@@ -330,3 +330,151 @@ VehicleData VehicleData {
 Fifteen lines of Rupa define four types and their conversion parameters. No
 CompuMethods, no ImplementationDataTypes, no DataTypeMaps. The dissolution
 transforms generate all of that.
+
+### Step 3: Dissolution Transforms
+
+A transformation file bridges the unified domain back to the concrete AUTOSAR
+domain. Write-mode transforms create multiple target objects from each source
+object, placing them into the appropriate ARPackages. Phase 2 wires
+cross-references after all objects exist.
+
+```rupa
+// dissolve.rupa -- unified → concrete AUTOSAR dissolution
+using domain autosar-2411;
+using domain autosar-2411-unified as unified;
+
+// ── Phase 1: Structural creation ─────────────────────────────────
+
+// LinearQuantity → CompuMethod (LINEAR) + ADT + IDT
+#[transform]
+let dissolve_linear(src: unified::LinearQuantity) {
+    /CompuMethods += CompuMethod (src.shortName + "_CM") {
+        .category = "LINEAR";
+        .compuInternalToPhys = CompuInternalToPhys {
+            CompuScale {
+                .compuRationalCoeffs = CompuRationalCoeffs {
+                    .compuNumerator = [src.offset, src.factor];
+                    .compuDenominator = [1.0];
+                };
+            };
+        };
+    };
+
+    /ApplicationDataTypes += ApplicationPrimitiveDataType (src.shortName) {
+        .category = "VALUE";
+    };
+
+    /ImplementationDataTypes += ImplementationDataType (src.shortName + "_Impl") {
+        .category = "VALUE";
+    };
+}
+
+// Enum → CompuMethod (TEXTTABLE) + ADT + IDT
+#[transform]
+let dissolve_enum(src: unified::GearPosition) {
+    /CompuMethods += CompuMethod (src.shortName + "_CM") {
+        .category = "TEXTTABLE";
+        .compuInternalToPhys = CompuInternalToPhys {
+            ::variants(src) | enumerate() | each((idx, name) => {
+                CompuScale {
+                    .lowerLimit = idx;
+                    .upperLimit = idx;
+                    .compuConst = CompuConst { .vt = name; };
+                };
+            });
+        };
+    };
+
+    /ApplicationDataTypes += ApplicationPrimitiveDataType (src.shortName) {
+        .category = "VALUE";
+    };
+
+    /ImplementationDataTypes += ImplementationDataType (src.shortName + "_Impl") {
+        .category = "VALUE";
+    };
+}
+
+// Composite → ApplicationRecordDataType + STRUCTURE IDT
+#[transform]
+let dissolve_composite(src: unified::VehicleData) {
+    /ApplicationDataTypes += ApplicationRecordDataType (src.shortName) {
+        .category = "STRUCTURE";
+        ::transform(src.speed, .elements);
+        ::transform(src.engineTemp, .elements);
+        ::transform(src.gear, .elements);
+    };
+
+    /ImplementationDataTypes += ImplementationDataType (src.shortName + "_Impl") {
+        .category = "STRUCTURE";
+        ::transform(src.speed, .subElements);
+        ::transform(src.engineTemp, .subElements);
+        ::transform(src.gear, .subElements);
+    };
+}
+
+// ── Phase 2: Cross-reference wiring ──────────────────────────────
+
+// Wire CompuMethod references into ADTs, set base types on IDTs, create
+// DataTypeMaps. By Phase 2 all objects exist; ::targets finds them.
+#[transform(phase = 2)]
+let link_linear(src: unified::LinearQuantity) {
+    let targets = ::targets(src);
+    let adt = targets | filter(x => x is ApplicationPrimitiveDataType) | first();
+    let cm = targets | filter(x => x is CompuMethod) | first();
+    let idt = targets | filter(x => x is ImplementationDataType) | first();
+
+    // Wire CompuMethod into ADT
+    adt.swDataDefProps = SwDataDefProps {
+        SwDataDefPropsConditional {
+            .compuMethodRef = cm;
+        };
+    };
+
+    // Set implementation base type (infer smallest platform type)
+    let range = (1.0 / src.factor) * (src.offset + src.factor * 65535.0);
+    idt.swDataDefProps = SwDataDefProps {
+        SwDataDefPropsConditional {
+            .baseTypeRef = if range <= 255.0 then /PlatformTypes/uint8
+                           else if range <= 65535.0 then /PlatformTypes/uint16
+                           else /PlatformTypes/uint32;
+        };
+    };
+
+    // Create the DataTypeMap
+    /DataTypeMappingSets/DtMapping += DataTypeMap {
+        .applicationDataType = adt;
+        .implementationDataType = idt;
+    };
+}
+
+#[transform(phase = 2)]
+let link_enum(src: unified::GearPosition) {
+    let targets = ::targets(src);
+    let adt = targets | filter(x => x is ApplicationPrimitiveDataType) | first();
+    let cm = targets | filter(x => x is CompuMethod) | first();
+    let idt = targets | filter(x => x is ImplementationDataType) | first();
+
+    adt.swDataDefProps = SwDataDefProps {
+        SwDataDefPropsConditional {
+            .compuMethodRef = cm;
+        };
+    };
+
+    idt.swDataDefProps = SwDataDefProps {
+        SwDataDefPropsConditional {
+            .baseTypeRef = /PlatformTypes/uint8;
+        };
+    };
+
+    /DataTypeMappingSets/DtMapping += DataTypeMap {
+        .applicationDataType = adt;
+        .implementationDataType = idt;
+    };
+}
+```
+
+Two phases cleanly separate structural creation from cross-reference wiring.
+Phase 1 creates all AUTOSAR artifacts and places them in the correct ARPackages.
+Phase 2 uses `::targets` to find the objects created from each source, then
+wires the `CompuMethod` references, infers the platform base type from the
+scaling parameters, and creates the `DataTypeMap` entries.
