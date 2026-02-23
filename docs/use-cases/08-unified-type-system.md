@@ -478,3 +478,171 @@ Phase 1 creates all AUTOSAR artifacts and places them in the correct ARPackages.
 Phase 2 uses `::targets` to find the objects created from each source, then
 wires the `CompuMethod` references, infers the platform base type from the
 scaling parameters, and creates the `DataTypeMap` entries.
+
+### Step 4: Dissolved Output
+
+After running the dissolution transforms, the target model in the `autosar-2411`
+domain contains the full AUTOSAR artifact set. Shown here in Rupa format for
+readability -- this is what `rupa inspect` would produce.
+
+```rupa
+// dissolved-output.rupa -- generated AUTOSAR model (target domain)
+using domain autosar-2411;
+
+ARPackage CompuMethods {
+    CompuMethod CM_VehicleSpeed {
+        .category = "LINEAR";
+        .compuInternalToPhys = CompuInternalToPhys {
+            CompuScale {
+                .compuRationalCoeffs = CompuRationalCoeffs {
+                    .compuNumerator = [0.0, 0.01];
+                    .compuDenominator = [1.0];
+                };
+            };
+        };
+    }
+
+    CompuMethod CM_EngineTemp {
+        .category = "LINEAR";
+        .compuInternalToPhys = CompuInternalToPhys {
+            CompuScale {
+                .compuRationalCoeffs = CompuRationalCoeffs {
+                    .compuNumerator = [-40.0, 1.0];
+                    .compuDenominator = [1.0];
+                };
+            };
+        };
+    }
+
+    CompuMethod CM_GearPosition {
+        .category = "TEXTTABLE";
+        .compuInternalToPhys = CompuInternalToPhys {
+            CompuScale { .lowerLimit = 0; .upperLimit = 0;
+                .compuConst = CompuConst { .vt = "Park"; }; }
+            CompuScale { .lowerLimit = 1; .upperLimit = 1;
+                .compuConst = CompuConst { .vt = "Reverse"; }; }
+            CompuScale { .lowerLimit = 2; .upperLimit = 2;
+                .compuConst = CompuConst { .vt = "Neutral"; }; }
+            CompuScale { .lowerLimit = 3; .upperLimit = 3;
+                .compuConst = CompuConst { .vt = "Drive"; }; }
+        };
+    }
+}
+
+ARPackage ApplicationDataTypes {
+    ApplicationPrimitiveDataType VehicleSpeed {
+        .category = "VALUE";
+        .swDataDefProps = SwDataDefProps {
+            SwDataDefPropsConditional {
+                .compuMethodRef = /CompuMethods/CM_VehicleSpeed;
+            };
+        };
+    }
+
+    ApplicationPrimitiveDataType EngineTemp {
+        .category = "VALUE";
+        .swDataDefProps = SwDataDefProps {
+            SwDataDefPropsConditional {
+                .compuMethodRef = /CompuMethods/CM_EngineTemp;
+            };
+        };
+    }
+
+    ApplicationPrimitiveDataType GearPosition {
+        .category = "VALUE";
+        .swDataDefProps = SwDataDefProps {
+            SwDataDefPropsConditional {
+                .compuMethodRef = /CompuMethods/CM_GearPosition;
+            };
+        };
+    }
+
+    ApplicationRecordDataType VehicleData {
+        .category = "STRUCTURE";
+        ApplicationRecordElement speed {
+            .typeRef = /ApplicationDataTypes/VehicleSpeed;
+        }
+        ApplicationRecordElement engineTemp {
+            .typeRef = /ApplicationDataTypes/EngineTemp;
+        }
+        ApplicationRecordElement gear {
+            .typeRef = /ApplicationDataTypes/GearPosition;
+        }
+    }
+}
+
+ARPackage ImplementationDataTypes {
+    ImplementationDataType VehicleSpeed_Impl {
+        .category = "VALUE";
+        .swDataDefProps = SwDataDefProps {
+            SwDataDefPropsConditional {
+                .baseTypeRef = /PlatformTypes/uint16;
+            };
+        };
+    }
+
+    ImplementationDataType EngineTemp_Impl {
+        .category = "VALUE";
+        .swDataDefProps = SwDataDefProps {
+            SwDataDefPropsConditional {
+                .baseTypeRef = /PlatformTypes/uint8;
+            };
+        };
+    }
+
+    ImplementationDataType GearPosition_Impl {
+        .category = "VALUE";
+        .swDataDefProps = SwDataDefProps {
+            SwDataDefPropsConditional {
+                .baseTypeRef = /PlatformTypes/uint8;
+            };
+        };
+    }
+
+    ImplementationDataType VehicleData_Impl {
+        .category = "STRUCTURE";
+        ImplementationDataTypeElement speed {
+            .swDataDefProps = SwDataDefProps {
+                SwDataDefPropsConditional {
+                    .implementationDataTypeRef = /ImplementationDataTypes/VehicleSpeed_Impl;
+                };
+            };
+        }
+        ImplementationDataTypeElement engineTemp {
+            .swDataDefProps = SwDataDefProps {
+                SwDataDefPropsConditional {
+                    .implementationDataTypeRef = /ImplementationDataTypes/EngineTemp_Impl;
+                };
+            };
+        }
+        ImplementationDataTypeElement gear {
+            .swDataDefProps = SwDataDefProps {
+                SwDataDefPropsConditional {
+                    .implementationDataTypeRef = /ImplementationDataTypes/GearPosition_Impl;
+                };
+            };
+        }
+    }
+}
+
+ARPackage DataTypeMappingSets {
+    DataTypeMappingSet DtMapping {
+        DataTypeMap {
+            .applicationDataType = /ApplicationDataTypes/VehicleSpeed;
+            .implementationDataType = /ImplementationDataTypes/VehicleSpeed_Impl;
+        }
+        DataTypeMap {
+            .applicationDataType = /ApplicationDataTypes/EngineTemp;
+            .implementationDataType = /ImplementationDataTypes/EngineTemp_Impl;
+        }
+        DataTypeMap {
+            .applicationDataType = /ApplicationDataTypes/GearPosition;
+            .implementationDataType = /ImplementationDataTypes/GearPosition_Impl;
+        }
+    }
+}
+```
+
+The dissolved Rupa model is readable and inspectable. Every AUTOSAR artifact is
+present -- ApplicationPrimitiveDataTypes, ImplementationDataTypes, CompuMethods,
+DataTypeMappingSet -- all generated from the 15 lines of unified input.
