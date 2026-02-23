@@ -646,3 +646,58 @@ ARPackage DataTypeMappingSets {
 The dissolved Rupa model is readable and inspectable. Every AUTOSAR artifact is
 present -- ApplicationPrimitiveDataTypes, ImplementationDataTypes, CompuMethods,
 DataTypeMappingSet -- all generated from the 15 lines of unified input.
+
+### Step 5: Build and Dissolve
+
+```sh
+# Compile the unified model
+rupa build vehicle-types.rupa vehicle-model.rupa -o vehicle-unified.rupac
+
+# Dissolve to concrete AUTOSAR domain -- compiler applies transforms
+rupa build --domain autosar-2411 \
+    dissolve.rupa \
+    vehicle-unified.rupac \
+    -o vehicle-autosar.rupac
+
+# Inspect the dissolved model
+rupa inspect vehicle-autosar.rupac
+
+# Export to ARXML
+rupa emit --format arxml vehicle-autosar.rupac -o vehicle.arxml
+```
+
+---
+
+## Key Features Demonstrated
+
+| Feature | Where it appears |
+|---------|-----------------|
+| **Domain derivation** | `domain autosar-2411-unified = autosar-2411;` -- copy full AUTOSAR type system, extend with simplified base types |
+| **M2 base types with roles** | `LinearQuantity` carries `.factor` and `.offset` as roles -- conversion parameters are structural, not annotations |
+| **M1 scaling templates** | `let speed_scaling = LinearQuantity { .factor = 0.01; ... };` -- reusable value templates |
+| **`from` derivation** | `VehicleSpeed VehicleSpeed from speed_scaling {}` -- copy scaling parameters into instances |
+| **Write-mode transforms** | `dissolve_linear` creates CompuMethod + ADT + IDT in one function, placing each in the correct ARPackage |
+| **One-to-many dissolution** | Each unified type produces three AUTOSAR artifacts (ADT + IDT + CompuMethod) plus a DataTypeMap entry |
+| **Multi-phase transforms** | Phase 1 creates structure; Phase 2 wires cross-references (`CompuMethodRef`, `baseTypeRef`, DataTypeMaps) |
+| **`::targets` lookup** | Phase 2 finds objects created from each source to wire references |
+| **Convention-based inference** | Implementation base type (uint8/uint16/uint32) inferred from scaling factor and range |
+| **Subtype dispatch** | `dissolve_linear`, `dissolve_enum`, `dissolve_composite` -- overloaded by source type |
+
+---
+
+## Comparison
+
+| Aspect | Manual AUTOSAR (ARXML) | Unified Type System (Rupa) |
+|--------|----------------------|---------------------------|
+| **Lines per type** | ~40 lines across 4 ARPackages | ~4 lines (type def + scaling template) |
+| **Artifacts to coordinate** | 4 per primitive (ADT + IDT + CompuMethod + DataTypeMap) | 1 type declaration, 1 scaling template |
+| **Adding a new type** | Edit 4 locations, maintain cross-references by path | Add type definition + scaling template, dissolution handles the rest |
+| **Changing a conversion factor** | Find CompuMethod, update coefficients, verify consistency | Change `.factor` on the scaling template |
+| **Type safety** | XML validation catches schema violations, not semantic errors | Compiler type-checks dissolution transforms against both domains |
+| **Readability** | Verbose XML with deeply nested elements | Concise Rupa with clear intent |
+| **Platform variants** | Duplicate all IDTs and mappings per ECU | Derive a new domain, override scaling templates |
+| **Consistency** | Manual maintenance of ADT-IDT-CompuMethod consistency | Structural consistency guaranteed by dissolution transforms |
+
+The fundamental difference: the unified type system eliminates the conceptual
+overhead of AUTOSAR's three-artifact split. Engineers think in physical types
+with conversion parameters. The tooling generates the AUTOSAR artifacts.
