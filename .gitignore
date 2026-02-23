@@ -1,0 +1,9 @@
+build-debug/
+build-release/
+CMakeUserPresets.json
+.idea/
+.cache/
+.worktrees/
+__pycache__/
+*.pyc
+.venv/

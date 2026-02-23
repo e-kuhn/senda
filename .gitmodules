@@ -1,0 +1,3 @@
+[submodule "external/rupa"]
+	path = external/rupa
+	url = https://github.com/e-kuhn/rupa.git

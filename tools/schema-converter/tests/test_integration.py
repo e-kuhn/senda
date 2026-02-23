@@ -1,0 +1,180 @@
+import unittest
+import os
+
+SCHEMA_PATH = "/Users/ekuhn/CLionProjects/autosar-dsl/schema/AUTOSAR_00052.xsd"
+
+
+@unittest.skipUnless(os.path.exists(SCHEMA_PATH), "AUTOSAR schema not available")
+class TestFullSchemaParsing(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from schema_parser import parse_schema, export_schema
+        cls.internal = parse_schema(SCHEMA_PATH)
+        cls.schema = export_schema(cls.internal)
+
+    def test_version_info(self):
+        self.assertEqual(self.schema.release_version, "R23-11")
+        self.assertIn("4.9", self.schema.autosar_version)
+
+    def test_has_primitives(self):
+        self.assertGreater(len(self.schema.primitives), 10)
+
+    def test_has_enums(self):
+        self.assertGreater(len(self.schema.enums), 50)
+
+    def test_has_composites(self):
+        self.assertGreater(len(self.schema.composites), 500)
+
+    def test_has_root_type(self):
+        self.assertIsNotNone(self.schema.root_type)
+
+    def test_known_type_exists(self):
+        names = {c.name for c in self.schema.composites}
+        self.assertIn("ARPackage", names)
+
+    def test_known_primitive_exists(self):
+        names = {p.name for p in self.schema.primitives}
+        self.assertIn("CIdentifierSimple", names)
+
+    def test_known_enum_exists(self):
+        names = {e.name for e in self.schema.enums}
+        self.assertIn("AccessControlEnumSimple", names)
+
+    def test_ar_package_has_identity(self):
+        pkg = next(c for c in self.schema.composites if c.name == "ARPackage")
+        self.assertGreater(len(pkg.identifiers), 0)
+
+    def test_no_critical_errors(self):
+        self.assertLess(len(self.schema.errors), 50,
+                        f"Too many errors: {self.schema.errors[:5]}...")
+
+    def test_has_abstract_composites(self):
+        abstract = [c for c in self.schema.composites if c.is_abstract]
+        self.assertGreater(len(abstract), 100)
+
+    def test_concrete_types_have_inherits_from(self):
+        concrete_with_parents = [
+            c for c in self.schema.composites
+            if not c.is_abstract and c.inherits_from
+        ]
+        self.assertGreater(len(concrete_with_parents), 500)
+
+    def test_no_massive_member_duplication(self):
+        """Concrete types should have only their own members, not inherited ones."""
+        for c in self.schema.composites:
+            if not c.is_abstract and c.inherits_from:
+                self.assertLess(len(c.members), 35,
+                                f"{c.name} has {len(c.members)} members — "
+                                f"possible flattened inheritance")
+
+    def test_ar_object_is_abstract(self):
+        ar_obj = next(c for c in self.schema.composites if c.name == "ARObject")
+        self.assertTrue(ar_obj.is_abstract)
+        self.assertEqual(len(ar_obj.inherits_from), 0)
+
+    def test_identifiable_hierarchy(self):
+        identifiable = next(
+            c for c in self.schema.composites if c.name == "Identifiable"
+        )
+        self.assertTrue(identifiable.is_abstract)
+        self.assertEqual(len(identifiable.inherits_from), 1)
+
+    def test_no_self_inheritance(self):
+        for c in self.schema.composites:
+            self.assertNotIn(c.name, c.inherits_from,
+                             f"{c.name} inherits from itself")
+
+
+@unittest.skipUnless(os.path.exists(SCHEMA_PATH), "AUTOSAR schema not available")
+class TestFullConversion(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        import tempfile
+        from schema_parser import parse_schema, export_schema
+        from rupa_generator import generate_rupa_files
+        cls.output_dir = tempfile.mkdtemp()
+        internal = parse_schema(SCHEMA_PATH)
+        cls.schema = export_schema(internal)
+        generate_rupa_files(cls.schema, cls.output_dir)
+
+    def test_domain_file_exists(self):
+        self.assertTrue(os.path.exists(os.path.join(self.output_dir, "domain.rupa")))
+
+    def test_primitives_file_exists(self):
+        self.assertTrue(os.path.exists(os.path.join(self.output_dir, "primitives.rupa")))
+
+    def test_enums_file_exists(self):
+        self.assertTrue(os.path.exists(os.path.join(self.output_dir, "enums.rupa")))
+
+    def test_mapping_report_exists(self):
+        self.assertTrue(os.path.exists(os.path.join(self.output_dir, "mapping-report.md")))
+
+    def test_primitives_contain_known_type(self):
+        with open(os.path.join(self.output_dir, "primitives.rupa")) as f:
+            content = f.read()
+        self.assertIn("type CIdentifierSimple = ::string;", content)
+
+    def test_domain_declaration(self):
+        with open(os.path.join(self.output_dir, "domain.rupa")) as f:
+            content = f.read()
+        self.assertIn("domain autosar-r23-11;", content)
+
+    def test_report_has_statistics(self):
+        with open(os.path.join(self.output_dir, "mapping-report.md")) as f:
+            content = f.read()
+        self.assertIn("Primitives:", content)
+        self.assertIn("Composites:", content)
+        self.assertIn("Abstract:", content)
+
+    def test_abstract_types_file_exists(self):
+        self.assertTrue(os.path.exists(
+            os.path.join(self.output_dir, "abstract-types.rupa")))
+
+    def test_abstract_types_file_content(self):
+        with open(os.path.join(self.output_dir, "abstract-types.rupa")) as f:
+            content = f.read()
+        self.assertIn("#[abstract]", content)
+        self.assertIn("type ARObject = {", content)
+
+    def test_concrete_types_show_inheritance(self):
+        """At least some composite files should have inheritance syntax."""
+        found = False
+        for fname in os.listdir(self.output_dir):
+            if fname.startswith("composites-"):
+                with open(os.path.join(self.output_dir, fname)) as f:
+                    content = f.read()
+                # Look for "type Foo = Bar {" pattern (inheritance)
+                import re
+                if re.search(r'type \w+ = \w+', content):
+                    found = True
+                    break
+        self.assertTrue(found, "No concrete type with inheritance syntax found")
+
+    def test_wrapper_types_have_unnamed_role(self):
+        """Primitive/enum wrapper types should use '..' unnamed member pattern."""
+        found_unnamed = False
+        for fname in os.listdir(self.output_dir):
+            if fname.startswith("composites-"):
+                with open(os.path.join(self.output_dir, fname)) as f:
+                    for line in f:
+                        if ".. :" in line:
+                            found_unnamed = True
+                            break
+            if found_unnamed:
+                break
+        self.assertTrue(found_unnamed, "No unnamed member '..' found in composite files")
+
+    def test_identifier_has_id_annotation(self):
+        """Identifier wrapper type should have #[id] on unnamed member."""
+        for fname in os.listdir(self.output_dir):
+            if fname.startswith("composites-"):
+                with open(os.path.join(self.output_dir, fname)) as f:
+                    content = f.read()
+                if "type Identifier = " in content or "type CIdentifier = " in content:
+                    self.assertIn("#[id]", content)
+                    return
+        self.fail("No Identifier or CIdentifier type found in composite files")
+
+
+if __name__ == "__main__":
+    unittest.main()

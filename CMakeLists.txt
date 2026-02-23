@@ -1,0 +1,35 @@
+cmake_minimum_required(VERSION 3.28)
+
+set(LLVM_PREFIX "/opt/homebrew/opt/llvm")
+
+project(senda
+    VERSION 0.1.0
+    DESCRIPTION "Automotive DSL built on the Rupa language"
+    LANGUAGES CXX C)
+
+set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use Homebrew LLVM's libc++ (required for C++ module support)
+execute_process(COMMAND xcrun --show-sdk-path OUTPUT_VARIABLE MACOS_SDK_PATH OUTPUT_STRIP_TRAILING_WHITESPACE)
+add_compile_options(-nostdinc++ -isystem ${LLVM_PREFIX}/include/c++/v1 -isysroot ${MACOS_SDK_PATH})
+add_link_options(-nostdlib++ -L${LLVM_PREFIX}/lib/c++ -Wl,-rpath,${LLVM_PREFIX}/lib/c++ -lc++)
+
+# Warning flags for senda targets
+function(senda_target_settings target)
+    target_compile_options(${target} PRIVATE -Wall -Wextra -Werror)
+endfunction()
+
+#-------------------------------------------------------------------------------
+# Rupa (submodule — provides rupa.lexer, rupa.parser, kore)
+#-------------------------------------------------------------------------------
+
+add_subdirectory(external/rupa)
+
+#-------------------------------------------------------------------------------
+# Senda CLI
+#-------------------------------------------------------------------------------
+
+add_executable(senda src/main.cpp)
+target_link_libraries(senda PRIVATE rupa.parser)
+senda_target_settings(senda)
