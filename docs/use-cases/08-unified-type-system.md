@@ -245,3 +245,88 @@ That is approximately 180 lines of XML for four data types (three primitives and
 one record). Each type requires coordinating elements across four separate
 ARPackages with cross-references by path. Adding a single new type means editing
 four locations.
+
+---
+
+## Rupa Solution
+
+### Step 1: Unified Domain Definition
+
+The unified domain derives from the full AUTOSAR R24-11 domain, copying its
+entire type system. It then adds simplified base types that carry conversion
+parameters as roles. Engineers derive their types from these base types instead
+of manually coordinating ADTs, IDTs, and DataTypeMaps.
+
+```rupa
+// unified-types.rupa -- simplified base types for the unified domain
+domain autosar-2411-unified = autosar-2411;
+
+// M2 aliases: M3 primitives cannot appear directly in M2 composite roles
+type Factor = ::float;
+type Offset = ::float;
+
+// Base type for linear-converted quantities (dissolves to LINEAR CompuMethod)
+type LinearQuantity = ARElement {
+    .factor: Factor;
+    .offset: Offset;
+};
+
+// Base type for pass-through quantities (dissolves to IDENTICAL CompuMethod)
+type IdenticalQuantity = ARElement {};
+```
+
+Two base types cover the most common AUTOSAR conversion categories. Enums
+(`::enum(...)`) dissolve to TEXTTABLE CompuMethods using ordinal position --
+no special base type needed. Both base types inherit from `ARElement` (available
+from the copied `autosar-2411` domain) so they carry a `.shortName` for identity.
+
+### Step 2: User Type Definitions and Scaling Templates
+
+Engineers work entirely in a domain derived from `autosar-2411-unified`. Type
+definitions are M2 (structure); scaling parameters are M1 (values on instances).
+The `from` keyword copies scaling templates into new instances.
+
+```rupa
+// vehicle-types.rupa -- type definitions (M2)
+domain vehicle-v1 = autosar-2411-unified;
+
+type VehicleSpeed = LinearQuantity;
+type EngineTemp = LinearQuantity;
+type GearPosition = ::enum(Park, Reverse, Neutral, Drive);
+
+type VehicleData = {
+    .speed: VehicleSpeed;
+    .engineTemp: EngineTemp;
+    .gear: GearPosition;
+};
+```
+
+```rupa
+// vehicle-model.rupa -- scaling templates and instances (M1)
+using domain vehicle-v1;
+
+// Scaling templates: set the conversion parameters once
+let speed_scaling = LinearQuantity {
+    .factor = 0.01;
+    .offset = 0.0;
+};
+
+let temp_scaling = LinearQuantity {
+    .factor = 1.0;
+    .offset = -40.0;
+};
+
+// Instances copy scaling via `from`
+VehicleSpeed VehicleSpeed from speed_scaling {}
+EngineTemp EngineTemp from temp_scaling {}
+
+VehicleData VehicleData {
+    .speed = /VehicleSpeed;
+    .engineTemp = /EngineTemp;
+    .gear = Park;
+}
+```
+
+Fifteen lines of Rupa define four types and their conversion parameters. No
+CompuMethods, no ImplementationDataTypes, no DataTypeMaps. The dissolution
+transforms generate all of that.
