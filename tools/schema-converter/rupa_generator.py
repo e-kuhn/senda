@@ -251,7 +251,7 @@ def generate_primitive(p: ExportPrimitive) -> str:
     if p.supertype == PrimitiveSupertype.STRING:
         # String: #[pattern] for regex validation
         if p.pattern:
-            lines.append('#[pattern("%s")]' % p.pattern)
+            lines.append('#[pattern(r#"%s"#)]' % p.pattern)
         # String values are plain token values
         if p.values:
             formatted = ", ".join('"%s"' % v for v in p.values)
