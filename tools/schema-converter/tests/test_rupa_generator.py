@@ -11,7 +11,7 @@ class TestPrimitiveGeneration(unittest.TestCase):
         p = ExportPrimitive("CIdentifierSimple", PrimitiveSupertype.STRING,
                             pattern="[a-zA-Z_][a-zA-Z0-9_]*")
         lines = generate_primitive(p)
-        self.assertIn('#[pattern("[a-zA-Z_][a-zA-Z0-9_]*")]', lines)
+        self.assertIn('#[pattern(r#"[a-zA-Z_][a-zA-Z0-9_]*"#)]', lines)
         self.assertIn("type CIdentifierSimple = ::string;", lines)
 
     def test_plain_string(self):

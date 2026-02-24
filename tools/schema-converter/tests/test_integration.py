@@ -117,7 +117,7 @@ class TestFullConversion(unittest.TestCase):
     def test_domain_declaration(self):
         with open(os.path.join(self.output_dir, "domain.rupa")) as f:
             content = f.read()
-        self.assertIn("domain autosar-r23-11;", content)
+        self.assertIn("domain autosar_r23_11;", content)
 
     def test_report_has_statistics(self):
         with open(os.path.join(self.output_dir, "mapping-report.md")) as f:
@@ -137,43 +137,117 @@ class TestFullConversion(unittest.TestCase):
         self.assertIn("type ARObject = {", content)
 
     def test_concrete_types_show_inheritance(self):
-        """At least some composite files should have inheritance syntax."""
-        found = False
-        for fname in os.listdir(self.output_dir):
-            if fname.startswith("composites-"):
-                with open(os.path.join(self.output_dir, fname)) as f:
-                    content = f.read()
-                # Look for "type Foo = Bar {" pattern (inheritance)
-                import re
-                if re.search(r'type \w+ = \w+', content):
-                    found = True
-                    break
-        self.assertTrue(found, "No concrete type with inheritance syntax found")
+        """The composites file should have inheritance syntax."""
+        composites_path = os.path.join(self.output_dir, "composites.rupa")
+        self.assertTrue(os.path.exists(composites_path))
+        with open(composites_path) as f:
+            content = f.read()
+        import re
+        self.assertTrue(
+            re.search(r'type \w+ = \w+', content),
+            "No concrete type with inheritance syntax found in composites.rupa"
+        )
 
     def test_wrapper_types_have_unnamed_role(self):
         """Primitive/enum wrapper types should use '..' unnamed member pattern."""
-        found_unnamed = False
-        for fname in os.listdir(self.output_dir):
-            if fname.startswith("composites-"):
-                with open(os.path.join(self.output_dir, fname)) as f:
-                    for line in f:
-                        if ".. :" in line:
-                            found_unnamed = True
-                            break
-            if found_unnamed:
-                break
-        self.assertTrue(found_unnamed, "No unnamed member '..' found in composite files")
+        composites_path = os.path.join(self.output_dir, "composites.rupa")
+        self.assertTrue(os.path.exists(composites_path))
+        with open(composites_path) as f:
+            content = f.read()
+        self.assertIn(".. :", content, "No unnamed member '..' found in composites.rupa")
 
     def test_identifier_has_id_annotation(self):
         """Identifier wrapper type should have #[id] on unnamed member."""
-        for fname in os.listdir(self.output_dir):
-            if fname.startswith("composites-"):
-                with open(os.path.join(self.output_dir, fname)) as f:
+        # Check both composites.rupa and base-types.rupa (these are base types)
+        for fname in ["composites.rupa", "base-types.rupa"]:
+            fpath = os.path.join(self.output_dir, fname)
+            if os.path.exists(fpath):
+                with open(fpath) as f:
                     content = f.read()
                 if "type Identifier = " in content or "type CIdentifier = " in content:
                     self.assertIn("#[id]", content)
                     return
-        self.fail("No Identifier or CIdentifier type found in composite files")
+        self.fail("No Identifier or CIdentifier type found in generated files")
+
+
+    # --- Task 7.1: Single composites file ---
+
+    def test_single_composites_file(self):
+        """Regular composites should be in a single composites.rupa file."""
+        composites_path = os.path.join(self.output_dir, "composites.rupa")
+        self.assertTrue(os.path.exists(composites_path))
+        # Old split files should NOT exist
+        import glob
+        splits = glob.glob(os.path.join(self.output_dir, "composites-*-*.rupa"))
+        self.assertEqual(len(splits), 0, "Should not have alphabetically split composite files")
+
+    # --- Task 7.2: Import statements ---
+
+    def test_primitives_no_imports(self):
+        """primitives.rupa should have no import statements (leaf file)."""
+        with open(os.path.join(self.output_dir, "primitives.rupa")) as f:
+            content = f.read()
+        self.assertNotIn('import "', content)
+
+    def test_enums_no_imports(self):
+        """enums.rupa should have no import statements (leaf file)."""
+        with open(os.path.join(self.output_dir, "enums.rupa")) as f:
+            content = f.read()
+        self.assertNotIn('import "', content)
+
+    def test_abstract_types_imports(self):
+        """abstract-types.rupa should import primitives and enums."""
+        with open(os.path.join(self.output_dir, "abstract-types.rupa")) as f:
+            content = f.read()
+        self.assertIn('import "primitives.rupa";', content)
+        self.assertIn('import "enums.rupa";', content)
+
+    def test_base_types_imports(self):
+        """base-types.rupa should import primitives, enums, and abstract-types."""
+        with open(os.path.join(self.output_dir, "base-types.rupa")) as f:
+            content = f.read()
+        self.assertIn('import "primitives.rupa";', content)
+        self.assertIn('import "enums.rupa";', content)
+        self.assertIn('import "abstract-types.rupa";', content)
+
+    def test_composites_imports(self):
+        """composites.rupa should import primitives, enums, abstract-types, base-types."""
+        with open(os.path.join(self.output_dir, "composites.rupa")) as f:
+            content = f.read()
+        self.assertIn('import "primitives.rupa";', content)
+        self.assertIn('import "enums.rupa";', content)
+        self.assertIn('import "abstract-types.rupa";', content)
+        self.assertIn('import "base-types.rupa";', content)
+
+    # --- Task 7.3: Root index.rupa ---
+
+    def test_index_file_exists(self):
+        """index.rupa should exist as the compilation entry point."""
+        index_path = os.path.join(self.output_dir, "index.rupa")
+        self.assertTrue(os.path.exists(index_path))
+
+    def test_index_has_domain(self):
+        """index.rupa should have a domain declaration."""
+        with open(os.path.join(self.output_dir, "index.rupa")) as f:
+            content = f.read()
+        self.assertIn("domain autosar_r23_11;", content)
+
+    def test_index_imports_all_sub_files(self):
+        """index.rupa should import all generated sub-files."""
+        with open(os.path.join(self.output_dir, "index.rupa")) as f:
+            content = f.read()
+        self.assertIn('import "primitives.rupa";', content)
+        self.assertIn('import "enums.rupa";', content)
+        self.assertIn('import "abstract-types.rupa";', content)
+        self.assertIn('import "base-types.rupa";', content)
+        self.assertIn('import "composites.rupa";', content)
+
+    def test_domain_uses_underscores(self):
+        """Domain names must use underscores, not hyphens, for lexer compatibility."""
+        with open(os.path.join(self.output_dir, "domain.rupa")) as f:
+            content = f.read()
+        self.assertIn("domain autosar_r23_11;", content)
+        self.assertNotIn("domain autosar-r23-11;", content)
 
 
 if __name__ == "__main__":
