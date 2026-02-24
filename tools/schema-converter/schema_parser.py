@@ -446,8 +446,8 @@ def _analyze_simple_type(
     if len(elem) == 0:
         return
 
-    restriction = elem[0]
-    if not _is_restriction(restriction):
+    restriction = elem.find("xsd:restriction", _XSD_NS)
+    if restriction is None:
         return
 
     base_name = _get_base_name(restriction)
