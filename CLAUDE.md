@@ -97,6 +97,16 @@ When changes touch inner repos, commit from the inside out:
 
 ## Workflow: Mandatory Rules
 
+### 0. Update Submodules First
+
+**Before starting any new task**, run the update script to ensure all submodule pointers are at the latest remote `main`:
+
+```bash
+./scripts/update-submodules.sh
+```
+
+This recursively fetches and checks out the latest commit on each submodule's default branch, then stages the updated pointers. If anything changed, commit the update as part of your first commit on the new branch.
+
 ### 1. Never Work on Main
 
 **All changes happen in a git worktree.** Never modify files directly on the main branch.
