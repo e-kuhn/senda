@@ -409,13 +409,19 @@ def generate_composite(c: ExportComposite, *, show_alternatives: bool = False) -
 
 
 def _release_to_domain(release_version: str) -> str:
-    """Convert 'R24-11' to 'autosar-r24-11'."""
-    return "autosar-" + release_version.lower()
+    """Convert 'R24-11' to 'autosar_r24_11' (underscores for lexer compatibility)."""
+    return "autosar_" + release_version.lower().replace("-", "_")
 
 
-def _domain_header(domain_name: str) -> str:
-    """Return the domain statement that starts each .rupa file."""
-    return "domain %s;\n\n" % domain_name
+def _file_header(domain_name: str, imports: list[str] | None = None) -> str:
+    """Return the domain statement + import statements that start each .rupa file."""
+    lines = ["domain %s;\n" % domain_name]
+    if imports:
+        lines.append("")
+        for imp in imports:
+            lines.append("import %s;" % imp)
+    lines.append("")
+    return "\n".join(lines)
 
 
 def generate_rupa_files(schema: ExportSchema, output_dir: str, *, show_alternatives: bool = False) -> None:
@@ -423,18 +429,19 @@ def generate_rupa_files(schema: ExportSchema, output_dir: str, *, show_alternati
     os.makedirs(output_dir, exist_ok=True)
 
     domain_name = _release_to_domain(schema.release_version)
-    header = _domain_header(domain_name)
 
     # --- domain.rupa ---
     _write(output_dir, "domain.rupa", "domain %s;\n" % domain_name)
 
-    # --- primitives.rupa ---
+    # --- primitives.rupa (no imports — leaf file) ---
     if schema.primitives:
+        header = _file_header(domain_name)
         parts = [generate_primitive(p) for p in schema.primitives]
         _write(output_dir, "primitives.rupa", header + "\n\n".join(parts) + "\n")
 
-    # --- enums.rupa ---
+    # --- enums.rupa (no imports — leaf file) ---
     if schema.enums:
+        header = _file_header(domain_name)
         parts = [generate_enum(e) for e in schema.enums]
         _write(output_dir, "enums.rupa", header + "\n\n".join(parts) + "\n")
 
@@ -451,31 +458,40 @@ def generate_rupa_files(schema: ExportSchema, output_dir: str, *, show_alternati
         else:
             regular.append(c)
 
-    # abstract-types.rupa
+    # abstract-types.rupa (imports primitives, enums)
     if abstract_types:
+        header = _file_header(domain_name, ["primitives", "enums"])
         abstract_sorted = sorted(abstract_types, key=lambda c: c.name.lower())
         parts = [generate_composite(c, show_alternatives=show_alternatives) for c in abstract_sorted]
         _write(output_dir, "abstract-types.rupa", header + "\n\n".join(parts) + "\n")
 
-    # base-types.rupa
+    # base-types.rupa (imports primitives, enums, abstract-types)
     if base_types:
+        header = _file_header(domain_name, ["primitives", "enums", "abstract-types"])
         parts = [generate_composite(c, show_alternatives=show_alternatives) for c in base_types]
         _write(output_dir, "base-types.rupa", header + "\n\n".join(parts) + "\n")
 
-    # Regular composites split alphabetically into chunks of ~500
+    # composites.rupa — single file for all regular composites
     if regular:
+        header = _file_header(domain_name, ["primitives", "enums", "abstract-types", "base-types"])
         regular_sorted = sorted(regular, key=lambda c: c.name.lower())
-        chunk_size = 500
-        chunks: list[list[ExportComposite]] = []
-        for i in range(0, len(regular_sorted), chunk_size):
-            chunks.append(regular_sorted[i:i + chunk_size])
+        parts = [generate_composite(c, show_alternatives=show_alternatives) for c in regular_sorted]
+        _write(output_dir, "composites.rupa", header + "\n\n".join(parts) + "\n")
 
-        for chunk in chunks:
-            first_letter = chunk[0].name[0].lower()
-            last_letter = chunk[-1].name[0].lower()
-            filename = "composites-%s-%s.rupa" % (first_letter, last_letter)
-            parts = [generate_composite(c, show_alternatives=show_alternatives) for c in chunk]
-            _write(output_dir, filename, header + "\n\n".join(parts) + "\n")
+    # --- index.rupa (root entry point with domain + imports to all sub-files) ---
+    sub_files = []
+    if schema.primitives:
+        sub_files.append("primitives")
+    if schema.enums:
+        sub_files.append("enums")
+    if abstract_types:
+        sub_files.append("abstract-types")
+    if base_types:
+        sub_files.append("base-types")
+    if regular:
+        sub_files.append("composites")
+    index_content = _file_header(domain_name, sub_files)
+    _write(output_dir, "index.rupa", index_content)
 
     # --- mapping-report.md ---
     report_lines = [
