@@ -45,6 +45,21 @@ SIMPLE_ENUM_XSD = """\
 </xsd:schema>
 """
 
+ANNOTATED_SIMPLE_TYPE_XSD = """\
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:AR="http://autosar.org/schema/r4.0"
+            targetNamespace="http://autosar.org/schema/r4.0">
+  <xsd:simpleType name="NORMALIZED-INSTRUCTION--SIMPLE">
+    <xsd:annotation>
+      <xsd:appinfo source="tags">atp.Status="draft"</xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[1-9][0-9]*"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>
+"""
+
 SUBTYPES_ENUM_XSD = """\
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:AR="http://autosar.org/schema/r4.0"
@@ -93,6 +108,17 @@ class TestAnalyzeSimpleType(unittest.TestCase):
         self.assertIsInstance(t, InternalEnumeration)
         self.assertEqual(t.name, "AccessControlEnumSimple")
         self.assertEqual(sorted(t.values), ["custom", "modeled"])
+
+    def test_simple_type_with_annotation_before_restriction(self):
+        from schema_parser import parse_schema_from_string
+        from schema_model import InternalAlias
+        schema = parse_schema_from_string(ANNOTATED_SIMPLE_TYPE_XSD)
+        key = "NORMALIZED-INSTRUCTION--SIMPLE"
+        self.assertIn(key, schema.types)
+        t = schema.types[key]
+        self.assertIsInstance(t, InternalAlias)
+        self.assertEqual(t.name, "NormalizedInstructionSimple")
+        self.assertEqual(t.pattern, "[1-9][0-9]*")
 
     def test_subtypes_enum(self):
         from schema_parser import parse_schema_from_string
