@@ -419,7 +419,7 @@ def _file_header(domain_name: str, imports: list[str] | None = None) -> str:
     if imports:
         lines.append("")
         for imp in imports:
-            lines.append("import %s;" % imp)
+            lines.append('import "%s.rupa";' % imp)
     lines.append("")
     return "\n".join(lines)
 

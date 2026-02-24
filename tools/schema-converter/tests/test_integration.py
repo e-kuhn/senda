@@ -187,37 +187,37 @@ class TestFullConversion(unittest.TestCase):
         """primitives.rupa should have no import statements (leaf file)."""
         with open(os.path.join(self.output_dir, "primitives.rupa")) as f:
             content = f.read()
-        self.assertNotIn("import ", content)
+        self.assertNotIn('import "', content)
 
     def test_enums_no_imports(self):
         """enums.rupa should have no import statements (leaf file)."""
         with open(os.path.join(self.output_dir, "enums.rupa")) as f:
             content = f.read()
-        self.assertNotIn("import ", content)
+        self.assertNotIn('import "', content)
 
     def test_abstract_types_imports(self):
         """abstract-types.rupa should import primitives and enums."""
         with open(os.path.join(self.output_dir, "abstract-types.rupa")) as f:
             content = f.read()
-        self.assertIn("import primitives;", content)
-        self.assertIn("import enums;", content)
+        self.assertIn('import "primitives.rupa";', content)
+        self.assertIn('import "enums.rupa";', content)
 
     def test_base_types_imports(self):
         """base-types.rupa should import primitives, enums, and abstract-types."""
         with open(os.path.join(self.output_dir, "base-types.rupa")) as f:
             content = f.read()
-        self.assertIn("import primitives;", content)
-        self.assertIn("import enums;", content)
-        self.assertIn("import abstract-types;", content)
+        self.assertIn('import "primitives.rupa";', content)
+        self.assertIn('import "enums.rupa";', content)
+        self.assertIn('import "abstract-types.rupa";', content)
 
     def test_composites_imports(self):
         """composites.rupa should import primitives, enums, abstract-types, base-types."""
         with open(os.path.join(self.output_dir, "composites.rupa")) as f:
             content = f.read()
-        self.assertIn("import primitives;", content)
-        self.assertIn("import enums;", content)
-        self.assertIn("import abstract-types;", content)
-        self.assertIn("import base-types;", content)
+        self.assertIn('import "primitives.rupa";', content)
+        self.assertIn('import "enums.rupa";', content)
+        self.assertIn('import "abstract-types.rupa";', content)
+        self.assertIn('import "base-types.rupa";', content)
 
     # --- Task 7.3: Root index.rupa ---
 
@@ -236,11 +236,11 @@ class TestFullConversion(unittest.TestCase):
         """index.rupa should import all generated sub-files."""
         with open(os.path.join(self.output_dir, "index.rupa")) as f:
             content = f.read()
-        self.assertIn("import primitives;", content)
-        self.assertIn("import enums;", content)
-        self.assertIn("import abstract-types;", content)
-        self.assertIn("import base-types;", content)
-        self.assertIn("import composites;", content)
+        self.assertIn('import "primitives.rupa";', content)
+        self.assertIn('import "enums.rupa";', content)
+        self.assertIn('import "abstract-types.rupa";', content)
+        self.assertIn('import "base-types.rupa";', content)
+        self.assertIn('import "composites.rupa";', content)
 
     def test_domain_uses_underscores(self):
         """Domain names must use underscores, not hyphens, for lexer compatibility."""
