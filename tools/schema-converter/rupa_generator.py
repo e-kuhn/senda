@@ -430,9 +430,6 @@ def generate_rupa_files(schema: ExportSchema, output_dir: str, *, show_alternati
 
     domain_name = _release_to_domain(schema.release_version)
 
-    # --- domain.rupa ---
-    _write(output_dir, "domain.rupa", "domain %s;\n" % domain_name)
-
     # --- primitives.rupa (no imports — leaf file) ---
     if schema.primitives:
         header = _file_header(domain_name)
@@ -478,7 +475,7 @@ def generate_rupa_files(schema: ExportSchema, output_dir: str, *, show_alternati
         parts = [generate_composite(c, show_alternatives=show_alternatives) for c in regular_sorted]
         _write(output_dir, "composites.rupa", header + "\n\n".join(parts) + "\n")
 
-    # --- index.rupa (root entry point with domain + imports to all sub-files) ---
+    # --- <domain>.rupa (root entry point with domain + imports to all sub-files) ---
     sub_files = []
     if schema.primitives:
         sub_files.append("primitives")
@@ -491,7 +488,7 @@ def generate_rupa_files(schema: ExportSchema, output_dir: str, *, show_alternati
     if regular:
         sub_files.append("composites")
     index_content = _file_header(domain_name, sub_files)
-    _write(output_dir, "index.rupa", index_content)
+    _write(output_dir, domain_name + ".rupa", index_content)
 
     # --- mapping-report.md ---
     report_lines = [
