@@ -202,13 +202,17 @@ def _format_multiplicity(min_occurs: int | None, max_occurs: int | None) -> str:
     if mn == 0 and mx == 1:
         return "?"
     if mn == 0 and mx is None:
-        return "*"
+        return "[]"
     if mn == 1 and mx is None:
-        return "+"
+        return "[1:]"
     # Explicit range
     if mx is None:
-        return "{%d,}" % mn
-    return "{%d,%d}" % (mn, mx)
+        return "[%d:]" % mn
+    if mn == 0:
+        return "[:%d]" % mx
+    if mn == mx:
+        return "[%d]" % mn
+    return "[%d:%d]" % (mn, mx)
 
 
 def _format_type_ref(types: list[str], is_reference: bool) -> tuple[str, list[str]]:

@@ -97,7 +97,7 @@ class TestCompositeGeneration(unittest.TestCase):
             ExportMember("element", ["Element"], min_occurs=0, max_occurs=None),
         ])
         lines = generate_composite(c)
-        self.assertIn("    .element : Element*;", lines)
+        self.assertIn("    .element : Element[];", lines)
 
     def test_one_or_more_member(self):
         from rupa_generator import generate_composite
@@ -105,7 +105,7 @@ class TestCompositeGeneration(unittest.TestCase):
             ExportMember("items", ["Item"], min_occurs=1, max_occurs=None),
         ])
         lines = generate_composite(c)
-        self.assertIn("    .items : Item+;", lines)
+        self.assertIn("    .items : Item[1:];", lines)
 
     def test_ordered_with_unnamed(self):
         from rupa_generator import generate_composite
@@ -122,7 +122,7 @@ class TestCompositeGeneration(unittest.TestCase):
                             has_unnamed_string_member=True)
         lines = generate_composite(c)
         self.assertIn("#[ordered]", lines)
-        self.assertIn("    .. : StringSimple*;", lines)
+        self.assertIn("    .. : StringSimple[];", lines)
 
     def test_multiplicity_required(self):
         from rupa_generator import generate_composite
