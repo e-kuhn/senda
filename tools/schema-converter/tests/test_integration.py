@@ -97,8 +97,8 @@ class TestFullConversion(unittest.TestCase):
         cls.schema = export_schema(internal)
         generate_rupa_files(cls.schema, cls.output_dir)
 
-    def test_domain_file_exists(self):
-        self.assertTrue(os.path.exists(os.path.join(self.output_dir, "domain.rupa")))
+    def test_entry_file_exists(self):
+        self.assertTrue(os.path.exists(os.path.join(self.output_dir, "autosar_r23_11.rupa")))
 
     def test_primitives_file_exists(self):
         self.assertTrue(os.path.exists(os.path.join(self.output_dir, "primitives.rupa")))
@@ -115,7 +115,7 @@ class TestFullConversion(unittest.TestCase):
         self.assertIn("type CIdentifierSimple = ::string;", content)
 
     def test_domain_declaration(self):
-        with open(os.path.join(self.output_dir, "domain.rupa")) as f:
+        with open(os.path.join(self.output_dir, "autosar_r23_11.rupa")) as f:
             content = f.read()
         self.assertIn("domain autosar_r23_11;", content)
 
@@ -219,22 +219,17 @@ class TestFullConversion(unittest.TestCase):
         self.assertIn('import "abstract-types.rupa";', content)
         self.assertIn('import "base-types.rupa";', content)
 
-    # --- Task 7.3: Root index.rupa ---
+    # --- Root entry point ---
 
-    def test_index_file_exists(self):
-        """index.rupa should exist as the compilation entry point."""
-        index_path = os.path.join(self.output_dir, "index.rupa")
-        self.assertTrue(os.path.exists(index_path))
-
-    def test_index_has_domain(self):
-        """index.rupa should have a domain declaration."""
-        with open(os.path.join(self.output_dir, "index.rupa")) as f:
+    def test_entry_has_domain(self):
+        """Entry file should have a domain declaration."""
+        with open(os.path.join(self.output_dir, "autosar_r23_11.rupa")) as f:
             content = f.read()
         self.assertIn("domain autosar_r23_11;", content)
 
-    def test_index_imports_all_sub_files(self):
-        """index.rupa should import all generated sub-files."""
-        with open(os.path.join(self.output_dir, "index.rupa")) as f:
+    def test_entry_imports_all_sub_files(self):
+        """Entry file should import all generated sub-files."""
+        with open(os.path.join(self.output_dir, "autosar_r23_11.rupa")) as f:
             content = f.read()
         self.assertIn('import "primitives.rupa";', content)
         self.assertIn('import "enums.rupa";', content)
@@ -244,7 +239,7 @@ class TestFullConversion(unittest.TestCase):
 
     def test_domain_uses_underscores(self):
         """Domain names must use underscores, not hyphens, for lexer compatibility."""
-        with open(os.path.join(self.output_dir, "domain.rupa")) as f:
+        with open(os.path.join(self.output_dir, "autosar_r23_11.rupa")) as f:
             content = f.read()
         self.assertIn("domain autosar_r23_11;", content)
         self.assertNotIn("domain autosar-r23-11;", content)
