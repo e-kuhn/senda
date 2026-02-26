@@ -2,6 +2,7 @@
 
 Usage:
     python tools/autosar-converter/converter.py <schema.xsd> <output-dir>
+    python tools/autosar-converter/converter.py <schema.xsd> <output-dir> --cpp
 """
 
 import argparse
@@ -20,10 +21,14 @@ def main():
         description="Convert AUTOSAR XSD schema to Rupa domain files."
     )
     parser.add_argument("schema", help="Path to AUTOSAR XSD schema file")
-    parser.add_argument("output_dir", help="Output directory for .rupa files")
+    parser.add_argument("output_dir", help="Output directory for generated files")
     parser.add_argument(
         "--alternatives", action="store_true", default=False,
         help="Generate variant alternative comments (// also:) on members",
+    )
+    parser.add_argument(
+        "--cpp", action="store_true", default=False,
+        help="Generate C++ domain builder and ARXML parser instead of Rupa files",
     )
     args = parser.parse_args()
 
@@ -37,9 +42,15 @@ def main():
     print("Exporting schema model...")
     schema = export_schema(internal)
 
-    print(f"Generating Rupa files in {args.output_dir}/...")
-    os.makedirs(args.output_dir, exist_ok=True)
-    generate_rupa_files(schema, args.output_dir, show_alternatives=args.alternatives)
+    if args.cpp:
+        from cpp_generator import generate_cpp_files
+
+        print(f"Generating C++ files in {args.output_dir}/...")
+        generate_cpp_files(schema, args.output_dir)
+    else:
+        print(f"Generating Rupa files in {args.output_dir}/...")
+        os.makedirs(args.output_dir, exist_ok=True)
+        generate_rupa_files(schema, args.output_dir, show_alternatives=args.alternatives)
 
     print(f"Done. {len(schema.primitives)} primitives, "
           f"{len(schema.enums)} enums, "
