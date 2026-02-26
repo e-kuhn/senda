@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AUTOSAR>
+  <AR-PACKAGES>
+    <AR-PACKAGE>
+      <SHORT-NAME>Signals</SHORT-NAME>
+      <ELEMENTS>
+        <I-SIGNAL>
+          <SHORT-NAME>BrakePedalPosition</SHORT-NAME>
+          <I-SIGNAL-TYPE>PRIMITIVE</I-SIGNAL-TYPE>
+          <LENGTH>16</LENGTH>
+        </I-SIGNAL>
+        <I-SIGNAL>
+          <SHORT-NAME>VehicleSpeed</SHORT-NAME>
+          <I-SIGNAL-TYPE>PRIMITIVE</I-SIGNAL-TYPE>
+          <LENGTH>8</LENGTH>
+        </I-SIGNAL>
+      </ELEMENTS>
+    </AR-PACKAGE>
+    <AR-PACKAGE>
+      <SHORT-NAME>ECUs</SHORT-NAME>
+      <ELEMENTS>
+        <ECU-INSTANCE>
+          <SHORT-NAME>BrakeECU</SHORT-NAME>
+        </ECU-INSTANCE>
+      </ELEMENTS>
+    </AR-PACKAGE>
+  </AR-PACKAGES>
+</AUTOSAR>

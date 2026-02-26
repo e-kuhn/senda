@@ -21,15 +21,64 @@ function(senda_target_settings target)
 endfunction()
 
 #-------------------------------------------------------------------------------
-# Rupa (submodule — provides rupa.lexer, rupa.parser, kore)
+# Dependencies
+#-------------------------------------------------------------------------------
+
+include(FetchContent)
+set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
+
+# pugixml (lightweight XML parser for ARXML compiler)
+FetchContent_Declare(
+    pugixml
+    SYSTEM
+    GIT_REPOSITORY https://github.com/zeux/pugixml.git
+    GIT_TAG v1.14
+    EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(pugixml)
+
+# Google Test
+FetchContent_Declare(
+    googletest
+    SYSTEM
+    GIT_REPOSITORY https://github.com/google/googletest
+    GIT_TAG v1.16.0
+    EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(googletest)
+
+#-------------------------------------------------------------------------------
+# Rupa (submodule — provides rupa.lexer, rupa.parser, rupa.fir, rupa.domain,
+#        rupa.compiler, rupa.driver, rupa.sema, kore)
 #-------------------------------------------------------------------------------
 
 add_subdirectory(external/rupa)
+
+#-------------------------------------------------------------------------------
+# Senda Libraries
+#-------------------------------------------------------------------------------
+
+add_subdirectory(src/domains)
+add_subdirectory(src/compiler-arxml)
 
 #-------------------------------------------------------------------------------
 # Senda CLI
 #-------------------------------------------------------------------------------
 
 add_executable(senda src/main.cpp)
-target_link_libraries(senda PRIVATE rupa.parser)
+target_link_libraries(senda PRIVATE
+    rupa.driver
+    rupa.sema
+    rupa.compiler
+    senda.compiler.arxml
+    senda.domains
+)
 senda_target_settings(senda)
+
+#-------------------------------------------------------------------------------
+# Testing
+#-------------------------------------------------------------------------------
+
+enable_testing()
+add_subdirectory(test/compiler-arxml)
+add_subdirectory(test/integration)

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AUTOSAR>
+  <AR-PACKAGES>
+    <AR-PACKAGE>
+      <SHORT-NAME>Signals</SHORT-NAME>
+      <ELEMENTS>
+        <I-SIGNAL>
+          <SHORT-NAME>BrakePedalPosition</SHORT-NAME>
+          <I-SIGNAL-TYPE>PRIMITIVE</I-SIGNAL-TYPE>
+          <LENGTH>16</LENGTH>
+        </I-SIGNAL>
+      </ELEMENTS>
+    </AR-PACKAGE>
+  </AR-PACKAGES>
+</AUTOSAR>
