@@ -291,5 +291,136 @@ class TestDomainBuilderComposites(unittest.TestCase):
         self.assertIn("fir::Multiplicity::OneOrMore", code)
 
 
+class TestDomainModuleGeneration(unittest.TestCase):
+    def test_generates_domain_module_file(self):
+        import tempfile
+        from cpp_generator import generate_domain_module
+        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            generate_domain_module(schema, tmpdir)
+            path = os.path.join(tmpdir, "domains", "senda.domains.cppm")
+            self.assertTrue(os.path.exists(path))
+            with open(path) as f:
+                content = f.read()
+            self.assertIn("export module senda.domains", content)
+            self.assertIn("AutosarSchema", content)
+            self.assertIn("TypeInfo", content)
+
+
+class TestDomainBuilderUnnamedRoles(unittest.TestCase):
+    def test_unnamed_role_uses_dotdot(self):
+        from cpp_generator import generate_domain_builder
+        from schema_model import (
+            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
+            PrimitiveSupertype,
+        )
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+            composites=[
+                ExportComposite("MixedContent", xml_name="MIXED-CONTENT",
+                                is_ordered=True,
+                                has_unnamed_string_member=True,
+                                members=[
+                                    ExportMember(None, ["string"],
+                                                 min_occurs=0, max_occurs=None),
+                                ]),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+        self.assertIn('".."', code)
+
+
+class TestArxmlParserGeneration(unittest.TestCase):
+    def test_generates_parser_module(self):
+        from cpp_generator import generate_arxml_module
+        from schema_model import ExportSchema
+
+        schema = ExportSchema(release_version="R23-11")
+        code = generate_arxml_module(schema)
+
+        # Module declaration
+        self.assertIn("export module senda.compiler.arxml", code)
+        # Expat include
+        self.assertIn("expat.h", code)
+        # Compiler interface
+        self.assertIn("class ArxmlCompiler", code)
+        self.assertIn("rupa::compiler::Compiler", code)
+        # SAX callbacks
+        self.assertIn("XML_SetElementHandler", code)
+        self.assertIn("XML_SetCharacterDataHandler", code)
+        # Extensions
+        self.assertIn(".arxml", code)
+
+    def test_parser_uses_autosar_schema(self):
+        from cpp_generator import generate_arxml_module
+        from schema_model import ExportSchema
+
+        schema = ExportSchema(release_version="R23-11")
+        code = generate_arxml_module(schema)
+
+        self.assertIn("AutosarSchema", code)
+        self.assertIn("tag_to_type", code)
+
+
+class TestFileGeneration(unittest.TestCase):
+    def test_generate_cpp_files_creates_domain_module(self):
+        import tempfile
+        from cpp_generator import generate_cpp_files
+        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            generate_cpp_files(schema, tmpdir)
+
+            domain_path = os.path.join(tmpdir, "domains", "senda.domains.cppm")
+            self.assertTrue(os.path.exists(domain_path))
+
+            with open(domain_path) as f:
+                content = f.read()
+            self.assertIn("export module senda.domains", content)
+            self.assertIn("AutosarSchema", content)
+
+    def test_generate_cpp_files_creates_parser_module(self):
+        import tempfile
+        from cpp_generator import generate_cpp_files
+        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            generate_cpp_files(schema, tmpdir)
+
+            parser_path = os.path.join(tmpdir, "compiler-arxml", "senda.compiler-arxml.cppm")
+            self.assertTrue(os.path.exists(parser_path))
+
+            with open(parser_path) as f:
+                content = f.read()
+            self.assertIn("export module senda.compiler.arxml", content)
+
+
 if __name__ == "__main__":
     unittest.main()

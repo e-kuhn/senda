@@ -188,6 +188,246 @@ def generate_domain_builder(schema: ExportSchema) -> str:
     return "\n".join(lines)
 
 
+def generate_arxml_module(schema: ExportSchema) -> str:
+    """Generate the complete senda.compiler-arxml.cppm SAX parser module."""
+    release = schema.release_version
+    domain = _domain_name(release)
+
+    return '''module;
+
+#include <cstring>
+#include <filesystem>
+#include <fstream>
+#include <span>
+#include <string>
+#include <string_view>
+#include <utility>
+#include <vector>
+#include <expat.h>
+
+export module senda.compiler.arxml;
+
+import rupa.compiler;
+import rupa.domain;
+import rupa.fir;
+import rupa.fir.builder;
+import senda.domains;
+
+export namespace senda
+{{
+
+class ArxmlCompiler : public rupa::compiler::Compiler {{
+public:
+    explicit ArxmlCompiler(const senda::domains::AutosarSchema& schema)
+        : schema_(schema) {{}}
+
+    std::span<const std::string_view> extensions() const override {{
+        return exts_;
+    }}
+
+    rupa::compiler::CompileResult compile(
+        const std::filesystem::path& path,
+        rupa::compiler::CompileContext& context) override
+    {{
+        rupa::compiler::Diagnostics diags;
+
+        // Read file content
+        std::ifstream file(path, std::ios::binary | std::ios::ate);
+        if (!file) {{
+            diags.add({{rupa::compiler::Severity::Error,
+                       "cannot open file: " + path.string(),
+                       {{path.string(), 0, 0}}}});
+            return rupa::compiler::CompileResult(
+                fir::Fir{{}}, rupa::compiler::DomainExtensions{{}}, std::move(diags));
+        }}
+        auto size = file.tellg();
+        file.seekg(0);
+        std::string content(static_cast<size_t>(size), '\\0');
+        file.read(content.data(), size);
+
+        // Create expat parser
+        XML_Parser parser = XML_ParserCreate(nullptr);
+        if (!parser) {{
+            diags.add({{rupa::compiler::Severity::Error,
+                       "failed to create XML parser",
+                       {{path.string(), 0, 0}}}});
+            return rupa::compiler::CompileResult(
+                fir::Fir{{}}, rupa::compiler::DomainExtensions{{}}, std::move(diags));
+        }}
+
+        // Set up parse state
+        fir::Fir fir;
+        rupa::fir_builder::FirBuilder builder(fir);
+
+        ParseState state{{
+            .schema = schema_,
+            .builder = builder,
+            .diags = diags,
+            .file_path = path.string(),
+        }};
+
+        XML_SetUserData(parser, &state);
+        XML_SetElementHandler(parser, on_start_element, on_end_element);
+        XML_SetCharacterDataHandler(parser, on_characters);
+
+        // Parse
+        if (XML_Parse(parser, content.data(), static_cast<int>(content.size()), XML_TRUE)
+            == XML_STATUS_ERROR) {{
+            diags.add({{rupa::compiler::Severity::Error,
+                       std::string("XML parse error: ")
+                           + XML_ErrorString(XML_GetErrorCode(parser))
+                           + " at line "
+                           + std::to_string(XML_GetCurrentLineNumber(parser)),
+                       {{path.string(),
+                         static_cast<uint32_t>(XML_GetCurrentLineNumber(parser)), 0}}}});
+        }}
+
+        XML_ParserFree(parser);
+
+        return rupa::compiler::CompileResult(
+            std::move(fir), rupa::compiler::DomainExtensions{{}}, std::move(diags));
+    }}
+
+private:
+    static constexpr std::string_view exts_arr_[] = {{".arxml"}};
+    std::span<const std::string_view> exts_{{exts_arr_}};
+    const senda::domains::AutosarSchema& schema_;
+
+    // --- SAX state machine ---
+
+    enum class FrameKind {{ Object, Property, Skip }};
+
+    struct Frame {{
+        FrameKind kind;
+        // Object frame
+        rupa::fir_builder::ObjectHandle obj{{}};
+        const senda::domains::TypeInfo* type_info = nullptr;
+        // Property frame
+        rupa::domain::RoleHandle role{{}};
+        rupa::fir_builder::ObjectHandle parent_obj{{}};
+        std::string text;
+        // Skip frame
+        int skip_depth = 0;
+    }};
+
+    struct ParseState {{
+        const senda::domains::AutosarSchema& schema;
+        rupa::fir_builder::FirBuilder& builder;
+        rupa::compiler::Diagnostics& diags;
+        std::string file_path;
+        std::vector<Frame> stack;
+    }};
+
+    static void XMLCALL on_start_element(void* user_data, const XML_Char* name,
+                                          const XML_Char** /*attrs*/) {{
+        auto& state = *static_cast<ParseState*>(user_data);
+        std::string_view tag(name);
+
+        // Strip namespace prefix if present (e.g., "AR:AUTOSAR" -> "AUTOSAR")
+        if (auto pos = tag.find(':'); pos != std::string_view::npos) {{
+            tag = tag.substr(pos + 1);
+        }}
+
+        // If top of stack is Skip, increment depth
+        if (!state.stack.empty() && state.stack.back().kind == FrameKind::Skip) {{
+            state.stack.back().skip_depth++;
+            return;
+        }}
+
+        // Try type lookup
+        auto* type_info = state.schema.tag_to_type.find(tag);
+        if (type_info) {{
+            // Known type element — create object
+            Frame frame{{}};
+            frame.kind = FrameKind::Object;
+            frame.type_info = type_info;
+            // Identity will be set when we see SHORT-NAME
+            frame.obj = {{}};  // deferred
+            state.stack.push_back(std::move(frame));
+            return;
+        }}
+
+        // If we're inside an Object frame, try role lookup
+        if (!state.stack.empty() && state.stack.back().kind == FrameKind::Object) {{
+            auto& parent = state.stack.back();
+            if (parent.type_info) {{
+                auto* role = parent.type_info->roles.find(tag);
+                if (role) {{
+                    Frame frame{{}};
+                    frame.kind = FrameKind::Property;
+                    frame.role = *role;
+                    frame.parent_obj = parent.obj;
+                    state.stack.push_back(std::move(frame));
+                    return;
+                }}
+            }}
+        }}
+
+        // If we're inside a Property frame, try type lookup (contained object)
+        if (!state.stack.empty() && state.stack.back().kind == FrameKind::Property) {{
+            auto* nested_type_info = state.schema.tag_to_type.find(tag);
+            if (nested_type_info) {{
+                Frame frame{{}};
+                frame.kind = FrameKind::Object;
+                frame.type_info = nested_type_info;
+                frame.obj = {{}};
+                state.stack.push_back(std::move(frame));
+                return;
+            }}
+        }}
+
+        // Unknown element — skip
+        Frame frame{{}};
+        frame.kind = FrameKind::Skip;
+        frame.skip_depth = 1;
+        state.stack.push_back(std::move(frame));
+    }}
+
+    static void XMLCALL on_end_element(void* user_data, const XML_Char* /*name*/) {{
+        auto& state = *static_cast<ParseState*>(user_data);
+
+        if (state.stack.empty()) return;
+
+        auto& frame = state.stack.back();
+
+        switch (frame.kind) {{
+        case FrameKind::Skip:
+            if (--frame.skip_depth > 0) return;
+            break;
+
+        case FrameKind::Property:
+            // If we captured text and have a valid parent object, add the property
+            if (!frame.text.empty() && frame.parent_obj.valid()) {{
+                state.builder.add_property(
+                    frame.parent_obj, rupa::fir_builder::RoleHandle{{frame.role.id}},
+                    std::string_view(frame.text));
+            }}
+            break;
+
+        case FrameKind::Object:
+            // Object finalization is implicit (FirBuilder tracks current object)
+            break;
+        }}
+
+        state.stack.pop_back();
+    }}
+
+    static void XMLCALL on_characters(void* user_data, const XML_Char* s, int len) {{
+        auto& state = *static_cast<ParseState*>(user_data);
+
+        if (state.stack.empty()) return;
+
+        auto& frame = state.stack.back();
+        if (frame.kind == FrameKind::Property) {{
+            frame.text.append(s, static_cast<size_t>(len));
+        }}
+    }}
+}};
+
+}}  // namespace senda
+'''
+
+
 def generate_domain_module(schema: ExportSchema, output_dir: str) -> None:
     """Generate the complete senda.domains.cppm module file."""
     header = '''module;
@@ -229,3 +469,23 @@ struct AutosarSchema {
         f.write(header)
         f.write(body)
         f.write(footer)
+
+
+def generate_cpp_files(schema: ExportSchema, output_dir: str) -> None:
+    """Generate all C++ files from the schema.
+
+    Args:
+        schema: The exported schema model.
+        output_dir: Base output directory (e.g., 'src/'). Files are written to:
+            - <output_dir>/domains/senda.domains.cppm
+            - <output_dir>/compiler-arxml/senda.compiler-arxml.cppm
+    """
+    generate_domain_module(schema, output_dir)
+
+    # Write parser module
+    parser_code = generate_arxml_module(schema)
+    parser_dir = os.path.join(output_dir, "compiler-arxml")
+    os.makedirs(parser_dir, exist_ok=True)
+    parser_path = os.path.join(parser_dir, "senda.compiler-arxml.cppm")
+    with open(parser_path, "w", encoding="utf-8") as f:
+        f.write(parser_code)
