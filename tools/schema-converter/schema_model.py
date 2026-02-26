@@ -27,6 +27,7 @@ class ExportMember:
     is_identity: bool = False
     doc: str | None = None
     instance_ref_role: str | None = None  # "context", "target", or None
+    xml_element_name: str | None = None
 
 
 @dataclass
@@ -36,6 +37,7 @@ class ExportPrimitive:
     pattern: str | None = None
     values: list[str] = field(default_factory=list)
     doc: str | None = None
+    xml_name: str | None = None
 
 
 @dataclass
@@ -45,6 +47,7 @@ class ExportEnum:
     is_subtypes_enum: bool = False
     doc: str | None = None
     value_docs: list[str | None] = field(default_factory=list)
+    xml_name: str | None = None
 
 
 @dataclass
@@ -58,6 +61,7 @@ class ExportComposite:
     inherits_from: list[str] = field(default_factory=list)
     doc: str | None = None
     is_instance_ref: bool = False
+    xml_name: str | None = None
 
 
 @dataclass
