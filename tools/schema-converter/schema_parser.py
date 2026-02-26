@@ -1306,6 +1306,7 @@ def _export_member(mem: InternalMember, schema: InternalSchema) -> ExportMember:
         max_occurs=mem.max_occurs,
         is_identity=is_identity,
         doc=mem.doc,
+        xml_element_name=mem.xml_element_name,
     )
 
 
@@ -1368,6 +1369,7 @@ def _export_composite(
         inherits_from=_resolve_inherits_from(comp, schema),
         doc=comp.doc,
         is_instance_ref=is_instance_ref,
+        xml_name=comp.xml_name,
     )
 
 
@@ -1386,7 +1388,8 @@ def _export_primitive(
     xml_to_name: dict[str, str],
 ) -> ExportPrimitive:
     supertype = _SUPERTYPE_BY_NAME.get(prim.name, PrimitiveSupertype.STRING)
-    return ExportPrimitive(name=prim.name, supertype=supertype, doc=prim.doc)
+    return ExportPrimitive(name=prim.name, supertype=supertype, doc=prim.doc,
+                           xml_name=prim.xml_name)
 
 
 def _export_alias(
@@ -1403,23 +1406,26 @@ def _export_alias(
             pattern=cleaned_pattern,
             values=values,
             doc=alias.doc,
+            xml_name=alias.xml_name,
         )
     elif alias.name != alias.target:
         # Resolve target to PascalCase name for lookup in primitive_by_name
         target_name = xml_to_name.get(alias.target, alias.target)
         aliases_map[alias.name] = target_name
-    return ExportPrimitive(name=alias.name, doc=alias.doc)
+    return ExportPrimitive(name=alias.name, doc=alias.doc, xml_name=alias.xml_name)
 
 
 def _export_enum(enum: InternalEnumeration) -> ExportEnum:
     return ExportEnum(
         name=enum.name, values=enum.values, is_subtypes_enum=False,
         doc=enum.doc, value_docs=enum.value_docs,
+        xml_name=enum.xml_name,
     )
 
 
 def _export_subtypes_enum(st: InternalSubTypesEnum) -> ExportEnum:
-    return ExportEnum(name=st.name, values=st.types, is_subtypes_enum=True, doc=st.doc)
+    return ExportEnum(name=st.name, values=st.types, is_subtypes_enum=True, doc=st.doc,
+                      xml_name=st.xml_name)
 
 
 def export_schema(internal: InternalSchema) -> ExportSchema:
