@@ -33,9 +33,26 @@ def _multiplicity(min_occurs: int | None, max_occurs: int | None) -> str:
     return "fir::Multiplicity::OneOrMore"
 
 
+_CPP_KEYWORDS = frozenset({
+    "auto", "bool", "break", "case", "catch", "char", "class", "const",
+    "continue", "default", "delete", "do", "double", "else", "enum",
+    "extern", "false", "float", "for", "goto", "if", "inline", "int",
+    "long", "namespace", "new", "nullptr", "operator", "private",
+    "protected", "public", "register", "return", "short", "signed",
+    "sizeof", "static", "struct", "switch", "template", "this", "throw",
+    "true", "try", "typedef", "union", "unsigned", "using", "virtual",
+    "void", "volatile", "while",
+})
+
+
+def _safe_var(name: str) -> str:
+    """Append underscore to C++ reserved keywords."""
+    return name + "_" if name in _CPP_KEYWORDS else name
+
+
 def _type_var(name: str) -> str:
     """Generate a C++ variable name for a type (snake_case)."""
-    return pascal_to_snake(name)
+    return _safe_var(pascal_to_snake(name))
 
 
 def _prim_var(name: str) -> str:
@@ -149,12 +166,14 @@ def generate_domain_builder(schema: ExportSchema) -> str:
 
                 mult = _multiplicity(m.min_occurs, m.max_occurs)
 
-                w('    auto %s = b.add_role(%s, "%s", %s, %s);'
-                  % (rvar, cvar, role_name, target_type, mult))
-
                 xml_elem = m.xml_element_name
                 if xml_elem:
+                    w('    auto %s = b.add_role(%s, "%s", %s, %s);'
+                      % (rvar, cvar, role_name, target_type, mult))
                     role_handles[c.name].append((rvar, xml_elem, role_name))
+                else:
+                    w('    b.add_role(%s, "%s", %s, %s);'
+                      % (cvar, role_name, target_type, mult))
             if c.members:
                 w("")
 
@@ -171,10 +190,10 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         roles = role_handles.get(c.name, [])
 
         w("    {")
-        w("        TypeInfo info{%s, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(%d)};"
+        w("        TypeInfo info{{%s.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(%d)};"
           % (cvar, len(roles)))
         for rvar, xml_elem, _role_name in roles:
-            w('        info.roles.add("%s", %s);' % (xml_elem, rvar))
+            w('        info.roles.add("%s", rupa::domain::RoleHandle{%s.id});' % (xml_elem, rvar))
         w("        info.roles.freeze();")
         w('        tag_to_type.add("%s", std::move(info));' % c.xml_name)
         w("    }")
@@ -425,7 +444,7 @@ private:
 }};
 
 }}  // namespace senda
-'''
+'''.format()
 
 
 def generate_domain_module(schema: ExportSchema, output_dir: str) -> None:

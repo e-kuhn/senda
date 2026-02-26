@@ -1,15 +1,14 @@
 module;
 
-#include <algorithm>
-#include <cctype>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <span>
-#include <sstream>
 #include <string>
 #include <string_view>
 #include <utility>
-#include <pugixml.hpp>
+#include <vector>
+#include <expat.h>
 
 export module senda.compiler.arxml;
 
@@ -17,12 +16,16 @@ import rupa.compiler;
 import rupa.domain;
 import rupa.fir;
 import rupa.fir.builder;
+import senda.domains;
 
 export namespace senda
 {
 
 class ArxmlCompiler : public rupa::compiler::Compiler {
 public:
+    explicit ArxmlCompiler(const senda::domains::AutosarSchema& schema)
+        : schema_(schema) {}
+
     std::span<const std::string_view> extensions() const override {
         return exts_;
     }
@@ -33,47 +36,58 @@ public:
     {
         rupa::compiler::Diagnostics diags;
 
-        // Parse XML
-        pugi::xml_document doc;
-        auto parse_result = doc.load_file(path.c_str());
-        if (!parse_result) {
+        // Read file content
+        std::ifstream file(path, std::ios::binary | std::ios::ate);
+        if (!file) {
             diags.add({rupa::compiler::Severity::Error,
-                       std::string("XML parse error: ") + parse_result.description(),
+                       "cannot open file: " + path.string(),
+                       {path.string(), 0, 0}});
+            return rupa::compiler::CompileResult(
+                fir::Fir{}, rupa::compiler::DomainExtensions{}, std::move(diags));
+        }
+        auto size = file.tellg();
+        file.seekg(0);
+        std::string content(static_cast<size_t>(size), '\0');
+        file.read(content.data(), size);
+
+        // Create expat parser
+        XML_Parser parser = XML_ParserCreate(nullptr);
+        if (!parser) {
+            diags.add({rupa::compiler::Severity::Error,
+                       "failed to create XML parser",
                        {path.string(), 0, 0}});
             return rupa::compiler::CompileResult(
                 fir::Fir{}, rupa::compiler::DomainExtensions{}, std::move(diags));
         }
 
-        // Find root AUTOSAR element (with or without namespace)
-        auto root = doc.child("AUTOSAR");
-        if (!root) {
-            // Try with namespace prefix
-            root = doc.child("AR:AUTOSAR");
-        }
-        if (!root) {
-            diags.add({rupa::compiler::Severity::Error,
-                       "missing <AUTOSAR> root element",
-                       {path.string(), 0, 0}});
-            return rupa::compiler::CompileResult(
-                fir::Fir{}, rupa::compiler::DomainExtensions{}, std::move(diags));
-        }
-
-        // Request the AUTOSAR domain
-        const rupa::domain::DomainView* domain = context.request_domain("autosar-r23-11");
-        if (!domain) {
-            diags.add({rupa::compiler::Severity::Error,
-                       "AUTOSAR domain 'autosar-r23-11' not available",
-                       {path.string(), 0, 0}});
-            return rupa::compiler::CompileResult(
-                fir::Fir{}, rupa::compiler::DomainExtensions{}, std::move(diags));
-        }
-
-        // Build FIR from ARXML content
+        // Set up parse state
         fir::Fir fir;
         rupa::fir_builder::FirBuilder builder(fir);
 
-        // Walk AR-PACKAGES recursively
-        walk_packages(root, builder, context, *domain, diags, path.string());
+        ParseState state{
+            .schema = schema_,
+            .builder = builder,
+            .diags = diags,
+            .file_path = path.string(),
+        };
+
+        XML_SetUserData(parser, &state);
+        XML_SetElementHandler(parser, on_start_element, on_end_element);
+        XML_SetCharacterDataHandler(parser, on_characters);
+
+        // Parse
+        if (XML_Parse(parser, content.data(), static_cast<int>(content.size()), XML_TRUE)
+            == XML_STATUS_ERROR) {
+            diags.add({rupa::compiler::Severity::Error,
+                       std::string("XML parse error: ")
+                           + XML_ErrorString(XML_GetErrorCode(parser))
+                           + " at line "
+                           + std::to_string(XML_GetCurrentLineNumber(parser)),
+                       {path.string(),
+                         static_cast<uint32_t>(XML_GetCurrentLineNumber(parser)), 0}});
+        }
+
+        XML_ParserFree(parser);
 
         return rupa::compiler::CompileResult(
             std::move(fir), rupa::compiler::DomainExtensions{}, std::move(diags));
@@ -82,146 +96,135 @@ public:
 private:
     static constexpr std::string_view exts_arr_[] = {".arxml"};
     std::span<const std::string_view> exts_{exts_arr_};
+    const senda::domains::AutosarSchema& schema_;
 
-    /// Convert AUTOSAR XML tag name (UPPER-KEBAB-CASE) to PascalCase type name.
-    /// e.g. "I-SIGNAL" -> "ISignal", "ECU-INSTANCE" -> "EcuInstance"
-    static std::string tag_to_type_name(std::string_view tag) {
-        std::string result;
-        result.reserve(tag.size());
-        bool capitalize_next = true;
-        for (char c : tag) {
-            if (c == '-') {
-                capitalize_next = true;
-            } else if (capitalize_next) {
-                result += static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
-                capitalize_next = false;
-            } else {
-                result += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
-            }
+    // --- SAX state machine ---
+
+    enum class FrameKind { Object, Property, Skip };
+
+    struct Frame {
+        FrameKind kind;
+        // Object frame
+        rupa::fir_builder::ObjectHandle obj{};
+        const senda::domains::TypeInfo* type_info = nullptr;
+        // Property frame
+        rupa::domain::RoleHandle role{};
+        rupa::fir_builder::ObjectHandle parent_obj{};
+        std::string text;
+        // Skip frame
+        int skip_depth = 0;
+    };
+
+    struct ParseState {
+        const senda::domains::AutosarSchema& schema;
+        rupa::fir_builder::FirBuilder& builder;
+        rupa::compiler::Diagnostics& diags;
+        std::string file_path;
+        std::vector<Frame> stack;
+    };
+
+    static void XMLCALL on_start_element(void* user_data, const XML_Char* name,
+                                          const XML_Char** /*attrs*/) {
+        auto& state = *static_cast<ParseState*>(user_data);
+        std::string_view tag(name);
+
+        // Strip namespace prefix if present (e.g., "AR:AUTOSAR" -> "AUTOSAR")
+        if (auto pos = tag.find(':'); pos != std::string_view::npos) {
+            tag = tag.substr(pos + 1);
         }
-        return result;
-    }
 
-    /// Convert AUTOSAR XML child tag name to camelCase role name.
-    /// e.g. "SHORT-NAME" -> "shortName", "I-SIGNAL-TYPE" -> "iSignalType"
-    static std::string tag_to_role_name(std::string_view tag) {
-        std::string result;
-        result.reserve(tag.size());
-        bool capitalize_next = false;
-        bool first_word = true;
-        for (char c : tag) {
-            if (c == '-') {
-                capitalize_next = true;
-            } else if (capitalize_next) {
-                if (first_word) {
-                    result += static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
-                } else {
-                    result += static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+        // If top of stack is Skip, increment depth
+        if (!state.stack.empty() && state.stack.back().kind == FrameKind::Skip) {
+            state.stack.back().skip_depth++;
+            return;
+        }
+
+        // Try type lookup
+        auto* type_info = state.schema.tag_to_type.find(tag);
+        if (type_info) {
+            // Known type element — create object
+            Frame frame{};
+            frame.kind = FrameKind::Object;
+            frame.type_info = type_info;
+            // Identity will be set when we see SHORT-NAME
+            frame.obj = {};  // deferred
+            state.stack.push_back(std::move(frame));
+            return;
+        }
+
+        // If we're inside an Object frame, try role lookup
+        if (!state.stack.empty() && state.stack.back().kind == FrameKind::Object) {
+            auto& parent = state.stack.back();
+            if (parent.type_info) {
+                auto* role = parent.type_info->roles.find(tag);
+                if (role) {
+                    Frame frame{};
+                    frame.kind = FrameKind::Property;
+                    frame.role = *role;
+                    frame.parent_obj = parent.obj;
+                    state.stack.push_back(std::move(frame));
+                    return;
                 }
-                capitalize_next = false;
-                first_word = false;
-            } else {
-                result += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
-                first_word = false;
             }
         }
-        return result;
+
+        // If we're inside a Property frame, try type lookup (contained object)
+        if (!state.stack.empty() && state.stack.back().kind == FrameKind::Property) {
+            auto* nested_type_info = state.schema.tag_to_type.find(tag);
+            if (nested_type_info) {
+                Frame frame{};
+                frame.kind = FrameKind::Object;
+                frame.type_info = nested_type_info;
+                frame.obj = {};
+                state.stack.push_back(std::move(frame));
+                return;
+            }
+        }
+
+        // Unknown element — skip
+        Frame frame{};
+        frame.kind = FrameKind::Skip;
+        frame.skip_depth = 1;
+        state.stack.push_back(std::move(frame));
     }
 
-    void walk_packages(
-        pugi::xml_node parent,
-        rupa::fir_builder::FirBuilder& builder,
-        rupa::compiler::CompileContext& context,
-        const rupa::domain::DomainView& domain,
-        rupa::compiler::Diagnostics& diags,
-        const std::string& file_path)
-    {
-        for (auto pkg : parent.children("AR-PACKAGES")) {
-            for (auto ar_pkg : pkg.children("AR-PACKAGE")) {
-                walk_package(ar_pkg, builder, context, domain, diags, file_path);
+    static void XMLCALL on_end_element(void* user_data, const XML_Char* /*name*/) {
+        auto& state = *static_cast<ParseState*>(user_data);
+
+        if (state.stack.empty()) return;
+
+        auto& frame = state.stack.back();
+
+        switch (frame.kind) {
+        case FrameKind::Skip:
+            if (--frame.skip_depth > 0) return;
+            break;
+
+        case FrameKind::Property:
+            // If we captured text and have a valid parent object, add the property
+            if (!frame.text.empty() && frame.parent_obj.valid()) {
+                state.builder.add_property(
+                    frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
+                    std::string_view(frame.text));
             }
+            break;
+
+        case FrameKind::Object:
+            // Object finalization is implicit (FirBuilder tracks current object)
+            break;
         }
-        // Also handle direct AR-PACKAGE children (flat structure)
-        for (auto ar_pkg : parent.children("AR-PACKAGE")) {
-            walk_package(ar_pkg, builder, context, domain, diags, file_path);
-        }
+
+        state.stack.pop_back();
     }
 
-    void walk_package(
-        pugi::xml_node pkg,
-        rupa::fir_builder::FirBuilder& builder,
-        rupa::compiler::CompileContext& context,
-        const rupa::domain::DomainView& domain,
-        rupa::compiler::Diagnostics& diags,
-        const std::string& file_path)
-    {
-        // Process ELEMENTS in this package
-        auto elements = pkg.child("ELEMENTS");
-        if (elements) {
-            for (auto elem : elements.children()) {
-                process_element(elem, builder, domain, diags, file_path);
-            }
-        }
+    static void XMLCALL on_characters(void* user_data, const XML_Char* s, int len) {
+        auto& state = *static_cast<ParseState*>(user_data);
 
-        // Recurse into sub-packages
-        walk_packages(pkg, builder, context, domain, diags, file_path);
-    }
+        if (state.stack.empty()) return;
 
-    void process_element(
-        pugi::xml_node elem,
-        rupa::fir_builder::FirBuilder& builder,
-        const rupa::domain::DomainView& domain,
-        rupa::compiler::Diagnostics& diags,
-        const std::string& file_path)
-    {
-        auto tag = std::string_view(elem.name());
-        auto type_name = tag_to_type_name(tag);
-
-        // Look up type in domain
-        auto type_handle = domain.find_type(type_name);
-        if (!type_handle.valid()) {
-            diags.add({rupa::compiler::Severity::Warning,
-                       "unknown AUTOSAR type: " + type_name + " (from <" + std::string(tag) + ">)",
-                       {file_path, 0, 0}});
-            return;
-        }
-
-        // Get SHORT-NAME for identity
-        auto short_name_node = elem.child("SHORT-NAME");
-        std::string identity = short_name_node
-            ? short_name_node.text().as_string()
-            : "";
-
-        if (identity.empty()) {
-            diags.add({rupa::compiler::Severity::Warning,
-                       "element <" + std::string(tag) + "> has no SHORT-NAME",
-                       {file_path, 0, 0}});
-            return;
-        }
-
-        // Create object instance
-        auto obj = builder.begin_object(identity, rupa::fir_builder::TypeHandle{type_handle.id});
-
-        // Map child elements to properties
-        for (auto child : elem.children()) {
-            auto child_tag = std::string_view(child.name());
-            if (child_tag == "SHORT-NAME") continue;  // already handled as identity
-
-            auto role_name = tag_to_role_name(child_tag);
-            auto role_handle = domain.find_role(type_handle, role_name);
-
-            if (!role_handle.valid()) {
-                // Skip unknown roles silently — ARXML has many elements
-                // we don't model yet
-                continue;
-            }
-
-            // Extract text content as string value
-            auto text = child.text().as_string();
-            if (text[0] != '\0') {
-                builder.add_property(obj, rupa::fir_builder::RoleHandle{role_handle.id},
-                                     std::string_view(text));
-            }
+        auto& frame = state.stack.back();
+        if (frame.kind == FrameKind::Property) {
+            frame.text.append(s, static_cast<size_t>(len));
         }
     }
 };
