@@ -21,9 +21,12 @@ int main(int argc, char* argv[]) {
 
     fs::path input_path(argv[1]);
 
+    // Build AUTOSAR schema (domain + lookup tables)
+    auto schema = senda::domains::build_autosar_r23_11();
+
     // Create compilers
     rupa::sema::RupaCompiler rupa_compiler;
-    senda::ArxmlCompiler arxml_compiler;
+    senda::ArxmlCompiler arxml_compiler(schema);
 
     // Register compilers
     rupa::compiler::CompilerRegistry registry;
@@ -33,8 +36,8 @@ int main(int argc, char* argv[]) {
     // Create driver
     rupa::driver::CompilationDriver driver(registry);
 
-    // Load pre-built AUTOSAR domain
-    driver.add_domain(senda::domains::build_autosar_r23_11());
+    // Load domain from schema
+    driver.add_domain(std::move(schema.domain));
 
     // Compile
     auto result = driver.compile(input_path);
