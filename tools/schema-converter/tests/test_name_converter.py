@@ -82,5 +82,31 @@ class TestMemberNameNormalize(unittest.TestCase):
         self.assertEqual(normalize_member_name("returnValueProvision"), "returnValueProvision")
 
 
+class TestPascalToSnake(unittest.TestCase):
+    def test_simple(self):
+        from name_converter import pascal_to_snake
+        self.assertEqual(pascal_to_snake("ISignal"), "i_signal")
+
+    def test_all_upper_prefix(self):
+        from name_converter import pascal_to_snake
+        self.assertEqual(pascal_to_snake("ARObject"), "ar_object")
+
+    def test_single_word(self):
+        from name_converter import pascal_to_snake
+        self.assertEqual(pascal_to_snake("Identifiable"), "identifiable")
+
+    def test_multiple_words(self):
+        from name_converter import pascal_to_snake
+        self.assertEqual(pascal_to_snake("EcuInstance"), "ecu_instance")
+
+    def test_consecutive_caps(self):
+        from name_converter import pascal_to_snake
+        self.assertEqual(pascal_to_snake("ISignalIPdu"), "i_signal_i_pdu")
+
+    def test_enum_suffix(self):
+        from name_converter import pascal_to_snake
+        self.assertEqual(pascal_to_snake("ISignalTypeEnum"), "i_signal_type_enum")
+
+
 if __name__ == "__main__":
     unittest.main()
