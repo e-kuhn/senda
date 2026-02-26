@@ -422,5 +422,16 @@ class TestFileGeneration(unittest.TestCase):
             self.assertIn("export module senda.compiler.arxml", content)
 
 
+class TestCLIIntegration(unittest.TestCase):
+    def test_cpp_flag_recognized(self):
+        import subprocess
+        result = subprocess.run(
+            ["python", "converter.py", "--help"],
+            capture_output=True, text=True,
+            cwd=os.path.join(os.path.dirname(__file__), ".."),
+        )
+        self.assertIn("--cpp", result.stdout)
+
+
 if __name__ == "__main__":
     unittest.main()
