@@ -278,11 +278,14 @@ public:
         fir::Fir fir;
         rupa::fir_builder::FirBuilder builder(fir);
 
+        (void)context;
+
         ParseState state{{
             .schema = schema_,
             .builder = builder,
             .diags = diags,
             .file_path = path.string(),
+            .stack = {{}},
         }};
 
         XML_SetUserData(parser, &state);
@@ -325,6 +328,7 @@ private:
         rupa::domain::RoleHandle role{{}};
         rupa::fir_builder::ObjectHandle parent_obj{{}};
         std::string text;
+        bool is_identity = false;  // true for SHORT-NAME capture
         // Skip frame
         int skip_depth = 0;
     }};
@@ -366,9 +370,19 @@ private:
             return;
         }}
 
-        // If we're inside an Object frame, try role lookup
+        // If we're inside an Object frame, check for SHORT-NAME or role lookup
         if (!state.stack.empty() && state.stack.back().kind == FrameKind::Object) {{
             auto& parent = state.stack.back();
+
+            // SHORT-NAME provides the identity for the parent object
+            if (tag == "SHORT-NAME" && !parent.obj.valid()) {{
+                Frame frame{{}};
+                frame.kind = FrameKind::Property;
+                frame.is_identity = true;
+                state.stack.push_back(std::move(frame));
+                return;
+            }}
+
             if (parent.type_info) {{
                 auto* role = parent.type_info->roles.find(tag);
                 if (role) {{
@@ -415,8 +429,19 @@ private:
             break;
 
         case FrameKind::Property:
-            // If we captured text and have a valid parent object, add the property
-            if (!frame.text.empty() && frame.parent_obj.valid()) {{
+            if (frame.is_identity && !frame.text.empty()) {{
+                // SHORT-NAME captured — create the parent object
+                if (state.stack.size() >= 2) {{
+                    auto& parent = state.stack[state.stack.size() - 2];
+                    if (parent.kind == FrameKind::Object && parent.type_info
+                        && !parent.obj.valid()) {{
+                        parent.obj = state.builder.begin_object(
+                            std::string_view(frame.text),
+                            rupa::fir_builder::TypeHandle{{parent.type_info->handle.id}});
+                    }}
+                }}
+            }} else if (!frame.text.empty() && frame.parent_obj.valid()) {{
+                // Regular property — add to parent object
                 state.builder.add_property(
                     frame.parent_obj, rupa::fir_builder::RoleHandle{{frame.role.id}},
                     std::string_view(frame.text));
