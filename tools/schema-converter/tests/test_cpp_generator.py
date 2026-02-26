@@ -137,5 +137,159 @@ class TestExportPopulatesXmlNames(unittest.TestCase):
                          "ACCESS-CONTROL-ENUM--SIMPLE")
 
 
+class TestDomainBuilderPrimitives(unittest.TestCase):
+    def test_generates_primitive_types(self):
+        from cpp_generator import generate_domain_builder
+        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+                ExportPrimitive("integer", PrimitiveSupertype.INTEGER, xml_name="integer"),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+        self.assertIn('b.begin_type("string", fir::M3Kind::Primitive)', code)
+        self.assertIn('b.begin_type("integer", fir::M3Kind::Primitive)', code)
+
+    def test_generates_enum_types(self):
+        from cpp_generator import generate_domain_builder
+        from schema_model import ExportSchema, ExportEnum
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            enums=[
+                ExportEnum("ISignalTypeEnum", ["PRIMITIVE", "STRUCTURE"],
+                           xml_name="I-SIGNAL-TYPE-ENUM--SIMPLE"),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+        self.assertIn('b.begin_type("ISignalTypeEnum", fir::M3Kind::Enum)', code)
+        self.assertIn('b.add_enum_value(i_signal_type_enum, "PRIMITIVE")', code)
+        self.assertIn('b.add_enum_value(i_signal_type_enum, "STRUCTURE")', code)
+
+
+class TestDomainBuilderComposites(unittest.TestCase):
+    def test_generates_composite_types(self):
+        from cpp_generator import generate_domain_builder
+        from schema_model import (
+            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
+            PrimitiveSupertype,
+        )
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+            composites=[
+                ExportComposite("Identifiable", is_abstract=True,
+                                xml_name="IDENTIFIABLE",
+                                members=[
+                                    ExportMember("shortName", ["string"],
+                                                 min_occurs=1, max_occurs=1,
+                                                 xml_element_name="SHORT-NAME"),
+                                ]),
+                ExportComposite("ISignal", inherits_from=["Identifiable"],
+                                xml_name="I-SIGNAL",
+                                members=[
+                                    ExportMember("shortName", ["string"],
+                                                 min_occurs=1, max_occurs=1,
+                                                 xml_element_name="SHORT-NAME"),
+                                    ExportMember("length", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="LENGTH"),
+                                ]),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+
+        # Phase 1: Type declarations
+        self.assertIn('b.begin_type("Identifiable", fir::M3Kind::Composite)', code)
+        self.assertIn('b.begin_type("ISignal", fir::M3Kind::Composite)', code)
+
+        # Phase 2: Supertypes
+        self.assertIn('b.set_supertype(i_signal, identifiable)', code)
+
+        # Phase 3: Abstract
+        self.assertIn('b.set_abstract(identifiable, true)', code)
+
+        # Phase 4: Roles
+        self.assertIn('b.add_role(identifiable, "shortName", string_t', code)
+        self.assertIn('b.add_role(i_signal, "shortName", string_t', code)
+        self.assertIn('b.add_role(i_signal, "length", string_t', code)
+
+    def test_generates_lookup_tables(self):
+        from cpp_generator import generate_domain_builder
+        from schema_model import (
+            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
+            PrimitiveSupertype,
+        )
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+            composites=[
+                ExportComposite("ISignal", xml_name="I-SIGNAL",
+                                members=[
+                                    ExportMember("shortName", ["string"],
+                                                 min_occurs=1, max_occurs=1,
+                                                 xml_element_name="SHORT-NAME"),
+                                ]),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+
+        # Tag-to-type lookup
+        self.assertIn('tag_to_type.add("I-SIGNAL"', code)
+        # Per-type role lookup
+        self.assertIn('"SHORT-NAME"', code)
+        self.assertIn('tag_to_type.freeze()', code)
+
+    def test_multiplicity_mapping(self):
+        from cpp_generator import generate_domain_builder
+        from schema_model import (
+            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
+            PrimitiveSupertype,
+        )
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+            composites=[
+                ExportComposite("TestType", xml_name="TEST-TYPE",
+                                members=[
+                                    ExportMember("required", ["string"],
+                                                 min_occurs=1, max_occurs=1,
+                                                 xml_element_name="REQUIRED"),
+                                    ExportMember("optional", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="OPTIONAL"),
+                                    ExportMember("many", ["string"],
+                                                 min_occurs=0, max_occurs=None,
+                                                 xml_element_name="MANY"),
+                                    ExportMember("oneOrMore", ["string"],
+                                                 min_occurs=1, max_occurs=None,
+                                                 xml_element_name="ONE-OR-MORE"),
+                                ]),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+        self.assertIn("fir::Multiplicity::One", code)
+        self.assertIn("fir::Multiplicity::Optional", code)
+        self.assertIn("fir::Multiplicity::Many", code)
+        self.assertIn("fir::Multiplicity::OneOrMore", code)
+
+
 if __name__ == "__main__":
     unittest.main()
