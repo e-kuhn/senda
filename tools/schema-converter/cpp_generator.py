@@ -13,61 +13,14 @@ from schema_model import (
     ExportMember, PrimitiveSupertype,
 )
 from name_converter import pascal_to_snake
-
-
-def _multiplicity(min_occurs: int | None, max_occurs: int | None) -> str:
-    """Map (min, max) to fir::Multiplicity enum value."""
-    mn = min_occurs if min_occurs is not None else 0
-    mx = max_occurs  # None = unbounded
-    if mn == 1 and mx == 1:
-        return "fir::Multiplicity::One"
-    if mn == 0 and mx == 1:
-        return "fir::Multiplicity::Optional"
-    if mn == 0 and mx is None:
-        return "fir::Multiplicity::Many"
-    if mn == 1 and mx is None:
-        return "fir::Multiplicity::OneOrMore"
-    # For explicit ranges, use closest approximation
-    if mn == 0:
-        return "fir::Multiplicity::Many"
-    return "fir::Multiplicity::OneOrMore"
-
-
-_CPP_KEYWORDS = frozenset({
-    "auto", "bool", "break", "case", "catch", "char", "class", "const",
-    "continue", "default", "delete", "do", "double", "else", "enum",
-    "extern", "false", "float", "for", "goto", "if", "inline", "int",
-    "long", "namespace", "new", "nullptr", "operator", "private",
-    "protected", "public", "register", "return", "short", "signed",
-    "sizeof", "static", "struct", "switch", "template", "this", "throw",
-    "true", "try", "typedef", "union", "unsigned", "using", "virtual",
-    "void", "volatile", "while",
-})
-
-
-def _safe_var(name: str) -> str:
-    """Append underscore to C++ reserved keywords."""
-    return name + "_" if name in _CPP_KEYWORDS else name
-
-
-def _type_var(name: str) -> str:
-    """Generate a C++ variable name for a type (snake_case)."""
-    return _safe_var(pascal_to_snake(name))
-
-
-def _prim_var(name: str) -> str:
-    """Variable name for a primitive type (snake_case + _t suffix)."""
-    return pascal_to_snake(name) + "_t"
-
-
-def _role_var(type_var: str, index: int) -> str:
-    """Variable name for a role handle."""
-    return f"{type_var}_r{index}"
-
-
-def _domain_name(release_version: str) -> str:
-    """Convert release version to domain name: R23-11 -> autosar-r23-11."""
-    return "autosar-" + release_version.lower()
+from cpp_helpers import (
+    multiplicity_str as _multiplicity,
+    safe_var as _safe_var,
+    type_var as _type_var,
+    prim_var as _prim_var,
+    role_var as _role_var,
+    domain_name as _domain_name,
+)
 
 
 def generate_domain_builder(schema: ExportSchema) -> str:
@@ -211,6 +164,7 @@ def generate_arxml_module(schema: ExportSchema) -> str:
     """Generate the complete senda.compiler-arxml.cppm SAX parser module."""
     release = schema.release_version
     domain = _domain_name(release)
+    module_version = release.lower().replace("-", "_")  # "r23_11"
 
     return '''module;
 
@@ -230,7 +184,7 @@ import rupa.compiler;
 import rupa.domain;
 import rupa.fir;
 import rupa.fir.builder;
-import senda.domains;
+import senda.domains.{module_version};
 
 export namespace senda
 {{
@@ -469,17 +423,21 @@ private:
 }};
 
 }}  // namespace senda
-'''.format()
+'''.format(module_version=module_version)
 
 
 def generate_domain_module(schema: ExportSchema, output_dir: str) -> None:
-    """Generate the complete senda.domains.cppm module file."""
+    """Generate a version-specific domain module file."""
+    release = schema.release_version
+    version_slug = release.lower()           # "r23-11"
+    module_version = version_slug.replace("-", "_")  # "r23_11"
+
     header = '''module;
 
 #include <string_view>
 #include <utility>
 
-export module senda.domains;
+export module senda.domains.%s;
 
 import kore.containers.frozen_map;
 import rupa.fir;
@@ -499,7 +457,7 @@ struct AutosarSchema {
     kore::FrozenMap<std::string_view, TypeInfo> tag_to_type;
 };
 
-'''
+''' % module_version
 
     body = generate_domain_builder(schema)
 
@@ -507,7 +465,8 @@ struct AutosarSchema {
 }  // namespace senda::domains
 '''
 
-    path = os.path.join(output_dir, "domains", "senda.domains.cppm")
+    filename = "senda.domains.%s.cppm" % version_slug
+    path = os.path.join(output_dir, "domains", filename)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(header)

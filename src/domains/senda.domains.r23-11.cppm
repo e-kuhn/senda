@@ -3,7 +3,7 @@ module;
 #include <string_view>
 #include <utility>
 
-export module senda.domains;
+export module senda.domains.r23_11;
 
 import kore.containers.frozen_map;
 import rupa.fir;
