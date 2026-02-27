@@ -11,14 +11,20 @@ export import rupa.domain;
 export namespace senda::domains
 {
 
+struct RoleInfo {
+    rupa::domain::RoleHandle role;
+    uint32_t target_type_id;  // fir::Id of the target type (for handle_to_type lookup)
+};
+
 struct TypeInfo {
     rupa::domain::TypeHandle handle;
-    kore::FrozenMap<std::string_view, rupa::domain::RoleHandle> roles;
+    kore::FrozenMap<std::string_view, RoleInfo> roles;
 };
 
 struct AutosarSchema {
     rupa::domain::Domain domain;
     kore::FrozenMap<std::string_view, TypeInfo> tag_to_type;
+    kore::FrozenMap<uint32_t, const TypeInfo*> handle_to_type;
     std::string_view xsd_filename;
 };
 
