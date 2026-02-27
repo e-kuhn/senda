@@ -138,17 +138,79 @@ def generate_domain_builder(schema: ExportSchema) -> str:
             if c.members:
                 w("")
 
-    # --- Collect inherited roles ---
+    # --- Collect inherited + inlined (composition-hoisted) roles ---
     composite_by_name: dict[str, ExportComposite] = {c.name: c for c in composites}
 
-    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str]]:
-        """Collect roles from a type and all ancestors (own roles first)."""
+    # Build a map from type name to its members (for composition detection)
+    members_by_type: dict[str, list[ExportMember]] = {c.name: c.members for c in composites}
+
+    def _inlined_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str]]:
+        """Collect roles hoisted from composition members without xml_element_name.
+
+        When a type has a composition member (no xml_element_name) pointing to
+        a composite type, that target type's XML children appear directly in
+        the parent's XML.  We hoist those roles into the parent's lookup table.
+
+        Handles transitive chains and cycles via visited-set tracking.
+        """
+        if visited is None:
+            visited = set()
+        if cname in visited:
+            return []
+        visited.add(cname)
+        result: list[tuple[str, str, str, str]] = []
+        for m in members_by_type.get(cname, []):
+            if m.xml_element_name is not None:
+                continue  # Has its own XML tag — not a composition-inline
+            if not m.types:
+                continue
+            target = m.types[0]
+            if target not in composite_by_name:
+                continue  # Points to a primitive/enum, not a composite
+            # Hoist direct roles from the target type
+            for role in role_handles.get(target, []):
+                result.append(role)
+            # Recursively hoist from the target's own composition members
+            for role in _inlined_roles(target, visited):
+                result.append(role)
+            # Also hoist inherited roles from the target's ancestors
+            target_comp = composite_by_name.get(target)
+            if target_comp:
+                for parent in target_comp.inherits_from:
+                    for role in _all_roles_no_inline(parent, set(visited)):
+                        result.append(role)
+        return result
+
+    def _all_roles_no_inline(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str]]:
+        """Collect roles from a type and all ancestors (no composition inlining)."""
         if visited is None:
             visited = set()
         if cname in visited:
             return []
         visited.add(cname)
         result = list(role_handles.get(cname, []))
+        comp = composite_by_name.get(cname)
+        if comp:
+            for parent in comp.inherits_from:
+                for role in _all_roles_no_inline(parent, visited):
+                    if role[1] not in {r[1] for r in result}:
+                        result.append(role)
+        return result
+
+    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str]]:
+        """Collect roles from a type, all ancestors, and inlined compositions (own roles first)."""
+        if visited is None:
+            visited = set()
+        if cname in visited:
+            return []
+        visited.add(cname)
+        result = list(role_handles.get(cname, []))
+        # Hoist roles from composition members (no xml_element_name)
+        # Pass a fresh visited set — _inlined_roles manages its own cycle detection
+        for role in _inlined_roles(cname):
+            if role[1] not in {r[1] for r in result}:
+                result.append(role)
+        # Inherit roles from parent types
         comp = composite_by_name.get(cname)
         if comp:
             for parent in comp.inherits_from:

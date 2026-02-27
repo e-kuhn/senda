@@ -558,6 +558,182 @@ class TestFileGeneration(unittest.TestCase):
             self.assertIn("export module senda.domains.r23_11", content)
             self.assertIn("AutosarSchema", content)
 
+class TestCompositionRoleHoisting(unittest.TestCase):
+    """RC1: Composition members without xml_element_name should have their
+    target type's roles hoisted into the parent's lookup table."""
+
+    @staticmethod
+    def _extract_lookup_block(code, xml_tag):
+        """Extract the lookup table block for a given XML tag name."""
+        lines = code.split("\n")
+        block_lines = []
+        capturing = False
+        brace_depth = 0
+        for line in lines:
+            if not capturing and line.strip() == "{":
+                capturing = True
+                brace_depth = 1
+                block_lines = [line]
+                continue
+            if capturing:
+                block_lines.append(line)
+                brace_depth += line.count("{") - line.count("}")
+                if brace_depth == 0:
+                    block = "\n".join(block_lines)
+                    if ('tag_to_type.add("%s"' % xml_tag) in block:
+                        return block
+                    capturing = False
+                    block_lines = []
+        return ""
+
+    def test_simple_composition_hoisting(self):
+        """A composition member without xml_element_name should hoist target roles."""
+        from cpp_generator import generate_domain_builder
+        from schema_model import (
+            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
+            PrimitiveSupertype,
+        )
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+            composites=[
+                # Target type: has roles with xml_element_name
+                ExportComposite("BaseTypeDirectDefinition", is_abstract=True,
+                                xml_name=None,
+                                members=[
+                                    ExportMember("baseTypeSize", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="BASE-TYPE-SIZE"),
+                                    ExportMember("baseTypeEncoding", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="BASE-TYPE-ENCODING"),
+                                ]),
+                # Parent type: has composition member without xml_element_name
+                ExportComposite("SwBaseType", xml_name="SW-BASE-TYPE",
+                                members=[
+                                    ExportMember("shortName", ["string"],
+                                                 min_occurs=1, max_occurs=1,
+                                                 xml_element_name="SHORT-NAME"),
+                                    # Composition member — no xml_element_name
+                                    ExportMember("baseTypeDirectDefinition",
+                                                 ["BaseTypeDirectDefinition"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name=None),
+                                ]),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+        block = self._extract_lookup_block(code, "SW-BASE-TYPE")
+
+        self.assertIn('"SHORT-NAME"', block,
+                      "Own role SHORT-NAME must be present")
+        self.assertIn('"BASE-TYPE-SIZE"', block,
+                      "Hoisted role BASE-TYPE-SIZE must be present")
+        self.assertIn('"BASE-TYPE-ENCODING"', block,
+                      "Hoisted role BASE-TYPE-ENCODING must be present")
+
+    def test_transitive_hoisting(self):
+        """Composition chains should hoist transitively (A -> B -> C)."""
+        from cpp_generator import generate_domain_builder
+        from schema_model import (
+            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
+            PrimitiveSupertype,
+        )
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+            composites=[
+                ExportComposite("Inner", is_abstract=True, xml_name=None,
+                                members=[
+                                    ExportMember("deepField", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="DEEP-FIELD"),
+                                ]),
+                ExportComposite("Middle", is_abstract=True, xml_name=None,
+                                members=[
+                                    ExportMember("midField", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="MID-FIELD"),
+                                    # Composition to Inner
+                                    ExportMember("inner", ["Inner"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name=None),
+                                ]),
+                ExportComposite("Outer", xml_name="OUTER",
+                                members=[
+                                    ExportMember("ownField", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="OWN-FIELD"),
+                                    # Composition to Middle
+                                    ExportMember("middle", ["Middle"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name=None),
+                                ]),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+        block = self._extract_lookup_block(code, "OUTER")
+
+        self.assertIn('"OWN-FIELD"', block)
+        self.assertIn('"MID-FIELD"', block,
+                      "One-level hoisted MID-FIELD must be present")
+        self.assertIn('"DEEP-FIELD"', block,
+                      "Two-level hoisted DEEP-FIELD must be present")
+
+    def test_cycle_detection(self):
+        """Circular composition references should not cause infinite recursion."""
+        from cpp_generator import generate_domain_builder
+        from schema_model import (
+            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
+            PrimitiveSupertype,
+        )
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+            composites=[
+                ExportComposite("DocBlock", xml_name="DOCUMENTATION-BLOCK",
+                                members=[
+                                    ExportMember("title", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="TITLE"),
+                                    # Composition to Note (which references back)
+                                    ExportMember("note", ["Note"],
+                                                 min_occurs=0, max_occurs=None,
+                                                 xml_element_name=None),
+                                ]),
+                ExportComposite("Note", xml_name="NOTE",
+                                members=[
+                                    ExportMember("text", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="TEXT"),
+                                    # Circular: back to DocBlock
+                                    ExportMember("docBlock", ["DocBlock"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name=None),
+                                ]),
+            ],
+        )
+
+        # Should not raise RecursionError
+        code = generate_domain_builder(schema)
+        block = self._extract_lookup_block(code, "DOCUMENTATION-BLOCK")
+
+        self.assertIn('"TITLE"', block, "Own role TITLE must be present")
+        self.assertIn('"TEXT"', block,
+                      "Hoisted role TEXT from Note must be present")
+
+
 class TestCLIIntegration(unittest.TestCase):
     def test_cpp_flag_recognized(self):
         import subprocess

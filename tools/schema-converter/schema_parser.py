@@ -649,22 +649,24 @@ def _get_sequence_variant_wrapped_element(
 def _get_sequence_choice_group(
     ct: InternalComplexType, choice_elem: ElementTree.Element
 ) -> bool:
-    """Handle choice containing a group ref."""
-    group = choice_elem.find("xsd:group", _XSD_NS)
-    if group is None or "ref" not in group.attrib:
+    """Handle choice containing one or more group refs."""
+    groups = choice_elem.findall("xsd:group", _XSD_NS)
+    groups = [g for g in groups if "ref" in g.attrib]
+    if not groups:
         return False
 
-    xml_types = [drop_ar_prefix(group.attrib["ref"])]
+    for group in groups:
+        xml_types = [drop_ar_prefix(group.attrib["ref"])]
 
-    if "name" in choice_elem.attrib:
-        name = choice_elem.attrib["name"]
-        member = InternalMember(name=name)
-        member.xml_types = xml_types
-        _add_choice_info(choice_elem, member)
-    else:
-        member = _get_choice_group_ref_member(group, choice_elem)
+        if "name" in choice_elem.attrib:
+            name = choice_elem.attrib["name"]
+            member = InternalMember(name=name)
+            member.xml_types = xml_types
+            _add_choice_info(choice_elem, member)
+        else:
+            member = _get_choice_group_ref_member(group, choice_elem)
 
-    ct.members.append(member)
+        ct.members.append(member)
     return True
 
 
@@ -795,6 +797,7 @@ def _analyze_mixed(
             member = InternalMember(name=normalize_member_name(member_name) if member_name else None)
             member.xml_types = [drop_ar_prefix(es.attrib["type"])]
 
+        member.xml_element_name = es.attrib.get("name")
         member.is_ordered = True
         member.min_occurs = 0
         member.max_occurs = None

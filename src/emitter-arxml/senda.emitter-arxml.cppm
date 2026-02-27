@@ -3073,7 +3073,7 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("BLUEPRINT-FORMULA");
         if (ti) {
-            EmitTypeInfo info{"BLUEPRINT-FORMULA", kore::FrozenMap<uint32_t, EmitRoleInfo>(2)};
+            EmitTypeInfo info{"BLUEPRINT-FORMULA", kore::FrozenMap<uint32_t, EmitRoleInfo>(3)};
             {
                 auto* role = ti->roles.find("ECUC-QUERY-REF");
                 if (role) {
@@ -3084,6 +3084,12 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
                 auto* role = ti->roles.find("ECUC-REF");
                 if (role) {
                     info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"ECUC-REF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("VERBATIM");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VERBATIM", false});
                 }
             }
             info.role_to_xml.freeze();
@@ -6585,7 +6591,13 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("CHAPTER-CONTENT");
         if (ti) {
-            EmitTypeInfo info{"CHAPTER-CONTENT", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"CHAPTER-CONTENT", kore::FrozenMap<uint32_t, EmitRoleInfo>(1)};
+            {
+                auto* role = ti->roles.find("PRMS");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"PRMS", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -6601,7 +6613,19 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("CHAPTER-OR-MSR-QUERY");
         if (ti) {
-            EmitTypeInfo info{"CHAPTER-OR-MSR-QUERY", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"CHAPTER-OR-MSR-QUERY", kore::FrozenMap<uint32_t, EmitRoleInfo>(2)};
+            {
+                auto* role = ti->roles.find("CHAPTER");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"CHAPTER", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("MSR-QUERY-CHAPTER");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"MSR-QUERY-CHAPTER", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -20399,7 +20423,73 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("DOCUMENTATION-BLOCK");
         if (ti) {
-            EmitTypeInfo info{"DOCUMENTATION-BLOCK", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"DOCUMENTATION-BLOCK", kore::FrozenMap<uint32_t, EmitRoleInfo>(11)};
+            {
+                auto* role = ti->roles.find("MSR-QUERY-P-2");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"MSR-QUERY-P-2", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("P");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"P", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("VERBATIM");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VERBATIM", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("LIST");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"LIST", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("DEF-LIST");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"DEF-LIST", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("LABELED-LIST");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"LABELED-LIST", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("FORMULA");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"FORMULA", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("FIGURE");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"FIGURE", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("NOTE");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"NOTE", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("TRACE");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TRACE", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("STRUCTURED-REQ");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"STRUCTURED-REQ", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -22229,7 +22319,25 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("EMPHASIS-TEXT");
         if (ti) {
-            EmitTypeInfo info{"EMPHASIS-TEXT", kore::FrozenMap<uint32_t, EmitRoleInfo>(3)};
+            EmitTypeInfo info{"EMPHASIS-TEXT", kore::FrozenMap<uint32_t, EmitRoleInfo>(6)};
+            {
+                auto* role = ti->roles.find("SUB");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUB", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SUP");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUP", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("TT");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TT", false});
+                }
+            }
             {
                 auto* role = ti->roles.find("COLOR");
                 if (role) {
@@ -28377,7 +28485,19 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("HW-PIN-GROUP-CONTENT");
         if (ti) {
-            EmitTypeInfo info{"HW-PIN-GROUP-CONTENT", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"HW-PIN-GROUP-CONTENT", kore::FrozenMap<uint32_t, EmitRoleInfo>(2)};
+            {
+                auto* role = ti->roles.find("HW-PIN");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"HW-PIN", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("HW-PIN-GROUP");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"HW-PIN-GROUP", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -30445,7 +30565,19 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("INDEX-ENTRY");
         if (ti) {
-            EmitTypeInfo info{"INDEX-ENTRY", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"INDEX-ENTRY", kore::FrozenMap<uint32_t, EmitRoleInfo>(2)};
+            {
+                auto* role = ti->roles.find("SUP");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUP", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SUB");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUB", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -34853,7 +34985,37 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("MIXED-CONTENT-FOR-LONG-NAME");
         if (ti) {
-            EmitTypeInfo info{"MIXED-CONTENT-FOR-LONG-NAME", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"MIXED-CONTENT-FOR-LONG-NAME", kore::FrozenMap<uint32_t, EmitRoleInfo>(5)};
+            {
+                auto* role = ti->roles.find("TT");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TT", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("E");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"E", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SUP");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUP", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SUB");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUB", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("IE");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"IE", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -34861,11 +35023,65 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("MIXED-CONTENT-FOR-OVERVIEW-PARAGRAPH");
         if (ti) {
-            EmitTypeInfo info{"MIXED-CONTENT-FOR-OVERVIEW-PARAGRAPH", kore::FrozenMap<uint32_t, EmitRoleInfo>(1)};
+            EmitTypeInfo info{"MIXED-CONTENT-FOR-OVERVIEW-PARAGRAPH", kore::FrozenMap<uint32_t, EmitRoleInfo>(10)};
+            {
+                auto* role = ti->roles.find("BR");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"BR", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("FT");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"FT", false});
+                }
+            }
             {
                 auto* role = ti->roles.find("TRACE-REF");
                 if (role) {
                     info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TRACE-REF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("TT");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TT", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("XREF");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"XREF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("XREF-TARGET");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"XREF-TARGET", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("E");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"E", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SUP");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUP", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SUB");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUB", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("IE");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"IE", false});
                 }
             }
             info.role_to_xml.freeze();
@@ -34875,11 +35091,83 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("MIXED-CONTENT-FOR-PARAGRAPH");
         if (ti) {
-            EmitTypeInfo info{"MIXED-CONTENT-FOR-PARAGRAPH", kore::FrozenMap<uint32_t, EmitRoleInfo>(1)};
+            EmitTypeInfo info{"MIXED-CONTENT-FOR-PARAGRAPH", kore::FrozenMap<uint32_t, EmitRoleInfo>(13)};
+            {
+                auto* role = ti->roles.find("FT");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"FT", false});
+                }
+            }
             {
                 auto* role = ti->roles.find("TRACE-REF");
                 if (role) {
                     info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TRACE-REF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("TT");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TT", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("BR");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"BR", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("XREF");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"XREF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("XREF-TARGET");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"XREF-TARGET", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("E");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"E", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SUP");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUP", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SUB");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUB", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("IE");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"IE", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("STD");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"STD", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("XDOC");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"XDOC", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("XFILE");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"XFILE", false});
                 }
             }
             info.role_to_xml.freeze();
@@ -34897,7 +35185,19 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("MIXED-CONTENT-FOR-UNIT-NAMES");
         if (ti) {
-            EmitTypeInfo info{"MIXED-CONTENT-FOR-UNIT-NAMES", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"MIXED-CONTENT-FOR-UNIT-NAMES", kore::FrozenMap<uint32_t, EmitRoleInfo>(2)};
+            {
+                auto* role = ti->roles.find("SUP");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUP", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SUB");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SUB", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -34905,7 +35205,31 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("MIXED-CONTENT-FOR-VERBATIM");
         if (ti) {
-            EmitTypeInfo info{"MIXED-CONTENT-FOR-VERBATIM", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"MIXED-CONTENT-FOR-VERBATIM", kore::FrozenMap<uint32_t, EmitRoleInfo>(4)};
+            {
+                auto* role = ti->roles.find("TT");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TT", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("E");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"E", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("XREF");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"XREF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("BR");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"BR", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -42759,7 +43083,37 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("RULE-ARGUMENTS");
         if (ti) {
-            EmitTypeInfo info{"RULE-ARGUMENTS", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"RULE-ARGUMENTS", kore::FrozenMap<uint32_t, EmitRoleInfo>(5)};
+            {
+                auto* role = ti->roles.find("V");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"V", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("VF");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("VT");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VT", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("VTF");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VTF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("VARIATION-POINT");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VARIATION-POINT", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -43395,11 +43749,35 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("SDG-CONTENTS");
         if (ti) {
-            EmitTypeInfo info{"SDG-CONTENTS", kore::FrozenMap<uint32_t, EmitRoleInfo>(1)};
+            EmitTypeInfo info{"SDG-CONTENTS", kore::FrozenMap<uint32_t, EmitRoleInfo>(5)};
             {
                 auto* role = ti->roles.find("SDX-REF");
                 if (role) {
                     info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SDX-REF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SDXF");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SDXF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SD");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SD", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SDG");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SDG", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SDF");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SDF", false});
                 }
             }
             info.role_to_xml.freeze();
@@ -49945,11 +50323,23 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("SW-RECORD-LAYOUT-GROUP-CONTENT");
         if (ti) {
-            EmitTypeInfo info{"SW-RECORD-LAYOUT-GROUP-CONTENT", kore::FrozenMap<uint32_t, EmitRoleInfo>(1)};
+            EmitTypeInfo info{"SW-RECORD-LAYOUT-GROUP-CONTENT", kore::FrozenMap<uint32_t, EmitRoleInfo>(3)};
             {
                 auto* role = ti->roles.find("SW-RECORD-LAYOUT-REF");
                 if (role) {
                     info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SW-RECORD-LAYOUT-REF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SW-RECORD-LAYOUT-V");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SW-RECORD-LAYOUT-V", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("SW-RECORD-LAYOUT-GROUP");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"SW-RECORD-LAYOUT-GROUP", false});
                 }
             }
             info.role_to_xml.freeze();
@@ -50191,7 +50581,37 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("SW-VALUES");
         if (ti) {
-            EmitTypeInfo info{"SW-VALUES", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"SW-VALUES", kore::FrozenMap<uint32_t, EmitRoleInfo>(5)};
+            {
+                auto* role = ti->roles.find("VTF");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VTF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("VF");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("VT");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VT", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("V");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"V", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("VG");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VG", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -53801,7 +54221,19 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("TOPIC-CONTENT");
         if (ti) {
-            EmitTypeInfo info{"TOPIC-CONTENT", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"TOPIC-CONTENT", kore::FrozenMap<uint32_t, EmitRoleInfo>(2)};
+            {
+                auto* role = ti->roles.find("TABLE");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TABLE", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("TRACEABLE-TABLE");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TRACEABLE-TABLE", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -53809,7 +54241,13 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("TOPIC-CONTENT-OR-MSR-QUERY");
         if (ti) {
-            EmitTypeInfo info{"TOPIC-CONTENT-OR-MSR-QUERY", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"TOPIC-CONTENT-OR-MSR-QUERY", kore::FrozenMap<uint32_t, EmitRoleInfo>(1)};
+            {
+                auto* role = ti->roles.find("MSR-QUERY-P-1");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"MSR-QUERY-P-1", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -53817,7 +54255,19 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("TOPIC-OR-MSR-QUERY");
         if (ti) {
-            EmitTypeInfo info{"TOPIC-OR-MSR-QUERY", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"TOPIC-OR-MSR-QUERY", kore::FrozenMap<uint32_t, EmitRoleInfo>(2)};
+            {
+                auto* role = ti->roles.find("TOPIC-1");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"TOPIC-1", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("MSR-QUERY-TOPIC-1");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"MSR-QUERY-TOPIC-1", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
@@ -55631,7 +56081,19 @@ EmitLookup build_emit_lookup(const senda::domains::AutosarSchema& schema) {
     {
         auto* ti = tag_to_type.find("VALUE-LIST");
         if (ti) {
-            EmitTypeInfo info{"VALUE-LIST", kore::FrozenMap<uint32_t, EmitRoleInfo>(0)};
+            EmitTypeInfo info{"VALUE-LIST", kore::FrozenMap<uint32_t, EmitRoleInfo>(2)};
+            {
+                auto* role = ti->roles.find("VF");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"VF", false});
+                }
+            }
+            {
+                auto* role = ti->roles.find("V");
+                if (role) {
+                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"V", false});
+                }
+            }
             info.role_to_xml.freeze();
             type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));
         }
