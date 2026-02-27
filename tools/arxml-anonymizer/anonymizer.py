@@ -99,17 +99,69 @@ def _build_aho_corasick(mapping: dict[str, str]) -> tuple[dict, list[str]]:
     return goto, fail, output
 
 
+def _build_text_regions(content: str) -> list[tuple[int, int]]:
+    """Identify text-content regions (between > and <) in the XML.
+
+    Returns sorted list of (start, end) pairs where replacements are safe.
+    Excludes content inside tags, processing instructions, comments, and CDATA.
+    """
+    regions: list[tuple[int, int]] = []
+    i = 0
+    n = len(content)
+    while i < n:
+        if content[i] == '<':
+            # Skip past this markup
+            if content[i:i+4] == '<!--':
+                # Comment body is replaceable (may contain path references)
+                body_start = i + 4
+                end = content.find('-->', body_start)
+                if end >= 0:
+                    if end > body_start:
+                        regions.append((body_start, end))
+                    i = end + 3
+                else:
+                    i = n
+            elif content[i:i+9] == '<![CDATA[':
+                # CDATA: skip to ]]>
+                end = content.find(']]>', i + 9)
+                i = end + 3 if end >= 0 else n
+            elif content[i:i+2] == '<?':
+                # Processing instruction: skip to ?>
+                end = content.find('?>', i + 2)
+                i = end + 2 if end >= 0 else n
+            else:
+                # Regular tag: skip to >
+                end = content.find('>', i + 1)
+                i = end + 1 if end >= 0 else n
+        else:
+            # Text content — find extent until next <
+            start = i
+            end = content.find('<', i)
+            if end < 0:
+                end = n
+            if end > start:
+                regions.append((start, end))
+            i = end
+    return regions
+
+
 def _find_replacements(
     content: str,
     mapping: dict[str, str],
 ) -> list[tuple[int, int, str]]:
     """Scan content for all occurrences of mapped names using Aho-Corasick.
 
+    Only replaces within XML text content (between > and <), never inside
+    tags, attributes, processing instructions, or comments.
+
     Returns a sorted, non-overlapping list of (offset, length, replacement).
     Longer matches take priority; on ties, earlier position wins.
     """
     if not mapping:
         return []
+
+    # Build set of safe text regions
+    text_regions = _build_text_regions(content)
 
     goto, fail, output = _build_aho_corasick(mapping)
 
@@ -127,16 +179,35 @@ def _find_replacements(
     if not raw_matches:
         return []
 
+    # Filter to only matches fully inside text regions
+    # Use a pointer into sorted regions for efficient filtering
+    region_idx = 0
+    filtered: list[tuple[int, int, str]] = []
+    raw_matches.sort(key=lambda m: m[0])
+    for start, length, replacement in raw_matches:
+        end = start + length
+        # Advance region pointer past regions that end before this match
+        while region_idx < len(text_regions) and text_regions[region_idx][1] <= start:
+            region_idx += 1
+        # Check if match is fully contained in the current region
+        if region_idx < len(text_regions):
+            r_start, r_end = text_regions[region_idx]
+            if start >= r_start and end <= r_end:
+                filtered.append((start, length, replacement))
+
+    if not filtered:
+        return []
+
     # Sort by start position, then longest match first
-    raw_matches.sort(key=lambda m: (m[0], -m[1]))
+    filtered.sort(key=lambda m: (m[0], -m[1]))
 
     # Remove overlaps: greedy left-to-right, prefer longer matches
     result: list[tuple[int, int, str]] = []
-    end = 0
-    for start, length, replacement in raw_matches:
-        if start >= end:
+    prev_end = 0
+    for start, length, replacement in filtered:
+        if start >= prev_end:
             result.append((start, length, replacement))
-            end = start + length
+            prev_end = start + length
 
     return result
 
