@@ -41,9 +41,13 @@ int main(int argc, char* argv[]) {
     // Build AUTOSAR schema (domain + lookup tables)
     auto schema = senda::domains::build_autosar_r23_11();
 
+    // Build XSD → domain registry
+    senda::SchemaRegistry schema_registry;
+    schema_registry.add(schema.xsd_filename, schema.domain.name());
+
     // Create compilers
     rupa::sema::RupaCompiler rupa_compiler;
-    senda::ArxmlCompiler arxml_compiler(schema, max_warnings);
+    senda::ArxmlCompiler arxml_compiler(schema, schema_registry, max_warnings);
 
     // Register compilers
     rupa::compiler::CompilerRegistry registry;

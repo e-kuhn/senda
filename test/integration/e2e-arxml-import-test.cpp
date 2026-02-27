@@ -63,7 +63,9 @@ TEST_F(E2EArxmlImportTest, ArxmlCompilationThroughDriver) {
     // Build schema and compilers
     auto schema = senda::domains::build_autosar_r23_11();
     rupa::sema::RupaCompiler rupa_compiler;
-    senda::ArxmlCompiler arxml_compiler(schema);
+    senda::SchemaRegistry schema_registry;
+    schema_registry.add(schema.xsd_filename, schema.domain.name());
+    senda::ArxmlCompiler arxml_compiler(schema, schema_registry);
 
     rupa::compiler::CompilerRegistry registry;
     registry.register_compiler(rupa_compiler);
@@ -82,7 +84,9 @@ TEST_F(E2EArxmlImportTest, MultiCompilerRegistration) {
     // Verify both compilers are registered and discoverable
     auto schema = senda::domains::build_autosar_r23_11();
     rupa::sema::RupaCompiler rupa_compiler;
-    senda::ArxmlCompiler arxml_compiler(schema);
+    senda::SchemaRegistry schema_registry;
+    schema_registry.add(schema.xsd_filename, schema.domain.name());
+    senda::ArxmlCompiler arxml_compiler(schema, schema_registry);
 
     rupa::compiler::CompilerRegistry registry;
     registry.register_compiler(rupa_compiler);
@@ -98,7 +102,9 @@ TEST_F(E2EArxmlImportTest, UnknownExtensionReportsError) {
 
     auto schema = senda::domains::build_autosar_r23_11();
     rupa::sema::RupaCompiler rupa_compiler;
-    senda::ArxmlCompiler arxml_compiler(schema);
+    senda::SchemaRegistry schema_registry;
+    schema_registry.add(schema.xsd_filename, schema.domain.name());
+    senda::ArxmlCompiler arxml_compiler(schema, schema_registry);
 
     rupa::compiler::CompilerRegistry registry;
     registry.register_compiler(rupa_compiler);
@@ -128,7 +134,9 @@ TEST_F(E2EArxmlImportTest, DomainAvailableToArxmlCompiler) {
 
     auto schema = senda::domains::build_autosar_r23_11();
     rupa::sema::RupaCompiler rupa_compiler;
-    senda::ArxmlCompiler arxml_compiler(schema);
+    senda::SchemaRegistry schema_registry;
+    schema_registry.add(schema.xsd_filename, schema.domain.name());
+    senda::ArxmlCompiler arxml_compiler(schema, schema_registry);
 
     rupa::compiler::CompilerRegistry registry;
     registry.register_compiler(rupa_compiler);

@@ -69,7 +69,9 @@ TEST(ArxmlEmitter, EmitsXmlHeader) {
 TEST(ArxmlEmitter, RoundTripSimpleSignal) {
     auto schema = senda::domains::build_autosar_r23_11();
     MockEmitterContext ctx(schema.domain);
-    senda::ArxmlCompiler compiler(schema);
+    senda::SchemaRegistry reg;
+    reg.add(schema.xsd_filename, schema.domain.name());
+    senda::ArxmlCompiler compiler(schema, reg);
     senda::ArxmlEmitter emitter(schema);
 
     // Compile ARXML -> FIR
