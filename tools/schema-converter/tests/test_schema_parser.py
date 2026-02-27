@@ -697,5 +697,158 @@ class TestInstanceRefDetection(unittest.TestCase):
             self.assertIsNone(m.instance_ref_role)
 
 
+MIXED_CONTENT_XSD = """\
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:AR="http://autosar.org/schema/r4.0"
+            targetNamespace="http://autosar.org/schema/r4.0">
+
+  <xsd:group name="MIXED-CONTENT-FOR-PARAGRAPH">
+    <xsd:annotation>
+      <xsd:appinfo source="tags">mmt.qualifiedName="MixedContentForParagraph"</xsd:appinfo>
+      <xsd:appinfo source="stereotypes">atpMixedString</xsd:appinfo>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:choice maxOccurs="unbounded" minOccurs="0">
+        <xsd:element name="FT" type="AR:FT-TYPE">
+          <xsd:annotation>
+            <xsd:appinfo source="tags">mmt.qualifiedName="MixedContentForParagraph.ft"</xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="TT" type="AR:TT-TYPE">
+          <xsd:annotation>
+            <xsd:appinfo source="tags">mmt.qualifiedName="MixedContentForParagraph.tt"</xsd:appinfo>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="BR">
+          <xsd:annotation>
+            <xsd:appinfo source="tags">mmt.qualifiedName="MixedContentForParagraph.br"</xsd:appinfo>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="AR:REF">
+                <xsd:attribute name="DEST" type="xsd:string" use="required"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:choice>
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:simpleType name="REF">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+</xsd:schema>
+"""
+
+
+class TestMixedContentXmlElementName(unittest.TestCase):
+    """RC2: _analyze_mixed() should set xml_element_name on mixed-content elements."""
+
+    def test_typed_element_gets_xml_element_name(self):
+        from schema_parser import parse_schema_from_string, export_schema
+        schema = parse_schema_from_string(MIXED_CONTENT_XSD)
+        export = export_schema(schema)
+        t = next((c for c in export.composites
+                  if c.name == "MixedContentForParagraph"), None)
+        self.assertIsNotNone(t)
+        ft = next((m for m in t.members if m.name == "ft"), None)
+        self.assertIsNotNone(ft)
+        self.assertEqual(ft.xml_element_name, "FT")
+
+    def test_ref_element_gets_xml_element_name(self):
+        from schema_parser import parse_schema_from_string, export_schema
+        schema = parse_schema_from_string(MIXED_CONTENT_XSD)
+        export = export_schema(schema)
+        t = next((c for c in export.composites
+                  if c.name == "MixedContentForParagraph"), None)
+        br = next((m for m in t.members if m.name == "br"), None)
+        self.assertIsNotNone(br)
+        self.assertEqual(br.xml_element_name, "BR")
+
+
+MULTI_GROUP_CHOICE_XSD = """\
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:AR="http://autosar.org/schema/r4.0"
+            targetNamespace="http://autosar.org/schema/r4.0">
+
+  <xsd:group name="GROUP-A">
+    <xsd:annotation>
+      <xsd:appinfo source="tags">mmt.qualifiedName="GroupA"</xsd:appinfo>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="FIELD-A" type="xsd:string" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo source="tags">mmt.qualifiedName="GroupA.fieldA";pureMM.maxOccurs="1";pureMM.minOccurs="0"</xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:group>
+
+  <xsd:group name="GROUP-B">
+    <xsd:annotation>
+      <xsd:appinfo source="tags">mmt.qualifiedName="GroupB"</xsd:appinfo>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="FIELD-B" type="xsd:string" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo source="tags">mmt.qualifiedName="GroupB.fieldB";pureMM.maxOccurs="1";pureMM.minOccurs="0"</xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:group>
+
+  <xsd:group name="GROUP-C">
+    <xsd:annotation>
+      <xsd:appinfo source="tags">mmt.qualifiedName="GroupC"</xsd:appinfo>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="FIELD-C" type="xsd:string" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo source="tags">mmt.qualifiedName="GroupC.fieldC";pureMM.maxOccurs="1";pureMM.minOccurs="0"</xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:group>
+
+  <xsd:group name="PARENT-GROUP">
+    <xsd:annotation>
+      <xsd:appinfo source="tags">mmt.qualifiedName="ParentGroup"</xsd:appinfo>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:group ref="AR:GROUP-A"/>
+        <xsd:group ref="AR:GROUP-B"/>
+        <xsd:group ref="AR:GROUP-C"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:group>
+</xsd:schema>
+"""
+
+
+class TestMultiGroupChoice(unittest.TestCase):
+    """RC3: _get_sequence_choice_group() should capture all group refs in a choice."""
+
+    def test_all_group_refs_captured(self):
+        from schema_parser import parse_schema_from_string
+        from schema_model import InternalComplexType
+        schema = parse_schema_from_string(MULTI_GROUP_CHOICE_XSD)
+        t = schema.types["groups:PARENT-GROUP"]
+        self.assertIsInstance(t, InternalComplexType)
+        member_type_lists = [m.xml_types for m in t.members]
+        flat_types = [t for types in member_type_lists for t in types]
+        self.assertIn("GROUP-A", flat_types)
+        self.assertIn("GROUP-B", flat_types)
+        self.assertIn("GROUP-C", flat_types)
+
+    def test_three_members_created(self):
+        from schema_parser import parse_schema_from_string
+        schema = parse_schema_from_string(MULTI_GROUP_CHOICE_XSD)
+        t = schema.types["groups:PARENT-GROUP"]
+        # Should have 3 members (one per group ref), not just 1
+        self.assertEqual(len(t.members), 3)
+
+
 if __name__ == "__main__":
     unittest.main()
