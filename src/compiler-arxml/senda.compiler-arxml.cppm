@@ -197,6 +197,7 @@ private:
         // Property frame
         rupa::domain::RoleHandle role{};
         rupa::fir_builder::ObjectHandle parent_obj{};
+        const senda::domains::TypeInfo* target_type_info = nullptr;
         std::string text;
         bool is_identity = false;  // true for SHORT-NAME capture
         // Skip frame
@@ -338,20 +339,46 @@ private:
             }
 
             if (parent.type_info) {
-                auto* role = parent.type_info->roles.find(tag);
-                if (role) {
+                auto* role_info = parent.type_info->roles.find(tag);
+                if (role_info) {
                     Frame frame{};
                     frame.kind = FrameKind::Property;
-                    frame.role = *role;
+                    frame.role = role_info->role;
                     frame.parent_obj = parent.obj;
+                    if (state.schema) {
+                        auto* ti = state.schema->handle_to_type.find(
+                            role_info->target_type_id);
+                        if (ti) frame.target_type_info = *ti;
+                    }
                     state.stack.push_back(std::move(frame));
                     return;
                 }
             }
         }
 
-        // If we're inside a Property frame, try type lookup (contained object)
+        // If we're inside a Property frame, try resolving child elements
         if (!state.stack.empty() && state.stack.back().kind == FrameKind::Property) {
+            auto& prop = state.stack.back();
+
+            // Try as a role on the property's target type
+            if (prop.target_type_info) {
+                auto* role_info = prop.target_type_info->roles.find(tag);
+                if (role_info) {
+                    Frame frame{};
+                    frame.kind = FrameKind::Property;
+                    frame.role = role_info->role;
+                    frame.parent_obj = prop.parent_obj;
+                    if (state.schema) {
+                        auto* ti = state.schema->handle_to_type.find(
+                            role_info->target_type_id);
+                        if (ti) frame.target_type_info = *ti;
+                    }
+                    state.stack.push_back(std::move(frame));
+                    return;
+                }
+            }
+
+            // Try as a top-level type (contained object)
             const senda::domains::TypeInfo* nested_type_info = nullptr;
             if (state.schema) {
                 nested_type_info = state.schema->tag_to_type.find(tag);

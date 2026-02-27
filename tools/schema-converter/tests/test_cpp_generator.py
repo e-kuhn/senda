@@ -498,47 +498,6 @@ class TestDomainBuilderUnnamedRoles(unittest.TestCase):
         self.assertIn('".."', code)
 
 
-class TestArxmlParserGeneration(unittest.TestCase):
-    def test_generates_parser_module(self):
-        from cpp_generator import generate_arxml_module
-        from schema_model import ExportSchema
-
-        schema = ExportSchema(release_version="R23-11")
-        code = generate_arxml_module(schema)
-
-        # Module declaration
-        self.assertIn("export module senda.compiler.arxml", code)
-        # Expat include
-        self.assertIn("expat.h", code)
-        # Compiler interface
-        self.assertIn("class ArxmlCompiler", code)
-        self.assertIn("rupa::compiler::Compiler", code)
-        # SAX callbacks
-        self.assertIn("XML_SetElementHandler", code)
-        self.assertIn("XML_SetCharacterDataHandler", code)
-        # Extensions
-        self.assertIn(".arxml", code)
-
-    def test_parser_uses_autosar_schema(self):
-        from cpp_generator import generate_arxml_module
-        from schema_model import ExportSchema
-
-        schema = ExportSchema(release_version="R23-11")
-        code = generate_arxml_module(schema)
-
-        self.assertIn("AutosarSchema", code)
-        self.assertIn("tag_to_type", code)
-
-    def test_parser_imports_versioned_domain(self):
-        from cpp_generator import generate_arxml_module
-        from schema_model import ExportSchema
-
-        schema = ExportSchema(release_version="R23-11")
-        code = generate_arxml_module(schema)
-
-        self.assertIn("import senda.domains.r23_11;", code)
-
-
 class TestVersionedDomainModule(unittest.TestCase):
     def test_domain_module_uses_release_in_filename(self):
         import tempfile
@@ -598,29 +557,6 @@ class TestFileGeneration(unittest.TestCase):
                 content = f.read()
             self.assertIn("export module senda.domains.r23_11", content)
             self.assertIn("AutosarSchema", content)
-
-    def test_generate_cpp_files_creates_parser_module(self):
-        import tempfile
-        from cpp_generator import generate_cpp_files
-        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
-
-        schema = ExportSchema(
-            release_version="R23-11",
-            primitives=[
-                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
-            ],
-        )
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            generate_cpp_files(schema, tmpdir)
-
-            parser_path = os.path.join(tmpdir, "compiler-arxml", "senda.compiler-arxml.cppm")
-            self.assertTrue(os.path.exists(parser_path))
-
-            with open(parser_path) as f:
-                content = f.read()
-            self.assertIn("export module senda.compiler.arxml", content)
-
 
 class TestCLIIntegration(unittest.TestCase):
     def test_cpp_flag_recognized(self):

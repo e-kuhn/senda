@@ -59,7 +59,7 @@ def _generate_reverse_lookup_builder(schema: ExportSchema) -> str:
             w("            {")
             w('                auto* role = ti->roles.find("%s");' % xml_elem)
             w("                if (role) {")
-            w('                    info.role_to_xml.add(static_cast<uint32_t>(role->id), EmitRoleInfo{"%s", %s});'
+            w('                    info.role_to_xml.add(static_cast<uint32_t>(role->role.id), EmitRoleInfo{"%s", %s});'
               % (xml_elem, identity_str))
             w("                }")
             w("            }")
@@ -98,6 +98,7 @@ export module senda.emitter.arxml;
 
 import rupa.domain;
 import rupa.fir;
+import senda.domains;
 import senda.domains.{module_version};
 import kore.containers.frozen_map;
 
