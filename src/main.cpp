@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <filesystem>
 #include <string>
+#include <string_view>
 
 import rupa.compiler;
 import rupa.driver;
@@ -13,20 +14,36 @@ import senda.domains.r23_11;
 namespace fs = std::filesystem;
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::puts("senda 0.1.0 — Automotive DSL built on Rupa");
-        std::puts("Usage: senda <file.rupa|file.arxml>");
-        return 0;
+    std::string domain_override;
+    int max_warnings = 10;
+    fs::path input_path;
+
+    for (int i = 1; i < argc; ++i) {
+        std::string_view arg(argv[i]);
+        if (arg == "--domain" && i + 1 < argc) {
+            domain_override = argv[++i];
+        } else if (arg == "--max-warnings" && i + 1 < argc) {
+            max_warnings = std::atoi(argv[++i]);
+        } else if (arg[0] == '-') {
+            std::fprintf(stderr, "unknown option: %s\n", argv[i]);
+            return 1;
+        } else {
+            input_path = arg;
+        }
     }
 
-    fs::path input_path(argv[1]);
+    if (input_path.empty()) {
+        std::puts("senda 0.1.0 — Automotive DSL built on Rupa");
+        std::puts("Usage: senda [--domain <name>] [--max-warnings <N>] <file>");
+        return 0;
+    }
 
     // Build AUTOSAR schema (domain + lookup tables)
     auto schema = senda::domains::build_autosar_r23_11();
 
     // Create compilers
     rupa::sema::RupaCompiler rupa_compiler;
-    senda::ArxmlCompiler arxml_compiler(schema);
+    senda::ArxmlCompiler arxml_compiler(schema, max_warnings);
 
     // Register compilers
     rupa::compiler::CompilerRegistry registry;
@@ -38,6 +55,16 @@ int main(int argc, char* argv[]) {
 
     // Load domain from schema
     driver.add_domain(std::move(schema.domain));
+
+    // Set domain override if specified
+    if (!domain_override.empty()) {
+        if (!driver.find_domain(domain_override)) {
+            std::fprintf(stderr, "error: domain '%s' is not available\n",
+                         domain_override.c_str());
+            return 1;
+        }
+        driver.set_domain_override(domain_override);
+    }
 
     // Compile
     auto result = driver.compile(input_path);

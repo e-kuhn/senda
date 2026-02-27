@@ -23,8 +23,9 @@ export namespace senda
 
 class ArxmlCompiler : public rupa::compiler::Compiler {
 public:
-    explicit ArxmlCompiler(const senda::domains::AutosarSchema& schema)
-        : schema_(schema) {}
+    explicit ArxmlCompiler(const senda::domains::AutosarSchema& schema,
+                           int max_skip_warnings = 10)
+        : schema_(schema), max_skip_warnings_(max_skip_warnings) {}
 
     std::span<const std::string_view> extensions() const override {
         return exts_;
@@ -64,14 +65,14 @@ public:
         fir::Fir fir;
         rupa::fir_builder::FirBuilder builder(fir);
 
-        (void)context;
-
         ParseState state{
             .schema = schema_,
             .builder = builder,
             .diags = diags,
             .file_path = path.string(),
             .stack = {},
+            .context = &context,
+            .max_skip_warnings = max_skip_warnings_,
         };
 
         XML_SetUserData(parser, &state);
@@ -79,8 +80,10 @@ public:
         XML_SetCharacterDataHandler(parser, on_characters);
 
         // Parse
-        if (XML_Parse(parser, content.data(), static_cast<int>(content.size()), XML_TRUE)
-            == XML_STATUS_ERROR) {
+        auto status = XML_Parse(parser, content.data(),
+                                static_cast<int>(content.size()), XML_TRUE);
+        if (status == XML_STATUS_ERROR
+            && XML_GetErrorCode(parser) != XML_ERROR_ABORTED) {
             diags.add({rupa::compiler::Severity::Error,
                        std::string("XML parse error: ")
                            + XML_ErrorString(XML_GetErrorCode(parser))
@@ -88,6 +91,14 @@ public:
                            + std::to_string(XML_GetCurrentLineNumber(parser)),
                        {path.string(),
                          static_cast<uint32_t>(XML_GetCurrentLineNumber(parser)), 0}});
+        }
+
+        // Emit summary if skip warnings were capped
+        if (state.skip_total_count > state.skip_warning_emitted) {
+            int remaining = state.skip_total_count - state.skip_warning_emitted;
+            diags.add({rupa::compiler::Severity::Warning,
+                std::to_string(remaining) + " additional elements skipped",
+                {path.string(), 0, 0}});
         }
 
         XML_ParserFree(parser);
@@ -100,6 +111,7 @@ private:
     static constexpr std::string_view exts_arr_[] = {".arxml"};
     std::span<const std::string_view> exts_{exts_arr_};
     const senda::domains::AutosarSchema& schema_;
+    int max_skip_warnings_ = 10;
 
     // --- SAX state machine ---
 
@@ -125,16 +137,77 @@ private:
         rupa::compiler::Diagnostics& diags;
         std::string file_path;
         std::vector<Frame> stack;
+        rupa::compiler::CompileContext* context = nullptr;
+        bool domain_resolved = false;
+        bool domain_is_override = false;
+        bool abort_parse = false;
+        int skip_warning_emitted = 0;
+        int skip_total_count = 0;
+        int max_skip_warnings = 10;
     };
 
+    // Extract XSD filename from xsi:schemaLocation value
+    static std::string_view extract_xsd_filename(std::string_view schema_location) {
+        auto space = schema_location.rfind(' ');
+        if (space == std::string_view::npos) return schema_location;
+        return schema_location.substr(space + 1);
+    }
+
     static void XMLCALL on_start_element(void* user_data, const XML_Char* name,
-                                          const XML_Char** /*attrs*/) {
+                                          const XML_Char** attrs) {
         auto& state = *static_cast<ParseState*>(user_data);
+        if (state.abort_parse) return;
+
         std::string_view tag(name);
 
         // Strip namespace prefix if present (e.g., "AR:AUTOSAR" -> "AUTOSAR")
         if (auto pos = tag.find(':'); pos != std::string_view::npos) {
             tag = tag.substr(pos + 1);
+        }
+
+        // On AUTOSAR root element, resolve domain from schema
+        if (tag == "AUTOSAR" && !state.domain_resolved) {
+            state.domain_resolved = true;
+
+            // Extract xsi:schemaLocation from attributes
+            std::string_view schema_location;
+            for (int i = 0; attrs[i]; i += 2) {
+                std::string_view attr_name(attrs[i]);
+                if (attr_name == "xsi:schemaLocation" ||
+                    attr_name.ends_with(":schemaLocation")) {
+                    schema_location = std::string_view(attrs[i + 1]);
+                    break;
+                }
+            }
+
+            if (!schema_location.empty()) {
+                auto xsd = extract_xsd_filename(schema_location);
+
+                if (xsd == state.schema.xsd_filename) {
+                    // Matches loaded schema — proceed normally
+                } else {
+                    // Different schema — try default domain (override)
+                    auto* view = state.context->request_default_domain();
+                    if (!view) {
+                        state.diags.add({rupa::compiler::Severity::Error,
+                            "unsupported AUTOSAR schema '" + std::string(xsd)
+                                + "'; use --domain to specify a domain",
+                            {state.file_path, 1, 0}});
+                        state.abort_parse = true;
+                        return;
+                    }
+                    state.domain_is_override = true;
+                }
+            } else {
+                // No schema annotation — try default domain
+                auto* view = state.context->request_default_domain();
+                if (view) {
+                    state.domain_is_override = true;
+                }
+                // If no default available, continue without domain validation
+                // (backwards-compatible with bare <AUTOSAR> elements)
+            }
+            // Continue — AUTOSAR is handled as a normal type lookup below
         }
 
         // If top of stack is Skip, increment depth
@@ -200,10 +273,22 @@ private:
         frame.kind = FrameKind::Skip;
         frame.skip_depth = 1;
         state.stack.push_back(std::move(frame));
+
+        // Emit skip warning when domain was overridden
+        if (state.domain_is_override) {
+            state.skip_total_count++;
+            if (state.skip_warning_emitted < state.max_skip_warnings) {
+                state.skip_warning_emitted++;
+                state.diags.add({rupa::compiler::Severity::Warning,
+                    "skipping unknown element '" + std::string(tag) + "'",
+                    {state.file_path, 0, 0}});
+            }
+        }
     }
 
     static void XMLCALL on_end_element(void* user_data, const XML_Char* /*name*/) {
         auto& state = *static_cast<ParseState*>(user_data);
+        if (state.abort_parse) return;
 
         if (state.stack.empty()) return;
 
@@ -244,6 +329,7 @@ private:
 
     static void XMLCALL on_characters(void* user_data, const XML_Char* s, int len) {
         auto& state = *static_cast<ParseState*>(user_data);
+        if (state.abort_parse) return;
 
         if (state.stack.empty()) return;
 

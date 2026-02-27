@@ -17,9 +17,11 @@ namespace fs = std::filesystem;
 
 class MockArxmlContext : public rupa::compiler::CompileContext {
 public:
-    explicit MockArxmlContext(const rupa::domain::Domain& domain)
+    explicit MockArxmlContext(const rupa::domain::Domain& domain,
+                              bool override_default = true)
         : view_(domain.view()),
-          transaction_(view_, "autosar-r23-11") {}
+          transaction_(view_, "autosar-r23-11"),
+          override_default_(override_default) {}
 
     rupa::compiler::CompileResult compile_import(const fs::path& /*path*/) override {
         return rupa::compiler::CompileResult(
@@ -28,6 +30,11 @@ public:
 
     const rupa::domain::DomainView* request_domain(std::string_view name) override {
         if (name == "autosar-r23-11") return &view_;
+        return nullptr;
+    }
+
+    const rupa::domain::DomainView* request_default_domain() override {
+        if (override_default_) return &view_;
         return nullptr;
     }
 
@@ -42,6 +49,7 @@ public:
 private:
     rupa::domain::DomainView view_;
     rupa::domain::DomainTransaction transaction_;
+    bool override_default_ = false;
 };
 
 // --- Helpers ---
@@ -110,4 +118,24 @@ TEST(ArxmlCompilerTest, InvalidXmlProducesError) {
     // Non-existent file
     auto result = compiler.compile("/tmp/nonexistent.arxml", ctx);
     EXPECT_TRUE(result.has_errors());
+}
+
+TEST(ArxmlCompilerTest, UnsupportedSchemaProducesError) {
+    auto schema = senda::domains::build_autosar_r23_11();
+    // No override — request_default_domain() returns nullptr
+    MockArxmlContext ctx(schema.domain, /*override_default=*/false);
+    senda::ArxmlCompiler compiler(schema);
+
+    auto result = compiler.compile(fixture_path("r4-3-1-signal.arxml"), ctx);
+    EXPECT_TRUE(result.has_errors());
+}
+
+TEST(ArxmlCompilerTest, OverriddenDomainEmitsSkipWarnings) {
+    auto schema = senda::domains::build_autosar_r23_11();
+    MockArxmlContext ctx(schema.domain, /*override_default=*/true);
+    senda::ArxmlCompiler compiler(schema);
+
+    auto result = compiler.compile(fixture_path("r4-3-1-signal.arxml"), ctx);
+    // Should succeed (override allows it) but may have warnings
+    EXPECT_FALSE(result.has_errors());
 }

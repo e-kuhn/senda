@@ -153,8 +153,8 @@ def generate_domain_builder(schema: ExportSchema) -> str:
 
     w("    tag_to_type.freeze();")
     w("")
-    w('    return AutosarSchema{rupa::domain::Domain("%s", std::move(type_fir)), std::move(tag_to_type)};'
-      % domain)
+    w('    return AutosarSchema{rupa::domain::Domain("%s", std::move(type_fir)), std::move(tag_to_type), "%s"};'
+      % (domain, schema.xsd_filename))
     w("}")
 
     return "\n".join(lines)
@@ -455,6 +455,7 @@ struct TypeInfo {
 struct AutosarSchema {
     rupa::domain::Domain domain;
     kore::FrozenMap<std::string_view, TypeInfo> tag_to_type;
+    std::string_view xsd_filename;
 };
 
 ''' % module_version

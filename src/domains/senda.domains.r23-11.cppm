@@ -21,6 +21,7 @@ struct TypeInfo {
 struct AutosarSchema {
     rupa::domain::Domain domain;
     kore::FrozenMap<std::string_view, TypeInfo> tag_to_type;
+    std::string_view xsd_filename;
 };
 
 AutosarSchema build_autosar_r23_11() {
@@ -44156,6 +44157,6 @@ AutosarSchema build_autosar_r23_11() {
     }
     tag_to_type.freeze();
 
-    return AutosarSchema{rupa::domain::Domain("autosar-r23-11", std::move(type_fir)), std::move(tag_to_type)};
+    return AutosarSchema{rupa::domain::Domain("autosar-r23-11", std::move(type_fir)), std::move(tag_to_type), "AUTOSAR_00052.xsd"};
 }
 }  // namespace senda::domains
