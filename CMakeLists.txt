@@ -88,4 +88,5 @@ senda_target_settings(senda)
 
 enable_testing()
 add_subdirectory(test/compiler-arxml)
+add_subdirectory(test/emitter-arxml)
 add_subdirectory(test/integration)

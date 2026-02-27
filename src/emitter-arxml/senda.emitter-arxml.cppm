@@ -7,6 +7,7 @@ module;
 #include <string>
 #include <string_view>
 #include <utility>
+#include <vector>
 
 export module senda.emitter.arxml;
 
@@ -59601,19 +59602,94 @@ private:
         for (int i = 0; i < indent; ++i) out << "  ";
     }
 
+    void emit_object(const fir::Fir& fir, const fir::ObjectDef& obj,
+                     std::ostream& out, int indent) {
+        // Look up type -> XML tag
+        auto* type_info = lookup_.type_to_tag.find(static_cast<uint32_t>(obj.type_id));
+        if (!type_info) return;  // Unknown type, skip
+
+        // Write opening tag
+        write_indent(out, indent);
+        out << "<" << type_info->xml_tag << ">\n";
+
+        // Write SHORT-NAME (identity)
+        auto identity = fir.getString(obj.identity);
+        if (!identity.empty()) {
+            write_indent(out, indent + 1);
+            out << "<SHORT-NAME>" << identity << "</SHORT-NAME>\n";
+        }
+
+        // Write properties
+        auto props = fir.propertiesOf(obj);
+        for (auto prop_id : props) {
+            auto& pv = fir.as<fir::PropertyVal>(prop_id);
+
+            // Look up role -> XML element
+            auto* role_info = type_info->role_to_xml.find(
+                static_cast<uint32_t>(pv.role_id));
+            if (!role_info || role_info->is_identity) continue;
+
+            auto& val_node = fir.get(pv.value_id);
+            if (val_node.kind == fir::NodeKind::ObjectDef) {
+                // Nested object — recurse
+                auto& nested = fir.as<fir::ObjectDef>(pv.value_id);
+                emit_object(fir, nested, out, indent + 1);
+            } else if (val_node.kind == fir::NodeKind::ValueDef) {
+                auto& vd = fir.as<fir::ValueDef>(pv.value_id);
+                write_indent(out, indent + 1);
+                out << "<" << role_info->xml_element << ">";
+                switch (vd.value_kind) {
+                case fir::ValueKind::String:
+                    out << fir.getString(vd.string_val);
+                    break;
+                case fir::ValueKind::Integer:
+                    out << vd.int_val;
+                    break;
+                case fir::ValueKind::Float:
+                    out << vd.float_val;
+                    break;
+                case fir::ValueKind::Boolean:
+                    out << (vd.bool_val ? "true" : "false");
+                    break;
+                default:
+                    break;
+                }
+                out << "</" << role_info->xml_element << ">\n";
+            }
+        }
+
+        // Write closing tag
+        write_indent(out, indent);
+        out << "</" << type_info->xml_tag << ">\n";
+    }
+
     void emit_objects(const fir::Fir& fir, std::ostream& out, int indent) {
-        // TODO: Walk FIR node graph using lookup_.type_to_tag reverse lookup
-        // For each ObjectDef node:
-        //   1. Look up type → XML tag name via type_to_tag
-        //   2. Write opening tag with indentation
-        //   3. For each role on the object:
-        //      a. Look up role → XML element name via role_to_xml
-        //      b. If is_identity, emit <SHORT-NAME>value</SHORT-NAME>
-        //      c. Otherwise emit <ELEMENT>value</ELEMENT> or recurse
-        //   4. Write closing tag
-        (void)fir;
-        (void)out;
-        (void)indent;
+        // Collect IDs of objects that are nested (referenced as containment values)
+        // so we only emit top-level objects at this level
+        std::vector<uint32_t> nested_ids;
+        fir.forEachNode([&](fir::Id id, const fir::Node& node) {
+            if (node.kind != fir::NodeKind::ObjectDef) return;
+            auto& obj = fir.as<fir::ObjectDef>(id);
+            auto props = fir.propertiesOf(obj);
+            for (auto prop_id : props) {
+                auto& pv = fir.as<fir::PropertyVal>(prop_id);
+                auto& val_node = fir.get(pv.value_id);
+                if (val_node.kind == fir::NodeKind::ObjectDef) {
+                    nested_ids.push_back(static_cast<uint32_t>(pv.value_id));
+                }
+            }
+        });
+
+        // Emit only top-level objects
+        fir.forEachNode([&](fir::Id id, const fir::Node& node) {
+            if (node.kind != fir::NodeKind::ObjectDef) return;
+            auto raw = static_cast<uint32_t>(id);
+            for (auto nid : nested_ids) {
+                if (nid == raw) return;
+            }
+            auto& obj = fir.as<fir::ObjectDef>(id);
+            emit_object(fir, obj, out, indent);
+        });
     }
 };
 
