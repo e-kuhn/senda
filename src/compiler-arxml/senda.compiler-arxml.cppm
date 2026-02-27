@@ -401,8 +401,7 @@ private:
 
         // Always count skipped elements
         state.skip_total_count++;
-        if (state.domain_is_override
-            && state.skip_warning_emitted < state.max_skip_warnings) {
+        if (state.skip_warning_emitted < state.max_skip_warnings) {
             state.skip_warning_emitted++;
             state.diags.add({rupa::compiler::Severity::Warning,
                 "skipping unknown element '" + std::string(tag) + "'",
