@@ -99,11 +99,41 @@ def _build_aho_corasick(mapping: dict[str, str]) -> tuple[dict, list[str]]:
     return goto, fail, output
 
 
+def _split_around_entities(content: str, start: int, end: int) -> list[tuple[int, int]]:
+    """Split a text span into sub-regions that exclude XML entity references.
+
+    Entity references (&amp; &lt; &gt; &quot; &apos; and numeric &#..;)
+    are excluded so that Aho-Corasick never matches substrings inside them.
+    """
+    regions: list[tuple[int, int]] = []
+    pos = start
+    while pos < end:
+        amp = content.find('&', pos, end)
+        if amp < 0:
+            # No more entities — rest of span is safe
+            if pos < end:
+                regions.append((pos, end))
+            break
+        semi = content.find(';', amp + 1, end)
+        if semi < 0:
+            # Bare '&' with no closing ';' — include everything
+            if pos < end:
+                regions.append((pos, end))
+            break
+        # Add the region before the entity reference
+        if amp > pos:
+            regions.append((pos, amp))
+        # Skip past the entity reference (&...;)
+        pos = semi + 1
+    return regions
+
+
 def _build_text_regions(content: str) -> list[tuple[int, int]]:
     """Identify text-content regions (between > and <) in the XML.
 
     Returns sorted list of (start, end) pairs where replacements are safe.
-    Excludes content inside tags, processing instructions, comments, and CDATA.
+    Excludes content inside tags, processing instructions, comments, CDATA,
+    and XML entity references (&amp; &lt; etc.).
     """
     regions: list[tuple[int, int]] = []
     i = 0
@@ -117,7 +147,7 @@ def _build_text_regions(content: str) -> list[tuple[int, int]]:
                 end = content.find('-->', body_start)
                 if end >= 0:
                     if end > body_start:
-                        regions.append((body_start, end))
+                        regions.extend(_split_around_entities(content, body_start, end))
                     i = end + 3
                 else:
                     i = n
@@ -134,13 +164,13 @@ def _build_text_regions(content: str) -> list[tuple[int, int]]:
                 end = content.find('>', i + 1)
                 i = end + 1 if end >= 0 else n
         else:
-            # Text content — find extent until next <
+            # Text content — find extent until next <, split around entities
             start = i
             end = content.find('<', i)
             if end < 0:
                 end = n
             if end > start:
-                regions.append((start, end))
+                regions.extend(_split_around_entities(content, start, end))
             i = end
     return regions
 
