@@ -1,7 +1,7 @@
 add_library(senda.domains)
 target_sources(senda.domains
     PUBLIC FILE_SET CXX_MODULES FILES
-        senda.domains.cppm
+        senda.domains.r23-11.cppm
 )
 target_link_libraries(senda.domains
     PUBLIC rupa.domain rupa.fir rupa.fir.builder kore

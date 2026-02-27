@@ -306,11 +306,11 @@ class TestDomainModuleGeneration(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmpdir:
             generate_domain_module(schema, tmpdir)
-            path = os.path.join(tmpdir, "domains", "senda.domains.cppm")
+            path = os.path.join(tmpdir, "domains", "senda.domains.r23-11.cppm")
             self.assertTrue(os.path.exists(path))
             with open(path) as f:
                 content = f.read()
-            self.assertIn("export module senda.domains", content)
+            self.assertIn("export module senda.domains.r23_11", content)
             self.assertIn("AutosarSchema", content)
             self.assertIn("TypeInfo", content)
 
@@ -374,6 +374,51 @@ class TestArxmlParserGeneration(unittest.TestCase):
         self.assertIn("AutosarSchema", code)
         self.assertIn("tag_to_type", code)
 
+    def test_parser_imports_versioned_domain(self):
+        from cpp_generator import generate_arxml_module
+        from schema_model import ExportSchema
+
+        schema = ExportSchema(release_version="R23-11")
+        code = generate_arxml_module(schema)
+
+        self.assertIn("import senda.domains.r23_11;", code)
+
+
+class TestVersionedDomainModule(unittest.TestCase):
+    def test_domain_module_uses_release_in_filename(self):
+        import tempfile
+        from cpp_generator import generate_cpp_files
+        from schema_model import ExportSchema
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            autosar_version="00052",
+            primitives=[], enums=[], composites=[],
+            root_type=None, warnings=[], errors=[],
+        )
+        with tempfile.TemporaryDirectory() as tmpdir:
+            generate_cpp_files(schema, tmpdir)
+            expected_path = os.path.join(tmpdir, "domains", "senda.domains.r23-11.cppm")
+            self.assertTrue(os.path.exists(expected_path), f"Expected {expected_path}")
+
+    def test_domain_module_name_contains_version(self):
+        import tempfile
+        from cpp_generator import generate_cpp_files
+        from schema_model import ExportSchema
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            autosar_version="00052",
+            primitives=[], enums=[], composites=[],
+            root_type=None, warnings=[], errors=[],
+        )
+        with tempfile.TemporaryDirectory() as tmpdir:
+            generate_cpp_files(schema, tmpdir)
+            path = os.path.join(tmpdir, "domains", "senda.domains.r23-11.cppm")
+            with open(path) as f:
+                content = f.read()
+            self.assertIn("export module senda.domains.r23_11;", content)
+
 
 class TestFileGeneration(unittest.TestCase):
     def test_generate_cpp_files_creates_domain_module(self):
@@ -391,12 +436,12 @@ class TestFileGeneration(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             generate_cpp_files(schema, tmpdir)
 
-            domain_path = os.path.join(tmpdir, "domains", "senda.domains.cppm")
+            domain_path = os.path.join(tmpdir, "domains", "senda.domains.r23-11.cppm")
             self.assertTrue(os.path.exists(domain_path))
 
             with open(domain_path) as f:
                 content = f.read()
-            self.assertIn("export module senda.domains", content)
+            self.assertIn("export module senda.domains.r23_11", content)
             self.assertIn("AutosarSchema", content)
 
     def test_generate_cpp_files_creates_parser_module(self):

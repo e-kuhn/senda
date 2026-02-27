@@ -8,7 +8,7 @@ import rupa.driver;
 import rupa.fir;
 import rupa.sema;
 import senda.compiler.arxml;
-import senda.domains;
+import senda.domains.r23_11;
 
 namespace fs = std::filesystem;
 

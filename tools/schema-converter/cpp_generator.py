@@ -164,6 +164,7 @@ def generate_arxml_module(schema: ExportSchema) -> str:
     """Generate the complete senda.compiler-arxml.cppm SAX parser module."""
     release = schema.release_version
     domain = _domain_name(release)
+    module_version = release.lower().replace("-", "_")  # "r23_11"
 
     return '''module;
 
@@ -183,7 +184,7 @@ import rupa.compiler;
 import rupa.domain;
 import rupa.fir;
 import rupa.fir.builder;
-import senda.domains;
+import senda.domains.{module_version};
 
 export namespace senda
 {{
@@ -422,17 +423,21 @@ private:
 }};
 
 }}  // namespace senda
-'''.format()
+'''.format(module_version=module_version)
 
 
 def generate_domain_module(schema: ExportSchema, output_dir: str) -> None:
-    """Generate the complete senda.domains.cppm module file."""
+    """Generate a version-specific domain module file."""
+    release = schema.release_version
+    version_slug = release.lower()           # "r23-11"
+    module_version = version_slug.replace("-", "_")  # "r23_11"
+
     header = '''module;
 
 #include <string_view>
 #include <utility>
 
-export module senda.domains;
+export module senda.domains.%s;
 
 import kore.containers.frozen_map;
 import rupa.fir;
@@ -452,7 +457,7 @@ struct AutosarSchema {
     kore::FrozenMap<std::string_view, TypeInfo> tag_to_type;
 };
 
-'''
+''' % module_version
 
     body = generate_domain_builder(schema)
 
@@ -460,7 +465,8 @@ struct AutosarSchema {
 }  // namespace senda::domains
 '''
 
-    path = os.path.join(output_dir, "domains", "senda.domains.cppm")
+    filename = "senda.domains.%s.cppm" % version_slug
+    path = os.path.join(output_dir, "domains", filename)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(header)
