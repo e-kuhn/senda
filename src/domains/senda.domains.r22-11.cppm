@@ -3,7 +3,7 @@ module;
 #include <string_view>
 #include <utility>
 
-export module senda.domains.r23_11;
+export module senda.domains.r22_11;
 
 import senda.domains;
 import rupa.fir;
@@ -14,7 +14,7 @@ export namespace senda::domains
 
 
 
-AutosarSchema build_autosar_r23_11() {
+AutosarSchema build_autosar_r22_11() {
     fir::Fir type_fir;
     rupa::fir_builder::FirBuilder b(type_fir);
 
@@ -70,7 +70,7 @@ AutosarSchema build_autosar_r23_11() {
     auto verbatim_string_plain_simple_t = b.begin_type("VerbatimStringPlainSimple", fir::M3Kind::Primitive);
     auto view_tokens_simple_t = b.begin_type("ViewTokensSimple", fir::M3Kind::Primitive);
 
-    // ── Enums (870) ──
+    // ── Enums (817) ──
     auto abstract_access_point_subtypes_enum = b.begin_type("AbstractAccessPointSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(abstract_access_point_subtypes_enum, "ABSTRACT-ACCESS-POINT");
     b.add_enum_value(abstract_access_point_subtypes_enum, "ASYNCHRONOUS-SERVER-CALL-POINT");
@@ -99,7 +99,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(abstract_event_subtypes_enum, "BSW-EVENT");
     b.add_enum_value(abstract_event_subtypes_enum, "BSW-EXTERNAL-TRIGGER-OCCURRED-EVENT");
     b.add_enum_value(abstract_event_subtypes_enum, "BSW-INTERNAL-TRIGGER-OCCURRED-EVENT");
-    b.add_enum_value(abstract_event_subtypes_enum, "BSW-INTERRUPT-EVENT");
     b.add_enum_value(abstract_event_subtypes_enum, "BSW-MODE-MANAGER-ERROR-EVENT");
     b.add_enum_value(abstract_event_subtypes_enum, "BSW-MODE-SWITCH-EVENT");
     b.add_enum_value(abstract_event_subtypes_enum, "BSW-MODE-SWITCHED-ACK-EVENT");
@@ -159,9 +158,6 @@ AutosarSchema build_autosar_r23_11() {
     auto abstract_service_instance_subtypes_enum = b.begin_type("AbstractServiceInstanceSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(abstract_service_instance_subtypes_enum, "ABSTRACT-SERVICE-INSTANCE");
     b.add_enum_value(abstract_service_instance_subtypes_enum, "CONSUMED-SERVICE-INSTANCE");
-    b.add_enum_value(abstract_service_instance_subtypes_enum, "DDS-CP-CONSUMED-SERVICE-INSTANCE");
-    b.add_enum_value(abstract_service_instance_subtypes_enum, "DDS-CP-PROVIDED-SERVICE-INSTANCE");
-    b.add_enum_value(abstract_service_instance_subtypes_enum, "DDS-CP-SERVICE-INSTANCE");
     b.add_enum_value(abstract_service_instance_subtypes_enum, "PROVIDED-SERVICE-INSTANCE");
 
     auto abstract_signal_based_to_i_signal_triggering_mapping_subtypes_enum = b.begin_type("AbstractSignalBasedToISignalTriggeringMappingSubtypesEnum", fir::M3Kind::Enum);
@@ -188,6 +184,9 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(adaptive_module_instantiation_subtypes_enum, "ADAPTIVE-FIREWALL-MODULE-INSTANTIATION");
     b.add_enum_value(adaptive_module_instantiation_subtypes_enum, "ADAPTIVE-MODULE-INSTANTIATION");
     b.add_enum_value(adaptive_module_instantiation_subtypes_enum, "CRYPTO-MODULE-INSTANTIATION");
+    b.add_enum_value(adaptive_module_instantiation_subtypes_enum, "DETERMINISTIC-CLIENT");
+    b.add_enum_value(adaptive_module_instantiation_subtypes_enum, "DETERMINISTIC-SYNC-INSTANTIATION");
+    b.add_enum_value(adaptive_module_instantiation_subtypes_enum, "DETERMINISTIC-SYNC-MASTER");
     b.add_enum_value(adaptive_module_instantiation_subtypes_enum, "DO-IP-INSTANTIATION");
     b.add_enum_value(adaptive_module_instantiation_subtypes_enum, "GENERIC-MODULE-INSTANTIATION");
     b.add_enum_value(adaptive_module_instantiation_subtypes_enum, "IAM-MODULE-INSTANTIATION");
@@ -271,11 +270,7 @@ AutosarSchema build_autosar_r23_11() {
     auto application_record_element_subtypes_enum = b.begin_type("ApplicationRecordElementSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(application_record_element_subtypes_enum, "APPLICATION-RECORD-ELEMENT");
 
-    auto applied_standard_subtypes_enum = b.begin_type("AppliedStandardSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(applied_standard_subtypes_enum, "APPLIED-STANDARD");
-
     auto ar_element_subtypes_enum = b.begin_type("ArElementSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(ar_element_subtypes_enum, "ABSTRACT-CAN-CLUSTER");
     b.add_enum_value(ar_element_subtypes_enum, "ABSTRACT-EXECUTION-CONTEXT");
     b.add_enum_value(ar_element_subtypes_enum, "ABSTRACT-IAM-REMOTE-SUBJECT");
     b.add_enum_value(ar_element_subtypes_enum, "ABSTRACT-IMPLEMENTATION-DATA-TYPE");
@@ -293,7 +288,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "AP-APPLICATION-ERROR");
     b.add_enum_value(ar_element_subtypes_enum, "AP-APPLICATION-ERROR-DOMAIN");
     b.add_enum_value(ar_element_subtypes_enum, "AP-APPLICATION-ERROR-SET");
-    b.add_enum_value(ar_element_subtypes_enum, "APPLICABILITY-INFO-SET");
     b.add_enum_value(ar_element_subtypes_enum, "APPLICATION-ARRAY-DATA-TYPE");
     b.add_enum_value(ar_element_subtypes_enum, "APPLICATION-ASSOC-MAP-DATA-TYPE");
     b.add_enum_value(ar_element_subtypes_enum, "APPLICATION-COMPOSITE-DATA-TYPE");
@@ -318,7 +312,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "BSW-MODULE-TIMING");
     b.add_enum_value(ar_element_subtypes_enum, "BUILD-ACTION-MANIFEST");
     b.add_enum_value(ar_element_subtypes_enum, "CALIBRATION-PARAMETER-VALUE-SET");
-    b.add_enum_value(ar_element_subtypes_enum, "CAN-CLUSTER");
     b.add_enum_value(ar_element_subtypes_enum, "CAN-XL-PROPS");
     b.add_enum_value(ar_element_subtypes_enum, "CLIENT-ID-DEFINITION-SET");
     b.add_enum_value(ar_element_subtypes_enum, "CLIENT-SERVER-INTERFACE");
@@ -339,9 +332,7 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "COM-OFFER-SERVICE-GRANT");
     b.add_enum_value(ar_element_subtypes_enum, "COM-OFFER-SERVICE-GRANT-DESIGN");
     b.add_enum_value(ar_element_subtypes_enum, "COM-SEC-OC-TO-CRYPTO-KEY-SLOT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "COM-TRIGGER-GRANT");
     b.add_enum_value(ar_element_subtypes_enum, "COM-TRIGGER-GRANT-DESIGN");
-    b.add_enum_value(ar_element_subtypes_enum, "COMMUNICATION-CLUSTER");
     b.add_enum_value(ar_element_subtypes_enum, "COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE");
     b.add_enum_value(ar_element_subtypes_enum, "COMPOSITION-P-PORT-TO-EXECUTABLE-P-PORT-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "COMPOSITION-PORT-TO-EXECUTABLE-PORT-MAPPING");
@@ -351,7 +342,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "CONSISTENCY-NEEDS-BLUEPRINT-SET");
     b.add_enum_value(ar_element_subtypes_enum, "CONSTANT-SPECIFICATION");
     b.add_enum_value(ar_element_subtypes_enum, "CONSTANT-SPECIFICATION-MAPPING-SET");
-    b.add_enum_value(ar_element_subtypes_enum, "CONTAINER-I-PDU");
     b.add_enum_value(ar_element_subtypes_enum, "CP-SOFTWARE-CLUSTER");
     b.add_enum_value(ar_element_subtypes_enum, "CP-SOFTWARE-CLUSTER-BINARY-MANIFEST-DESCRIPTOR");
     b.add_enum_value(ar_element_subtypes_enum, "CP-SOFTWARE-CLUSTER-MAPPING-SET");
@@ -381,8 +371,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "DATA-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "DATA-TRANSFORMATION-SET");
     b.add_enum_value(ar_element_subtypes_enum, "DATA-TYPE-MAPPING-SET");
-    b.add_enum_value(ar_element_subtypes_enum, "DCM-I-PDU");
-    b.add_enum_value(ar_element_subtypes_enum, "DDS-CP-CONFIG");
     b.add_enum_value(ar_element_subtypes_enum, "DDS-PROVIDED-SERVICE-INSTANCE");
     b.add_enum_value(ar_element_subtypes_enum, "DDS-REQUIRED-SERVICE-INSTANCE");
     b.add_enum_value(ar_element_subtypes_enum, "DDS-SECURE-COM-PROPS");
@@ -390,6 +378,8 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "DDS-SERVICE-INSTANCE-TO-MACHINE-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "DDS-SERVICE-INTERFACE-DEPLOYMENT");
     b.add_enum_value(ar_element_subtypes_enum, "DDS-TOPIC-ACCESS-RULE");
+    b.add_enum_value(ar_element_subtypes_enum, "DETERMINISTIC-CLIENT");
+    b.add_enum_value(ar_element_subtypes_enum, "DETERMINISTIC-SYNC-MASTER-TO-TIME-BASE-CONSUMER-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-ABSTRACT-ALIAS-EVENT");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-ABSTRACT-DATA-IDENTIFIER");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-ABSTRACT-DATA-IDENTIFIER-INTERFACE");
@@ -397,8 +387,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-ACCESS-PERMISSION");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-AGING");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-AUTH-ROLE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CLASS");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CONFIGURATION");
@@ -507,14 +495,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MEMORY-IDENTIFIER");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MONITOR-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MONITOR-PORT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-PORT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-PORT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-PORT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-PORT-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-PORT-MAPPING");
@@ -562,7 +542,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-ROUTINE-CONTROL-CLASS");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-ROUTINE-GENERIC-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-ROUTINE-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SECURE-CODING-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SECURITY-ACCESS");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SECURITY-ACCESS-CLASS");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SECURITY-EVENT-REPORTING-MODE-MAPPING");
@@ -582,27 +561,10 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SESSION-CONTROL-CLASS");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-PORT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-PORT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-BULK-DATA");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-DATA-IDENTIFIER-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PARAMETER");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PORT-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-LOCK");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-LOG");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-METHOD");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-PORT-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-PORT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-INSTANCE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-PORT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-PORT-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION-GROUP");
     b.add_enum_value(ar_element_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION-PORT-MAPPING");
@@ -645,7 +607,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "ETH-IP-PROPS");
     b.add_enum_value(ar_element_subtypes_enum, "ETH-TCP-IP-ICMP-PROPS");
     b.add_enum_value(ar_element_subtypes_enum, "ETH-TCP-IP-PROPS");
-    b.add_enum_value(ar_element_subtypes_enum, "ETHERNET-CLUSTER");
     b.add_enum_value(ar_element_subtypes_enum, "ETHERNET-RAW-DATA-STREAM-CLIENT-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "ETHERNET-RAW-DATA-STREAM-GRANT");
     b.add_enum_value(ar_element_subtypes_enum, "ETHERNET-RAW-DATA-STREAM-MAPPING");
@@ -656,7 +617,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "FIREWALL-RULE");
     b.add_enum_value(ar_element_subtypes_enum, "FIREWALL-STATE-SWITCH-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "FLAT-MAP");
-    b.add_enum_value(ar_element_subtypes_enum, "FLEXRAY-CLUSTER");
     b.add_enum_value(ar_element_subtypes_enum, "FM-FEATURE");
     b.add_enum_value(ar_element_subtypes_enum, "FM-FEATURE-MAP");
     b.add_enum_value(ar_element_subtypes_enum, "FM-FEATURE-MODEL");
@@ -664,80 +624,47 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "FUNCTION-GROUP-SET");
     b.add_enum_value(ar_element_subtypes_enum, "FUNCTIONAL-CLUSTER-INTERACTS-WITH-FUNCTIONAL-CLUSTER-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "FUNCTIONAL-CLUSTER-INTERACTS-WITH-PERSISTENCY-DEPLOYMENT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "FUNCTIONAL-CLUSTER-TO-SECURITY-EVENT-DEFINITION-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "GENERAL-PURPOSE-CONNECTION");
-    b.add_enum_value(ar_element_subtypes_enum, "GENERAL-PURPOSE-I-PDU");
-    b.add_enum_value(ar_element_subtypes_enum, "GENERAL-PURPOSE-PDU");
-    b.add_enum_value(ar_element_subtypes_enum, "GLOBAL-TIME-DOMAIN");
     b.add_enum_value(ar_element_subtypes_enum, "GRANT");
     b.add_enum_value(ar_element_subtypes_enum, "GRANT-DESIGN");
     b.add_enum_value(ar_element_subtypes_enum, "HW-CATEGORY");
     b.add_enum_value(ar_element_subtypes_enum, "HW-ELEMENT");
     b.add_enum_value(ar_element_subtypes_enum, "HW-TYPE");
-    b.add_enum_value(ar_element_subtypes_enum, "I-PDU");
     b.add_enum_value(ar_element_subtypes_enum, "I-PV-6-EXT-HEADER-FILTER-SET");
-    b.add_enum_value(ar_element_subtypes_enum, "I-SIGNAL");
-    b.add_enum_value(ar_element_subtypes_enum, "I-SIGNAL-GROUP");
-    b.add_enum_value(ar_element_subtypes_enum, "I-SIGNAL-I-PDU");
     b.add_enum_value(ar_element_subtypes_enum, "IDS-COMMON-ELEMENT");
     b.add_enum_value(ar_element_subtypes_enum, "IDS-DESIGN");
     b.add_enum_value(ar_element_subtypes_enum, "IDS-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "IDSM-ABSTRACT-PORT-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "IDSM-CONTEXT-PROVIDER-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "IDSM-CONTEXT-PROVIDER-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "IDSM-INSTANCE");
     b.add_enum_value(ar_element_subtypes_enum, "IDSM-PROPERTIES");
-    b.add_enum_value(ar_element_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "IEEE-1722-TP-AAF-CONNECTION");
-    b.add_enum_value(ar_element_subtypes_enum, "IEEE-1722-TP-ACF-CONNECTION");
-    b.add_enum_value(ar_element_subtypes_enum, "IEEE-1722-TP-AV-CONNECTION");
-    b.add_enum_value(ar_element_subtypes_enum, "IEEE-1722-TP-CONNECTION");
-    b.add_enum_value(ar_element_subtypes_enum, "IEEE-1722-TP-CRF-CONNECTION");
-    b.add_enum_value(ar_element_subtypes_enum, "IEEE-1722-TP-IIDC-CONNECTION");
-    b.add_enum_value(ar_element_subtypes_enum, "IEEE-1722-TP-RVF-CONNECTION");
     b.add_enum_value(ar_element_subtypes_enum, "IMPLEMENTATION");
     b.add_enum_value(ar_element_subtypes_enum, "IMPLEMENTATION-DATA-TYPE");
-    b.add_enum_value(ar_element_subtypes_enum, "IMPOSITION-TIME-DEFINITION-GROUP");
     b.add_enum_value(ar_element_subtypes_enum, "INTERFACE-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "INTERPOLATION-ROUTINE-MAPPING-SET");
     b.add_enum_value(ar_element_subtypes_enum, "IP-IAM-REMOTE-SUBJECT");
     b.add_enum_value(ar_element_subtypes_enum, "IP-SEC-CONFIG-PROPS");
     b.add_enum_value(ar_element_subtypes_enum, "IP-SEC-IAM-REMOTE-SUBJECT");
-    b.add_enum_value(ar_element_subtypes_enum, "J-1939-CLUSTER");
     b.add_enum_value(ar_element_subtypes_enum, "J-1939-CONTROLLER-APPLICATION");
-    b.add_enum_value(ar_element_subtypes_enum, "J-1939-DCM-I-PDU");
     b.add_enum_value(ar_element_subtypes_enum, "KEYWORD-SET");
     b.add_enum_value(ar_element_subtypes_enum, "LIFE-CYCLE-INFO-SET");
     b.add_enum_value(ar_element_subtypes_enum, "LIFE-CYCLE-STATE-DEFINITION-GROUP");
-    b.add_enum_value(ar_element_subtypes_enum, "LIN-CLUSTER");
     b.add_enum_value(ar_element_subtypes_enum, "LOG-AND-TRACE-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "LOG-AND-TRACE-MESSAGE-COLLECTION-SET");
     b.add_enum_value(ar_element_subtypes_enum, "LT-MESSAGE-COLLECTION-TO-PORT-PROTOTYPE-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "MAC-SEC-GLOBAL-KAY-PROPS");
     b.add_enum_value(ar_element_subtypes_enum, "MAC-SEC-PARTICIPANT-SET");
     b.add_enum_value(ar_element_subtypes_enum, "MACHINE");
-    b.add_enum_value(ar_element_subtypes_enum, "MACHINE-DESIGN");
     b.add_enum_value(ar_element_subtypes_enum, "MACHINE-TIMING");
     b.add_enum_value(ar_element_subtypes_enum, "MC-FUNCTION");
     b.add_enum_value(ar_element_subtypes_enum, "MC-GROUP");
     b.add_enum_value(ar_element_subtypes_enum, "MODE-DECLARATION-GROUP");
     b.add_enum_value(ar_element_subtypes_enum, "MODE-DECLARATION-MAPPING-SET");
     b.add_enum_value(ar_element_subtypes_enum, "MODE-SWITCH-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "MULTIPLEXED-I-PDU");
-    b.add_enum_value(ar_element_subtypes_enum, "N-PDU");
-    b.add_enum_value(ar_element_subtypes_enum, "NETWORK-HANDLE-PORT-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "NETWORK-MANAGEMENT-PORT-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "NM-CONFIG");
     b.add_enum_value(ar_element_subtypes_enum, "NM-HANDLE-TO-FUNCTION-GROUP-STATE-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "NM-INTERACTS-WITH-SM-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "NM-PDU");
     b.add_enum_value(ar_element_subtypes_enum, "NV-BLOCK-SW-COMPONENT-TYPE");
     b.add_enum_value(ar_element_subtypes_enum, "NV-DATA-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "OS-TASK-PROXY");
     b.add_enum_value(ar_element_subtypes_enum, "PARAMETER-INTERFACE");
     b.add_enum_value(ar_element_subtypes_enum, "PARAMETER-SW-COMPONENT-TYPE");
-    b.add_enum_value(ar_element_subtypes_enum, "PDU");
     b.add_enum_value(ar_element_subtypes_enum, "PERSISTENCY-DEPLOYMENT");
     b.add_enum_value(ar_element_subtypes_enum, "PERSISTENCY-DEPLOYMENT-ELEMENT-TO-CRYPTO-KEY-SLOT-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "PERSISTENCY-DEPLOYMENT-TO-CRYPTO-KEY-SLOT-MAPPING");
@@ -795,7 +722,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "SDG-DEF");
     b.add_enum_value(ar_element_subtypes_enum, "SEC-OC-SECURE-COM-PROPS");
     b.add_enum_value(ar_element_subtypes_enum, "SECURE-COM-PROPS");
-    b.add_enum_value(ar_element_subtypes_enum, "SECURED-I-PDU");
     b.add_enum_value(ar_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING-APPLICATION");
     b.add_enum_value(ar_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING-BSW-MODULE");
@@ -825,8 +751,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "SERVICE-SW-COMPONENT-TYPE");
     b.add_enum_value(ar_element_subtypes_enum, "SERVICE-TIMING");
     b.add_enum_value(ar_element_subtypes_enum, "SIGNAL-SERVICE-TRANSLATION-PROPS-SET");
-    b.add_enum_value(ar_element_subtypes_enum, "SM-INTERACTS-WITH-NM-MAPPING");
-    b.add_enum_value(ar_element_subtypes_enum, "SOCKET-CONNECTION-IPDU-IDENTIFIER-SET");
     b.add_enum_value(ar_element_subtypes_enum, "SOFTWARE-CLUSTER");
     b.add_enum_value(ar_element_subtypes_enum, "SOFTWARE-CLUSTER-DESIGN");
     b.add_enum_value(ar_element_subtypes_enum, "SOFTWARE-CLUSTER-DIAGNOSTIC-DEPLOYMENT-PROPS");
@@ -881,23 +805,16 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ar_element_subtypes_enum, "TRANSFORMATION-PROPS-SET");
     b.add_enum_value(ar_element_subtypes_enum, "TRANSFORMATION-PROPS-TO-SERVICE-INTERFACE-ELEMENT-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "TRIGGER-INTERFACE");
-    b.add_enum_value(ar_element_subtypes_enum, "TTCAN-CLUSTER");
     b.add_enum_value(ar_element_subtypes_enum, "UCM-TO-TIME-BASE-RESOURCE-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "UNIT");
     b.add_enum_value(ar_element_subtypes_enum, "UNIT-GROUP");
-    b.add_enum_value(ar_element_subtypes_enum, "UPLOADABLE-DEPLOYMENT-ELEMENT");
-    b.add_enum_value(ar_element_subtypes_enum, "UPLOADABLE-DESIGN-ELEMENT");
     b.add_enum_value(ar_element_subtypes_enum, "UPLOADABLE-EXCLUSIVE-PACKAGE-ELEMENT");
     b.add_enum_value(ar_element_subtypes_enum, "UPLOADABLE-PACKAGE-ELEMENT");
-    b.add_enum_value(ar_element_subtypes_enum, "USER-DEFINED-CLUSTER");
-    b.add_enum_value(ar_element_subtypes_enum, "USER-DEFINED-I-PDU");
-    b.add_enum_value(ar_element_subtypes_enum, "USER-DEFINED-PDU");
     b.add_enum_value(ar_element_subtypes_enum, "USER-DEFINED-SERVICE-INSTANCE-TO-MACHINE-MAPPING");
     b.add_enum_value(ar_element_subtypes_enum, "USER-DEFINED-SERVICE-INTERFACE-DEPLOYMENT");
     b.add_enum_value(ar_element_subtypes_enum, "VEHICLE-PACKAGE");
     b.add_enum_value(ar_element_subtypes_enum, "VFB-TIMING");
     b.add_enum_value(ar_element_subtypes_enum, "VIEW-MAP-SET");
-    b.add_enum_value(ar_element_subtypes_enum, "XCP-PDU");
 
     auto ar_package_subtypes_enum = b.begin_type("ArPackageSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(ar_package_subtypes_enum, "AR-PACKAGE");
@@ -981,10 +898,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-GENERIC-UDS-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-INDICATOR-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-MONITOR-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-PORT-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-REQUEST-FILE-TRANSFER-INTERFACE");
@@ -993,12 +906,8 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-SECURITY-LEVEL-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-SERVICE-VALIDATION-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-SOVD-PORT-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "DIAGNOSTIC-UPLOAD-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "ECU-ABSTRACTION-SW-COMPONENT-TYPE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "ECUC-DEFINITION-COLLECTION");
@@ -1006,12 +915,7 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(atp_blueprint_subtypes_enum, "ECUC-MODULE-DEF");
     b.add_enum_value(atp_blueprint_subtypes_enum, "FIREWALL-STATE-SWITCH-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "FLAT-MAP");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "IDSM-ABSTRACT-PORT-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "IDSM-CONTEXT-PROVIDER-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "IMPLEMENTATION-DATA-TYPE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "IMPOSITION-TIME");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "IMPOSITION-TIME-DEFINITION-GROUP");
     b.add_enum_value(atp_blueprint_subtypes_enum, "KEYWORD-SET");
     b.add_enum_value(atp_blueprint_subtypes_enum, "LIFE-CYCLE-STATE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "LIFE-CYCLE-STATE-DEFINITION-GROUP");
@@ -1019,7 +923,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(atp_blueprint_subtypes_enum, "MODE-DECLARATION-GROUP");
     b.add_enum_value(atp_blueprint_subtypes_enum, "MODE-INTERFACE-MAPPING");
     b.add_enum_value(atp_blueprint_subtypes_enum, "MODE-SWITCH-INTERFACE");
-    b.add_enum_value(atp_blueprint_subtypes_enum, "NETWORK-MANAGEMENT-PORT-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "NV-BLOCK-SW-COMPONENT-TYPE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "NV-DATA-INTERFACE");
     b.add_enum_value(atp_blueprint_subtypes_enum, "PARAMETER-INTERFACE");
@@ -1135,10 +1038,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-GENERIC-UDS-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-INDICATOR-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-MONITOR-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-PORT-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-REQUEST-FILE-TRANSFER-INTERFACE");
@@ -1147,12 +1046,8 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-SECURITY-LEVEL-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-SERVICE-VALIDATION-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-SOVD-PORT-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "DIAGNOSTIC-UPLOAD-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "ECU-ABSTRACTION-SW-COMPONENT-TYPE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "ECUC-DEFINITION-COLLECTION");
@@ -1160,12 +1055,7 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(atp_blueprintable_subtypes_enum, "ECUC-MODULE-DEF");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "FIREWALL-STATE-SWITCH-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "FLAT-MAP");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "IDSM-ABSTRACT-PORT-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "IDSM-CONTEXT-PROVIDER-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "IMPLEMENTATION-DATA-TYPE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "IMPOSITION-TIME");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "IMPOSITION-TIME-DEFINITION-GROUP");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "KEYWORD-SET");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "LIFE-CYCLE-STATE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "LIFE-CYCLE-STATE-DEFINITION-GROUP");
@@ -1173,7 +1063,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(atp_blueprintable_subtypes_enum, "MODE-DECLARATION-GROUP");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "MODE-INTERFACE-MAPPING");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "MODE-SWITCH-INTERFACE");
-    b.add_enum_value(atp_blueprintable_subtypes_enum, "NETWORK-MANAGEMENT-PORT-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "NV-BLOCK-SW-COMPONENT-TYPE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "NV-DATA-INTERFACE");
     b.add_enum_value(atp_blueprintable_subtypes_enum, "P-PORT-PROTOTYPE");
@@ -1291,6 +1180,9 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(atp_feature_subtypes_enum, "DATA-SEND-COMPLETED-EVENT");
     b.add_enum_value(atp_feature_subtypes_enum, "DATA-WRITE-COMPLETED-EVENT");
     b.add_enum_value(atp_feature_subtypes_enum, "DELEGATION-SW-CONNECTOR");
+    b.add_enum_value(atp_feature_subtypes_enum, "DETERMINISTIC-CLIENT");
+    b.add_enum_value(atp_feature_subtypes_enum, "DETERMINISTIC-SYNC-INSTANTIATION");
+    b.add_enum_value(atp_feature_subtypes_enum, "DETERMINISTIC-SYNC-MASTER");
     b.add_enum_value(atp_feature_subtypes_enum, "DIAGNOSTIC-PARAMETER-IDENT");
     b.add_enum_value(atp_feature_subtypes_enum, "DO-IP-INSTANTIATION");
     b.add_enum_value(atp_feature_subtypes_enum, "EXTERNAL-TRIGGER-OCCURRED-EVENT");
@@ -1501,7 +1393,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "AP-APPLICATION-ERROR");
     b.add_enum_value(collectable_element_subtypes_enum, "AP-APPLICATION-ERROR-DOMAIN");
     b.add_enum_value(collectable_element_subtypes_enum, "AP-APPLICATION-ERROR-SET");
-    b.add_enum_value(collectable_element_subtypes_enum, "APPLICABILITY-INFO-SET");
     b.add_enum_value(collectable_element_subtypes_enum, "APPLICATION-ARRAY-DATA-TYPE");
     b.add_enum_value(collectable_element_subtypes_enum, "APPLICATION-ASSOC-MAP-DATA-TYPE");
     b.add_enum_value(collectable_element_subtypes_enum, "APPLICATION-COMPOSITE-DATA-TYPE");
@@ -1556,7 +1447,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "COM-OFFER-SERVICE-GRANT");
     b.add_enum_value(collectable_element_subtypes_enum, "COM-OFFER-SERVICE-GRANT-DESIGN");
     b.add_enum_value(collectable_element_subtypes_enum, "COM-SEC-OC-TO-CRYPTO-KEY-SLOT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "COM-TRIGGER-GRANT");
     b.add_enum_value(collectable_element_subtypes_enum, "COM-TRIGGER-GRANT-DESIGN");
     b.add_enum_value(collectable_element_subtypes_enum, "COMMUNICATION-CLUSTER");
     b.add_enum_value(collectable_element_subtypes_enum, "COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE");
@@ -1601,7 +1491,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "DATA-TRANSFORMATION-SET");
     b.add_enum_value(collectable_element_subtypes_enum, "DATA-TYPE-MAPPING-SET");
     b.add_enum_value(collectable_element_subtypes_enum, "DCM-I-PDU");
-    b.add_enum_value(collectable_element_subtypes_enum, "DDS-CP-CONFIG");
     b.add_enum_value(collectable_element_subtypes_enum, "DDS-PROVIDED-SERVICE-INSTANCE");
     b.add_enum_value(collectable_element_subtypes_enum, "DDS-REQUIRED-SERVICE-INSTANCE");
     b.add_enum_value(collectable_element_subtypes_enum, "DDS-SECURE-COM-PROPS");
@@ -1609,6 +1498,8 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "DDS-SERVICE-INSTANCE-TO-MACHINE-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "DDS-SERVICE-INTERFACE-DEPLOYMENT");
     b.add_enum_value(collectable_element_subtypes_enum, "DDS-TOPIC-ACCESS-RULE");
+    b.add_enum_value(collectable_element_subtypes_enum, "DETERMINISTIC-CLIENT");
+    b.add_enum_value(collectable_element_subtypes_enum, "DETERMINISTIC-SYNC-MASTER-TO-TIME-BASE-CONSUMER-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-ABSTRACT-ALIAS-EVENT");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-ABSTRACT-DATA-IDENTIFIER");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-ABSTRACT-DATA-IDENTIFIER-INTERFACE");
@@ -1616,8 +1507,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-ACCESS-PERMISSION");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-AGING");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-AUTH-ROLE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CLASS");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CONFIGURATION");
@@ -1726,14 +1615,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MEMORY-IDENTIFIER");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MONITOR-INTERFACE");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MONITOR-PORT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-PORT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-PORT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-PORT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-PORT-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-INTERFACE");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-PORT-MAPPING");
@@ -1781,7 +1662,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-ROUTINE-CONTROL-CLASS");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-ROUTINE-GENERIC-INTERFACE");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-ROUTINE-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SECURE-CODING-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SECURITY-ACCESS");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SECURITY-ACCESS-CLASS");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SECURITY-EVENT-REPORTING-MODE-MAPPING");
@@ -1801,27 +1681,10 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SESSION-CONTROL-CLASS");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-INTERFACE");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-PORT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-PORT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-BULK-DATA");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-DATA-IDENTIFIER-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PARAMETER");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PORT-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-LOCK");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-LOG");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-METHOD");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-PORT-INTERFACE");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-INTERFACE");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-PORT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-INSTANCE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-PORT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-PORT-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION-GROUP");
     b.add_enum_value(collectable_element_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION-PORT-MAPPING");
@@ -1895,7 +1758,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "FUNCTION-GROUP-SET");
     b.add_enum_value(collectable_element_subtypes_enum, "FUNCTIONAL-CLUSTER-INTERACTS-WITH-FUNCTIONAL-CLUSTER-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "FUNCTIONAL-CLUSTER-INTERACTS-WITH-PERSISTENCY-DEPLOYMENT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "FUNCTIONAL-CLUSTER-TO-SECURITY-EVENT-DEFINITION-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "GATEWAY");
     b.add_enum_value(collectable_element_subtypes_enum, "GENERAL-PURPOSE-CONNECTION");
     b.add_enum_value(collectable_element_subtypes_enum, "GENERAL-PURPOSE-I-PDU");
@@ -1916,25 +1778,11 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "IDS-COMMON-ELEMENT");
     b.add_enum_value(collectable_element_subtypes_enum, "IDS-DESIGN");
     b.add_enum_value(collectable_element_subtypes_enum, "IDS-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "IDSM-ABSTRACT-PORT-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "IDSM-CONTEXT-PROVIDER-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "IDSM-CONTEXT-PROVIDER-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "IDSM-INSTANCE");
     b.add_enum_value(collectable_element_subtypes_enum, "IDSM-PROPERTIES");
-    b.add_enum_value(collectable_element_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-INTERFACE");
-    b.add_enum_value(collectable_element_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "IEEE-1722-TP-AAF-CONNECTION");
-    b.add_enum_value(collectable_element_subtypes_enum, "IEEE-1722-TP-ACF-CONNECTION");
-    b.add_enum_value(collectable_element_subtypes_enum, "IEEE-1722-TP-AV-CONNECTION");
-    b.add_enum_value(collectable_element_subtypes_enum, "IEEE-1722-TP-CONFIG");
-    b.add_enum_value(collectable_element_subtypes_enum, "IEEE-1722-TP-CONNECTION");
-    b.add_enum_value(collectable_element_subtypes_enum, "IEEE-1722-TP-CRF-CONNECTION");
     b.add_enum_value(collectable_element_subtypes_enum, "IEEE-1722-TP-ETHERNET-FRAME");
-    b.add_enum_value(collectable_element_subtypes_enum, "IEEE-1722-TP-IIDC-CONNECTION");
-    b.add_enum_value(collectable_element_subtypes_enum, "IEEE-1722-TP-RVF-CONNECTION");
     b.add_enum_value(collectable_element_subtypes_enum, "IMPLEMENTATION");
     b.add_enum_value(collectable_element_subtypes_enum, "IMPLEMENTATION-DATA-TYPE");
-    b.add_enum_value(collectable_element_subtypes_enum, "IMPOSITION-TIME-DEFINITION-GROUP");
     b.add_enum_value(collectable_element_subtypes_enum, "INTERFACE-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "INTERPOLATION-ROUTINE-MAPPING-SET");
     b.add_enum_value(collectable_element_subtypes_enum, "IP-IAM-REMOTE-SUBJECT");
@@ -1968,11 +1816,8 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "MODE-SWITCH-INTERFACE");
     b.add_enum_value(collectable_element_subtypes_enum, "MULTIPLEXED-I-PDU");
     b.add_enum_value(collectable_element_subtypes_enum, "N-PDU");
-    b.add_enum_value(collectable_element_subtypes_enum, "NETWORK-HANDLE-PORT-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "NETWORK-MANAGEMENT-PORT-INTERFACE");
     b.add_enum_value(collectable_element_subtypes_enum, "NM-CONFIG");
     b.add_enum_value(collectable_element_subtypes_enum, "NM-HANDLE-TO-FUNCTION-GROUP-STATE-MAPPING");
-    b.add_enum_value(collectable_element_subtypes_enum, "NM-INTERACTS-WITH-SM-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "NM-PDU");
     b.add_enum_value(collectable_element_subtypes_enum, "NV-BLOCK-SW-COMPONENT-TYPE");
     b.add_enum_value(collectable_element_subtypes_enum, "NV-DATA-INTERFACE");
@@ -2071,7 +1916,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "SERVICE-SW-COMPONENT-TYPE");
     b.add_enum_value(collectable_element_subtypes_enum, "SERVICE-TIMING");
     b.add_enum_value(collectable_element_subtypes_enum, "SIGNAL-SERVICE-TRANSLATION-PROPS-SET");
-    b.add_enum_value(collectable_element_subtypes_enum, "SM-INTERACTS-WITH-NM-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "SO-AD-ROUTING-GROUP");
     b.add_enum_value(collectable_element_subtypes_enum, "SOCKET-CONNECTION-IPDU-IDENTIFIER-SET");
     b.add_enum_value(collectable_element_subtypes_enum, "SOFTWARE-CLUSTER");
@@ -2134,8 +1978,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(collectable_element_subtypes_enum, "UCM-TO-TIME-BASE-RESOURCE-MAPPING");
     b.add_enum_value(collectable_element_subtypes_enum, "UNIT");
     b.add_enum_value(collectable_element_subtypes_enum, "UNIT-GROUP");
-    b.add_enum_value(collectable_element_subtypes_enum, "UPLOADABLE-DEPLOYMENT-ELEMENT");
-    b.add_enum_value(collectable_element_subtypes_enum, "UPLOADABLE-DESIGN-ELEMENT");
     b.add_enum_value(collectable_element_subtypes_enum, "UPLOADABLE-EXCLUSIVE-PACKAGE-ELEMENT");
     b.add_enum_value(collectable_element_subtypes_enum, "UPLOADABLE-PACKAGE-ELEMENT");
     b.add_enum_value(collectable_element_subtypes_enum, "USER-DEFINED-CLUSTER");
@@ -2166,9 +2008,6 @@ AutosarSchema build_autosar_r23_11() {
 
     auto com_offer_service_grant_design_subtypes_enum = b.begin_type("ComOfferServiceGrantDesignSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(com_offer_service_grant_design_subtypes_enum, "COM-OFFER-SERVICE-GRANT-DESIGN");
-
-    auto com_trigger_grant_design_subtypes_enum = b.begin_type("ComTriggerGrantDesignSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(com_trigger_grant_design_subtypes_enum, "COM-TRIGGER-GRANT-DESIGN");
 
     auto communication_cluster_subtypes_enum = b.begin_type("CommunicationClusterSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(communication_cluster_subtypes_enum, "ABSTRACT-CAN-CLUSTER");
@@ -2226,9 +2065,6 @@ AutosarSchema build_autosar_r23_11() {
 
     auto coupling_port_subtypes_enum = b.begin_type("CouplingPortSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(coupling_port_subtypes_enum, "COUPLING-PORT");
-
-    auto coupling_port_asynchronous_traffic_shaper_subtypes_enum = b.begin_type("CouplingPortAsynchronousTrafficShaperSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(coupling_port_asynchronous_traffic_shaper_subtypes_enum, "COUPLING-PORT-ASYNCHRONOUS-TRAFFIC-SHAPER");
 
     auto coupling_port_fifo_subtypes_enum = b.begin_type("CouplingPortFifoSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(coupling_port_fifo_subtypes_enum, "COUPLING-PORT-FIFO");
@@ -2332,15 +2168,6 @@ AutosarSchema build_autosar_r23_11() {
     auto data_type_mapping_set_subtypes_enum = b.begin_type("DataTypeMappingSetSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(data_type_mapping_set_subtypes_enum, "DATA-TYPE-MAPPING-SET");
 
-    auto dds_cp_partition_subtypes_enum = b.begin_type("DdsCpPartitionSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(dds_cp_partition_subtypes_enum, "DDS-CP-PARTITION");
-
-    auto dds_cp_qos_profile_subtypes_enum = b.begin_type("DdsCpQosProfileSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(dds_cp_qos_profile_subtypes_enum, "DDS-CP-QOS-PROFILE");
-
-    auto dds_cp_topic_subtypes_enum = b.begin_type("DdsCpTopicSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(dds_cp_topic_subtypes_enum, "DDS-CP-TOPIC");
-
     auto dds_secure_com_props_subtypes_enum = b.begin_type("DdsSecureComPropsSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(dds_secure_com_props_subtypes_enum, "DDS-SECURE-COM-PROPS");
 
@@ -2352,6 +2179,9 @@ AutosarSchema build_autosar_r23_11() {
 
     auto dependency_on_artifact_subtypes_enum = b.begin_type("DependencyOnArtifactSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(dependency_on_artifact_subtypes_enum, "DEPENDENCY-ON-ARTIFACT");
+
+    auto deterministic_sync_master_subtypes_enum = b.begin_type("DeterministicSyncMasterSubtypesEnum", fir::M3Kind::Enum);
+    b.add_enum_value(deterministic_sync_master_subtypes_enum, "DETERMINISTIC-SYNC-MASTER");
 
     auto diagnostic_abstract_data_identifier_subtypes_enum = b.begin_type("DiagnosticAbstractDataIdentifierSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(diagnostic_abstract_data_identifier_subtypes_enum, "DIAGNOSTIC-ABSTRACT-DATA-IDENTIFIER");
@@ -2367,11 +2197,7 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_auth_role_subtypes_enum = b.begin_type("DiagnosticAuthRoleSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(diagnostic_auth_role_subtypes_enum, "DIAGNOSTIC-AUTH-ROLE");
 
-    auto diagnostic_auth_transmit_certificate_evaluation_subtypes_enum = b.begin_type("DiagnosticAuthTransmitCertificateEvaluationSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_auth_transmit_certificate_evaluation_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE-EVALUATION");
-
     auto diagnostic_authentication_subtypes_enum = b.begin_type("DiagnosticAuthenticationSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_authentication_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE");
     b.add_enum_value(diagnostic_authentication_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION");
     b.add_enum_value(diagnostic_authentication_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CONFIGURATION");
     b.add_enum_value(diagnostic_authentication_subtypes_enum, "DIAGNOSTIC-DE-AUTHENTICATION");
@@ -2407,8 +2233,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-ACCESS-PERMISSION");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-AGING");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-AUTH-ROLE");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE-MAPPING");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CLASS");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CONFIGURATION");
@@ -2495,10 +2319,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-MEMORY-DESTINATION-USER-DEFINED");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-MEMORY-IDENTIFIER");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-MONITOR-PORT-MAPPING");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-PORT-MAPPING");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-PORT-MAPPING");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-PORT-MAPPING");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-PORT-MAPPING");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-PORT-MAPPING");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-PARAMETER-IDENTIFIER");
@@ -2541,7 +2361,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-ROUTINE");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-ROUTINE-CONTROL");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-ROUTINE-CONTROL-CLASS");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SECURE-CODING-MAPPING");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SECURITY-ACCESS");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SECURITY-ACCESS-CLASS");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SECURITY-EVENT-REPORTING-MODE-MAPPING");
@@ -2558,21 +2377,8 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SESSION-CONTROL");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SESSION-CONTROL-CLASS");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-PORT-MAPPING");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-PORT-MAPPING");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-BULK-DATA");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-DATA-IDENTIFIER-MAPPING");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PARAMETER");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PORT-MAPPING");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-LOCK");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-LOG");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-METHOD");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-PORT-MAPPING");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-INSTANCE");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-PORT-MAPPING");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE");
-    b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-PORT-MAPPING");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION-GROUP");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION-PORT-MAPPING");
@@ -2595,12 +2401,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-WRITE-DATA-BY-IDENTIFIER-CLASS");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-WRITE-MEMORY-BY-ADDRESS");
     b.add_enum_value(diagnostic_common_element_subtypes_enum, "DIAGNOSTIC-WRITE-MEMORY-BY-ADDRESS-CLASS");
-
-    auto diagnostic_condition_subtypes_enum = b.begin_type("DiagnosticConditionSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_condition_subtypes_enum, "DIAGNOSTIC-CLEAR-CONDITION");
-    b.add_enum_value(diagnostic_condition_subtypes_enum, "DIAGNOSTIC-CONDITION");
-    b.add_enum_value(diagnostic_condition_subtypes_enum, "DIAGNOSTIC-ENABLE-CONDITION");
-    b.add_enum_value(diagnostic_condition_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION");
 
     auto diagnostic_connection_subtypes_enum = b.begin_type("DiagnosticConnectionSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(diagnostic_connection_subtypes_enum, "DIAGNOSTIC-CONNECTION");
@@ -2791,7 +2591,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(diagnostic_security_level_subtypes_enum, "DIAGNOSTIC-SECURITY-LEVEL");
 
     auto diagnostic_service_instance_subtypes_enum = b.begin_type("DiagnosticServiceInstanceSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_service_instance_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE");
     b.add_enum_value(diagnostic_service_instance_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION");
     b.add_enum_value(diagnostic_service_instance_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CONFIGURATION");
     b.add_enum_value(diagnostic_service_instance_subtypes_enum, "DIAGNOSTIC-CLEAR-DIAGNOSTIC-INFORMATION");
@@ -2846,31 +2645,8 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_session_control_class_subtypes_enum = b.begin_type("DiagnosticSessionControlClassSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(diagnostic_session_control_class_subtypes_enum, "DIAGNOSTIC-SESSION-CONTROL-CLASS");
 
-    auto diagnostic_sovd_bulk_data_subtypes_enum = b.begin_type("DiagnosticSovdBulkDataSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_sovd_bulk_data_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA");
-
-    auto diagnostic_sovd_configuration_subtypes_enum = b.begin_type("DiagnosticSovdConfigurationSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_sovd_configuration_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION");
-    b.add_enum_value(diagnostic_sovd_configuration_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-BULK-DATA");
-    b.add_enum_value(diagnostic_sovd_configuration_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PARAMETER");
-
-    auto diagnostic_sovd_configuration_parameter_subtypes_enum = b.begin_type("DiagnosticSovdConfigurationParameterSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_sovd_configuration_parameter_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PARAMETER");
-
     auto diagnostic_sovd_lock_subtypes_enum = b.begin_type("DiagnosticSovdLockSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(diagnostic_sovd_lock_subtypes_enum, "DIAGNOSTIC-SOVD-LOCK");
-
-    auto diagnostic_sovd_method_subtypes_enum = b.begin_type("DiagnosticSovdMethodSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_sovd_method_subtypes_enum, "DIAGNOSTIC-SOVD-METHOD");
-
-    auto diagnostic_sovd_service_validation_port_mapping_subtypes_enum = b.begin_type("DiagnosticSovdServiceValidationPortMappingSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_sovd_service_validation_port_mapping_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-PORT-MAPPING");
-
-    auto diagnostic_sovd_update_subtypes_enum = b.begin_type("DiagnosticSovdUpdateSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_sovd_update_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE");
-
-    auto diagnostic_start_routine_subtypes_enum = b.begin_type("DiagnosticStartRoutineSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_start_routine_subtypes_enum, "DIAGNOSTIC-START-ROUTINE");
 
     auto diagnostic_storage_condition_subtypes_enum = b.begin_type("DiagnosticStorageConditionSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(diagnostic_storage_condition_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION");
@@ -2907,9 +2683,6 @@ AutosarSchema build_autosar_r23_11() {
 
     auto diagnostic_value_needs_subtypes_enum = b.begin_type("DiagnosticValueNeedsSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(diagnostic_value_needs_subtypes_enum, "DIAGNOSTIC-VALUE-NEEDS");
-
-    auto diagnostic_write_data_by_identifier_subtypes_enum = b.begin_type("DiagnosticWriteDataByIdentifierSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(diagnostic_write_data_by_identifier_subtypes_enum, "DIAGNOSTIC-WRITE-DATA-BY-IDENTIFIER");
 
     auto diagnostic_write_data_by_identifier_class_subtypes_enum = b.begin_type("DiagnosticWriteDataByIdentifierClassSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(diagnostic_write_data_by_identifier_class_subtypes_enum, "DIAGNOSTIC-WRITE-DATA-BY-IDENTIFIER-CLASS");
@@ -3157,7 +2930,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(fibex_element_subtypes_enum, "I-SIGNAL-GROUP");
     b.add_enum_value(fibex_element_subtypes_enum, "I-SIGNAL-I-PDU");
     b.add_enum_value(fibex_element_subtypes_enum, "I-SIGNAL-I-PDU-GROUP");
-    b.add_enum_value(fibex_element_subtypes_enum, "IEEE-1722-TP-CONFIG");
     b.add_enum_value(fibex_element_subtypes_enum, "IEEE-1722-TP-ETHERNET-FRAME");
     b.add_enum_value(fibex_element_subtypes_enum, "J-1939-CLUSTER");
     b.add_enum_value(fibex_element_subtypes_enum, "J-1939-DCM-I-PDU");
@@ -3294,7 +3066,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(grant_subtypes_enum, "COM-GRANT");
     b.add_enum_value(grant_subtypes_enum, "COM-METHOD-GRANT");
     b.add_enum_value(grant_subtypes_enum, "COM-OFFER-SERVICE-GRANT");
-    b.add_enum_value(grant_subtypes_enum, "COM-TRIGGER-GRANT");
     b.add_enum_value(grant_subtypes_enum, "ETHERNET-RAW-DATA-STREAM-GRANT");
     b.add_enum_value(grant_subtypes_enum, "GRANT");
     b.add_enum_value(grant_subtypes_enum, "RAW-DATA-STREAM-GRANT");
@@ -3408,7 +3179,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "AP-APPLICATION-ERROR-SET");
     b.add_enum_value(identifiable_subtypes_enum, "AP-SOMEIP-TRANSFORMATION-PROPS");
     b.add_enum_value(identifiable_subtypes_enum, "APP-OS-TASK-PROXY-TO-ECU-TASK-PROXY-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "APPLICABILITY-INFO-SET");
     b.add_enum_value(identifiable_subtypes_enum, "APPLICATION-ARRAY-DATA-TYPE");
     b.add_enum_value(identifiable_subtypes_enum, "APPLICATION-ARRAY-ELEMENT");
     b.add_enum_value(identifiable_subtypes_enum, "APPLICATION-ASSOC-MAP-DATA-TYPE");
@@ -3426,7 +3196,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "APPLICATION-RECORD-DATA-TYPE");
     b.add_enum_value(identifiable_subtypes_enum, "APPLICATION-RECORD-ELEMENT");
     b.add_enum_value(identifiable_subtypes_enum, "APPLICATION-SW-COMPONENT-TYPE");
-    b.add_enum_value(identifiable_subtypes_enum, "APPLIED-STANDARD");
     b.add_enum_value(identifiable_subtypes_enum, "AR-ELEMENT");
     b.add_enum_value(identifiable_subtypes_enum, "AR-PACKAGE");
     b.add_enum_value(identifiable_subtypes_enum, "ARBITRARY-EVENT-TRIGGERING");
@@ -3477,7 +3246,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "BSW-INTERNAL-TRIGGER-OCCURRED-EVENT");
     b.add_enum_value(identifiable_subtypes_enum, "BSW-INTERNAL-TRIGGERING-POINT");
     b.add_enum_value(identifiable_subtypes_enum, "BSW-INTERRUPT-ENTITY");
-    b.add_enum_value(identifiable_subtypes_enum, "BSW-INTERRUPT-EVENT");
     b.add_enum_value(identifiable_subtypes_enum, "BSW-MGR-NEEDS");
     b.add_enum_value(identifiable_subtypes_enum, "BSW-MODE-MANAGER-ERROR-EVENT");
     b.add_enum_value(identifiable_subtypes_enum, "BSW-MODE-SWITCH-EVENT");
@@ -3547,7 +3315,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "COM-OFFER-SERVICE-GRANT");
     b.add_enum_value(identifiable_subtypes_enum, "COM-OFFER-SERVICE-GRANT-DESIGN");
     b.add_enum_value(identifiable_subtypes_enum, "COM-SEC-OC-TO-CRYPTO-KEY-SLOT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "COM-TRIGGER-GRANT");
     b.add_enum_value(identifiable_subtypes_enum, "COM-TRIGGER-GRANT-DESIGN");
     b.add_enum_value(identifiable_subtypes_enum, "COMM-CONNECTOR-PORT");
     b.add_enum_value(identifiable_subtypes_enum, "COMMUNICATION-CLUSTER");
@@ -3572,12 +3339,7 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "CONSUMED-SERVICE-INSTANCE");
     b.add_enum_value(identifiable_subtypes_enum, "CONTAINER-I-PDU");
     b.add_enum_value(identifiable_subtypes_enum, "COUPLING-ELEMENT");
-    b.add_enum_value(identifiable_subtypes_enum, "COUPLING-ELEMENT-ABSTRACT-DETAILS");
-    b.add_enum_value(identifiable_subtypes_enum, "COUPLING-ELEMENT-SWITCH-DETAILS");
     b.add_enum_value(identifiable_subtypes_enum, "COUPLING-PORT");
-    b.add_enum_value(identifiable_subtypes_enum, "COUPLING-PORT-ABSTRACT-SHAPER");
-    b.add_enum_value(identifiable_subtypes_enum, "COUPLING-PORT-ASYNCHRONOUS-TRAFFIC-SHAPER");
-    b.add_enum_value(identifiable_subtypes_enum, "COUPLING-PORT-CREDIT-BASED-SHAPER");
     b.add_enum_value(identifiable_subtypes_enum, "COUPLING-PORT-FIFO");
     b.add_enum_value(identifiable_subtypes_enum, "COUPLING-PORT-SCHEDULER");
     b.add_enum_value(identifiable_subtypes_enum, "COUPLING-PORT-SHAPER");
@@ -3590,7 +3352,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "CP-SOFTWARE-CLUSTER-RESOURCE-POOL");
     b.add_enum_value(identifiable_subtypes_enum, "CP-SOFTWARE-CLUSTER-RESOURCE-TO-APPLICATION-PARTITION-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "CP-SOFTWARE-CLUSTER-SERVICE-RESOURCE");
-    b.add_enum_value(identifiable_subtypes_enum, "CP-SOFTWARE-CLUSTER-TO-APPLICATION-PARTITION-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "CP-SOFTWARE-CLUSTER-TO-ECU-INSTANCE-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "CP-SOFTWARE-CLUSTER-TO-RESOURCE-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "CP-SW-CLUSTER-RESOURCE-TO-DIAG-DATA-ELEM-MAPPING");
@@ -3639,14 +3400,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "DATA-TYPE-MAPPING-SET");
     b.add_enum_value(identifiable_subtypes_enum, "DATA-WRITE-COMPLETED-EVENT");
     b.add_enum_value(identifiable_subtypes_enum, "DCM-I-PDU");
-    b.add_enum_value(identifiable_subtypes_enum, "DDS-CP-CONFIG");
-    b.add_enum_value(identifiable_subtypes_enum, "DDS-CP-CONSUMED-SERVICE-INSTANCE");
-    b.add_enum_value(identifiable_subtypes_enum, "DDS-CP-DOMAIN");
-    b.add_enum_value(identifiable_subtypes_enum, "DDS-CP-PARTITION");
-    b.add_enum_value(identifiable_subtypes_enum, "DDS-CP-PROVIDED-SERVICE-INSTANCE");
-    b.add_enum_value(identifiable_subtypes_enum, "DDS-CP-QOS-PROFILE");
-    b.add_enum_value(identifiable_subtypes_enum, "DDS-CP-SERVICE-INSTANCE");
-    b.add_enum_value(identifiable_subtypes_enum, "DDS-CP-TOPIC");
     b.add_enum_value(identifiable_subtypes_enum, "DDS-DOMAIN-RANGE");
     b.add_enum_value(identifiable_subtypes_enum, "DDS-EVENT-DEPLOYMENT");
     b.add_enum_value(identifiable_subtypes_enum, "DDS-FIELD-DEPLOYMENT");
@@ -3660,6 +3413,11 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "DEADLINE-SUPERVISION");
     b.add_enum_value(identifiable_subtypes_enum, "DELEGATION-SW-CONNECTOR");
     b.add_enum_value(identifiable_subtypes_enum, "DEPENDENCY-ON-ARTIFACT");
+    b.add_enum_value(identifiable_subtypes_enum, "DETERMINISTIC-CLIENT");
+    b.add_enum_value(identifiable_subtypes_enum, "DETERMINISTIC-CLIENT-RESOURCE-NEEDS");
+    b.add_enum_value(identifiable_subtypes_enum, "DETERMINISTIC-SYNC-INSTANTIATION");
+    b.add_enum_value(identifiable_subtypes_enum, "DETERMINISTIC-SYNC-MASTER");
+    b.add_enum_value(identifiable_subtypes_enum, "DETERMINISTIC-SYNC-MASTER-TO-TIME-BASE-CONSUMER-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "DEVELOPMENT-ERROR");
     b.add_enum_value(identifiable_subtypes_enum, "DIAG-EVENT-DEBOUNCE-ALGORITHM");
     b.add_enum_value(identifiable_subtypes_enum, "DIAG-EVENT-DEBOUNCE-COUNTER-BASED");
@@ -3672,9 +3430,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-ACCESS-PERMISSION");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-AGING");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-AUTH-ROLE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE-EVALUATION");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CLASS");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CONFIGURATION");
@@ -3799,14 +3554,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MEMORY-IDENTIFIER");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MONITOR-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MONITOR-PORT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-PORT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-PORT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-PORT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-PORT-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-NEEDS");
@@ -3862,7 +3609,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-ROUTINE-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-ROUTINE-NEEDS");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-ROUTINE-SUBFUNCTION");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SECURE-CODING-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SECURITY-ACCESS");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SECURITY-ACCESS-CLASS");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SECURITY-EVENT-REPORTING-MODE-MAPPING");
@@ -3882,28 +3628,10 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SESSION-CONTROL-CLASS");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-PORT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-PORT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-BULK-DATA");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-DATA-IDENTIFIER-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PARAMETER");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PORT-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-LOCK");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-LOG");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-METHOD");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-METHOD-PRIMITIVE");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-PORT-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-PORT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-INSTANCE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-PORT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-PORT-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-START-ROUTINE");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-STOP-ROUTINE");
     b.add_enum_value(identifiable_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION");
@@ -4085,7 +3813,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "FUNCTION-INHIBITION-NEEDS");
     b.add_enum_value(identifiable_subtypes_enum, "FUNCTIONAL-CLUSTER-INTERACTS-WITH-FUNCTIONAL-CLUSTER-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "FUNCTIONAL-CLUSTER-INTERACTS-WITH-PERSISTENCY-DEPLOYMENT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "FUNCTIONAL-CLUSTER-TO-SECURITY-EVENT-DEFINITION-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "FURTHER-ACTION-BYTE-NEEDS");
     b.add_enum_value(identifiable_subtypes_enum, "GATEWAY");
     b.add_enum_value(identifiable_subtypes_enum, "GENERAL-PARAMETER");
@@ -4140,36 +3867,15 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "IDS-MGR-CUSTOM-TIMESTAMP-NEEDS");
     b.add_enum_value(identifiable_subtypes_enum, "IDS-MGR-NEEDS");
     b.add_enum_value(identifiable_subtypes_enum, "IDS-PLATFORM-INSTANTIATION");
-    b.add_enum_value(identifiable_subtypes_enum, "IDSM-ABSTRACT-PORT-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "IDSM-CONTEXT-PROVIDER-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "IDSM-CONTEXT-PROVIDER-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "IDSM-INSTANCE");
     b.add_enum_value(identifiable_subtypes_enum, "IDSM-MODULE-INSTANTIATION");
     b.add_enum_value(identifiable_subtypes_enum, "IDSM-PROPERTIES");
     b.add_enum_value(identifiable_subtypes_enum, "IDSM-RATE-LIMITATION");
-    b.add_enum_value(identifiable_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-INTERFACE");
-    b.add_enum_value(identifiable_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "IDSM-TRAFFIC-LIMITATION");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-AAF-CONNECTION");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-ACF-BUS");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-ACF-BUS-PART");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-ACF-CAN");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-ACF-CAN-PART");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-ACF-CONNECTION");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-ACF-LIN");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-ACF-LIN-PART");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-AV-CONNECTION");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-CONFIG");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-CONNECTION");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-CRF-CONNECTION");
     b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-ETHERNET-FRAME");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-IIDC-CONNECTION");
-    b.add_enum_value(identifiable_subtypes_enum, "IEEE-1722-TP-RVF-CONNECTION");
     b.add_enum_value(identifiable_subtypes_enum, "IMPLEMENTATION");
     b.add_enum_value(identifiable_subtypes_enum, "IMPLEMENTATION-DATA-TYPE");
     b.add_enum_value(identifiable_subtypes_enum, "IMPLEMENTATION-DATA-TYPE-ELEMENT");
-    b.add_enum_value(identifiable_subtypes_enum, "IMPOSITION-TIME");
-    b.add_enum_value(identifiable_subtypes_enum, "IMPOSITION-TIME-DEFINITION-GROUP");
     b.add_enum_value(identifiable_subtypes_enum, "INDICATOR-STATUS-NEEDS");
     b.add_enum_value(identifiable_subtypes_enum, "INIT-EVENT");
     b.add_enum_value(identifiable_subtypes_enum, "INTERFACE-MAPPING");
@@ -4250,14 +3956,11 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "MULTIPLEXED-I-PDU");
     b.add_enum_value(identifiable_subtypes_enum, "N-PDU");
     b.add_enum_value(identifiable_subtypes_enum, "NETWORK-ENDPOINT");
-    b.add_enum_value(identifiable_subtypes_enum, "NETWORK-HANDLE-PORT-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "NETWORK-MANAGEMENT-PORT-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "NM-CLUSTER");
     b.add_enum_value(identifiable_subtypes_enum, "NM-CONFIG");
     b.add_enum_value(identifiable_subtypes_enum, "NM-ECU");
     b.add_enum_value(identifiable_subtypes_enum, "NM-HANDLE-TO-FUNCTION-GROUP-STATE-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "NM-INSTANTIATION");
-    b.add_enum_value(identifiable_subtypes_enum, "NM-INTERACTS-WITH-SM-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "NM-NODE");
     b.add_enum_value(identifiable_subtypes_enum, "NM-PDU");
     b.add_enum_value(identifiable_subtypes_enum, "NO-CHECKPOINT-SUPERVISION");
@@ -4468,7 +4171,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "SIGNAL-SERVICE-TRANSLATION-PROPS");
     b.add_enum_value(identifiable_subtypes_enum, "SIGNAL-SERVICE-TRANSLATION-PROPS-SET");
     b.add_enum_value(identifiable_subtypes_enum, "SIMULATED-EXECUTION-TIME");
-    b.add_enum_value(identifiable_subtypes_enum, "SM-INTERACTS-WITH-NM-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "SO-AD-ROUTING-GROUP");
     b.add_enum_value(identifiable_subtypes_enum, "SOCKET-ADDRESS");
     b.add_enum_value(identifiable_subtypes_enum, "SOCKET-CONNECTION-IPDU-IDENTIFIER-SET");
@@ -4512,14 +4214,12 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-ERROR-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-FUNCTION-GROUP-SWITCH-NOTIFICATION-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-MODULE-INSTANTIATION");
-    b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-NM-ACTION-ITEM");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-NOTIFICATION-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-PORT-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-REQUEST-ERROR");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-REQUEST-INTERFACE");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-REQUEST-TRIGGER");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-SET-FUNCTION-GROUP-STATE-ACTION-ITEM");
-    b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-SLEEP-ACTION-ITEM");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-STATE-MACHINE-ACTION-ITEM");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-STATE-NOTIFICATION");
     b.add_enum_value(identifiable_subtypes_enum, "STATE-MANAGEMENT-STATE-REQUEST");
@@ -4555,13 +4255,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "SWC-TO-APPLICATION-PARTITION-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "SWC-TO-ECU-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "SWC-TO-IMPL-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "SWITCH-ASYNCHRONOUS-TRAFFIC-SHAPER-GROUP-ENTRY");
-    b.add_enum_value(identifiable_subtypes_enum, "SWITCH-FLOW-METERING-ENTRY");
-    b.add_enum_value(identifiable_subtypes_enum, "SWITCH-STREAM-FILTER-ACTION-DEST-PORT-MODIFICATION");
-    b.add_enum_value(identifiable_subtypes_enum, "SWITCH-STREAM-FILTER-ENTRY");
-    b.add_enum_value(identifiable_subtypes_enum, "SWITCH-STREAM-FILTER-RULE");
-    b.add_enum_value(identifiable_subtypes_enum, "SWITCH-STREAM-GATE-ENTRY");
-    b.add_enum_value(identifiable_subtypes_enum, "SWITCH-STREAM-IDENTIFICATION");
     b.add_enum_value(identifiable_subtypes_enum, "SYNC-TIME-BASE-MGR-USER-NEEDS");
     b.add_enum_value(identifiable_subtypes_enum, "SYNCHRONIZATION-POINT-CONSTRAINT");
     b.add_enum_value(identifiable_subtypes_enum, "SYNCHRONIZATION-TIMING-CONSTRAINT");
@@ -4574,8 +4267,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "SYSTEM-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "SYSTEM-SIGNAL");
     b.add_enum_value(identifiable_subtypes_enum, "SYSTEM-SIGNAL-GROUP");
-    b.add_enum_value(identifiable_subtypes_enum, "SYSTEM-SIGNAL-GROUP-TO-COMMUNICATION-RESOURCE-MAPPING");
-    b.add_enum_value(identifiable_subtypes_enum, "SYSTEM-SIGNAL-TO-COMMUNICATION-RESOURCE-MAPPING");
     b.add_enum_value(identifiable_subtypes_enum, "SYSTEM-TIMING");
     b.add_enum_value(identifiable_subtypes_enum, "TCP-OPTION-FILTER-LIST");
     b.add_enum_value(identifiable_subtypes_enum, "TCP-OPTION-FILTER-SET");
@@ -4667,8 +4358,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(identifiable_subtypes_enum, "UDP-NM-NODE");
     b.add_enum_value(identifiable_subtypes_enum, "UNIT");
     b.add_enum_value(identifiable_subtypes_enum, "UNIT-GROUP");
-    b.add_enum_value(identifiable_subtypes_enum, "UPLOADABLE-DEPLOYMENT-ELEMENT");
-    b.add_enum_value(identifiable_subtypes_enum, "UPLOADABLE-DESIGN-ELEMENT");
     b.add_enum_value(identifiable_subtypes_enum, "UPLOADABLE-EXCLUSIVE-PACKAGE-ELEMENT");
     b.add_enum_value(identifiable_subtypes_enum, "UPLOADABLE-PACKAGE-ELEMENT");
     b.add_enum_value(identifiable_subtypes_enum, "USER-DEFINED-CLUSTER");
@@ -4719,10 +4408,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(ids_common_element_subtypes_enum, "SECURITY-EVENT-DEFINITION");
     b.add_enum_value(ids_common_element_subtypes_enum, "SECURITY-EVENT-FILTER-CHAIN");
 
-    auto ids_platform_instantiation_subtypes_enum = b.begin_type("IdsPlatformInstantiationSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(ids_platform_instantiation_subtypes_enum, "IDS-PLATFORM-INSTANTIATION");
-    b.add_enum_value(ids_platform_instantiation_subtypes_enum, "IDSM-MODULE-INSTANTIATION");
-
     auto idsm_instance_subtypes_enum = b.begin_type("IdsmInstanceSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(idsm_instance_subtypes_enum, "IDSM-INSTANCE");
 
@@ -4735,26 +4420,11 @@ AutosarSchema build_autosar_r23_11() {
     auto idsm_traffic_limitation_subtypes_enum = b.begin_type("IdsmTrafficLimitationSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(idsm_traffic_limitation_subtypes_enum, "IDSM-TRAFFIC-LIMITATION");
 
-    auto ieee1722_tp_connection_subtypes_enum = b.begin_type("Ieee1722TpConnectionSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_connection_subtypes_enum, "IEEE-1722-TP-AAF-CONNECTION");
-    b.add_enum_value(ieee1722_tp_connection_subtypes_enum, "IEEE-1722-TP-ACF-CONNECTION");
-    b.add_enum_value(ieee1722_tp_connection_subtypes_enum, "IEEE-1722-TP-AV-CONNECTION");
-    b.add_enum_value(ieee1722_tp_connection_subtypes_enum, "IEEE-1722-TP-CONNECTION");
-    b.add_enum_value(ieee1722_tp_connection_subtypes_enum, "IEEE-1722-TP-CRF-CONNECTION");
-    b.add_enum_value(ieee1722_tp_connection_subtypes_enum, "IEEE-1722-TP-IIDC-CONNECTION");
-    b.add_enum_value(ieee1722_tp_connection_subtypes_enum, "IEEE-1722-TP-RVF-CONNECTION");
-
     auto implementation_data_type_subtypes_enum = b.begin_type("ImplementationDataTypeSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(implementation_data_type_subtypes_enum, "IMPLEMENTATION-DATA-TYPE");
 
     auto implementation_data_type_element_subtypes_enum = b.begin_type("ImplementationDataTypeElementSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(implementation_data_type_element_subtypes_enum, "IMPLEMENTATION-DATA-TYPE-ELEMENT");
-
-    auto imposition_time_subtypes_enum = b.begin_type("ImpositionTimeSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(imposition_time_subtypes_enum, "IMPOSITION-TIME");
-
-    auto imposition_time_definition_group_subtypes_enum = b.begin_type("ImpositionTimeDefinitionGroupSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(imposition_time_definition_group_subtypes_enum, "IMPOSITION-TIME-DEFINITION-GROUP");
 
     auto internal_triggering_point_subtypes_enum = b.begin_type("InternalTriggeringPointSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(internal_triggering_point_subtypes_enum, "INTERNAL-TRIGGERING-POINT");
@@ -4883,6 +4553,9 @@ AutosarSchema build_autosar_r23_11() {
     auto non_os_module_instantiation_subtypes_enum = b.begin_type("NonOsModuleInstantiationSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(non_os_module_instantiation_subtypes_enum, "ADAPTIVE-FIREWALL-MODULE-INSTANTIATION");
     b.add_enum_value(non_os_module_instantiation_subtypes_enum, "CRYPTO-MODULE-INSTANTIATION");
+    b.add_enum_value(non_os_module_instantiation_subtypes_enum, "DETERMINISTIC-CLIENT");
+    b.add_enum_value(non_os_module_instantiation_subtypes_enum, "DETERMINISTIC-SYNC-INSTANTIATION");
+    b.add_enum_value(non_os_module_instantiation_subtypes_enum, "DETERMINISTIC-SYNC-MASTER");
     b.add_enum_value(non_os_module_instantiation_subtypes_enum, "DO-IP-INSTANTIATION");
     b.add_enum_value(non_os_module_instantiation_subtypes_enum, "GENERIC-MODULE-INSTANTIATION");
     b.add_enum_value(non_os_module_instantiation_subtypes_enum, "IAM-MODULE-INSTANTIATION");
@@ -4981,9 +4654,6 @@ AutosarSchema build_autosar_r23_11() {
     auto physical_dimension_subtypes_enum = b.begin_type("PhysicalDimensionSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(physical_dimension_subtypes_enum, "PHYSICAL-DIMENSION");
 
-    auto physical_dimension_mapping_set_subtypes_enum = b.begin_type("PhysicalDimensionMappingSetSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(physical_dimension_mapping_set_subtypes_enum, "PHYSICAL-DIMENSION-MAPPING-SET");
-
     auto platform_health_management_contribution_subtypes_enum = b.begin_type("PlatformHealthManagementContributionSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(platform_health_management_contribution_subtypes_enum, "PLATFORM-HEALTH-MANAGEMENT-CONTRIBUTION");
 
@@ -5028,10 +4698,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-GENERIC-UDS-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-INDICATOR-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-MONITOR-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-PORT-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-REQUEST-FILE-TRANSFER-INTERFACE");
@@ -5040,20 +4706,12 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-SECURITY-LEVEL-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-SERVICE-VALIDATION-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-SOVD-PORT-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "DIAGNOSTIC-UPLOAD-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "FIREWALL-STATE-SWITCH-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "IDSM-ABSTRACT-PORT-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "IDSM-CONTEXT-PROVIDER-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "LOG-AND-TRACE-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "MODE-SWITCH-INTERFACE");
-    b.add_enum_value(port_interface_subtypes_enum, "NETWORK-MANAGEMENT-PORT-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "NV-DATA-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "PARAMETER-INTERFACE");
     b.add_enum_value(port_interface_subtypes_enum, "PERSISTENCY-FILE-STORAGE-INTERFACE");
@@ -5202,7 +4860,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "AP-APPLICATION-ERROR-SET");
     b.add_enum_value(referrable_subtypes_enum, "AP-SOMEIP-TRANSFORMATION-PROPS");
     b.add_enum_value(referrable_subtypes_enum, "APP-OS-TASK-PROXY-TO-ECU-TASK-PROXY-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "APPLICABILITY-INFO-SET");
     b.add_enum_value(referrable_subtypes_enum, "APPLICATION-ARRAY-DATA-TYPE");
     b.add_enum_value(referrable_subtypes_enum, "APPLICATION-ARRAY-ELEMENT");
     b.add_enum_value(referrable_subtypes_enum, "APPLICATION-ASSOC-MAP-DATA-TYPE");
@@ -5220,7 +4877,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "APPLICATION-RECORD-DATA-TYPE");
     b.add_enum_value(referrable_subtypes_enum, "APPLICATION-RECORD-ELEMENT");
     b.add_enum_value(referrable_subtypes_enum, "APPLICATION-SW-COMPONENT-TYPE");
-    b.add_enum_value(referrable_subtypes_enum, "APPLIED-STANDARD");
     b.add_enum_value(referrable_subtypes_enum, "AR-ELEMENT");
     b.add_enum_value(referrable_subtypes_enum, "AR-PACKAGE");
     b.add_enum_value(referrable_subtypes_enum, "ARBITRARY-EVENT-TRIGGERING");
@@ -5276,7 +4932,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "BSW-INTERNAL-TRIGGER-OCCURRED-EVENT");
     b.add_enum_value(referrable_subtypes_enum, "BSW-INTERNAL-TRIGGERING-POINT");
     b.add_enum_value(referrable_subtypes_enum, "BSW-INTERRUPT-ENTITY");
-    b.add_enum_value(referrable_subtypes_enum, "BSW-INTERRUPT-EVENT");
     b.add_enum_value(referrable_subtypes_enum, "BSW-MGR-NEEDS");
     b.add_enum_value(referrable_subtypes_enum, "BSW-MODE-MANAGER-ERROR-EVENT");
     b.add_enum_value(referrable_subtypes_enum, "BSW-MODE-SWITCH-EVENT");
@@ -5352,7 +5007,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "COM-OFFER-SERVICE-GRANT");
     b.add_enum_value(referrable_subtypes_enum, "COM-OFFER-SERVICE-GRANT-DESIGN");
     b.add_enum_value(referrable_subtypes_enum, "COM-SEC-OC-TO-CRYPTO-KEY-SLOT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "COM-TRIGGER-GRANT");
     b.add_enum_value(referrable_subtypes_enum, "COM-TRIGGER-GRANT-DESIGN");
     b.add_enum_value(referrable_subtypes_enum, "COMM-CONNECTOR-PORT");
     b.add_enum_value(referrable_subtypes_enum, "COMMUNICATION-CLUSTER");
@@ -5377,12 +5031,7 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "CONSUMED-SERVICE-INSTANCE");
     b.add_enum_value(referrable_subtypes_enum, "CONTAINER-I-PDU");
     b.add_enum_value(referrable_subtypes_enum, "COUPLING-ELEMENT");
-    b.add_enum_value(referrable_subtypes_enum, "COUPLING-ELEMENT-ABSTRACT-DETAILS");
-    b.add_enum_value(referrable_subtypes_enum, "COUPLING-ELEMENT-SWITCH-DETAILS");
     b.add_enum_value(referrable_subtypes_enum, "COUPLING-PORT");
-    b.add_enum_value(referrable_subtypes_enum, "COUPLING-PORT-ABSTRACT-SHAPER");
-    b.add_enum_value(referrable_subtypes_enum, "COUPLING-PORT-ASYNCHRONOUS-TRAFFIC-SHAPER");
-    b.add_enum_value(referrable_subtypes_enum, "COUPLING-PORT-CREDIT-BASED-SHAPER");
     b.add_enum_value(referrable_subtypes_enum, "COUPLING-PORT-FIFO");
     b.add_enum_value(referrable_subtypes_enum, "COUPLING-PORT-SCHEDULER");
     b.add_enum_value(referrable_subtypes_enum, "COUPLING-PORT-SHAPER");
@@ -5396,7 +5045,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "CP-SOFTWARE-CLUSTER-RESOURCE-POOL");
     b.add_enum_value(referrable_subtypes_enum, "CP-SOFTWARE-CLUSTER-RESOURCE-TO-APPLICATION-PARTITION-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "CP-SOFTWARE-CLUSTER-SERVICE-RESOURCE");
-    b.add_enum_value(referrable_subtypes_enum, "CP-SOFTWARE-CLUSTER-TO-APPLICATION-PARTITION-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "CP-SOFTWARE-CLUSTER-TO-ECU-INSTANCE-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "CP-SOFTWARE-CLUSTER-TO-RESOURCE-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "CP-SW-CLUSTER-RESOURCE-TO-DIAG-DATA-ELEM-MAPPING");
@@ -5446,14 +5094,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "DATA-TYPE-MAPPING-SET");
     b.add_enum_value(referrable_subtypes_enum, "DATA-WRITE-COMPLETED-EVENT");
     b.add_enum_value(referrable_subtypes_enum, "DCM-I-PDU");
-    b.add_enum_value(referrable_subtypes_enum, "DDS-CP-CONFIG");
-    b.add_enum_value(referrable_subtypes_enum, "DDS-CP-CONSUMED-SERVICE-INSTANCE");
-    b.add_enum_value(referrable_subtypes_enum, "DDS-CP-DOMAIN");
-    b.add_enum_value(referrable_subtypes_enum, "DDS-CP-PARTITION");
-    b.add_enum_value(referrable_subtypes_enum, "DDS-CP-PROVIDED-SERVICE-INSTANCE");
-    b.add_enum_value(referrable_subtypes_enum, "DDS-CP-QOS-PROFILE");
-    b.add_enum_value(referrable_subtypes_enum, "DDS-CP-SERVICE-INSTANCE");
-    b.add_enum_value(referrable_subtypes_enum, "DDS-CP-TOPIC");
     b.add_enum_value(referrable_subtypes_enum, "DDS-DOMAIN-RANGE");
     b.add_enum_value(referrable_subtypes_enum, "DDS-EVENT-DEPLOYMENT");
     b.add_enum_value(referrable_subtypes_enum, "DDS-FIELD-DEPLOYMENT");
@@ -5468,6 +5108,11 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "DEF-ITEM");
     b.add_enum_value(referrable_subtypes_enum, "DELEGATION-SW-CONNECTOR");
     b.add_enum_value(referrable_subtypes_enum, "DEPENDENCY-ON-ARTIFACT");
+    b.add_enum_value(referrable_subtypes_enum, "DETERMINISTIC-CLIENT");
+    b.add_enum_value(referrable_subtypes_enum, "DETERMINISTIC-CLIENT-RESOURCE-NEEDS");
+    b.add_enum_value(referrable_subtypes_enum, "DETERMINISTIC-SYNC-INSTANTIATION");
+    b.add_enum_value(referrable_subtypes_enum, "DETERMINISTIC-SYNC-MASTER");
+    b.add_enum_value(referrable_subtypes_enum, "DETERMINISTIC-SYNC-MASTER-TO-TIME-BASE-CONSUMER-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "DEVELOPMENT-ERROR");
     b.add_enum_value(referrable_subtypes_enum, "DIAG-EVENT-DEBOUNCE-ALGORITHM");
     b.add_enum_value(referrable_subtypes_enum, "DIAG-EVENT-DEBOUNCE-COUNTER-BASED");
@@ -5480,9 +5125,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-ACCESS-PERMISSION");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-AGING");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-AUTH-ROLE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE-EVALUATION");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CLASS");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-AUTHENTICATION-CONFIGURATION");
@@ -5610,14 +5252,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MEMORY-IDENTIFIER");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MONITOR-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MONITOR-PORT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-CONDITION-PORT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-EVENT-PORT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-MONITOR-PORT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-MULTIPLE-RESOURCE-PORT-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-OPERATION-CYCLE-NEEDS");
@@ -5673,7 +5307,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-ROUTINE-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-ROUTINE-NEEDS");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-ROUTINE-SUBFUNCTION");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SECURE-CODING-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SECURITY-ACCESS");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SECURITY-ACCESS-CLASS");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SECURITY-EVENT-REPORTING-MODE-MAPPING");
@@ -5693,28 +5326,10 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SESSION-CONTROL-CLASS");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-AUTHORIZATION-PORT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-BULK-DATA-PORT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-BULK-DATA");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-DATA-IDENTIFIER-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PARAMETER");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-CONFIGURATION-PORT-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-LOCK");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-LOG");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-METHOD");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-METHOD-PRIMITIVE");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-PORT-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-PORT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-INSTANCE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-SERVICE-VALIDATION-PORT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-SOVD-UPDATE-PORT-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-START-ROUTINE");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-STOP-ROUTINE");
     b.add_enum_value(referrable_subtypes_enum, "DIAGNOSTIC-STORAGE-CONDITION");
@@ -5900,7 +5515,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "FUNCTION-INHIBITION-NEEDS");
     b.add_enum_value(referrable_subtypes_enum, "FUNCTIONAL-CLUSTER-INTERACTS-WITH-FUNCTIONAL-CLUSTER-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "FUNCTIONAL-CLUSTER-INTERACTS-WITH-PERSISTENCY-DEPLOYMENT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "FUNCTIONAL-CLUSTER-TO-SECURITY-EVENT-DEFINITION-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "FURTHER-ACTION-BYTE-NEEDS");
     b.add_enum_value(referrable_subtypes_enum, "GATEWAY");
     b.add_enum_value(referrable_subtypes_enum, "GENERAL-PARAMETER");
@@ -5956,37 +5570,16 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "IDS-MGR-CUSTOM-TIMESTAMP-NEEDS");
     b.add_enum_value(referrable_subtypes_enum, "IDS-MGR-NEEDS");
     b.add_enum_value(referrable_subtypes_enum, "IDS-PLATFORM-INSTANTIATION");
-    b.add_enum_value(referrable_subtypes_enum, "IDSM-ABSTRACT-PORT-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "IDSM-CONTEXT-PROVIDER-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "IDSM-CONTEXT-PROVIDER-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "IDSM-INSTANCE");
     b.add_enum_value(referrable_subtypes_enum, "IDSM-MODULE-INSTANTIATION");
     b.add_enum_value(referrable_subtypes_enum, "IDSM-PROPERTIES");
     b.add_enum_value(referrable_subtypes_enum, "IDSM-RATE-LIMITATION");
-    b.add_enum_value(referrable_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-INTERFACE");
-    b.add_enum_value(referrable_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "IDSM-TRAFFIC-LIMITATION");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-AAF-CONNECTION");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-ACF-BUS");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-ACF-BUS-PART");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-ACF-CAN");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-ACF-CAN-PART");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-ACF-CONNECTION");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-ACF-LIN");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-ACF-LIN-PART");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-AV-CONNECTION");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-CONFIG");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-CONNECTION");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-CRF-CONNECTION");
     b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-ETHERNET-FRAME");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-IIDC-CONNECTION");
-    b.add_enum_value(referrable_subtypes_enum, "IEEE-1722-TP-RVF-CONNECTION");
     b.add_enum_value(referrable_subtypes_enum, "IMPLEMENTATION");
     b.add_enum_value(referrable_subtypes_enum, "IMPLEMENTATION-DATA-TYPE");
     b.add_enum_value(referrable_subtypes_enum, "IMPLEMENTATION-DATA-TYPE-ELEMENT");
     b.add_enum_value(referrable_subtypes_enum, "IMPLEMENTATION-PROPS");
-    b.add_enum_value(referrable_subtypes_enum, "IMPOSITION-TIME");
-    b.add_enum_value(referrable_subtypes_enum, "IMPOSITION-TIME-DEFINITION-GROUP");
     b.add_enum_value(referrable_subtypes_enum, "INDICATOR-STATUS-NEEDS");
     b.add_enum_value(referrable_subtypes_enum, "INIT-EVENT");
     b.add_enum_value(referrable_subtypes_enum, "INTERFACE-MAPPING");
@@ -6069,14 +5662,11 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "MULTIPLEXED-I-PDU");
     b.add_enum_value(referrable_subtypes_enum, "N-PDU");
     b.add_enum_value(referrable_subtypes_enum, "NETWORK-ENDPOINT");
-    b.add_enum_value(referrable_subtypes_enum, "NETWORK-HANDLE-PORT-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "NETWORK-MANAGEMENT-PORT-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "NM-CLUSTER");
     b.add_enum_value(referrable_subtypes_enum, "NM-CONFIG");
     b.add_enum_value(referrable_subtypes_enum, "NM-ECU");
     b.add_enum_value(referrable_subtypes_enum, "NM-HANDLE-TO-FUNCTION-GROUP-STATE-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "NM-INSTANTIATION");
-    b.add_enum_value(referrable_subtypes_enum, "NM-INTERACTS-WITH-SM-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "NM-NETWORK-HANDLE");
     b.add_enum_value(referrable_subtypes_enum, "NM-NODE");
     b.add_enum_value(referrable_subtypes_enum, "NM-PDU");
@@ -6293,7 +5883,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "SIGNAL-SERVICE-TRANSLATION-PROPS-SET");
     b.add_enum_value(referrable_subtypes_enum, "SIMULATED-EXECUTION-TIME");
     b.add_enum_value(referrable_subtypes_enum, "SINGLE-LANGUAGE-REFERRABLE");
-    b.add_enum_value(referrable_subtypes_enum, "SM-INTERACTS-WITH-NM-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "SO-AD-ROUTING-GROUP");
     b.add_enum_value(referrable_subtypes_enum, "SO-CON-I-PDU-IDENTIFIER");
     b.add_enum_value(referrable_subtypes_enum, "SOCKET-ADDRESS");
@@ -6340,14 +5929,12 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-ERROR-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-FUNCTION-GROUP-SWITCH-NOTIFICATION-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-MODULE-INSTANTIATION");
-    b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-NM-ACTION-ITEM");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-NOTIFICATION-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-PORT-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-REQUEST-ERROR");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-REQUEST-INTERFACE");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-REQUEST-TRIGGER");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-SET-FUNCTION-GROUP-STATE-ACTION-ITEM");
-    b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-SLEEP-ACTION-ITEM");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-STATE-MACHINE-ACTION-ITEM");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-STATE-NOTIFICATION");
     b.add_enum_value(referrable_subtypes_enum, "STATE-MANAGEMENT-STATE-REQUEST");
@@ -6384,13 +5971,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "SWC-TO-APPLICATION-PARTITION-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "SWC-TO-ECU-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "SWC-TO-IMPL-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "SWITCH-ASYNCHRONOUS-TRAFFIC-SHAPER-GROUP-ENTRY");
-    b.add_enum_value(referrable_subtypes_enum, "SWITCH-FLOW-METERING-ENTRY");
-    b.add_enum_value(referrable_subtypes_enum, "SWITCH-STREAM-FILTER-ACTION-DEST-PORT-MODIFICATION");
-    b.add_enum_value(referrable_subtypes_enum, "SWITCH-STREAM-FILTER-ENTRY");
-    b.add_enum_value(referrable_subtypes_enum, "SWITCH-STREAM-FILTER-RULE");
-    b.add_enum_value(referrable_subtypes_enum, "SWITCH-STREAM-GATE-ENTRY");
-    b.add_enum_value(referrable_subtypes_enum, "SWITCH-STREAM-IDENTIFICATION");
     b.add_enum_value(referrable_subtypes_enum, "SYMBOL-PROPS");
     b.add_enum_value(referrable_subtypes_enum, "SYMBOLIC-NAME-PROPS");
     b.add_enum_value(referrable_subtypes_enum, "SYNC-TIME-BASE-MGR-USER-NEEDS");
@@ -6405,8 +5985,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "SYSTEM-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "SYSTEM-SIGNAL");
     b.add_enum_value(referrable_subtypes_enum, "SYSTEM-SIGNAL-GROUP");
-    b.add_enum_value(referrable_subtypes_enum, "SYSTEM-SIGNAL-GROUP-TO-COMMUNICATION-RESOURCE-MAPPING");
-    b.add_enum_value(referrable_subtypes_enum, "SYSTEM-SIGNAL-TO-COMMUNICATION-RESOURCE-MAPPING");
     b.add_enum_value(referrable_subtypes_enum, "SYSTEM-TIMING");
     b.add_enum_value(referrable_subtypes_enum, "TCP-OPTION-FILTER-LIST");
     b.add_enum_value(referrable_subtypes_enum, "TCP-OPTION-FILTER-SET");
@@ -6502,8 +6080,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(referrable_subtypes_enum, "UDP-NM-NODE");
     b.add_enum_value(referrable_subtypes_enum, "UNIT");
     b.add_enum_value(referrable_subtypes_enum, "UNIT-GROUP");
-    b.add_enum_value(referrable_subtypes_enum, "UPLOADABLE-DEPLOYMENT-ELEMENT");
-    b.add_enum_value(referrable_subtypes_enum, "UPLOADABLE-DESIGN-ELEMENT");
     b.add_enum_value(referrable_subtypes_enum, "UPLOADABLE-EXCLUSIVE-PACKAGE-ELEMENT");
     b.add_enum_value(referrable_subtypes_enum, "UPLOADABLE-PACKAGE-ELEMENT");
     b.add_enum_value(referrable_subtypes_enum, "USER-DEFINED-CLUSTER");
@@ -6811,14 +6387,6 @@ AutosarSchema build_autosar_r23_11() {
     auto state_dependent_firewall_subtypes_enum = b.begin_type("StateDependentFirewallSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(state_dependent_firewall_subtypes_enum, "STATE-DEPENDENT-FIREWALL");
 
-    auto state_management_nm_action_item_subtypes_enum = b.begin_type("StateManagementNmActionItemSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(state_management_nm_action_item_subtypes_enum, "STATE-MANAGEMENT-NM-ACTION-ITEM");
-
-    auto state_management_state_request_subtypes_enum = b.begin_type("StateManagementStateRequestSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(state_management_state_request_subtypes_enum, "STATE-MANAGEMENT-REQUEST-ERROR");
-    b.add_enum_value(state_management_state_request_subtypes_enum, "STATE-MANAGEMENT-REQUEST-TRIGGER");
-    b.add_enum_value(state_management_state_request_subtypes_enum, "STATE-MANAGEMENT-STATE-REQUEST");
-
     auto static_socket_connection_subtypes_enum = b.begin_type("StaticSocketConnectionSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(static_socket_connection_subtypes_enum, "STATIC-SOCKET-CONNECTION");
 
@@ -6890,17 +6458,8 @@ AutosarSchema build_autosar_r23_11() {
     auto swc_to_ecu_mapping_subtypes_enum = b.begin_type("SwcToEcuMappingSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(swc_to_ecu_mapping_subtypes_enum, "SWC-TO-ECU-MAPPING");
 
-    auto switch_asynchronous_traffic_shaper_group_entry_subtypes_enum = b.begin_type("SwitchAsynchronousTrafficShaperGroupEntrySubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(switch_asynchronous_traffic_shaper_group_entry_subtypes_enum, "SWITCH-ASYNCHRONOUS-TRAFFIC-SHAPER-GROUP-ENTRY");
-
-    auto switch_flow_metering_entry_subtypes_enum = b.begin_type("SwitchFlowMeteringEntrySubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(switch_flow_metering_entry_subtypes_enum, "SWITCH-FLOW-METERING-ENTRY");
-
-    auto switch_stream_gate_entry_subtypes_enum = b.begin_type("SwitchStreamGateEntrySubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(switch_stream_gate_entry_subtypes_enum, "SWITCH-STREAM-GATE-ENTRY");
-
-    auto switch_stream_identification_subtypes_enum = b.begin_type("SwitchStreamIdentificationSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(switch_stream_identification_subtypes_enum, "SWITCH-STREAM-IDENTIFICATION");
+    auto synchronized_time_base_consumer_subtypes_enum = b.begin_type("SynchronizedTimeBaseConsumerSubtypesEnum", fir::M3Kind::Enum);
+    b.add_enum_value(synchronized_time_base_consumer_subtypes_enum, "SYNCHRONIZED-TIME-BASE-CONSUMER");
 
     auto synchronized_time_base_provider_subtypes_enum = b.begin_type("SynchronizedTimeBaseProviderSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(synchronized_time_base_provider_subtypes_enum, "SYNCHRONIZED-TIME-BASE-PROVIDER");
@@ -7096,203 +6655,34 @@ AutosarSchema build_autosar_r23_11() {
     auto unit_group_subtypes_enum = b.begin_type("UnitGroupSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(unit_group_subtypes_enum, "UNIT-GROUP");
 
-    auto uploadable_design_element_subtypes_enum = b.begin_type("UploadableDesignElementSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "ABSTRACT-CAN-CLUSTER");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "ADAPTIVE-PLATFORM-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "CAN-CLUSTER");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "CAN-XL-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "COMMUNICATION-CLUSTER");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "CONTAINER-I-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "CRYPTO-SERVICE-CERTIFICATE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "CRYPTO-SERVICE-KEY");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "CRYPTO-SERVICE-PRIMITIVE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DCM-I-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DDS-PROVIDED-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DDS-REQUIRED-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DDS-SECURE-COM-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DDS-SECURE-GOVERNANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DDS-SERVICE-INSTANCE-TO-MACHINE-MAPPING");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DDS-SERVICE-INTERFACE-DEPLOYMENT");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DDS-TOPIC-ACCESS-RULE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DLT-CONTEXT");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DLT-ECU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "DOCUMENTATION");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "E-2-E-PROFILE-COMPATIBILITY-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "E-2-E-PROFILE-CONFIGURATION-SET");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "ETH-IP-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "ETH-TCP-IP-ICMP-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "ETH-TCP-IP-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "ETHERNET-CLUSTER");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "EXECUTABLE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "FIREWALL-RULE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "FLEXRAY-CLUSTER");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "FUNCTION-GROUP-SET");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "GENERAL-PURPOSE-I-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "GENERAL-PURPOSE-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "GLOBAL-TIME-DOMAIN");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "I-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "I-SIGNAL");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "I-SIGNAL-GROUP");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "I-SIGNAL-I-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "IDS-COMMON-ELEMENT");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "IDS-DESIGN");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "IDS-MAPPING");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "IDSM-INSTANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "IDSM-PROPERTIES");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "IP-SEC-CONFIG-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "J-1939-CLUSTER");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "J-1939-DCM-I-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "LIN-CLUSTER");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "LOG-AND-TRACE-MESSAGE-COLLECTION-SET");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "MAC-SEC-GLOBAL-KAY-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "MAC-SEC-PARTICIPANT-SET");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "MACHINE-DESIGN");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "MODE-DECLARATION-GROUP");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "MULTIPLEXED-I-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "N-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "NM-CONFIG");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "NM-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "PROVIDED-AP-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "PROVIDED-SOMEIP-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "PROVIDED-USER-DEFINED-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "REQUIRED-AP-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "REQUIRED-SOMEIP-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "REQUIRED-USER-DEFINED-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SEC-OC-SECURE-COM-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SECURE-COM-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SECURED-I-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING-APPLICATION");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING-BSW-MODULE");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING-COMM-CONNECTOR");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING-FUNCTIONAL-CLUSTER");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SECURITY-EVENT-DEFINITION");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SECURITY-EVENT-FILTER-CHAIN");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SECURITY-EVENT-REPORT-TO-SECURITY-EVENT-DEFINITION-MAPPING");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SERVICE-INSTANCE-TO-MACHINE-MAPPING");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SERVICE-INSTANCE-TO-PORT-PROTOTYPE-MAPPING");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SERVICE-INSTANCE-TO-SIGNAL-MAPPING");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SERVICE-INTERFACE-DEPLOYMENT");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SIGNAL-SERVICE-TRANSLATION-PROPS-SET");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SOCKET-CONNECTION-IPDU-IDENTIFIER-SET");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SOMEIP-DATA-PROTOTYPE-TRANSFORMATION-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SOMEIP-REMOTE-MULTICAST-CONFIG");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SOMEIP-REMOTE-UNICAST-CONFIG");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SOMEIP-SD-CLIENT-EVENT-GROUP-TIMING-CONFIG");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SOMEIP-SD-CLIENT-SERVICE-INSTANCE-CONFIG");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SOMEIP-SD-SERVER-EVENT-GROUP-TIMING-CONFIG");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SOMEIP-SD-SERVER-SERVICE-INSTANCE-CONFIG");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SOMEIP-SERVICE-INSTANCE-TO-MACHINE-MAPPING");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SOMEIP-SERVICE-INTERFACE-DEPLOYMENT");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "STATE-DEPENDENT-FIREWALL");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "SYSTEM");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "TLS-SECURE-COM-PROPS");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "TLV-DATA-ID-DEFINITION-SET");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "TRANSFORMATION-PROPS-SET");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "TRANSFORMATION-PROPS-TO-SERVICE-INTERFACE-ELEMENT-MAPPING");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "TTCAN-CLUSTER");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "UPLOADABLE-DESIGN-ELEMENT");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "USER-DEFINED-CLUSTER");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "USER-DEFINED-I-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "USER-DEFINED-PDU");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "USER-DEFINED-SERVICE-INSTANCE-TO-MACHINE-MAPPING");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "USER-DEFINED-SERVICE-INTERFACE-DEPLOYMENT");
-    b.add_enum_value(uploadable_design_element_subtypes_enum, "XCP-PDU");
-
     auto uploadable_package_element_subtypes_enum = b.begin_type("UploadablePackageElementSubtypesEnum", fir::M3Kind::Enum);
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "ABSTRACT-CAN-CLUSTER");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "ABSTRACT-EXECUTION-CONTEXT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "ABSTRACT-IAM-REMOTE-SUBJECT");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "ADAPTIVE-FIREWALL-TO-PORT-PROTOTYPE-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "ADAPTIVE-PLATFORM-SERVICE-INSTANCE");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "ARTIFACT-CHECKSUM-TO-CRYPTO-PROVIDER-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "CAN-CLUSTER");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "CAN-XL-PROPS");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "COM-CERTIFICATE-TO-CRYPTO-CERTIFICATE-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "COM-EVENT-GRANT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "COM-FIELD-GRANT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "COM-FIND-SERVICE-GRANT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "COM-GRANT");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "COM-KEY-TO-CRYPTO-KEY-SLOT-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "COM-METHOD-GRANT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "COM-OFFER-SERVICE-GRANT");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "COM-SEC-OC-TO-CRYPTO-KEY-SLOT-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "COM-TRIGGER-GRANT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "COMMUNICATION-CLUSTER");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "CONTAINER-I-PDU");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "CRYPTO-CERTIFICATE-TO-PORT-PROTOTYPE-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "CRYPTO-KEY-SLOT-TO-PORT-PROTOTYPE-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "CRYPTO-PROVIDER-TO-PORT-PROTOTYPE-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "CRYPTO-SERVICE-CERTIFICATE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "CRYPTO-SERVICE-KEY");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "CRYPTO-SERVICE-PRIMITIVE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "DCM-I-PDU");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "DDS-PROVIDED-SERVICE-INSTANCE");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "DDS-REQUIRED-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "DDS-SECURE-COM-PROPS");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "DDS-SECURE-GOVERNANCE");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "DDS-SERVICE-INSTANCE-TO-MACHINE-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "DDS-SERVICE-INTERFACE-DEPLOYMENT");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "DDS-TOPIC-ACCESS-RULE");
+    b.add_enum_value(uploadable_package_element_subtypes_enum, "DETERMINISTIC-CLIENT");
+    b.add_enum_value(uploadable_package_element_subtypes_enum, "DETERMINISTIC-SYNC-MASTER-TO-TIME-BASE-CONSUMER-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "DLT-APPLICATION-TO-PROCESS-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "DLT-CONTEXT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "DLT-ECU");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "DLT-LOG-SINK");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "DLT-LOG-SINK-TO-PORT-PROTOTYPE-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "DOCUMENTATION");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "E-2-E-PROFILE-COMPATIBILITY-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "E-2-E-PROFILE-CONFIGURATION-SET");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "ETH-IP-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "ETH-TCP-IP-ICMP-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "ETH-TCP-IP-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "ETHERNET-CLUSTER");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "ETHERNET-RAW-DATA-STREAM-CLIENT-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "ETHERNET-RAW-DATA-STREAM-GRANT");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "ETHERNET-RAW-DATA-STREAM-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "ETHERNET-RAW-DATA-STREAM-SERVER-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "EXECUTABLE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "FIREWALL-RULE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "FLEXRAY-CLUSTER");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "FUNCTION-GROUP-SET");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "FUNCTIONAL-CLUSTER-INTERACTS-WITH-FUNCTIONAL-CLUSTER-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "FUNCTIONAL-CLUSTER-INTERACTS-WITH-PERSISTENCY-DEPLOYMENT-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "FUNCTIONAL-CLUSTER-TO-SECURITY-EVENT-DEFINITION-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "GENERAL-PURPOSE-I-PDU");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "GENERAL-PURPOSE-PDU");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "GLOBAL-TIME-DOMAIN");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "GRANT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "I-PDU");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "I-SIGNAL");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "I-SIGNAL-GROUP");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "I-SIGNAL-I-PDU");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "IDS-COMMON-ELEMENT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "IDS-DESIGN");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "IDS-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "IDSM-CONTEXT-PROVIDER-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "IDSM-INSTANCE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "IDSM-PROPERTIES");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "IDSM-TIMESTAMP-PROVIDER-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "IP-IAM-REMOTE-SUBJECT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "IP-SEC-CONFIG-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "IP-SEC-IAM-REMOTE-SUBJECT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "J-1939-CLUSTER");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "J-1939-DCM-I-PDU");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "LIN-CLUSTER");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "LOG-AND-TRACE-MESSAGE-COLLECTION-SET");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "MAC-SEC-GLOBAL-KAY-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "MAC-SEC-PARTICIPANT-SET");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "MACHINE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "MACHINE-DESIGN");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "MODE-DECLARATION-GROUP");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "MULTIPLEXED-I-PDU");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "N-PDU");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "NETWORK-HANDLE-PORT-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "NM-CONFIG");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "NM-HANDLE-TO-FUNCTION-GROUP-STATE-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "NM-INTERACTS-WITH-SM-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "NM-PDU");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "PDU");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PERSISTENCY-DEPLOYMENT");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PERSISTENCY-DEPLOYMENT-ELEMENT-TO-CRYPTO-KEY-SLOT-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PERSISTENCY-DEPLOYMENT-TO-CRYPTO-KEY-SLOT-MAPPING");
@@ -7302,7 +6692,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PERSISTENCY-PORT-PROTOTYPE-TO-DEPLOYMENT-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PERSISTENCY-PORT-PROTOTYPE-TO-FILE-STORAGE-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PERSISTENCY-PORT-PROTOTYPE-TO-KEY-VALUE-STORAGE-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "PHM-CONTRIBUTION-TO-MACHINE-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PLATFORM-HEALTH-MANAGEMENT-CONTRIBUTION");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PROCESS");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PROCESS-EXECUTION-ERROR");
@@ -7311,67 +6700,26 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PROVIDED-SOMEIP-SERVICE-INSTANCE");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "PROVIDED-USER-DEFINED-SERVICE-INSTANCE");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "RAW-DATA-STREAM-DEPLOYMENT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "RAW-DATA-STREAM-GRANT");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "RAW-DATA-STREAM-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "RECOVERY-NOTIFICATION");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "RECOVERY-NOTIFICATION-TO-P-PORT-PROTOTYPE-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "REQUIRED-AP-SERVICE-INSTANCE");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "REQUIRED-SOMEIP-SERVICE-INSTANCE");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "REQUIRED-USER-DEFINED-SERVICE-INSTANCE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SEC-OC-SECURE-COM-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURE-COM-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURED-I-PDU");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING-APPLICATION");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING-BSW-MODULE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING-COMM-CONNECTOR");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURITY-EVENT-CONTEXT-MAPPING-FUNCTIONAL-CLUSTER");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURITY-EVENT-DEFINITION");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURITY-EVENT-FILTER-CHAIN");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURITY-EVENT-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SECURITY-EVENT-REPORT-TO-SECURITY-EVENT-DEFINITION-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "SERVICE-INSTANCE-TO-MACHINE-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "SERVICE-INSTANCE-TO-PORT-PROTOTYPE-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SERVICE-INSTANCE-TO-SIGNAL-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "SERVICE-INTERFACE-DEPLOYMENT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SIGNAL-SERVICE-TRANSLATION-PROPS-SET");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SM-INTERACTS-WITH-NM-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SOCKET-CONNECTION-IPDU-IDENTIFIER-SET");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SOFTWARE-CLUSTER");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "SOFTWARE-CLUSTER-DIAGNOSTIC-DEPLOYMENT-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SOFTWARE-PACKAGE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SOMEIP-DATA-PROTOTYPE-TRANSFORMATION-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SOMEIP-REMOTE-MULTICAST-CONFIG");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SOMEIP-REMOTE-UNICAST-CONFIG");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SOMEIP-SD-CLIENT-EVENT-GROUP-TIMING-CONFIG");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SOMEIP-SD-CLIENT-SERVICE-INSTANCE-CONFIG");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SOMEIP-SD-SERVER-EVENT-GROUP-TIMING-CONFIG");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SOMEIP-SD-SERVER-SERVICE-INSTANCE-CONFIG");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "SOMEIP-SERVICE-INSTANCE-TO-MACHINE-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "SOMEIP-SERVICE-INTERFACE-DEPLOYMENT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "STARTUP-CONFIG");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "STATE-DEPENDENT-FIREWALL");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "SYSTEM");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "TIME-BASE-PROVIDER-TO-PERSISTENCY-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "TIME-SYNC-PORT-PROTOTYPE-TO-TIME-BASE-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "TLS-IAM-REMOTE-SUBJECT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "TLS-SECURE-COM-PROPS");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "TLV-DATA-ID-DEFINITION-SET");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "TRANSFORMATION-PROPS-SET");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "TRANSFORMATION-PROPS-TO-SERVICE-INTERFACE-ELEMENT-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "TTCAN-CLUSTER");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "UCM-TO-TIME-BASE-RESOURCE-MAPPING");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "UPLOADABLE-DEPLOYMENT-ELEMENT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "UPLOADABLE-DESIGN-ELEMENT");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "UPLOADABLE-EXCLUSIVE-PACKAGE-ELEMENT");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "UPLOADABLE-PACKAGE-ELEMENT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "USER-DEFINED-CLUSTER");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "USER-DEFINED-I-PDU");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "USER-DEFINED-PDU");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "USER-DEFINED-SERVICE-INSTANCE-TO-MACHINE-MAPPING");
     b.add_enum_value(uploadable_package_element_subtypes_enum, "USER-DEFINED-SERVICE-INTERFACE-DEPLOYMENT");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "VEHICLE-PACKAGE");
-    b.add_enum_value(uploadable_package_element_subtypes_enum, "XCP-PDU");
 
     auto variable_access_subtypes_enum = b.begin_type("VariableAccessSubtypesEnum", fir::M3Kind::Enum);
     b.add_enum_value(variable_access_subtypes_enum, "VARIABLE-ACCESS");
@@ -7639,40 +6987,11 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(data_transformation_status_forwarding_enum_simple, "transformerStatusForwarding");
 
     auto data_type_policy_enum_simple = b.begin_type("DataTypePolicyEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(data_type_policy_enum_simple, "ddsService");
-    b.add_enum_value(data_type_policy_enum_simple, "ddsSignal");
     b.add_enum_value(data_type_policy_enum_simple, "legacy");
     b.add_enum_value(data_type_policy_enum_simple, "networkRepresentationFromComSpec");
     b.add_enum_value(data_type_policy_enum_simple, "override");
     b.add_enum_value(data_type_policy_enum_simple, "portInterfaceDefinition");
     b.add_enum_value(data_type_policy_enum_simple, "transformingISignal");
-
-    auto dds_destination_order_kind_enum_simple = b.begin_type("DdsDestinationOrderKindEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(dds_destination_order_kind_enum_simple, "byReceptionTimestamp");
-    b.add_enum_value(dds_destination_order_kind_enum_simple, "bySourceTimestamp");
-
-    auto dds_durability_kind_enum_simple = b.begin_type("DdsDurabilityKindEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(dds_durability_kind_enum_simple, "persistent");
-    b.add_enum_value(dds_durability_kind_enum_simple, "transient");
-    b.add_enum_value(dds_durability_kind_enum_simple, "transientLocal");
-    b.add_enum_value(dds_durability_kind_enum_simple, "volatile");
-
-    auto dds_durability_service_history_kind_enum_simple = b.begin_type("DdsDurabilityServiceHistoryKindEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(dds_durability_service_history_kind_enum_simple, "keepAll");
-    b.add_enum_value(dds_durability_service_history_kind_enum_simple, "keepLast");
-
-    auto dds_history_kind_enum_simple = b.begin_type("DdsHistoryKindEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(dds_history_kind_enum_simple, "keepAll");
-    b.add_enum_value(dds_history_kind_enum_simple, "keepLast");
-
-    auto dds_liveness_kind_enum_simple = b.begin_type("DdsLivenessKindEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(dds_liveness_kind_enum_simple, "automatic");
-    b.add_enum_value(dds_liveness_kind_enum_simple, "manualByParticipant");
-    b.add_enum_value(dds_liveness_kind_enum_simple, "manualByTopic");
-
-    auto dds_ownership_kind_enum_simple = b.begin_type("DdsOwnershipKindEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(dds_ownership_kind_enum_simple, "exclusive");
-    b.add_enum_value(dds_ownership_kind_enum_simple, "shared");
 
     auto dds_protection_kind_enum_simple = b.begin_type("DdsProtectionKindEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(dds_protection_kind_enum_simple, "encryptAndSign");
@@ -7680,10 +6999,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(dds_protection_kind_enum_simple, "none");
     b.add_enum_value(dds_protection_kind_enum_simple, "sign");
     b.add_enum_value(dds_protection_kind_enum_simple, "signWithOriginAuthentication");
-
-    auto dds_reliability_kind_enum_simple = b.begin_type("DdsReliabilityKindEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(dds_reliability_kind_enum_simple, "bestEffort");
-    b.add_enum_value(dds_reliability_kind_enum_simple, "reliable");
 
     auto dds_service_instance_discovery_type_enum_simple = b.begin_type("DdsServiceInstanceDiscoveryTypeEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(dds_service_instance_discovery_type_enum_simple, "domainParticipantUserDataQos");
@@ -7768,7 +7083,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(diagnostic_denominator_condition_enum_simple, "coldstart");
     b.add_enum_value(diagnostic_denominator_condition_enum_simple, "csers");
     b.add_enum_value(diagnostic_denominator_condition_enum_simple, "evap");
-    b.add_enum_value(diagnostic_denominator_condition_enum_simple, "evappurgeflow");
     b.add_enum_value(diagnostic_denominator_condition_enum_simple, "individual");
     b.add_enum_value(diagnostic_denominator_condition_enum_simple, "obd");
 
@@ -8143,10 +7457,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(float_enum_simple, "float");
     b.add_enum_value(float_enum_simple, "noFloat");
 
-    auto flow_metering_color_mode_enum_simple = b.begin_type("FlowMeteringColorModeEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(flow_metering_color_mode_enum_simple, "colorAware");
-    b.add_enum_value(flow_metering_color_mode_enum_simple, "colorBlind");
-
     auto fm_feature_selection_state_simple = b.begin_type("FmFeatureSelectionStateSimple", fir::M3Kind::Enum);
     b.add_enum_value(fm_feature_selection_state_simple, "deselected");
     b.add_enum_value(fm_feature_selection_state_simple, "selected");
@@ -8197,11 +7507,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(global_time_icv_verification_enum_simple, "icvNotVerified");
     b.add_enum_value(global_time_icv_verification_enum_simple, "icvOptional");
     b.add_enum_value(global_time_icv_verification_enum_simple, "icvVerified");
-
-    auto global_time_port_role_enum_simple = b.begin_type("GlobalTimePortRoleEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(global_time_port_role_enum_simple, "dynamic");
-    b.add_enum_value(global_time_port_role_enum_simple, "timeMaster");
-    b.add_enum_value(global_time_port_role_enum_simple, "timeSlave");
 
     auto graphic_fit_enum_simple = b.begin_type("GraphicFitEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(graphic_fit_enum_simple, "AsIs");
@@ -8290,109 +7595,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(i_signal_type_enum_simple, "array");
     b.add_enum_value(i_signal_type_enum_simple, "primitive");
 
-    auto ieee1722_tp_aaf_aes3_data_type_enum_simple = b.begin_type("Ieee1722TpAafAes3DataTypeEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_aaf_aes3_data_type_enum_simple, "iec61937");
-    b.add_enum_value(ieee1722_tp_aaf_aes3_data_type_enum_simple, "pcm");
-    b.add_enum_value(ieee1722_tp_aaf_aes3_data_type_enum_simple, "smpte338");
-    b.add_enum_value(ieee1722_tp_aaf_aes3_data_type_enum_simple, "unspecified");
-    b.add_enum_value(ieee1722_tp_aaf_aes3_data_type_enum_simple, "vendor");
-
-    auto ieee1722_tp_aaf_format_enum_simple = b.begin_type("Ieee1722TpAafFormatEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_aaf_format_enum_simple, "aes3_32bit");
-    b.add_enum_value(ieee1722_tp_aaf_format_enum_simple, "float_32bit");
-    b.add_enum_value(ieee1722_tp_aaf_format_enum_simple, "int_16bit");
-    b.add_enum_value(ieee1722_tp_aaf_format_enum_simple, "int_24bit");
-    b.add_enum_value(ieee1722_tp_aaf_format_enum_simple, "int_32bit");
-    b.add_enum_value(ieee1722_tp_aaf_format_enum_simple, "user");
-
-    auto ieee1722_tp_aaf_nominal_rate_enum_simple = b.begin_type("Ieee1722TpAafNominalRateEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "16kHz");
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "176_4kHz");
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "192kHz");
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "24kHz");
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "32kHz");
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "44_1kHz");
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "48kHz");
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "8kHz");
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "88_2kHz");
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "96kHz");
-    b.add_enum_value(ieee1722_tp_aaf_nominal_rate_enum_simple, "user");
-
-    auto ieee1722_tp_acf_can_message_type_enum_simple = b.begin_type("Ieee1722TpAcfCanMessageTypeEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_acf_can_message_type_enum_simple, "can");
-    b.add_enum_value(ieee1722_tp_acf_can_message_type_enum_simple, "canBrief");
-
-    auto ieee1722_tp_crf_pull_enum_simple = b.begin_type("Ieee1722TpCrfPullEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_crf_pull_enum_simple, "1_0");
-    b.add_enum_value(ieee1722_tp_crf_pull_enum_simple, "1_001");
-    b.add_enum_value(ieee1722_tp_crf_pull_enum_simple, "1_1_001");
-    b.add_enum_value(ieee1722_tp_crf_pull_enum_simple, "1_8");
-    b.add_enum_value(ieee1722_tp_crf_pull_enum_simple, "24_25");
-    b.add_enum_value(ieee1722_tp_crf_pull_enum_simple, "25_24");
-
-    auto ieee1722_tp_crf_type_enum_simple = b.begin_type("Ieee1722TpCrfTypeEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_crf_type_enum_simple, "audioSample");
-    b.add_enum_value(ieee1722_tp_crf_type_enum_simple, "machineCycle");
-    b.add_enum_value(ieee1722_tp_crf_type_enum_simple, "user");
-    b.add_enum_value(ieee1722_tp_crf_type_enum_simple, "videoFrame");
-    b.add_enum_value(ieee1722_tp_crf_type_enum_simple, "videoLine");
-
-    auto ieee1722_tp_rvf_color_space_enum_simple = b.begin_type("Ieee1722TpRvfColorSpaceEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_rvf_color_space_enum_simple, "bt_rec_601");
-    b.add_enum_value(ieee1722_tp_rvf_color_space_enum_simple, "bt_rec_709");
-    b.add_enum_value(ieee1722_tp_rvf_color_space_enum_simple, "grayscale");
-    b.add_enum_value(ieee1722_tp_rvf_color_space_enum_simple, "itu_bt_2020");
-    b.add_enum_value(ieee1722_tp_rvf_color_space_enum_simple, "srgb");
-    b.add_enum_value(ieee1722_tp_rvf_color_space_enum_simple, "user");
-    b.add_enum_value(ieee1722_tp_rvf_color_space_enum_simple, "xyz");
-    b.add_enum_value(ieee1722_tp_rvf_color_space_enum_simple, "ycbcr");
-    b.add_enum_value(ieee1722_tp_rvf_color_space_enum_simple, "ycgco");
-    b.add_enum_value(ieee1722_tp_rvf_color_space_enum_simple, "ycm");
-
-    auto ieee1722_tp_rvf_frame_rate_enum_simple = b.begin_type("Ieee1722TpRvfFrameRateEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "1");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "10");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "100");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "120");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "15");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "150");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "2");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "20");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "200");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "24");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "240");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "25");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "30");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "300");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "48");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "5");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "50");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "60");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "72");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "85");
-    b.add_enum_value(ieee1722_tp_rvf_frame_rate_enum_simple, "user");
-
-    auto ieee1722_tp_rvf_pixel_depth_enum_simple = b.begin_type("Ieee1722TpRvfPixelDepthEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_rvf_pixel_depth_enum_simple, "10");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_depth_enum_simple, "12");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_depth_enum_simple, "16");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_depth_enum_simple, "8");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_depth_enum_simple, "user");
-
-    auto ieee1722_tp_rvf_pixel_format_enum_simple = b.begin_type("Ieee1722TpRvfPixelFormatEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "4_1_1");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "4_2_0");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "4_2_2");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "4_2_2_4");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "4_4_4");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "4_4_4_4");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "bayer_bggr");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "bayer_gbrg");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "bayer_grbg");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "bayer_rggb");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "monochrome");
-    b.add_enum_value(ieee1722_tp_rvf_pixel_format_enum_simple, "user");
-
     auto ike_authentication_method_enum_simple = b.begin_type("IkeAuthenticationMethodEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(ike_authentication_method_enum_simple, "dsa");
     b.add_enum_value(ike_authentication_method_enum_simple, "psk");
@@ -8428,13 +7630,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(item_label_pos_enum_simple, "newline");
     b.add_enum_value(item_label_pos_enum_simple, "newlineIfNecessary");
     b.add_enum_value(item_label_pos_enum_simple, "noNewline");
-
-    auto j1939_nm_address_configuration_capability_enum_simple = b.begin_type("J1939NmAddressConfigurationCapabilityEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(j1939_nm_address_configuration_capability_enum_simple, "J1939NM_AAC");
-    b.add_enum_value(j1939_nm_address_configuration_capability_enum_simple, "J1939NM_CCA");
-    b.add_enum_value(j1939_nm_address_configuration_capability_enum_simple, "J1939NM_NCA");
-    b.add_enum_value(j1939_nm_address_configuration_capability_enum_simple, "J1939NM_SCA");
-    b.add_enum_value(j1939_nm_address_configuration_capability_enum_simple, "J1939NM_SVCA");
 
     auto keep_with_previous_enum_simple = b.begin_type("KeepWithPreviousEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(keep_with_previous_enum_simple, "keep");
@@ -8588,10 +7783,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(latency_constraint_type_enum_simple, "age");
     b.add_enum_value(latency_constraint_type_enum_simple, "reaction");
 
-    auto let_data_exchange_paradigm_enum_simple = b.begin_type("LetDataExchangeParadigmEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(let_data_exchange_paradigm_enum_simple, "interLetOnly");
-    b.add_enum_value(let_data_exchange_paradigm_enum_simple, "intraLetEOC");
-
     auto lin_checksum_type_simple = b.begin_type("LinChecksumTypeSimple", fir::M3Kind::Enum);
     b.add_enum_value(lin_checksum_type_simple, "classic");
     b.add_enum_value(lin_checksum_type_simple, "enhanced");
@@ -8665,10 +7856,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(memory_section_type_simple, "varNoInit");
     b.add_enum_value(memory_section_type_simple, "varPowerOnInit");
 
-    auto mirroring_protocol_enum_simple = b.begin_type("MirroringProtocolEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(mirroring_protocol_enum_simple, "none");
-    b.add_enum_value(mirroring_protocol_enum_simple, "version1");
-
     auto mode_activation_kind_simple = b.begin_type("ModeActivationKindSimple", fir::M3Kind::Enum);
     b.add_enum_value(mode_activation_kind_simple, "onEntry");
     b.add_enum_value(mode_activation_kind_simple, "onExit");
@@ -8706,10 +7893,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(nm_handle_mapping_direction_enum_simple, "nmHandleActiveToFunctionGroupState");
     b.add_enum_value(nm_handle_mapping_direction_enum_simple, "nmHandleInactiveToFunctionGroupState");
 
-    auto nm_state_request_enum_simple = b.begin_type("NmStateRequestEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(nm_state_request_enum_simple, "fullCom");
-    b.add_enum_value(nm_state_request_enum_simple, "noCom");
-
     auto note_type_enum_simple = b.begin_type("NoteTypeEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(note_type_enum_simple, "caution");
     b.add_enum_value(note_type_enum_simple, "example");
@@ -8744,11 +7927,6 @@ AutosarSchema build_autosar_r23_11() {
     auto orient_enum_simple = b.begin_type("OrientEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(orient_enum_simple, "land");
     b.add_enum_value(orient_enum_simple, "port");
-
-    auto os_arti_adapter_launch_behavior_enum_simple = b.begin_type("OsArtiAdapterLaunchBehaviorEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(os_arti_adapter_launch_behavior_enum_simple, "doNotInclude");
-    b.add_enum_value(os_arti_adapter_launch_behavior_enum_simple, "includeButDoNotStart");
-    b.add_enum_value(os_arti_adapter_launch_behavior_enum_simple, "startOnBoot");
 
     auto os_task_preemptability_enum_simple = b.begin_type("OsTaskPreemptabilityEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(os_task_preemptability_enum_simple, "full");
@@ -9133,10 +8311,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(swc_to_swc_operation_arguments_direction_enum_simple, "in");
     b.add_enum_value(swc_to_swc_operation_arguments_direction_enum_simple, "out");
 
-    auto switch_stream_filter_action_port_modification_enum_simple = b.begin_type("SwitchStreamFilterActionPortModificationEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(switch_stream_filter_action_port_modification_enum_simple, "extend");
-    b.add_enum_value(switch_stream_filter_action_port_modification_enum_simple, "overwrite");
-
     auto synchronization_type_enum_simple = b.begin_type("SynchronizationTypeEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(synchronization_type_enum_simple, "responseSynchronization");
     b.add_enum_value(synchronization_type_enum_simple, "stimulusSynchronization");
@@ -9255,12 +8429,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(tp_ack_type_simple, "ackWithRt");
     b.add_enum_value(tp_ack_type_simple, "noAck");
 
-    auto trace_switch_enum_simple = b.begin_type("TraceSwitchEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(trace_switch_enum_simple, "traceSwitchArti");
-    b.add_enum_value(trace_switch_enum_simple, "traceSwitchArtiAndLog");
-    b.add_enum_value(trace_switch_enum_simple, "traceSwitchLog");
-    b.add_enum_value(trace_switch_enum_simple, "traceSwitchNone");
-
     auto transfer_property_enum_simple = b.begin_type("TransferPropertyEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(transfer_property_enum_simple, "pending");
     b.add_enum_value(transfer_property_enum_simple, "triggered");
@@ -9337,15 +8505,11 @@ AutosarSchema build_autosar_r23_11() {
     b.add_enum_value(verification_status_indication_mode_enum_simple, "failureAndSuccess");
     b.add_enum_value(verification_status_indication_mode_enum_simple, "failureOnly");
 
-    auto violated_safety_condition_behavior_enum_simple = b.begin_type("ViolatedSafetyConditionBehaviorEnumSimple", fir::M3Kind::Enum);
-    b.add_enum_value(violated_safety_condition_behavior_enum_simple, "cancelCampaign");
-    b.add_enum_value(violated_safety_condition_behavior_enum_simple, "waitForVehicleSafeState");
-
     auto xml_space_enum_simple = b.begin_type("XmlSpaceEnumSimple", fir::M3Kind::Enum);
     b.add_enum_value(xml_space_enum_simple, "default");
     b.add_enum_value(xml_space_enum_simple, "preserve");
 
-    // ── Composites Phase 1: Declare types (2710) ──
+    // ── Composites Phase 1: Declare types (2573) ──
     auto absolute_tolerance = b.begin_type("AbsoluteTolerance", fir::M3Kind::Composite);
     auto abstract_access_point = b.begin_type("AbstractAccessPoint", fir::M3Kind::Composite);
     auto abstract_can_cluster = b.begin_type("AbstractCanCluster", fir::M3Kind::Composite);
@@ -9412,8 +8576,6 @@ AutosarSchema build_autosar_r23_11() {
     auto ap_application_error_set = b.begin_type("ApApplicationErrorSet", fir::M3Kind::Composite);
     auto ap_someip_transformation_props = b.begin_type("ApSomeipTransformationProps", fir::M3Kind::Composite);
     auto app_os_task_proxy_to_ecu_task_proxy_mapping = b.begin_type("AppOsTaskProxyToEcuTaskProxyMapping", fir::M3Kind::Composite);
-    auto applicability_info = b.begin_type("ApplicabilityInfo", fir::M3Kind::Composite);
-    auto applicability_info_set = b.begin_type("ApplicabilityInfoSet", fir::M3Kind::Composite);
     auto application_array_data_type = b.begin_type("ApplicationArrayDataType", fir::M3Kind::Composite);
     auto application_array_element = b.begin_type("ApplicationArrayElement", fir::M3Kind::Composite);
     auto application_assoc_map_data_type = b.begin_type("ApplicationAssocMapDataType", fir::M3Kind::Composite);
@@ -9441,7 +8603,6 @@ AutosarSchema build_autosar_r23_11() {
     auto application_rule_based_value_specification = b.begin_type("ApplicationRuleBasedValueSpecification", fir::M3Kind::Composite);
     auto application_sw_component_type = b.begin_type("ApplicationSwComponentType", fir::M3Kind::Composite);
     auto application_value_specification = b.begin_type("ApplicationValueSpecification", fir::M3Kind::Composite);
-    auto applied_standard = b.begin_type("AppliedStandard", fir::M3Kind::Composite);
     auto ar_element = b.begin_type("ARElement", fir::M3Kind::Composite);
     auto ar_object = b.begin_type("ARObject", fir::M3Kind::Composite);
     auto ar_package = b.begin_type("ARPackage", fir::M3Kind::Composite);
@@ -9539,7 +8700,6 @@ AutosarSchema build_autosar_r23_11() {
     auto bsw_internal_triggering_point_policy = b.begin_type("BswInternalTriggeringPointPolicy", fir::M3Kind::Composite);
     auto bsw_internal_triggering_point_ref_conditional = b.begin_type("BswInternalTriggeringPointRefConditional", fir::M3Kind::Composite);
     auto bsw_interrupt_entity = b.begin_type("BswInterruptEntity", fir::M3Kind::Composite);
-    auto bsw_interrupt_event = b.begin_type("BswInterruptEvent", fir::M3Kind::Composite);
     auto bsw_mgr_needs = b.begin_type("BswMgrNeeds", fir::M3Kind::Composite);
     auto bsw_mode_manager_error_event = b.begin_type("BswModeManagerErrorEvent", fir::M3Kind::Composite);
     auto bsw_mode_receiver_policy = b.begin_type("BswModeReceiverPolicy", fir::M3Kind::Composite);
@@ -9678,7 +8838,6 @@ AutosarSchema build_autosar_r23_11() {
     auto com_offer_service_grant = b.begin_type("ComOfferServiceGrant", fir::M3Kind::Composite);
     auto com_offer_service_grant_design = b.begin_type("ComOfferServiceGrantDesign", fir::M3Kind::Composite);
     auto com_sec_oc_to_crypto_key_slot_mapping = b.begin_type("ComSecOcToCryptoKeySlotMapping", fir::M3Kind::Composite);
-    auto com_trigger_grant = b.begin_type("ComTriggerGrant", fir::M3Kind::Composite);
     auto com_trigger_grant_design = b.begin_type("ComTriggerGrantDesign", fir::M3Kind::Composite);
     auto comm_connector_port = b.begin_type("CommConnectorPort", fir::M3Kind::Composite);
     auto common_signal_path = b.begin_type("CommonSignalPath", fir::M3Kind::Composite);
@@ -9742,13 +8901,8 @@ AutosarSchema build_autosar_r23_11() {
     auto contained_i_pdu_props = b.begin_type("ContainedIPduProps", fir::M3Kind::Composite);
     auto container_i_pdu = b.begin_type("ContainerIPdu", fir::M3Kind::Composite);
     auto coupling_element = b.begin_type("CouplingElement", fir::M3Kind::Composite);
-    auto coupling_element_abstract_details = b.begin_type("CouplingElementAbstractDetails", fir::M3Kind::Composite);
-    auto coupling_element_switch_details = b.begin_type("CouplingElementSwitchDetails", fir::M3Kind::Composite);
     auto coupling_port = b.begin_type("CouplingPort", fir::M3Kind::Composite);
-    auto coupling_port_abstract_shaper = b.begin_type("CouplingPortAbstractShaper", fir::M3Kind::Composite);
-    auto coupling_port_asynchronous_traffic_shaper = b.begin_type("CouplingPortAsynchronousTrafficShaper", fir::M3Kind::Composite);
     auto coupling_port_connection = b.begin_type("CouplingPortConnection", fir::M3Kind::Composite);
-    auto coupling_port_credit_based_shaper = b.begin_type("CouplingPortCreditBasedShaper", fir::M3Kind::Composite);
     auto coupling_port_details = b.begin_type("CouplingPortDetails", fir::M3Kind::Composite);
     auto coupling_port_fifo = b.begin_type("CouplingPortFifo", fir::M3Kind::Composite);
     auto coupling_port_rate_policy = b.begin_type("CouplingPortRatePolicy", fir::M3Kind::Composite);
@@ -9767,7 +8921,6 @@ AutosarSchema build_autosar_r23_11() {
     auto cp_software_cluster_resource_pool = b.begin_type("CpSoftwareClusterResourcePool", fir::M3Kind::Composite);
     auto cp_software_cluster_resource_to_application_partition_mapping = b.begin_type("CpSoftwareClusterResourceToApplicationPartitionMapping", fir::M3Kind::Composite);
     auto cp_software_cluster_service_resource = b.begin_type("CpSoftwareClusterServiceResource", fir::M3Kind::Composite);
-    auto cp_software_cluster_to_application_partition_mapping = b.begin_type("CpSoftwareClusterToApplicationPartitionMapping", fir::M3Kind::Composite);
     auto cp_software_cluster_to_ecu_instance_mapping = b.begin_type("CpSoftwareClusterToEcuInstanceMapping", fir::M3Kind::Composite);
     auto cp_software_cluster_to_resource_mapping = b.begin_type("CpSoftwareClusterToResourceMapping", fir::M3Kind::Composite);
     auto cp_sw_cluster_resource_to_diag_data_elem_mapping = b.begin_type("CpSwClusterResourceToDiagDataElemMapping", fir::M3Kind::Composite);
@@ -9846,37 +8999,14 @@ AutosarSchema build_autosar_r23_11() {
     auto data_type_mapping_set = b.begin_type("DataTypeMappingSet", fir::M3Kind::Composite);
     auto data_write_completed_event = b.begin_type("DataWriteCompletedEvent", fir::M3Kind::Composite);
     auto dcm_i_pdu = b.begin_type("DcmIPdu", fir::M3Kind::Composite);
-    auto dds_cp_config = b.begin_type("DdsCpConfig", fir::M3Kind::Composite);
-    auto dds_cp_consumed_service_instance = b.begin_type("DdsCpConsumedServiceInstance", fir::M3Kind::Composite);
-    auto dds_cp_domain = b.begin_type("DdsCpDomain", fir::M3Kind::Composite);
-    auto dds_cp_i_signal_to_dds_topic_mapping = b.begin_type("DdsCpISignalToDdsTopicMapping", fir::M3Kind::Composite);
-    auto dds_cp_partition = b.begin_type("DdsCpPartition", fir::M3Kind::Composite);
-    auto dds_cp_provided_service_instance = b.begin_type("DdsCpProvidedServiceInstance", fir::M3Kind::Composite);
-    auto dds_cp_qos_profile = b.begin_type("DdsCpQosProfile", fir::M3Kind::Composite);
-    auto dds_cp_service_instance = b.begin_type("DdsCpServiceInstance", fir::M3Kind::Composite);
-    auto dds_cp_service_instance_event = b.begin_type("DdsCpServiceInstanceEvent", fir::M3Kind::Composite);
-    auto dds_cp_service_instance_operation = b.begin_type("DdsCpServiceInstanceOperation", fir::M3Kind::Composite);
-    auto dds_cp_topic = b.begin_type("DdsCpTopic", fir::M3Kind::Composite);
-    auto dds_deadline = b.begin_type("DdsDeadline", fir::M3Kind::Composite);
-    auto dds_destination_order = b.begin_type("DdsDestinationOrder", fir::M3Kind::Composite);
     auto dds_domain_range = b.begin_type("DdsDomainRange", fir::M3Kind::Composite);
-    auto dds_durability = b.begin_type("DdsDurability", fir::M3Kind::Composite);
-    auto dds_durability_service = b.begin_type("DdsDurabilityService", fir::M3Kind::Composite);
     auto dds_event_deployment = b.begin_type("DdsEventDeployment", fir::M3Kind::Composite);
     auto dds_event_qos_props = b.begin_type("DdsEventQosProps", fir::M3Kind::Composite);
     auto dds_field_deployment = b.begin_type("DdsFieldDeployment", fir::M3Kind::Composite);
     auto dds_field_qos_props = b.begin_type("DdsFieldQosProps", fir::M3Kind::Composite);
-    auto dds_history = b.begin_type("DdsHistory", fir::M3Kind::Composite);
-    auto dds_latency_budget = b.begin_type("DdsLatencyBudget", fir::M3Kind::Composite);
-    auto dds_lifespan = b.begin_type("DdsLifespan", fir::M3Kind::Composite);
-    auto dds_liveliness = b.begin_type("DdsLiveliness", fir::M3Kind::Composite);
-    auto dds_ownership = b.begin_type("DdsOwnership", fir::M3Kind::Composite);
-    auto dds_ownership_strength = b.begin_type("DdsOwnershipStrength", fir::M3Kind::Composite);
     auto dds_provided_service_instance = b.begin_type("DdsProvidedServiceInstance", fir::M3Kind::Composite);
     auto dds_qos_props = b.begin_type("DdsQosProps", fir::M3Kind::Composite);
-    auto dds_reliability = b.begin_type("DdsReliability", fir::M3Kind::Composite);
     auto dds_required_service_instance = b.begin_type("DdsRequiredServiceInstance", fir::M3Kind::Composite);
-    auto dds_resource_limits = b.begin_type("DdsResourceLimits", fir::M3Kind::Composite);
     auto dds_rule = b.begin_type("DdsRule", fir::M3Kind::Composite);
     auto dds_secure_com_props = b.begin_type("DdsSecureComProps", fir::M3Kind::Composite);
     auto dds_secure_governance = b.begin_type("DdsSecureGovernance", fir::M3Kind::Composite);
@@ -9885,8 +9015,6 @@ AutosarSchema build_autosar_r23_11() {
     auto dds_service_interface_deployment = b.begin_type("DdsServiceInterfaceDeployment", fir::M3Kind::Composite);
     auto dds_service_version = b.begin_type("DdsServiceVersion", fir::M3Kind::Composite);
     auto dds_topic_access_rule = b.begin_type("DdsTopicAccessRule", fir::M3Kind::Composite);
-    auto dds_topic_data = b.begin_type("DdsTopicData", fir::M3Kind::Composite);
-    auto dds_transport_priority = b.begin_type("DdsTransportPriority", fir::M3Kind::Composite);
     auto deadline_supervision = b.begin_type("DeadlineSupervision", fir::M3Kind::Composite);
     auto def_item = b.begin_type("DefItem", fir::M3Kind::Composite);
     auto def_list = b.begin_type("DefList", fir::M3Kind::Composite);
@@ -9895,6 +9023,14 @@ AutosarSchema build_autosar_r23_11() {
     auto delegation_sw_connector = b.begin_type("DelegationSwConnector", fir::M3Kind::Composite);
     auto dependency_on_artifact = b.begin_type("DependencyOnArtifact", fir::M3Kind::Composite);
     auto describable = b.begin_type("Describable", fir::M3Kind::Composite);
+    auto deterministic_client = b.begin_type("DeterministicClient", fir::M3Kind::Composite);
+    auto deterministic_client_resource = b.begin_type("DeterministicClientResource", fir::M3Kind::Composite);
+    auto deterministic_client_resource_needs = b.begin_type("DeterministicClientResourceNeeds", fir::M3Kind::Composite);
+    auto deterministic_sync_instantiation = b.begin_type("DeterministicSyncInstantiation", fir::M3Kind::Composite);
+    auto deterministic_sync_m_out_of_n = b.begin_type("DeterministicSyncMOutOfN", fir::M3Kind::Composite);
+    auto deterministic_sync_master = b.begin_type("DeterministicSyncMaster", fir::M3Kind::Composite);
+    auto deterministic_sync_master_to_time_base_consumer_mapping = b.begin_type("DeterministicSyncMasterToTimeBaseConsumerMapping", fir::M3Kind::Composite);
+    auto deterministic_sync_verification_policy = b.begin_type("DeterministicSyncVerificationPolicy", fir::M3Kind::Composite);
     auto development_error = b.begin_type("DevelopmentError", fir::M3Kind::Composite);
     auto dhcp_server_configuration = b.begin_type("DhcpServerConfiguration", fir::M3Kind::Composite);
     auto dhcpv6_props = b.begin_type("Dhcpv6Props", fir::M3Kind::Composite);
@@ -9910,10 +9046,6 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_access_permission = b.begin_type("DiagnosticAccessPermission", fir::M3Kind::Composite);
     auto diagnostic_aging = b.begin_type("DiagnosticAging", fir::M3Kind::Composite);
     auto diagnostic_auth_role = b.begin_type("DiagnosticAuthRole", fir::M3Kind::Composite);
-    auto diagnostic_auth_role_proxy = b.begin_type("DiagnosticAuthRoleProxy", fir::M3Kind::Composite);
-    auto diagnostic_auth_transmit_certificate = b.begin_type("DiagnosticAuthTransmitCertificate", fir::M3Kind::Composite);
-    auto diagnostic_auth_transmit_certificate_evaluation = b.begin_type("DiagnosticAuthTransmitCertificateEvaluation", fir::M3Kind::Composite);
-    auto diagnostic_auth_transmit_certificate_mapping = b.begin_type("DiagnosticAuthTransmitCertificateMapping", fir::M3Kind::Composite);
     auto diagnostic_authentication = b.begin_type("DiagnosticAuthentication", fir::M3Kind::Composite);
     auto diagnostic_authentication_class = b.begin_type("DiagnosticAuthenticationClass", fir::M3Kind::Composite);
     auto diagnostic_authentication_configuration = b.begin_type("DiagnosticAuthenticationConfiguration", fir::M3Kind::Composite);
@@ -10068,14 +9200,6 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_memory_identifier = b.begin_type("DiagnosticMemoryIdentifier", fir::M3Kind::Composite);
     auto diagnostic_monitor_interface = b.begin_type("DiagnosticMonitorInterface", fir::M3Kind::Composite);
     auto diagnostic_monitor_port_mapping = b.begin_type("DiagnosticMonitorPortMapping", fir::M3Kind::Composite);
-    auto diagnostic_multiple_condition_interface = b.begin_type("DiagnosticMultipleConditionInterface", fir::M3Kind::Composite);
-    auto diagnostic_multiple_condition_port_mapping = b.begin_type("DiagnosticMultipleConditionPortMapping", fir::M3Kind::Composite);
-    auto diagnostic_multiple_event_interface = b.begin_type("DiagnosticMultipleEventInterface", fir::M3Kind::Composite);
-    auto diagnostic_multiple_event_port_mapping = b.begin_type("DiagnosticMultipleEventPortMapping", fir::M3Kind::Composite);
-    auto diagnostic_multiple_monitor_interface = b.begin_type("DiagnosticMultipleMonitorInterface", fir::M3Kind::Composite);
-    auto diagnostic_multiple_monitor_port_mapping = b.begin_type("DiagnosticMultipleMonitorPortMapping", fir::M3Kind::Composite);
-    auto diagnostic_multiple_resource_interface = b.begin_type("DiagnosticMultipleResourceInterface", fir::M3Kind::Composite);
-    auto diagnostic_multiple_resource_port_mapping = b.begin_type("DiagnosticMultipleResourcePortMapping", fir::M3Kind::Composite);
     auto diagnostic_operation_cycle = b.begin_type("DiagnosticOperationCycle", fir::M3Kind::Composite);
     auto diagnostic_operation_cycle_interface = b.begin_type("DiagnosticOperationCycleInterface", fir::M3Kind::Composite);
     auto diagnostic_operation_cycle_needs = b.begin_type("DiagnosticOperationCycleNeeds", fir::M3Kind::Composite);
@@ -10137,7 +9261,6 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_routine_interface = b.begin_type("DiagnosticRoutineInterface", fir::M3Kind::Composite);
     auto diagnostic_routine_needs = b.begin_type("DiagnosticRoutineNeeds", fir::M3Kind::Composite);
     auto diagnostic_routine_subfunction = b.begin_type("DiagnosticRoutineSubfunction", fir::M3Kind::Composite);
-    auto diagnostic_secure_coding_mapping = b.begin_type("DiagnosticSecureCodingMapping", fir::M3Kind::Composite);
     auto diagnostic_security_access = b.begin_type("DiagnosticSecurityAccess", fir::M3Kind::Composite);
     auto diagnostic_security_access_class = b.begin_type("DiagnosticSecurityAccessClass", fir::M3Kind::Composite);
     auto diagnostic_security_event_reporting_mode_mapping = b.begin_type("DiagnosticSecurityEventReportingModeMapping", fir::M3Kind::Composite);
@@ -10160,28 +9283,10 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_session_control_class = b.begin_type("DiagnosticSessionControlClass", fir::M3Kind::Composite);
     auto diagnostic_sovd_authorization_interface = b.begin_type("DiagnosticSovdAuthorizationInterface", fir::M3Kind::Composite);
     auto diagnostic_sovd_authorization_port_mapping = b.begin_type("DiagnosticSovdAuthorizationPortMapping", fir::M3Kind::Composite);
-    auto diagnostic_sovd_bulk_data = b.begin_type("DiagnosticSovdBulkData", fir::M3Kind::Composite);
-    auto diagnostic_sovd_bulk_data_interface = b.begin_type("DiagnosticSovdBulkDataInterface", fir::M3Kind::Composite);
-    auto diagnostic_sovd_bulk_data_port_mapping = b.begin_type("DiagnosticSovdBulkDataPortMapping", fir::M3Kind::Composite);
-    auto diagnostic_sovd_configuration = b.begin_type("DiagnosticSovdConfiguration", fir::M3Kind::Composite);
-    auto diagnostic_sovd_configuration_bulk_data = b.begin_type("DiagnosticSovdConfigurationBulkData", fir::M3Kind::Composite);
-    auto diagnostic_sovd_configuration_data_identifier_mapping = b.begin_type("DiagnosticSovdConfigurationDataIdentifierMapping", fir::M3Kind::Composite);
-    auto diagnostic_sovd_configuration_interface = b.begin_type("DiagnosticSovdConfigurationInterface", fir::M3Kind::Composite);
-    auto diagnostic_sovd_configuration_parameter = b.begin_type("DiagnosticSovdConfigurationParameter", fir::M3Kind::Composite);
-    auto diagnostic_sovd_configuration_port_mapping = b.begin_type("DiagnosticSovdConfigurationPortMapping", fir::M3Kind::Composite);
     auto diagnostic_sovd_lock = b.begin_type("DiagnosticSovdLock", fir::M3Kind::Composite);
-    auto diagnostic_sovd_log = b.begin_type("DiagnosticSovdLog", fir::M3Kind::Composite);
-    auto diagnostic_sovd_method = b.begin_type("DiagnosticSovdMethod", fir::M3Kind::Composite);
-    auto diagnostic_sovd_method_primitive = b.begin_type("DiagnosticSovdMethodPrimitive", fir::M3Kind::Composite);
     auto diagnostic_sovd_port_interface = b.begin_type("DiagnosticSovdPortInterface", fir::M3Kind::Composite);
     auto diagnostic_sovd_proximity_challenge_interface = b.begin_type("DiagnosticSovdProximityChallengeInterface", fir::M3Kind::Composite);
     auto diagnostic_sovd_proximity_challenge_port_mapping = b.begin_type("DiagnosticSovdProximityChallengePortMapping", fir::M3Kind::Composite);
-    auto diagnostic_sovd_service_instance = b.begin_type("DiagnosticSovdServiceInstance", fir::M3Kind::Composite);
-    auto diagnostic_sovd_service_validation_interface = b.begin_type("DiagnosticSovdServiceValidationInterface", fir::M3Kind::Composite);
-    auto diagnostic_sovd_service_validation_port_mapping = b.begin_type("DiagnosticSovdServiceValidationPortMapping", fir::M3Kind::Composite);
-    auto diagnostic_sovd_update = b.begin_type("DiagnosticSovdUpdate", fir::M3Kind::Composite);
-    auto diagnostic_sovd_update_interface = b.begin_type("DiagnosticSovdUpdateInterface", fir::M3Kind::Composite);
-    auto diagnostic_sovd_update_port_mapping = b.begin_type("DiagnosticSovdUpdatePortMapping", fir::M3Kind::Composite);
     auto diagnostic_start_routine = b.begin_type("DiagnosticStartRoutine", fir::M3Kind::Composite);
     auto diagnostic_stop_routine = b.begin_type("DiagnosticStopRoutine", fir::M3Kind::Composite);
     auto diagnostic_storage_condition = b.begin_type("DiagnosticStorageCondition", fir::M3Kind::Composite);
@@ -10206,7 +9311,6 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_trouble_code_uds = b.begin_type("DiagnosticTroubleCodeUds", fir::M3Kind::Composite);
     auto diagnostic_trouble_code_uds_to_clear_condition_group_mapping = b.begin_type("DiagnosticTroubleCodeUdsToClearConditionGroupMapping", fir::M3Kind::Composite);
     auto diagnostic_trouble_code_uds_to_trouble_code_obd_mapping = b.begin_type("DiagnosticTroubleCodeUdsToTroubleCodeObdMapping", fir::M3Kind::Composite);
-    auto diagnostic_uds_severity_enum_value_variation_point = b.begin_type("DiagnosticUdsSeverityEnumValueVariationPoint", fir::M3Kind::Composite);
     auto diagnostic_upload_download_needs = b.begin_type("DiagnosticUploadDownloadNeeds", fir::M3Kind::Composite);
     auto diagnostic_upload_interface = b.begin_type("DiagnosticUploadInterface", fir::M3Kind::Composite);
     auto diagnostic_value_needs = b.begin_type("DiagnosticValueNeeds", fir::M3Kind::Composite);
@@ -10491,7 +9595,6 @@ AutosarSchema build_autosar_r23_11() {
     auto function_inhibition_needs = b.begin_type("FunctionInhibitionNeeds", fir::M3Kind::Composite);
     auto functional_cluster_interacts_with_functional_cluster_mapping = b.begin_type("FunctionalClusterInteractsWithFunctionalClusterMapping", fir::M3Kind::Composite);
     auto functional_cluster_interacts_with_persistency_deployment_mapping = b.begin_type("FunctionalClusterInteractsWithPersistencyDeploymentMapping", fir::M3Kind::Composite);
-    auto functional_cluster_to_security_event_definition_mapping = b.begin_type("FunctionalClusterToSecurityEventDefinitionMapping", fir::M3Kind::Composite);
     auto further_action_byte_needs = b.begin_type("FurtherActionByteNeeds", fir::M3Kind::Composite);
     auto gateway = b.begin_type("Gateway", fir::M3Kind::Composite);
     auto general_annotation = b.begin_type("GeneralAnnotation", fir::M3Kind::Composite);
@@ -10573,9 +9676,6 @@ AutosarSchema build_autosar_r23_11() {
     auto ids_mgr_custom_timestamp_needs = b.begin_type("IdsMgrCustomTimestampNeeds", fir::M3Kind::Composite);
     auto ids_mgr_needs = b.begin_type("IdsMgrNeeds", fir::M3Kind::Composite);
     auto ids_platform_instantiation = b.begin_type("IdsPlatformInstantiation", fir::M3Kind::Composite);
-    auto idsm_abstract_port_interface = b.begin_type("IdsmAbstractPortInterface", fir::M3Kind::Composite);
-    auto idsm_context_provider_interface = b.begin_type("IdsmContextProviderInterface", fir::M3Kind::Composite);
-    auto idsm_context_provider_mapping = b.begin_type("IdsmContextProviderMapping", fir::M3Kind::Composite);
     auto idsm_instance = b.begin_type("IdsmInstance", fir::M3Kind::Composite);
     auto idsm_instance_ref_conditional = b.begin_type("IdsmInstanceRefConditional", fir::M3Kind::Composite);
     auto idsm_module_instantiation = b.begin_type("IdsmModuleInstantiation", fir::M3Kind::Composite);
@@ -10584,27 +9684,10 @@ AutosarSchema build_autosar_r23_11() {
     auto idsm_rate_limitation_ref_conditional = b.begin_type("IdsmRateLimitationRefConditional", fir::M3Kind::Composite);
     auto idsm_signature_support_ap = b.begin_type("IdsmSignatureSupportAp", fir::M3Kind::Composite);
     auto idsm_signature_support_cp = b.begin_type("IdsmSignatureSupportCp", fir::M3Kind::Composite);
-    auto idsm_timestamp_provider_interface = b.begin_type("IdsmTimestampProviderInterface", fir::M3Kind::Composite);
-    auto idsm_timestamp_provider_mapping = b.begin_type("IdsmTimestampProviderMapping", fir::M3Kind::Composite);
     auto idsm_traffic_limitation = b.begin_type("IdsmTrafficLimitation", fir::M3Kind::Composite);
     auto idsm_traffic_limitation_ref_conditional = b.begin_type("IdsmTrafficLimitationRefConditional", fir::M3Kind::Composite);
     auto ieee1722_tp = b.begin_type("Ieee1722Tp", fir::M3Kind::Composite);
-    auto iee_e1722_tp_aaf_connection = b.begin_type("IEEE1722TpAafConnection", fir::M3Kind::Composite);
-    auto iee_e1722_tp_acf_bus = b.begin_type("IEEE1722TpAcfBus", fir::M3Kind::Composite);
-    auto iee_e1722_tp_acf_bus_part = b.begin_type("IEEE1722TpAcfBusPart", fir::M3Kind::Composite);
-    auto iee_e1722_tp_acf_can = b.begin_type("IEEE1722TpAcfCan", fir::M3Kind::Composite);
-    auto iee_e1722_tp_acf_can_part = b.begin_type("IEEE1722TpAcfCanPart", fir::M3Kind::Composite);
-    auto iee_e1722_tp_acf_connection = b.begin_type("IEEE1722TpAcfConnection", fir::M3Kind::Composite);
-    auto iee_e1722_tp_acf_lin = b.begin_type("IEEE1722TpAcfLin", fir::M3Kind::Composite);
-    auto iee_e1722_tp_acf_lin_part = b.begin_type("IEEE1722TpAcfLinPart", fir::M3Kind::Composite);
-    auto iee_e1722_tp_av_connection = b.begin_type("IEEE1722TpAvConnection", fir::M3Kind::Composite);
-    auto iee_e1722_tp_config = b.begin_type("IEEE1722TpConfig", fir::M3Kind::Composite);
-    auto iee_e1722_tp_connection = b.begin_type("IEEE1722TpConnection", fir::M3Kind::Composite);
-    auto iee_e1722_tp_connection_ref_conditional = b.begin_type("IEEE1722TpConnectionRefConditional", fir::M3Kind::Composite);
-    auto iee_e1722_tp_crf_connection = b.begin_type("IEEE1722TpCrfConnection", fir::M3Kind::Composite);
     auto ieee1722_tp_ethernet_frame = b.begin_type("Ieee1722TpEthernetFrame", fir::M3Kind::Composite);
-    auto iee_e1722_tp_iidc_connection = b.begin_type("IEEE1722TpIidcConnection", fir::M3Kind::Composite);
-    auto iee_e1722_tp_rvf_connection = b.begin_type("IEEE1722TpRvfConnection", fir::M3Kind::Composite);
     auto implementation = b.begin_type("Implementation", fir::M3Kind::Composite);
     auto implementation_data_type = b.begin_type("ImplementationDataType", fir::M3Kind::Composite);
     auto implementation_data_type_element = b.begin_type("ImplementationDataTypeElement", fir::M3Kind::Composite);
@@ -10613,8 +9696,6 @@ AutosarSchema build_autosar_r23_11() {
     auto implementation_data_type_sub_element_ref = b.begin_type("ImplementationDataTypeSubElementRef", fir::M3Kind::Composite);
     auto implementation_element_in_parameter_instance_ref = b.begin_type("ImplementationElementInParameterInstanceRef", fir::M3Kind::Composite);
     auto implementation_props = b.begin_type("ImplementationProps", fir::M3Kind::Composite);
-    auto imposition_time = b.begin_type("ImpositionTime", fir::M3Kind::Composite);
-    auto imposition_time_definition_group = b.begin_type("ImpositionTimeDefinitionGroup", fir::M3Kind::Composite);
     auto included_data_type_set = b.begin_type("IncludedDataTypeSet", fir::M3Kind::Composite);
     auto included_mode_declaration_group_set = b.begin_type("IncludedModeDeclarationGroupSet", fir::M3Kind::Composite);
     auto indent_sample = b.begin_type("IndentSample", fir::M3Kind::Composite);
@@ -10835,10 +9916,7 @@ AutosarSchema build_autosar_r23_11() {
     auto name_token_value_variation_point = b.begin_type("NameTokenValueVariationPoint", fir::M3Kind::Composite);
     auto network_endpoint = b.begin_type("NetworkEndpoint", fir::M3Kind::Composite);
     auto network_endpoint_address = b.begin_type("NetworkEndpointAddress", fir::M3Kind::Composite);
-    auto network_endpoint_ref_conditional = b.begin_type("NetworkEndpointRefConditional", fir::M3Kind::Composite);
-    auto network_handle_port_mapping = b.begin_type("NetworkHandlePortMapping", fir::M3Kind::Composite);
     auto network_layer_rule = b.begin_type("NetworkLayerRule", fir::M3Kind::Composite);
-    auto network_management_port_interface = b.begin_type("NetworkManagementPortInterface", fir::M3Kind::Composite);
     auto network_segment_identification = b.begin_type("NetworkSegmentIdentification", fir::M3Kind::Composite);
     auto nm_cluster = b.begin_type("NmCluster", fir::M3Kind::Composite);
     auto nm_cluster_coupling = b.begin_type("NmClusterCoupling", fir::M3Kind::Composite);
@@ -10847,7 +9925,6 @@ AutosarSchema build_autosar_r23_11() {
     auto nm_ecu = b.begin_type("NmEcu", fir::M3Kind::Composite);
     auto nm_handle_to_function_group_state_mapping = b.begin_type("NmHandleToFunctionGroupStateMapping", fir::M3Kind::Composite);
     auto nm_instantiation = b.begin_type("NmInstantiation", fir::M3Kind::Composite);
-    auto nm_interacts_with_sm_mapping = b.begin_type("NmInteractsWithSmMapping", fir::M3Kind::Composite);
     auto nm_network_handle = b.begin_type("NmNetworkHandle", fir::M3Kind::Composite);
     auto nm_node = b.begin_type("NmNode", fir::M3Kind::Composite);
     auto nm_pdu = b.begin_type("NmPdu", fir::M3Kind::Composite);
@@ -11235,7 +10312,6 @@ AutosarSchema build_autosar_r23_11() {
     auto single_language_unit_names = b.begin_type("SingleLanguageUnitNames", fir::M3Kind::Composite);
     auto sl_overview_paragraph = b.begin_type("SlOverviewParagraph", fir::M3Kind::Composite);
     auto sl_paragraph = b.begin_type("SlParagraph", fir::M3Kind::Composite);
-    auto sm_interacts_with_nm_mapping = b.begin_type("SmInteractsWithNmMapping", fir::M3Kind::Composite);
     auto so_ad_config = b.begin_type("SoAdConfig", fir::M3Kind::Composite);
     auto so_ad_routing_group = b.begin_type("SoAdRoutingGroup", fir::M3Kind::Composite);
     auto so_con_i_pdu_identifier = b.begin_type("SoConIPduIdentifier", fir::M3Kind::Composite);
@@ -11255,7 +10331,6 @@ AutosarSchema build_autosar_r23_11() {
     auto software_cluster_diagnostic_deployment_props = b.begin_type("SoftwareClusterDiagnosticDeploymentProps", fir::M3Kind::Composite);
     auto software_cluster_doip_diagnostic_address = b.begin_type("SoftwareClusterDoipDiagnosticAddress", fir::M3Kind::Composite);
     auto software_cluster_sovd_address = b.begin_type("SoftwareClusterSovdAddress", fir::M3Kind::Composite);
-    auto software_cluster_uds_diagnostic_address = b.begin_type("SoftwareClusterUdsDiagnosticAddress", fir::M3Kind::Composite);
     auto software_context = b.begin_type("SoftwareContext", fir::M3Kind::Composite);
     auto software_package = b.begin_type("SoftwarePackage", fir::M3Kind::Composite);
     auto software_package_step = b.begin_type("SoftwarePackageStep", fir::M3Kind::Composite);
@@ -11320,7 +10395,6 @@ AutosarSchema build_autosar_r23_11() {
     auto state_management_error_interface = b.begin_type("StateManagementErrorInterface", fir::M3Kind::Composite);
     auto state_management_function_group_switch_notification_interface = b.begin_type("StateManagementFunctionGroupSwitchNotificationInterface", fir::M3Kind::Composite);
     auto state_management_module_instantiation = b.begin_type("StateManagementModuleInstantiation", fir::M3Kind::Composite);
-    auto state_management_nm_action_item = b.begin_type("StateManagementNmActionItem", fir::M3Kind::Composite);
     auto state_management_notification_interface = b.begin_type("StateManagementNotificationInterface", fir::M3Kind::Composite);
     auto state_management_port_interface = b.begin_type("StateManagementPortInterface", fir::M3Kind::Composite);
     auto state_management_request_error = b.begin_type("StateManagementRequestError", fir::M3Kind::Composite);
@@ -11328,7 +10402,6 @@ AutosarSchema build_autosar_r23_11() {
     auto state_management_request_rule = b.begin_type("StateManagementRequestRule", fir::M3Kind::Composite);
     auto state_management_request_trigger = b.begin_type("StateManagementRequestTrigger", fir::M3Kind::Composite);
     auto state_management_set_function_group_state_action_item = b.begin_type("StateManagementSetFunctionGroupStateActionItem", fir::M3Kind::Composite);
-    auto state_management_sleep_action_item = b.begin_type("StateManagementSleepActionItem", fir::M3Kind::Composite);
     auto state_management_state_machine_action_item = b.begin_type("StateManagementStateMachineActionItem", fir::M3Kind::Composite);
     auto state_management_state_notification = b.begin_type("StateManagementStateNotification", fir::M3Kind::Composite);
     auto state_management_state_request = b.begin_type("StateManagementStateRequest", fir::M3Kind::Composite);
@@ -11339,13 +10412,6 @@ AutosarSchema build_autosar_r23_11() {
     auto static_socket_connection = b.begin_type("StaticSocketConnection", fir::M3Kind::Composite);
     auto std = b.begin_type("Std", fir::M3Kind::Composite);
     auto std_cpp_implementation_data_type = b.begin_type("StdCppImplementationDataType", fir::M3Kind::Composite);
-    auto stream_filter_iee_e1722_tp = b.begin_type("StreamFilterIEEE1722Tp", fir::M3Kind::Composite);
-    auto stream_filter_ipv4_address = b.begin_type("StreamFilterIpv4Address", fir::M3Kind::Composite);
-    auto stream_filter_ipv6_address = b.begin_type("StreamFilterIpv6Address", fir::M3Kind::Composite);
-    auto stream_filter_mac_address = b.begin_type("StreamFilterMACAddress", fir::M3Kind::Composite);
-    auto stream_filter_port_range = b.begin_type("StreamFilterPortRange", fir::M3Kind::Composite);
-    auto stream_filter_rule_data_link_layer = b.begin_type("StreamFilterRuleDataLinkLayer", fir::M3Kind::Composite);
-    auto stream_filter_rule_ip_tp = b.begin_type("StreamFilterRuleIpTp", fir::M3Kind::Composite);
     auto structured_req = b.begin_type("StructuredReq", fir::M3Kind::Composite);
     auto sub_element_mapping = b.begin_type("SubElementMapping", fir::M3Kind::Composite);
     auto sub_element_ref = b.begin_type("SubElementRef", fir::M3Kind::Composite);
@@ -11414,13 +10480,6 @@ AutosarSchema build_autosar_r23_11() {
     auto swc_to_impl_mapping = b.begin_type("SwcToImplMapping", fir::M3Kind::Composite);
     auto swc_to_swc_operation_arguments = b.begin_type("SwcToSwcOperationArguments", fir::M3Kind::Composite);
     auto swc_to_swc_signal = b.begin_type("SwcToSwcSignal", fir::M3Kind::Composite);
-    auto switch_asynchronous_traffic_shaper_group_entry = b.begin_type("SwitchAsynchronousTrafficShaperGroupEntry", fir::M3Kind::Composite);
-    auto switch_flow_metering_entry = b.begin_type("SwitchFlowMeteringEntry", fir::M3Kind::Composite);
-    auto switch_stream_filter_action_dest_port_modification = b.begin_type("SwitchStreamFilterActionDestPortModification", fir::M3Kind::Composite);
-    auto switch_stream_filter_entry = b.begin_type("SwitchStreamFilterEntry", fir::M3Kind::Composite);
-    auto switch_stream_filter_rule = b.begin_type("SwitchStreamFilterRule", fir::M3Kind::Composite);
-    auto switch_stream_gate_entry = b.begin_type("SwitchStreamGateEntry", fir::M3Kind::Composite);
-    auto switch_stream_identification = b.begin_type("SwitchStreamIdentification", fir::M3Kind::Composite);
     auto symbol_props = b.begin_type("SymbolProps", fir::M3Kind::Composite);
     auto symbol_string = b.begin_type("SymbolString", fir::M3Kind::Composite);
     auto symbolic_name_props = b.begin_type("SymbolicNameProps", fir::M3Kind::Composite);
@@ -11436,8 +10495,6 @@ AutosarSchema build_autosar_r23_11() {
     auto system_mapping = b.begin_type("SystemMapping", fir::M3Kind::Composite);
     auto system_signal = b.begin_type("SystemSignal", fir::M3Kind::Composite);
     auto system_signal_group = b.begin_type("SystemSignalGroup", fir::M3Kind::Composite);
-    auto system_signal_group_to_communication_resource_mapping = b.begin_type("SystemSignalGroupToCommunicationResourceMapping", fir::M3Kind::Composite);
-    auto system_signal_to_communication_resource_mapping = b.begin_type("SystemSignalToCommunicationResourceMapping", fir::M3Kind::Composite);
     auto system_timing = b.begin_type("SystemTiming", fir::M3Kind::Composite);
     auto table = b.begin_type("Table", fir::M3Kind::Composite);
     auto tag_with_optional_value = b.begin_type("TagWithOptionalValue", fir::M3Kind::Composite);
@@ -11538,7 +10595,6 @@ AutosarSchema build_autosar_r23_11() {
     auto tp_connection_ident = b.begin_type("TpConnectionIdent", fir::M3Kind::Composite);
     auto tp_port = b.begin_type("TpPort", fir::M3Kind::Composite);
     auto trace_referrable = b.begin_type("TraceReferrable", fir::M3Kind::Composite);
-    auto trace_switch_configuration = b.begin_type("TraceSwitchConfiguration", fir::M3Kind::Composite);
     auto traceable = b.begin_type("Traceable", fir::M3Kind::Composite);
     auto traceable_table = b.begin_type("TraceableTable", fir::M3Kind::Composite);
     auto traceable_text = b.begin_type("TraceableText", fir::M3Kind::Composite);
@@ -11601,8 +10657,6 @@ AutosarSchema build_autosar_r23_11() {
     auto unit_group = b.begin_type("UnitGroup", fir::M3Kind::Composite);
     auto unlimited_integer_value_variation_point = b.begin_type("UnlimitedIntegerValueVariationPoint", fir::M3Kind::Composite);
     auto unresolved_reference_restriction_with_severity = b.begin_type("UnresolvedReferenceRestrictionWithSeverity", fir::M3Kind::Composite);
-    auto uploadable_deployment_element = b.begin_type("UploadableDeploymentElement", fir::M3Kind::Composite);
-    auto uploadable_design_element = b.begin_type("UploadableDesignElement", fir::M3Kind::Composite);
     auto uploadable_exclusive_package_element = b.begin_type("UploadableExclusivePackageElement", fir::M3Kind::Composite);
     auto uploadable_package_element = b.begin_type("UploadablePackageElement", fir::M3Kind::Composite);
     auto url = b.begin_type("Url", fir::M3Kind::Composite);
@@ -11733,14 +10787,7 @@ AutosarSchema build_autosar_r23_11() {
     auto data_transformation_status_forwarding_enum = b.begin_type("DataTransformationStatusForwardingEnum", fir::M3Kind::Composite);
     auto data_type_policy_enum = b.begin_type("DataTypePolicyEnum", fir::M3Kind::Composite);
     auto date_time = b.begin_type("DateTime", fir::M3Kind::Composite);
-    auto dds_destination_order_kind_enum = b.begin_type("DdsDestinationOrderKindEnum", fir::M3Kind::Composite);
-    auto dds_durability_kind_enum = b.begin_type("DdsDurabilityKindEnum", fir::M3Kind::Composite);
-    auto dds_durability_service_history_kind_enum = b.begin_type("DdsDurabilityServiceHistoryKindEnum", fir::M3Kind::Composite);
-    auto dds_history_kind_enum = b.begin_type("DdsHistoryKindEnum", fir::M3Kind::Composite);
-    auto dds_liveness_kind_enum = b.begin_type("DdsLivenessKindEnum", fir::M3Kind::Composite);
-    auto dds_ownership_kind_enum = b.begin_type("DdsOwnershipKindEnum", fir::M3Kind::Composite);
     auto dds_protection_kind_enum = b.begin_type("DdsProtectionKindEnum", fir::M3Kind::Composite);
-    auto dds_reliability_kind_enum = b.begin_type("DdsReliabilityKindEnum", fir::M3Kind::Composite);
     auto dds_service_instance_discovery_type_enum = b.begin_type("DdsServiceInstanceDiscoveryTypeEnum", fir::M3Kind::Composite);
     auto dds_service_instance_resource_identifier_type_enum = b.begin_type("DdsServiceInstanceResourceIdentifierTypeEnum", fir::M3Kind::Composite);
     auto default_value_application_strategy_enum = b.begin_type("DefaultValueApplicationStrategyEnum", fir::M3Kind::Composite);
@@ -11832,7 +10879,6 @@ AutosarSchema build_autosar_r23_11() {
     auto flexray_nm_schedule_variant = b.begin_type("FlexrayNmScheduleVariant", fir::M3Kind::Composite);
     auto float_ = b.begin_type("Float", fir::M3Kind::Composite);
     auto float_enum = b.begin_type("FloatEnum", fir::M3Kind::Composite);
-    auto flow_metering_color_mode_enum = b.begin_type("FlowMeteringColorModeEnum", fir::M3Kind::Composite);
     auto fm_feature_selection_state = b.begin_type("FMFeatureSelectionState", fir::M3Kind::Composite);
     auto fr_ar_tp_ack_type = b.begin_type("FrArTpAckType", fir::M3Kind::Composite);
     auto frame_enum = b.begin_type("FrameEnum", fir::M3Kind::Composite);
@@ -11842,7 +10888,6 @@ AutosarSchema build_autosar_r23_11() {
     auto global_time_crc_validation_enum = b.begin_type("GlobalTimeCrcValidationEnum", fir::M3Kind::Composite);
     auto global_time_icv_support_enum = b.begin_type("GlobalTimeIcvSupportEnum", fir::M3Kind::Composite);
     auto global_time_icv_verification_enum = b.begin_type("GlobalTimeIcvVerificationEnum", fir::M3Kind::Composite);
-    auto global_time_port_role_enum = b.begin_type("GlobalTimePortRoleEnum", fir::M3Kind::Composite);
     auto graphic_fit_enum = b.begin_type("GraphicFitEnum", fir::M3Kind::Composite);
     auto graphic_notation_enum = b.begin_type("GraphicNotationEnum", fir::M3Kind::Composite);
     auto handle_invalid_enum = b.begin_type("HandleInvalidEnum", fir::M3Kind::Composite);
@@ -11857,16 +10902,6 @@ AutosarSchema build_autosar_r23_11() {
     auto i_psec_mode_enum = b.begin_type("IPsecModeEnum", fir::M3Kind::Composite);
     auto i_psec_policy_enum = b.begin_type("IPsecPolicyEnum", fir::M3Kind::Composite);
     auto i_signal_type_enum = b.begin_type("ISignalTypeEnum", fir::M3Kind::Composite);
-    auto iee_e1722_tp_aaf_aes3_data_type_enum = b.begin_type("IEEE1722TpAafAes3DataTypeEnum", fir::M3Kind::Composite);
-    auto iee_e1722_tp_aaf_format_enum = b.begin_type("IEEE1722TpAafFormatEnum", fir::M3Kind::Composite);
-    auto iee_e1722_tp_aaf_nominal_rate_enum = b.begin_type("IEEE1722TpAafNominalRateEnum", fir::M3Kind::Composite);
-    auto iee_e1722_tp_acf_can_message_type_enum = b.begin_type("IEEE1722TpAcfCanMessageTypeEnum", fir::M3Kind::Composite);
-    auto iee_e1722_tp_crf_pull_enum = b.begin_type("IEEE1722TpCrfPullEnum", fir::M3Kind::Composite);
-    auto iee_e1722_tp_crf_type_enum = b.begin_type("IEEE1722TpCrfTypeEnum", fir::M3Kind::Composite);
-    auto iee_e1722_tp_rvf_color_space_enum = b.begin_type("IEEE1722TpRvfColorSpaceEnum", fir::M3Kind::Composite);
-    auto iee_e1722_tp_rvf_frame_rate_enum = b.begin_type("IEEE1722TpRvfFrameRateEnum", fir::M3Kind::Composite);
-    auto iee_e1722_tp_rvf_pixel_depth_enum = b.begin_type("IEEE1722TpRvfPixelDepthEnum", fir::M3Kind::Composite);
-    auto iee_e1722_tp_rvf_pixel_format_enum = b.begin_type("IEEE1722TpRvfPixelFormatEnum", fir::M3Kind::Composite);
     auto ike_authentication_method_enum = b.begin_type("IkeAuthenticationMethodEnum", fir::M3Kind::Composite);
     auto integer = b.begin_type("Integer", fir::M3Kind::Composite);
     auto interval_type_enum = b.begin_type("IntervalTypeEnum", fir::M3Kind::Composite);
@@ -11877,12 +10912,10 @@ AutosarSchema build_autosar_r23_11() {
     auto ipv4_address_source_enum = b.begin_type("Ipv4AddressSourceEnum", fir::M3Kind::Composite);
     auto ipv6_address_source_enum = b.begin_type("Ipv6AddressSourceEnum", fir::M3Kind::Composite);
     auto item_label_pos_enum = b.begin_type("ItemLabelPosEnum", fir::M3Kind::Composite);
-    auto j1939_nm_address_configuration_capability_enum = b.begin_type("J1939NmAddressConfigurationCapabilityEnum", fir::M3Kind::Composite);
     auto keep_with_previous_enum = b.begin_type("KeepWithPreviousEnum", fir::M3Kind::Composite);
     auto key_usage_restriction_enum = b.begin_type("KeyUsageRestrictionEnum", fir::M3Kind::Composite);
     auto l_enum = b.begin_type("LEnum", fir::M3Kind::Composite);
     auto latency_constraint_type_enum = b.begin_type("LatencyConstraintTypeEnum", fir::M3Kind::Composite);
-    auto let_data_exchange_paradigm_enum = b.begin_type("LetDataExchangeParadigmEnum", fir::M3Kind::Composite);
     auto lin_checksum_type = b.begin_type("LinChecksumType", fir::M3Kind::Composite);
     auto list_enum = b.begin_type("ListEnum", fir::M3Kind::Composite);
     auto log_trace_default_log_level_enum = b.begin_type("LogTraceDefaultLogLevelEnum", fir::M3Kind::Composite);
@@ -11900,7 +10933,6 @@ AutosarSchema build_autosar_r23_11() {
     auto memory_section_type = b.begin_type("MemorySectionType", fir::M3Kind::Composite);
     auto meta_class_name = b.begin_type("MetaClassName", fir::M3Kind::Composite);
     auto mime_type_string = b.begin_type("MimeTypeString", fir::M3Kind::Composite);
-    auto mirroring_protocol_enum = b.begin_type("MirroringProtocolEnum", fir::M3Kind::Composite);
     auto mode_activation_kind = b.begin_type("ModeActivationKind", fir::M3Kind::Composite);
     auto mode_error_reaction_policy_enum = b.begin_type("ModeErrorReactionPolicyEnum", fir::M3Kind::Composite);
     auto modification_type_enum = b.begin_type("ModificationTypeEnum", fir::M3Kind::Composite);
@@ -11909,7 +10941,6 @@ AutosarSchema build_autosar_r23_11() {
     auto network_target_address_type = b.begin_type("NetworkTargetAddressType", fir::M3Kind::Composite);
     auto nm_coordinator_role_enum = b.begin_type("NmCoordinatorRoleEnum", fir::M3Kind::Composite);
     auto nm_handle_mapping_direction_enum = b.begin_type("NmHandleMappingDirectionEnum", fir::M3Kind::Composite);
-    auto nm_state_request_enum = b.begin_type("NmStateRequestEnum", fir::M3Kind::Composite);
     auto name_token = b.begin_type("NameToken", fir::M3Kind::Composite);
     auto name_tokens = b.begin_type("NameTokens", fir::M3Kind::Composite);
     auto normalized_instruction = b.begin_type("NormalizedInstruction", fir::M3Kind::Composite);
@@ -11920,7 +10951,6 @@ AutosarSchema build_autosar_r23_11() {
     auto obd_ratio_connection_kind_enum = b.begin_type("ObdRatioConnectionKindEnum", fir::M3Kind::Composite);
     auto operation_cycle_type_enum = b.begin_type("OperationCycleTypeEnum", fir::M3Kind::Composite);
     auto orient_enum = b.begin_type("OrientEnum", fir::M3Kind::Composite);
-    auto os_arti_adapter_launch_behavior_enum = b.begin_type("OsArtiAdapterLaunchBehaviorEnum", fir::M3Kind::Composite);
     auto os_task_preemptability_enum = b.begin_type("OsTaskPreemptabilityEnum", fir::M3Kind::Composite);
     auto pdu_collection_semantics_enum = b.begin_type("PduCollectionSemanticsEnum", fir::M3Kind::Composite);
     auto pdu_collection_trigger_enum = b.begin_type("PduCollectionTriggerEnum", fir::M3Kind::Composite);
@@ -12009,7 +11039,6 @@ AutosarSchema build_autosar_r23_11() {
     auto sw_variable_access_impl_policy_enum = b.begin_type("SwVariableAccessImplPolicyEnum", fir::M3Kind::Composite);
     auto swc_to_ecu_mapping_constraint_type = b.begin_type("SwcToEcuMappingConstraintType", fir::M3Kind::Composite);
     auto swc_to_swc_operation_arguments_direction_enum = b.begin_type("SwcToSwcOperationArgumentsDirectionEnum", fir::M3Kind::Composite);
-    auto switch_stream_filter_action_port_modification_enum = b.begin_type("SwitchStreamFilterActionPortModificationEnum", fir::M3Kind::Composite);
     auto synchronization_type_enum = b.begin_type("SynchronizationTypeEnum", fir::M3Kind::Composite);
     auto table_separator_string = b.begin_type("TableSeparatorString", fir::M3Kind::Composite);
     auto tcp_role_enum = b.begin_type("TcpRoleEnum", fir::M3Kind::Composite);
@@ -12035,7 +11064,6 @@ AutosarSchema build_autosar_r23_11() {
     auto time_value = b.begin_type("TimeValue", fir::M3Kind::Composite);
     auto tls_version_enum = b.begin_type("TlsVersionEnum", fir::M3Kind::Composite);
     auto tp_ack_type = b.begin_type("TpAckType", fir::M3Kind::Composite);
-    auto trace_switch_enum = b.begin_type("TraceSwitchEnum", fir::M3Kind::Composite);
     auto transfer_property_enum = b.begin_type("TransferPropertyEnum", fir::M3Kind::Composite);
     auto transformer_class_enum = b.begin_type("TransformerClassEnum", fir::M3Kind::Composite);
     auto transmission_mode_definition_enum = b.begin_type("TransmissionModeDefinitionEnum", fir::M3Kind::Composite);
@@ -12054,7 +11082,6 @@ AutosarSchema build_autosar_r23_11() {
     auto verbatim_string_plain = b.begin_type("VerbatimStringPlain", fir::M3Kind::Composite);
     auto verification_status_indication_mode_enum = b.begin_type("VerificationStatusIndicationModeEnum", fir::M3Kind::Composite);
     auto view_tokens = b.begin_type("ViewTokens", fir::M3Kind::Composite);
-    auto violated_safety_condition_behavior_enum = b.begin_type("ViolatedSafetyConditionBehaviorEnum", fir::M3Kind::Composite);
     auto xml_space_enum = b.begin_type("XmlSpaceEnum", fir::M3Kind::Composite);
 
     // ── Composites Phase 2: Supertypes ──
@@ -12073,9 +11100,9 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(abstract_enumeration_value_variation_point, attribute_value_variation_point);
     b.set_supertype(abstract_ethernet_frame, frame);
     b.set_supertype(abstract_event, identifiable);
-    b.set_supertype(abstract_execution_context, uploadable_deployment_element);
+    b.set_supertype(abstract_execution_context, uploadable_package_element);
     b.set_supertype(abstract_global_time_domain_props, ar_object);
-    b.set_supertype(abstract_iam_remote_subject, uploadable_deployment_element);
+    b.set_supertype(abstract_iam_remote_subject, ar_element);
     b.set_supertype(abstract_implementation_data_type, autosar_data_type);
     b.set_supertype(abstract_implementation_data_type_element, atp_structure_element);
     b.set_supertype(abstract_method_in_executable_instance_ref, atp_instance_ref);
@@ -12103,9 +11130,9 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(acl_role, atp_blueprintable);
     b.set_supertype(adaptive_application_sw_component_type, sw_component_type);
     b.set_supertype(adaptive_firewall_module_instantiation, non_os_module_instantiation);
-    b.set_supertype(adaptive_firewall_to_port_prototype_mapping, uploadable_deployment_element);
+    b.set_supertype(adaptive_firewall_to_port_prototype_mapping, uploadable_package_element);
     b.set_supertype(adaptive_module_instantiation, atp_structure_element);
-    b.set_supertype(adaptive_platform_service_instance, uploadable_design_element);
+    b.set_supertype(adaptive_platform_service_instance, uploadable_package_element);
     b.set_supertype(adaptive_swc_internal_behavior, identifiable);
     b.set_supertype(admin_data, ar_object);
     b.set_supertype(age_constraint, timing_constraint);
@@ -12124,8 +11151,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(ap_application_error_set, ar_element);
     b.set_supertype(ap_someip_transformation_props, transformation_props);
     b.set_supertype(app_os_task_proxy_to_ecu_task_proxy_mapping, identifiable);
-    b.set_supertype(applicability_info, ar_object);
-    b.set_supertype(applicability_info_set, ar_element);
     b.set_supertype(application_array_data_type, application_composite_data_type);
     b.set_supertype(application_array_element, application_composite_element_data_prototype);
     b.set_supertype(application_assoc_map_data_type, application_composite_data_type);
@@ -12153,7 +11178,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(application_rule_based_value_specification, composite_rule_based_value_argument);
     b.set_supertype(application_sw_component_type, atomic_sw_component_type);
     b.set_supertype(application_value_specification, value_specification);
-    b.set_supertype(applied_standard, identifiable);
     b.set_supertype(ar_element, packageable_element);
     b.set_supertype(ar_package, atp_blueprintable);
     b.set_supertype(ar_parameter_in_implementation_data_instance_ref, ar_object);
@@ -12250,7 +11274,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(bsw_internal_triggering_point_policy, bsw_api_options);
     b.set_supertype(bsw_internal_triggering_point_ref_conditional, ar_object);
     b.set_supertype(bsw_interrupt_entity, bsw_module_entity);
-    b.set_supertype(bsw_interrupt_event, bsw_event);
     b.set_supertype(bsw_mgr_needs, service_needs);
     b.set_supertype(bsw_mode_manager_error_event, bsw_schedule_event);
     b.set_supertype(bsw_mode_receiver_policy, ar_object);
@@ -12337,7 +11360,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(can_tp_node, identifiable);
     b.set_supertype(can_xl_frame_triggering_props, ar_object);
     b.set_supertype(can_xl_nm_node_props, ar_object);
-    b.set_supertype(can_xl_props, uploadable_design_element);
+    b.set_supertype(can_xl_props, ar_element);
     b.set_supertype(caption, multilanguage_referrable);
     b.set_supertype(chapter, paginateable);
     b.set_supertype(chapter_content, ar_object);
@@ -12389,12 +11412,11 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(com_offer_service_grant, grant);
     b.set_supertype(com_offer_service_grant_design, grant_design);
     b.set_supertype(com_sec_oc_to_crypto_key_slot_mapping, functional_cluster_interacts_with_functional_cluster_mapping);
-    b.set_supertype(com_trigger_grant, com_grant);
     b.set_supertype(com_trigger_grant_design, com_grant_design);
     b.set_supertype(comm_connector_port, identifiable);
     b.set_supertype(common_signal_path, signal_path_constraint);
     b.set_supertype(communication_buffer_locking, swc_supported_feature);
-    b.set_supertype(communication_cluster, uploadable_design_element);
+    b.set_supertype(communication_cluster, fibex_element);
     b.set_supertype(communication_cluster_content, ar_object);
     b.set_supertype(communication_connector, identifiable);
     b.set_supertype(communication_connector_ref_conditional, ar_object);
@@ -12453,13 +11475,8 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(contained_i_pdu_props, ar_object);
     b.set_supertype(container_i_pdu, i_pdu);
     b.set_supertype(coupling_element, fibex_element);
-    b.set_supertype(coupling_element_abstract_details, identifiable);
-    b.set_supertype(coupling_element_switch_details, coupling_element_abstract_details);
     b.set_supertype(coupling_port, identifiable);
-    b.set_supertype(coupling_port_abstract_shaper, identifiable);
-    b.set_supertype(coupling_port_asynchronous_traffic_shaper, coupling_port_abstract_shaper);
     b.set_supertype(coupling_port_connection, ar_object);
-    b.set_supertype(coupling_port_credit_based_shaper, coupling_port_abstract_shaper);
     b.set_supertype(coupling_port_details, ar_object);
     b.set_supertype(coupling_port_fifo, coupling_port_structural_element);
     b.set_supertype(coupling_port_rate_policy, ar_object);
@@ -12478,7 +11495,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(cp_software_cluster_resource_pool, ar_element);
     b.set_supertype(cp_software_cluster_resource_to_application_partition_mapping, identifiable);
     b.set_supertype(cp_software_cluster_service_resource, cp_software_cluster_resource);
-    b.set_supertype(cp_software_cluster_to_application_partition_mapping, identifiable);
     b.set_supertype(cp_software_cluster_to_ecu_instance_mapping, identifiable);
     b.set_supertype(cp_software_cluster_to_resource_mapping, identifiable);
     b.set_supertype(cp_sw_cluster_resource_to_diag_data_elem_mapping, diagnostic_mapping);
@@ -12494,7 +11510,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(crypto_certificate_interface, crypto_interface);
     b.set_supertype(crypto_certificate_key_slot_needs, crypto_needs);
     b.set_supertype(crypto_certificate_to_crypto_key_slot_mapping, ar_object);
-    b.set_supertype(crypto_certificate_to_port_prototype_mapping, uploadable_deployment_element);
+    b.set_supertype(crypto_certificate_to_port_prototype_mapping, uploadable_package_element);
     b.set_supertype(crypto_elliptic_curve_props, ar_element);
     b.set_supertype(crypto_interface, port_interface);
     b.set_supertype(crypto_key_management_needs, service_needs);
@@ -12502,18 +11518,18 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(crypto_key_slot_allowed_modification, ar_object);
     b.set_supertype(crypto_key_slot_content_allowed_usage, ar_object);
     b.set_supertype(crypto_key_slot_interface, crypto_interface);
-    b.set_supertype(crypto_key_slot_to_port_prototype_mapping, uploadable_deployment_element);
+    b.set_supertype(crypto_key_slot_to_port_prototype_mapping, uploadable_package_element);
     b.set_supertype(crypto_module_instantiation, non_os_module_instantiation);
     b.set_supertype(crypto_needs, service_needs);
     b.set_supertype(crypto_provider, identifiable);
     b.set_supertype(crypto_provider_interface, crypto_interface);
-    b.set_supertype(crypto_provider_to_port_prototype_mapping, uploadable_deployment_element);
-    b.set_supertype(crypto_service_certificate, uploadable_design_element);
+    b.set_supertype(crypto_provider_to_port_prototype_mapping, uploadable_package_element);
+    b.set_supertype(crypto_service_certificate, ar_element);
     b.set_supertype(crypto_service_job_needs, service_needs);
-    b.set_supertype(crypto_service_key, uploadable_design_element);
+    b.set_supertype(crypto_service_key, ar_element);
     b.set_supertype(crypto_service_mapping, identifiable);
     b.set_supertype(crypto_service_needs, service_needs);
-    b.set_supertype(crypto_service_primitive, uploadable_design_element);
+    b.set_supertype(crypto_service_primitive, ar_element);
     b.set_supertype(crypto_service_queue, ar_element);
     b.set_supertype(crypto_signature_scheme, ar_element);
     b.set_supertype(crypto_trust_master_interface, crypto_interface);
@@ -12557,47 +11573,22 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(data_type_mapping_set, atp_blueprintable);
     b.set_supertype(data_write_completed_event, rte_event);
     b.set_supertype(dcm_i_pdu, i_pdu);
-    b.set_supertype(dds_cp_config, ar_element);
-    b.set_supertype(dds_cp_consumed_service_instance, dds_cp_service_instance);
-    b.set_supertype(dds_cp_domain, identifiable);
-    b.set_supertype(dds_cp_i_signal_to_dds_topic_mapping, ar_object);
-    b.set_supertype(dds_cp_partition, identifiable);
-    b.set_supertype(dds_cp_provided_service_instance, dds_cp_service_instance);
-    b.set_supertype(dds_cp_qos_profile, identifiable);
-    b.set_supertype(dds_cp_service_instance, abstract_service_instance);
-    b.set_supertype(dds_cp_service_instance_event, ar_object);
-    b.set_supertype(dds_cp_service_instance_operation, ar_object);
-    b.set_supertype(dds_cp_topic, identifiable);
-    b.set_supertype(dds_deadline, ar_object);
-    b.set_supertype(dds_destination_order, ar_object);
     b.set_supertype(dds_domain_range, identifiable);
-    b.set_supertype(dds_durability, ar_object);
-    b.set_supertype(dds_durability_service, ar_object);
     b.set_supertype(dds_event_deployment, service_event_deployment);
     b.set_supertype(dds_event_qos_props, dds_qos_props);
     b.set_supertype(dds_field_deployment, service_field_deployment);
     b.set_supertype(dds_field_qos_props, dds_qos_props);
-    b.set_supertype(dds_history, ar_object);
-    b.set_supertype(dds_latency_budget, ar_object);
-    b.set_supertype(dds_lifespan, ar_object);
-    b.set_supertype(dds_liveliness, ar_object);
-    b.set_supertype(dds_ownership, ar_object);
-    b.set_supertype(dds_ownership_strength, ar_object);
     b.set_supertype(dds_provided_service_instance, dds_service_instance_props);
     b.set_supertype(dds_qos_props, ar_object);
-    b.set_supertype(dds_reliability, ar_object);
     b.set_supertype(dds_required_service_instance, dds_service_instance_props);
-    b.set_supertype(dds_resource_limits, ar_object);
     b.set_supertype(dds_rule, ar_object);
     b.set_supertype(dds_secure_com_props, secure_com_props);
-    b.set_supertype(dds_secure_governance, uploadable_design_element);
+    b.set_supertype(dds_secure_governance, uploadable_package_element);
     b.set_supertype(dds_service_instance_props, dds_qos_props);
     b.set_supertype(dds_service_instance_to_machine_mapping, service_instance_to_machine_mapping);
     b.set_supertype(dds_service_interface_deployment, service_interface_deployment);
     b.set_supertype(dds_service_version, ar_object);
-    b.set_supertype(dds_topic_access_rule, uploadable_design_element);
-    b.set_supertype(dds_topic_data, ar_object);
-    b.set_supertype(dds_transport_priority, ar_object);
+    b.set_supertype(dds_topic_access_rule, uploadable_package_element);
     b.set_supertype(deadline_supervision, phm_supervision);
     b.set_supertype(def_item, paginateable);
     b.set_supertype(def_list, paginateable);
@@ -12606,6 +11597,14 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(delegation_sw_connector, sw_connector);
     b.set_supertype(dependency_on_artifact, identifiable);
     b.set_supertype(describable, ar_object);
+    b.set_supertype(deterministic_client, uploadable_package_element);
+    b.set_supertype(deterministic_client_resource, ar_object);
+    b.set_supertype(deterministic_client_resource_needs, identifiable);
+    b.set_supertype(deterministic_sync_instantiation, non_os_module_instantiation);
+    b.set_supertype(deterministic_sync_m_out_of_n, deterministic_sync_verification_policy);
+    b.set_supertype(deterministic_sync_master, deterministic_sync_instantiation);
+    b.set_supertype(deterministic_sync_master_to_time_base_consumer_mapping, functional_cluster_interacts_with_functional_cluster_mapping);
+    b.set_supertype(deterministic_sync_verification_policy, ar_object);
     b.set_supertype(development_error, traced_failure);
     b.set_supertype(dhcp_server_configuration, ar_object);
     b.set_supertype(dhcpv6_props, ar_object);
@@ -12621,10 +11620,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(diagnostic_access_permission, diagnostic_common_element);
     b.set_supertype(diagnostic_aging, diagnostic_common_element);
     b.set_supertype(diagnostic_auth_role, diagnostic_common_element);
-    b.set_supertype(diagnostic_auth_role_proxy, ar_object);
-    b.set_supertype(diagnostic_auth_transmit_certificate, diagnostic_authentication);
-    b.set_supertype(diagnostic_auth_transmit_certificate_evaluation, identifiable);
-    b.set_supertype(diagnostic_auth_transmit_certificate_mapping, diagnostic_mapping);
     b.set_supertype(diagnostic_authentication, diagnostic_service_instance);
     b.set_supertype(diagnostic_authentication_class, diagnostic_service_class);
     b.set_supertype(diagnostic_authentication_configuration, diagnostic_authentication);
@@ -12779,14 +11774,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(diagnostic_memory_identifier, diagnostic_common_element);
     b.set_supertype(diagnostic_monitor_interface, diagnostic_port_interface);
     b.set_supertype(diagnostic_monitor_port_mapping, diagnostic_sw_mapping);
-    b.set_supertype(diagnostic_multiple_condition_interface, diagnostic_multiple_resource_interface);
-    b.set_supertype(diagnostic_multiple_condition_port_mapping, diagnostic_multiple_resource_port_mapping);
-    b.set_supertype(diagnostic_multiple_event_interface, diagnostic_multiple_resource_interface);
-    b.set_supertype(diagnostic_multiple_event_port_mapping, diagnostic_multiple_resource_port_mapping);
-    b.set_supertype(diagnostic_multiple_monitor_interface, diagnostic_multiple_resource_interface);
-    b.set_supertype(diagnostic_multiple_monitor_port_mapping, diagnostic_multiple_resource_port_mapping);
-    b.set_supertype(diagnostic_multiple_resource_interface, diagnostic_port_interface);
-    b.set_supertype(diagnostic_multiple_resource_port_mapping, diagnostic_sw_mapping);
     b.set_supertype(diagnostic_operation_cycle, diagnostic_common_element);
     b.set_supertype(diagnostic_operation_cycle_interface, diagnostic_port_interface);
     b.set_supertype(diagnostic_operation_cycle_needs, diagnostic_capability_element);
@@ -12848,7 +11835,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(diagnostic_routine_interface, diagnostic_abstract_routine_interface);
     b.set_supertype(diagnostic_routine_needs, diagnostic_capability_element);
     b.set_supertype(diagnostic_routine_subfunction, identifiable);
-    b.set_supertype(diagnostic_secure_coding_mapping, diagnostic_mapping);
     b.set_supertype(diagnostic_security_access, diagnostic_service_instance);
     b.set_supertype(diagnostic_security_access_class, diagnostic_service_class);
     b.set_supertype(diagnostic_security_event_reporting_mode_mapping, diagnostic_mapping);
@@ -12871,28 +11857,10 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(diagnostic_session_control_class, diagnostic_service_class);
     b.set_supertype(diagnostic_sovd_authorization_interface, diagnostic_sovd_port_interface);
     b.set_supertype(diagnostic_sovd_authorization_port_mapping, diagnostic_sw_mapping);
-    b.set_supertype(diagnostic_sovd_bulk_data, diagnostic_sovd_service_instance);
-    b.set_supertype(diagnostic_sovd_bulk_data_interface, diagnostic_sovd_port_interface);
-    b.set_supertype(diagnostic_sovd_bulk_data_port_mapping, diagnostic_sw_mapping);
-    b.set_supertype(diagnostic_sovd_configuration, diagnostic_sovd_service_instance);
-    b.set_supertype(diagnostic_sovd_configuration_bulk_data, diagnostic_sovd_configuration);
-    b.set_supertype(diagnostic_sovd_configuration_data_identifier_mapping, diagnostic_mapping);
-    b.set_supertype(diagnostic_sovd_configuration_interface, diagnostic_sovd_port_interface);
-    b.set_supertype(diagnostic_sovd_configuration_parameter, diagnostic_sovd_configuration);
-    b.set_supertype(diagnostic_sovd_configuration_port_mapping, diagnostic_sw_mapping);
     b.set_supertype(diagnostic_sovd_lock, diagnostic_common_element);
-    b.set_supertype(diagnostic_sovd_log, diagnostic_sovd_service_instance);
-    b.set_supertype(diagnostic_sovd_method, diagnostic_common_element);
-    b.set_supertype(diagnostic_sovd_method_primitive, identifiable);
     b.set_supertype(diagnostic_sovd_port_interface, diagnostic_port_interface);
     b.set_supertype(diagnostic_sovd_proximity_challenge_interface, diagnostic_sovd_port_interface);
     b.set_supertype(diagnostic_sovd_proximity_challenge_port_mapping, diagnostic_sw_mapping);
-    b.set_supertype(diagnostic_sovd_service_instance, diagnostic_common_element);
-    b.set_supertype(diagnostic_sovd_service_validation_interface, diagnostic_sovd_port_interface);
-    b.set_supertype(diagnostic_sovd_service_validation_port_mapping, diagnostic_sw_mapping);
-    b.set_supertype(diagnostic_sovd_update, diagnostic_sovd_service_instance);
-    b.set_supertype(diagnostic_sovd_update_interface, diagnostic_sovd_port_interface);
-    b.set_supertype(diagnostic_sovd_update_port_mapping, diagnostic_sw_mapping);
     b.set_supertype(diagnostic_start_routine, diagnostic_routine_subfunction);
     b.set_supertype(diagnostic_stop_routine, diagnostic_routine_subfunction);
     b.set_supertype(diagnostic_storage_condition, diagnostic_condition);
@@ -12917,7 +11885,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(diagnostic_trouble_code_uds, diagnostic_trouble_code);
     b.set_supertype(diagnostic_trouble_code_uds_to_clear_condition_group_mapping, diagnostic_mapping);
     b.set_supertype(diagnostic_trouble_code_uds_to_trouble_code_obd_mapping, diagnostic_mapping);
-    b.set_supertype(diagnostic_uds_severity_enum_value_variation_point, abstract_enumeration_value_variation_point);
     b.set_supertype(diagnostic_upload_download_needs, diagnostic_capability_element);
     b.set_supertype(diagnostic_upload_interface, diagnostic_port_interface);
     b.set_supertype(diagnostic_value_needs, diagnostic_capability_element);
@@ -12931,15 +11898,15 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(diagnostics_communication_security_needs, diagnostic_capability_element);
     b.set_supertype(discovery_technology, ar_object);
     b.set_supertype(dlt_application, identifiable);
-    b.set_supertype(dlt_application_to_process_mapping, uploadable_deployment_element);
+    b.set_supertype(dlt_application_to_process_mapping, uploadable_package_element);
     b.set_supertype(dlt_argument, identifiable);
     b.set_supertype(dlt_config, ar_object);
-    b.set_supertype(dlt_context, uploadable_design_element);
+    b.set_supertype(dlt_context, ar_element);
     b.set_supertype(dlt_context_ref_conditional, ar_object);
-    b.set_supertype(dlt_ecu, uploadable_design_element);
+    b.set_supertype(dlt_ecu, ar_element);
     b.set_supertype(dlt_log_channel, identifiable);
-    b.set_supertype(dlt_log_sink, uploadable_deployment_element);
-    b.set_supertype(dlt_log_sink_to_port_prototype_mapping, uploadable_deployment_element);
+    b.set_supertype(dlt_log_sink, uploadable_package_element);
+    b.set_supertype(dlt_log_sink_to_port_prototype_mapping, uploadable_package_element);
     b.set_supertype(dlt_message, identifiable);
     b.set_supertype(dlt_message_collection_set, fibex_element);
     b.set_supertype(dlt_message_ref_conditional, ar_object);
@@ -12967,15 +11934,15 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(doc_revision, ar_object);
     b.set_supertype(document_element_scope, spec_element_scope);
     b.set_supertype(document_view_selectable, identifiable);
-    b.set_supertype(documentation, uploadable_design_element);
+    b.set_supertype(documentation, ar_element);
     b.set_supertype(documentation_block, ar_object);
     b.set_supertype(documentation_context, multilanguage_referrable);
     b.set_supertype(dtc_status_change_notification_needs, diagnostic_capability_element);
     b.set_supertype(dynamic_part, multiplexed_part);
     b.set_supertype(dynamic_part_alternative, ar_object);
-    b.set_supertype(e2_e_profile_compatibility_props, uploadable_design_element);
+    b.set_supertype(e2_e_profile_compatibility_props, ar_element);
     b.set_supertype(e2_e_profile_configuration, identifiable);
-    b.set_supertype(e2_e_profile_configuration_set, uploadable_design_element);
+    b.set_supertype(e2_e_profile_configuration_set, ar_element);
     b.set_supertype(ecu_abstraction_sw_component_type, atomic_sw_component_type);
     b.set_supertype(ecu_instance, fibex_element);
     b.set_supertype(ecu_instance_props, ar_object);
@@ -13075,11 +12042,11 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(error_tracer_needs, service_needs);
     b.set_supertype(eth_global_time_domain_props, abstract_global_time_domain_props);
     b.set_supertype(eth_global_time_managed_coupling_port, ar_object);
-    b.set_supertype(eth_ip_props, uploadable_design_element);
+    b.set_supertype(eth_ip_props, ar_element);
     b.set_supertype(eth_t_syn_crc_flags, ar_object);
     b.set_supertype(eth_t_syn_sub_tlv_config, ar_object);
-    b.set_supertype(eth_tcp_ip_icmp_props, uploadable_design_element);
-    b.set_supertype(eth_tcp_ip_props, uploadable_design_element);
+    b.set_supertype(eth_tcp_ip_icmp_props, ar_element);
+    b.set_supertype(eth_tcp_ip_props, ar_element);
     b.set_supertype(eth_tp_config, tp_config);
     b.set_supertype(eth_tp_connection, tp_connection);
     b.set_supertype(ethernet_cluster, communication_cluster);
@@ -13112,7 +12079,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(exclusive_area, identifiable);
     b.set_supertype(exclusive_area_nesting_order, referrable);
     b.set_supertype(exclusive_area_ref_conditional, ar_object);
-    b.set_supertype(executable, uploadable_design_element);
+    b.set_supertype(executable, atp_classifier);
     b.set_supertype(executable_entity, identifiable);
     b.set_supertype(executable_entity_activation_reason, implementation_props);
     b.set_supertype(executable_implementation_props, describable);
@@ -13133,7 +12100,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(field_sender_com_spec, sender_com_spec);
     b.set_supertype(file_info_comment, ar_object);
     b.set_supertype(fire_and_forget_method_mapping, identifiable);
-    b.set_supertype(firewall_rule, uploadable_design_element);
+    b.set_supertype(firewall_rule, ar_element);
     b.set_supertype(firewall_rule_props, ar_object);
     b.set_supertype(firewall_state_in_firwall_state_switch_interface_instance_ref, atp_instance_ref);
     b.set_supertype(firewall_state_switch_interface, port_interface);
@@ -13196,13 +12163,12 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(free_format, free_format_entry);
     b.set_supertype(free_format_entry, schedule_table_entry);
     b.set_supertype(function_group_phm_state_reference, phm_state_reference);
-    b.set_supertype(function_group_set, uploadable_design_element);
+    b.set_supertype(function_group_set, atp_classifier);
     b.set_supertype(function_group_state_in_function_group_set_instance_ref, atp_instance_ref);
     b.set_supertype(function_inhibition_availability_needs, service_needs);
     b.set_supertype(function_inhibition_needs, service_needs);
-    b.set_supertype(functional_cluster_interacts_with_functional_cluster_mapping, uploadable_deployment_element);
+    b.set_supertype(functional_cluster_interacts_with_functional_cluster_mapping, uploadable_package_element);
     b.set_supertype(functional_cluster_interacts_with_persistency_deployment_mapping, functional_cluster_interacts_with_functional_cluster_mapping);
-    b.set_supertype(functional_cluster_to_security_event_definition_mapping, functional_cluster_interacts_with_functional_cluster_mapping);
     b.set_supertype(further_action_byte_needs, do_ip_service_needs);
     b.set_supertype(gateway, fibex_element);
     b.set_supertype(general_annotation, ar_object);
@@ -13220,7 +12186,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(global_time_can_slave, global_time_slave);
     b.set_supertype(global_time_correction_props, ar_object);
     b.set_supertype(global_time_coupling_port_props, ar_object);
-    b.set_supertype(global_time_domain, uploadable_design_element);
+    b.set_supertype(global_time_domain, fibex_element);
     b.set_supertype(global_time_domain_ref_conditional, ar_object);
     b.set_supertype(global_time_eth_master, global_time_master);
     b.set_supertype(global_time_eth_slave, global_time_slave);
@@ -13229,7 +12195,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(global_time_gateway, identifiable);
     b.set_supertype(global_time_master, identifiable);
     b.set_supertype(global_time_slave, identifiable);
-    b.set_supertype(grant, uploadable_deployment_element);
+    b.set_supertype(grant, ar_element);
     b.set_supertype(grant_design, ar_element);
     b.set_supertype(graphic, engineering_object);
     b.set_supertype(hardware_configuration, ar_object);
@@ -13261,8 +12227,8 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(i_pdu_timing, describable);
     b.set_supertype(i_pv6_ext_header_filter_list, identifiable);
     b.set_supertype(i_pv6_ext_header_filter_set, ar_element);
-    b.set_supertype(i_signal, uploadable_design_element);
-    b.set_supertype(i_signal_group, uploadable_design_element);
+    b.set_supertype(i_signal, fibex_element);
+    b.set_supertype(i_signal_group, fibex_element);
     b.set_supertype(i_signal_i_pdu, i_pdu);
     b.set_supertype(i_signal_i_pdu_group, fibex_element);
     b.set_supertype(i_signal_i_pdu_ref_conditional, ar_object);
@@ -13277,16 +12243,13 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(ident_caption, atp_structure_element);
     b.set_supertype(identifiable, multilanguage_referrable);
     b.set_supertype(identifier, ar_object);
-    b.set_supertype(ids_common_element, uploadable_design_element);
+    b.set_supertype(ids_common_element, ar_element);
     b.set_supertype(ids_common_element_ref_conditional, ar_object);
-    b.set_supertype(ids_design, uploadable_design_element);
+    b.set_supertype(ids_design, ar_element);
     b.set_supertype(ids_mapping, ids_common_element);
     b.set_supertype(ids_mgr_custom_timestamp_needs, service_needs);
     b.set_supertype(ids_mgr_needs, service_needs);
     b.set_supertype(ids_platform_instantiation, non_os_module_instantiation);
-    b.set_supertype(idsm_abstract_port_interface, port_interface);
-    b.set_supertype(idsm_context_provider_interface, idsm_abstract_port_interface);
-    b.set_supertype(idsm_context_provider_mapping, uploadable_deployment_element);
     b.set_supertype(idsm_instance, ids_common_element);
     b.set_supertype(idsm_instance_ref_conditional, ar_object);
     b.set_supertype(idsm_module_instantiation, ids_platform_instantiation);
@@ -13295,27 +12258,10 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(idsm_rate_limitation_ref_conditional, ar_object);
     b.set_supertype(idsm_signature_support_ap, ar_object);
     b.set_supertype(idsm_signature_support_cp, ar_object);
-    b.set_supertype(idsm_timestamp_provider_interface, idsm_abstract_port_interface);
-    b.set_supertype(idsm_timestamp_provider_mapping, uploadable_deployment_element);
     b.set_supertype(idsm_traffic_limitation, abstract_security_idsm_instance_filter);
     b.set_supertype(idsm_traffic_limitation_ref_conditional, ar_object);
     b.set_supertype(ieee1722_tp, transport_protocol_configuration);
-    b.set_supertype(iee_e1722_tp_aaf_connection, iee_e1722_tp_av_connection);
-    b.set_supertype(iee_e1722_tp_acf_bus, identifiable);
-    b.set_supertype(iee_e1722_tp_acf_bus_part, identifiable);
-    b.set_supertype(iee_e1722_tp_acf_can, iee_e1722_tp_acf_bus);
-    b.set_supertype(iee_e1722_tp_acf_can_part, iee_e1722_tp_acf_bus_part);
-    b.set_supertype(iee_e1722_tp_acf_connection, iee_e1722_tp_connection);
-    b.set_supertype(iee_e1722_tp_acf_lin, iee_e1722_tp_acf_bus);
-    b.set_supertype(iee_e1722_tp_acf_lin_part, iee_e1722_tp_acf_bus_part);
-    b.set_supertype(iee_e1722_tp_av_connection, iee_e1722_tp_connection);
-    b.set_supertype(iee_e1722_tp_config, tp_config);
-    b.set_supertype(iee_e1722_tp_connection, ar_element);
-    b.set_supertype(iee_e1722_tp_connection_ref_conditional, ar_object);
-    b.set_supertype(iee_e1722_tp_crf_connection, iee_e1722_tp_av_connection);
     b.set_supertype(ieee1722_tp_ethernet_frame, abstract_ethernet_frame);
-    b.set_supertype(iee_e1722_tp_iidc_connection, iee_e1722_tp_av_connection);
-    b.set_supertype(iee_e1722_tp_rvf_connection, iee_e1722_tp_av_connection);
     b.set_supertype(implementation, ar_element);
     b.set_supertype(implementation_data_type, abstract_implementation_data_type);
     b.set_supertype(implementation_data_type_element, abstract_implementation_data_type_element);
@@ -13324,8 +12270,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(implementation_data_type_sub_element_ref, sub_element_ref);
     b.set_supertype(implementation_element_in_parameter_instance_ref, ar_object);
     b.set_supertype(implementation_props, referrable);
-    b.set_supertype(imposition_time, atp_blueprintable);
-    b.set_supertype(imposition_time_definition_group, atp_blueprintable);
     b.set_supertype(included_data_type_set, ar_object);
     b.set_supertype(included_mode_declaration_group_set, ar_object);
     b.set_supertype(indent_sample, ar_object);
@@ -13357,7 +12301,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(ip_iam_authentic_connection_props, ar_object);
     b.set_supertype(ip_iam_remote_subject, abstract_iam_remote_subject);
     b.set_supertype(ip_sec_config, ar_object);
-    b.set_supertype(ip_sec_config_props, uploadable_design_element);
+    b.set_supertype(ip_sec_config_props, ar_element);
     b.set_supertype(ip_sec_iam_remote_subject, abstract_iam_remote_subject);
     b.set_supertype(ip_sec_rule, identifiable);
     b.set_supertype(ipv4_arp_props, ar_object);
@@ -13444,7 +12388,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(list, paginateable);
     b.set_supertype(log_and_trace_instantiation, non_os_module_instantiation);
     b.set_supertype(log_and_trace_interface, port_interface);
-    b.set_supertype(log_and_trace_message_collection_set, uploadable_design_element);
+    b.set_supertype(log_and_trace_message_collection_set, ar_element);
     b.set_supertype(logic_address, identifiable);
     b.set_supertype(logical_supervision, phm_supervision);
     b.set_supertype(lt_message_collection_to_port_prototype_mapping, ar_element);
@@ -13452,13 +12396,13 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(mac_multicast_group, identifiable);
     b.set_supertype(mac_sec_cipher_suite_config, ar_object);
     b.set_supertype(mac_sec_crypto_algo_config, ar_object);
-    b.set_supertype(mac_sec_global_kay_props, uploadable_design_element);
+    b.set_supertype(mac_sec_global_kay_props, ar_element);
     b.set_supertype(mac_sec_kay_participant, identifiable);
     b.set_supertype(mac_sec_local_kay_props, ar_object);
-    b.set_supertype(mac_sec_participant_set, uploadable_design_element);
+    b.set_supertype(mac_sec_participant_set, ar_element);
     b.set_supertype(mac_sec_props, ar_object);
-    b.set_supertype(machine, uploadable_deployment_element);
-    b.set_supertype(machine_design, uploadable_design_element);
+    b.set_supertype(machine, atp_structure_element);
+    b.set_supertype(machine_design, fibex_element);
     b.set_supertype(machine_timing, timing_extension);
     b.set_supertype(map, ar_object);
     b.set_supertype(mapping_constraint, ar_object);
@@ -13495,7 +12439,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(mode_access_point, ar_object);
     b.set_supertype(mode_access_point_ident, ident_caption);
     b.set_supertype(mode_declaration, atp_structure_element);
-    b.set_supertype(mode_declaration_group, uploadable_design_element);
+    b.set_supertype(mode_declaration_group, atp_type);
     b.set_supertype(mode_declaration_group_prototype, atp_prototype);
     b.set_supertype(mode_declaration_group_prototype_in_executable_instance_ref, atp_instance_ref);
     b.set_supertype(mode_declaration_group_prototype_in_system_instance_ref, atp_instance_ref);
@@ -13546,19 +12490,15 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(name_token_value_variation_point, attribute_value_variation_point);
     b.set_supertype(network_endpoint, identifiable);
     b.set_supertype(network_endpoint_address, ar_object);
-    b.set_supertype(network_endpoint_ref_conditional, ar_object);
-    b.set_supertype(network_handle_port_mapping, uploadable_deployment_element);
     b.set_supertype(network_layer_rule, ar_object);
-    b.set_supertype(network_management_port_interface, port_interface);
     b.set_supertype(network_segment_identification, ar_object);
     b.set_supertype(nm_cluster, identifiable);
     b.set_supertype(nm_cluster_coupling, ar_object);
-    b.set_supertype(nm_config, uploadable_design_element);
+    b.set_supertype(nm_config, fibex_element);
     b.set_supertype(nm_coordinator, ar_object);
     b.set_supertype(nm_ecu, identifiable);
-    b.set_supertype(nm_handle_to_function_group_state_mapping, uploadable_deployment_element);
+    b.set_supertype(nm_handle_to_function_group_state_mapping, uploadable_package_element);
     b.set_supertype(nm_instantiation, non_os_module_instantiation);
-    b.set_supertype(nm_interacts_with_sm_mapping, functional_cluster_interacts_with_functional_cluster_mapping);
     b.set_supertype(nm_network_handle, referrable);
     b.set_supertype(nm_node, identifiable);
     b.set_supertype(nm_pdu, pdu);
@@ -13620,7 +12560,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(pass_through_sw_connector, sw_connector);
     b.set_supertype(payload_byte_pattern_rule, ar_object);
     b.set_supertype(payload_byte_pattern_rule_part, ar_object);
-    b.set_supertype(pdu, uploadable_design_element);
+    b.set_supertype(pdu, fibex_element);
     b.set_supertype(pdu_activation_routing_group, identifiable);
     b.set_supertype(pdu_mapping_default_value, ar_object);
     b.set_supertype(pdu_to_frame_mapping, identifiable);
@@ -13660,7 +12600,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(phm_abstract_recovery_notification_interface, platform_health_management_interface);
     b.set_supertype(phm_checkpoint, atp_feature);
     b.set_supertype(phm_checkpoint_in_executable_instance_ref, atp_instance_ref);
-    b.set_supertype(phm_contribution_to_machine_mapping, uploadable_deployment_element);
+    b.set_supertype(phm_contribution_to_machine_mapping, ar_element);
     b.set_supertype(phm_health_channel_interface, platform_health_management_interface);
     b.set_supertype(phm_health_channel_recovery_notification_interface, phm_abstract_recovery_notification_interface);
     b.set_supertype(phm_health_channel_status, atp_feature);
@@ -13675,7 +12615,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(physical_dimension, ar_element);
     b.set_supertype(physical_dimension_mapping, ar_object);
     b.set_supertype(physical_dimension_mapping_set, ar_element);
-    b.set_supertype(platform_health_management_contribution, uploadable_deployment_element);
+    b.set_supertype(platform_health_management_contribution, uploadable_package_element);
     b.set_supertype(platform_health_management_interface, port_interface);
     b.set_supertype(platform_module_endpoint_configuration, ar_element);
     b.set_supertype(platform_module_ethernet_endpoint_configuration, platform_module_endpoint_configuration);
@@ -13726,9 +12666,9 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(process_argument, ar_object);
     b.set_supertype(process_design, ar_element);
     b.set_supertype(process_design_to_machine_design_mapping, ar_element);
-    b.set_supertype(process_execution_error, uploadable_deployment_element);
+    b.set_supertype(process_execution_error, uploadable_package_element);
     b.set_supertype(process_to_machine_mapping, identifiable);
-    b.set_supertype(process_to_machine_mapping_set, uploadable_deployment_element);
+    b.set_supertype(process_to_machine_mapping_set, uploadable_package_element);
     b.set_supertype(processor, identifiable);
     b.set_supertype(processor_core, identifiable);
     b.set_supertype(provided_ap_service_instance, adaptive_platform_service_instance);
@@ -13753,19 +12693,19 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(r_variable_in_atomic_swc_instance_ref, variable_in_atomic_swc_instance_ref);
     b.set_supertype(rapid_prototyping_scenario, ar_element);
     b.set_supertype(raw_data_stream_client_interface, abstract_raw_data_stream_interface);
-    b.set_supertype(raw_data_stream_deployment, uploadable_deployment_element);
+    b.set_supertype(raw_data_stream_deployment, uploadable_package_element);
     b.set_supertype(raw_data_stream_ethernet_tcp_udp_credentials, abstract_raw_data_stream_ethernet_credentials);
     b.set_supertype(raw_data_stream_ethernet_udp_credentials, abstract_raw_data_stream_ethernet_credentials);
     b.set_supertype(raw_data_stream_grant, grant);
     b.set_supertype(raw_data_stream_grant_design, grant_design);
-    b.set_supertype(raw_data_stream_mapping, uploadable_deployment_element);
+    b.set_supertype(raw_data_stream_mapping, uploadable_package_element);
     b.set_supertype(raw_data_stream_server_interface, abstract_raw_data_stream_interface);
     b.set_supertype(receiver_annotation, sender_receiver_annotation);
     b.set_supertype(receiver_com_spec, r_port_com_spec);
     b.set_supertype(reception_com_spec_props, ar_object);
     b.set_supertype(record_value_specification, composite_value_specification);
-    b.set_supertype(recovery_notification, uploadable_deployment_element);
-    b.set_supertype(recovery_notification_to_p_port_prototype_mapping, uploadable_deployment_element);
+    b.set_supertype(recovery_notification, uploadable_package_element);
+    b.set_supertype(recovery_notification_to_p_port_prototype_mapping, uploadable_package_element);
     b.set_supertype(ref, ar_object);
     b.set_supertype(reference_base, ar_object);
     b.set_supertype(reference_condition, attribute_condition);
@@ -13858,7 +12798,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(sec_oc_job_requirement, identifiable);
     b.set_supertype(sec_oc_secure_com_props, secure_com_props);
     b.set_supertype(section_name_prefix, implementation_props);
-    b.set_supertype(secure_com_props, uploadable_design_element);
+    b.set_supertype(secure_com_props, ar_element);
     b.set_supertype(secure_communication_authentication_props, identifiable);
     b.set_supertype(secure_communication_deployment, identifiable);
     b.set_supertype(secure_communication_freshness_props, identifiable);
@@ -13878,10 +12818,10 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(security_event_definition_ref_conditional, ar_object);
     b.set_supertype(security_event_filter_chain, ids_common_element);
     b.set_supertype(security_event_filter_chain_ref_conditional, ar_object);
-    b.set_supertype(security_event_mapping, uploadable_deployment_element);
+    b.set_supertype(security_event_mapping, uploadable_package_element);
     b.set_supertype(security_event_one_every_n_filter, abstract_security_event_filter);
-    b.set_supertype(security_event_report_interface, idsm_abstract_port_interface);
-    b.set_supertype(security_event_report_to_security_event_definition_mapping, uploadable_design_element);
+    b.set_supertype(security_event_report_interface, port_interface);
+    b.set_supertype(security_event_report_to_security_event_definition_mapping, ar_element);
     b.set_supertype(security_event_state_filter, abstract_security_event_filter);
     b.set_supertype(security_event_threshold_filter, abstract_security_event_filter);
     b.set_supertype(segment_position, ar_object);
@@ -13908,12 +12848,12 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(service_event_deployment, identifiable);
     b.set_supertype(service_field_deployment, identifiable);
     b.set_supertype(service_instance_collection_set, fibex_element);
-    b.set_supertype(service_instance_to_machine_mapping, uploadable_design_element);
-    b.set_supertype(service_instance_to_port_prototype_mapping, uploadable_design_element);
-    b.set_supertype(service_instance_to_signal_mapping, uploadable_design_element);
+    b.set_supertype(service_instance_to_machine_mapping, uploadable_package_element);
+    b.set_supertype(service_instance_to_port_prototype_mapping, uploadable_package_element);
+    b.set_supertype(service_instance_to_signal_mapping, ar_element);
     b.set_supertype(service_instance_to_sw_cluster_design_port_prototype_mapping, ar_element);
     b.set_supertype(service_interface, port_interface);
-    b.set_supertype(service_interface_deployment, uploadable_design_element);
+    b.set_supertype(service_interface_deployment, uploadable_package_element);
     b.set_supertype(service_interface_element_mapping, ar_element);
     b.set_supertype(service_interface_element_secure_com_config, identifiable);
     b.set_supertype(service_interface_event_mapping, service_interface_element_mapping);
@@ -13939,14 +12879,13 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(signal_service_translation_element_props, identifiable);
     b.set_supertype(signal_service_translation_event_props, identifiable);
     b.set_supertype(signal_service_translation_props, identifiable);
-    b.set_supertype(signal_service_translation_props_set, uploadable_design_element);
+    b.set_supertype(signal_service_translation_props_set, ar_element);
     b.set_supertype(simulated_execution_time, execution_time);
     b.set_supertype(single_language_long_name, mixed_content_for_long_name);
     b.set_supertype(single_language_referrable, referrable);
     b.set_supertype(single_language_unit_names, mixed_content_for_unit_names);
     b.set_supertype(sl_overview_paragraph, mixed_content_for_overview_paragraph);
     b.set_supertype(sl_paragraph, mixed_content_for_paragraph);
-    b.set_supertype(sm_interacts_with_nm_mapping, functional_cluster_interacts_with_functional_cluster_mapping);
     b.set_supertype(so_ad_config, ar_object);
     b.set_supertype(so_ad_routing_group, fibex_element);
     b.set_supertype(so_con_i_pdu_identifier, referrable);
@@ -13956,23 +12895,22 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(socket_connection, describable);
     b.set_supertype(socket_connection_bundle, referrable);
     b.set_supertype(socket_connection_ipdu_identifier, ar_object);
-    b.set_supertype(socket_connection_ipdu_identifier_set, uploadable_design_element);
-    b.set_supertype(software_cluster, uploadable_deployment_element);
+    b.set_supertype(socket_connection_ipdu_identifier_set, fibex_element);
+    b.set_supertype(software_cluster, ar_element);
     b.set_supertype(software_cluster_dependency_compare_condition, software_cluster_dependency_formula_part);
     b.set_supertype(software_cluster_dependency_formula, software_cluster_dependency_formula_part);
     b.set_supertype(software_cluster_dependency_formula_part, ar_object);
     b.set_supertype(software_cluster_design, atp_classifier);
     b.set_supertype(software_cluster_diagnostic_address, ar_object);
-    b.set_supertype(software_cluster_diagnostic_deployment_props, uploadable_deployment_element);
+    b.set_supertype(software_cluster_diagnostic_deployment_props, uploadable_package_element);
     b.set_supertype(software_cluster_doip_diagnostic_address, software_cluster_diagnostic_address);
     b.set_supertype(software_cluster_sovd_address, software_cluster_diagnostic_address);
-    b.set_supertype(software_cluster_uds_diagnostic_address, software_cluster_diagnostic_address);
     b.set_supertype(software_context, ar_object);
-    b.set_supertype(software_package, uploadable_deployment_element);
+    b.set_supertype(software_package, ar_element);
     b.set_supertype(software_package_step, identifiable);
     b.set_supertype(software_package_storing, ar_object);
     b.set_supertype(someip_collection_props, ar_object);
-    b.set_supertype(someip_data_prototype_transformation_props, uploadable_design_element);
+    b.set_supertype(someip_data_prototype_transformation_props, ar_element);
     b.set_supertype(someip_event_deployment, service_event_deployment);
     b.set_supertype(someip_event_group, identifiable);
     b.set_supertype(someip_event_props, ar_object);
@@ -13981,17 +12919,17 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(someip_method_props, ar_object);
     b.set_supertype(someip_protocol_rule, ar_object);
     b.set_supertype(someip_provided_event_group, identifiable);
-    b.set_supertype(someip_remote_multicast_config, uploadable_design_element);
-    b.set_supertype(someip_remote_unicast_config, uploadable_design_element);
+    b.set_supertype(someip_remote_multicast_config, ar_element);
+    b.set_supertype(someip_remote_unicast_config, ar_element);
     b.set_supertype(someip_required_event_group, referrable);
-    b.set_supertype(someip_sd_client_event_group_timing_config, uploadable_design_element);
+    b.set_supertype(someip_sd_client_event_group_timing_config, ar_element);
     b.set_supertype(someip_sd_client_event_group_timing_config_ref_conditional, ar_object);
-    b.set_supertype(someip_sd_client_service_instance_config, uploadable_design_element);
+    b.set_supertype(someip_sd_client_service_instance_config, ar_element);
     b.set_supertype(someip_sd_client_service_instance_config_ref_conditional, ar_object);
     b.set_supertype(someip_sd_rule, ar_object);
-    b.set_supertype(someip_sd_server_event_group_timing_config, uploadable_design_element);
+    b.set_supertype(someip_sd_server_event_group_timing_config, ar_element);
     b.set_supertype(someip_sd_server_event_group_timing_config_ref_conditional, ar_object);
-    b.set_supertype(someip_sd_server_service_instance_config, uploadable_design_element);
+    b.set_supertype(someip_sd_server_service_instance_config, ar_element);
     b.set_supertype(someip_sd_server_service_instance_config_ref_conditional, ar_object);
     b.set_supertype(someip_service_discovery, service_discovery_configuration);
     b.set_supertype(someip_service_instance_to_machine_mapping, service_instance_to_machine_mapping);
@@ -14016,8 +12954,8 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(specification_scope, ar_object);
     b.set_supertype(sporadic_event_triggering, event_triggering_constraint);
     b.set_supertype(stack_usage, identifiable);
-    b.set_supertype(startup_config, uploadable_deployment_element);
-    b.set_supertype(state_dependent_firewall, uploadable_design_element);
+    b.set_supertype(startup_config, ar_element);
+    b.set_supertype(state_dependent_firewall, ar_element);
     b.set_supertype(state_dependent_startup_config, ar_object);
     b.set_supertype(state_managemen_phm_error_interface, state_management_error_interface);
     b.set_supertype(state_management_action_item, identifiable);
@@ -14031,7 +12969,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(state_management_error_interface, state_management_request_interface);
     b.set_supertype(state_management_function_group_switch_notification_interface, state_management_notification_interface);
     b.set_supertype(state_management_module_instantiation, non_os_module_instantiation);
-    b.set_supertype(state_management_nm_action_item, state_management_action_item);
     b.set_supertype(state_management_notification_interface, state_management_port_interface);
     b.set_supertype(state_management_port_interface, port_interface);
     b.set_supertype(state_management_request_error, state_management_state_request);
@@ -14039,9 +12976,8 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(state_management_request_rule, ar_object);
     b.set_supertype(state_management_request_trigger, state_management_state_request);
     b.set_supertype(state_management_set_function_group_state_action_item, state_management_action_item);
-    b.set_supertype(state_management_sleep_action_item, state_management_action_item);
     b.set_supertype(state_management_state_machine_action_item, state_management_action_item);
-    b.set_supertype(state_management_state_notification, atp_classifier);
+    b.set_supertype(state_management_state_notification, identifiable);
     b.set_supertype(state_management_state_request, identifiable);
     b.set_supertype(state_management_sync_action_item, state_management_action_item);
     b.set_supertype(state_management_trigger_compare_rule, state_management_compare_condition);
@@ -14050,13 +12986,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(static_socket_connection, identifiable);
     b.set_supertype(std, single_language_referrable);
     b.set_supertype(std_cpp_implementation_data_type, cpp_implementation_data_type);
-    b.set_supertype(stream_filter_iee_e1722_tp, ar_object);
-    b.set_supertype(stream_filter_ipv4_address, ar_object);
-    b.set_supertype(stream_filter_ipv6_address, ar_object);
-    b.set_supertype(stream_filter_mac_address, ar_object);
-    b.set_supertype(stream_filter_port_range, ar_object);
-    b.set_supertype(stream_filter_rule_data_link_layer, ar_object);
-    b.set_supertype(stream_filter_rule_ip_tp, ar_object);
     b.set_supertype(structured_req, traceable);
     b.set_supertype(sub_element_mapping, ar_object);
     b.set_supertype(sub_element_ref, ar_object);
@@ -14125,13 +13054,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(swc_to_impl_mapping, identifiable);
     b.set_supertype(swc_to_swc_operation_arguments, ar_object);
     b.set_supertype(swc_to_swc_signal, ar_object);
-    b.set_supertype(switch_asynchronous_traffic_shaper_group_entry, identifiable);
-    b.set_supertype(switch_flow_metering_entry, identifiable);
-    b.set_supertype(switch_stream_filter_action_dest_port_modification, identifiable);
-    b.set_supertype(switch_stream_filter_entry, identifiable);
-    b.set_supertype(switch_stream_filter_rule, identifiable);
-    b.set_supertype(switch_stream_gate_entry, identifiable);
-    b.set_supertype(switch_stream_identification, identifiable);
     b.set_supertype(symbol_props, implementation_props);
     b.set_supertype(symbol_string, ar_object);
     b.set_supertype(symbolic_name_props, implementation_props);
@@ -14143,12 +13065,10 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(synchronized_time_base_provider, time_base_resource);
     b.set_supertype(synchronized_time_base_provider_interface, abstract_synchronized_time_base_interface);
     b.set_supertype(synchronous_server_call_point, server_call_point);
-    b.set_supertype(system, uploadable_design_element);
+    b.set_supertype(system, atp_structure_element);
     b.set_supertype(system_mapping, identifiable);
     b.set_supertype(system_signal, ar_element);
     b.set_supertype(system_signal_group, ar_element);
-    b.set_supertype(system_signal_group_to_communication_resource_mapping, identifiable);
-    b.set_supertype(system_signal_to_communication_resource_mapping, identifiable);
     b.set_supertype(system_timing, timing_extension);
     b.set_supertype(table, paginateable);
     b.set_supertype(tag_with_optional_value, ar_object);
@@ -14212,7 +13132,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(time_sync_client_configuration, ar_object);
     b.set_supertype(time_sync_correction, ar_object);
     b.set_supertype(time_sync_module_instantiation, non_os_module_instantiation);
-    b.set_supertype(time_sync_port_prototype_to_time_base_mapping, uploadable_deployment_element);
+    b.set_supertype(time_sync_port_prototype_to_time_base_mapping, uploadable_package_element);
     b.set_supertype(time_sync_server_configuration, referrable);
     b.set_supertype(time_synchronization, ar_object);
     b.set_supertype(time_value_value_variation_point, attribute_value_variation_point);
@@ -14238,7 +13158,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(tls_psk_identity, ar_object);
     b.set_supertype(tls_secure_com_props, secure_com_props);
     b.set_supertype(tlv_data_id_definition, ar_object);
-    b.set_supertype(tlv_data_id_definition_set, uploadable_design_element);
+    b.set_supertype(tlv_data_id_definition_set, ar_element);
     b.set_supertype(topic1, paginateable);
     b.set_supertype(topic_content, ar_object);
     b.set_supertype(topic_content_or_msr_query, ar_object);
@@ -14248,7 +13168,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(tp_connection, ar_object);
     b.set_supertype(tp_connection_ident, referrable);
     b.set_supertype(tp_port, ar_object);
-    b.set_supertype(trace_switch_configuration, ar_object);
     b.set_supertype(traceable, identifiable);
     b.set_supertype(traceable_table, traceable);
     b.set_supertype(traceable_text, traceable);
@@ -14258,8 +13177,8 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(transformation_i_signal_props, describable);
     b.set_supertype(transformation_i_signal_props_content, ar_object);
     b.set_supertype(transformation_props, identifiable);
-    b.set_supertype(transformation_props_set, uploadable_design_element);
-    b.set_supertype(transformation_props_to_service_interface_element_mapping, uploadable_design_element);
+    b.set_supertype(transformation_props_set, ar_element);
+    b.set_supertype(transformation_props_to_service_interface_element_mapping, ar_element);
     b.set_supertype(transformation_technology, identifiable);
     b.set_supertype(transformer_hard_error_event, rte_event);
     b.set_supertype(transient_fault, traced_failure);
@@ -14311,9 +13230,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(unit_group, ar_element);
     b.set_supertype(unlimited_integer_value_variation_point, attribute_value_variation_point);
     b.set_supertype(unresolved_reference_restriction_with_severity, restriction_with_severity);
-    b.set_supertype(uploadable_deployment_element, uploadable_package_element);
-    b.set_supertype(uploadable_design_element, uploadable_package_element);
-    b.set_supertype(uploadable_exclusive_package_element, uploadable_deployment_element);
+    b.set_supertype(uploadable_exclusive_package_element, uploadable_package_element);
     b.set_supertype(uploadable_package_element, ar_element);
     b.set_supertype(url, ar_object);
     b.set_supertype(user_defined_cluster, communication_cluster);
@@ -14360,7 +13277,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(variation_point_proxy, identifiable);
     b.set_supertype(variation_restriction_with_severity, abstract_variation_restriction);
     b.set_supertype(vehicle_driver_notification, ar_object);
-    b.set_supertype(vehicle_package, uploadable_deployment_element);
+    b.set_supertype(vehicle_package, ar_element);
     b.set_supertype(vehicle_rollout_step, identifiable);
     b.set_supertype(vendor_specific_service_needs, service_needs);
     b.set_supertype(verbatim_string, ar_object);
@@ -14443,14 +13360,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(data_transformation_status_forwarding_enum, ar_object);
     b.set_supertype(data_type_policy_enum, ar_object);
     b.set_supertype(date_time, ar_object);
-    b.set_supertype(dds_destination_order_kind_enum, ar_object);
-    b.set_supertype(dds_durability_kind_enum, ar_object);
-    b.set_supertype(dds_durability_service_history_kind_enum, ar_object);
-    b.set_supertype(dds_history_kind_enum, ar_object);
-    b.set_supertype(dds_liveness_kind_enum, ar_object);
-    b.set_supertype(dds_ownership_kind_enum, ar_object);
     b.set_supertype(dds_protection_kind_enum, ar_object);
-    b.set_supertype(dds_reliability_kind_enum, ar_object);
     b.set_supertype(dds_service_instance_discovery_type_enum, ar_object);
     b.set_supertype(dds_service_instance_resource_identifier_type_enum, ar_object);
     b.set_supertype(default_value_application_strategy_enum, ar_object);
@@ -14542,7 +13452,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(flexray_nm_schedule_variant, ar_object);
     b.set_supertype(float_, ar_object);
     b.set_supertype(float_enum, ar_object);
-    b.set_supertype(flow_metering_color_mode_enum, ar_object);
     b.set_supertype(fm_feature_selection_state, ar_object);
     b.set_supertype(fr_ar_tp_ack_type, ar_object);
     b.set_supertype(frame_enum, ar_object);
@@ -14552,7 +13461,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(global_time_crc_validation_enum, ar_object);
     b.set_supertype(global_time_icv_support_enum, ar_object);
     b.set_supertype(global_time_icv_verification_enum, ar_object);
-    b.set_supertype(global_time_port_role_enum, ar_object);
     b.set_supertype(graphic_fit_enum, ar_object);
     b.set_supertype(graphic_notation_enum, ar_object);
     b.set_supertype(handle_invalid_enum, ar_object);
@@ -14567,16 +13475,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(i_psec_mode_enum, ar_object);
     b.set_supertype(i_psec_policy_enum, ar_object);
     b.set_supertype(i_signal_type_enum, ar_object);
-    b.set_supertype(iee_e1722_tp_aaf_aes3_data_type_enum, ar_object);
-    b.set_supertype(iee_e1722_tp_aaf_format_enum, ar_object);
-    b.set_supertype(iee_e1722_tp_aaf_nominal_rate_enum, ar_object);
-    b.set_supertype(iee_e1722_tp_acf_can_message_type_enum, ar_object);
-    b.set_supertype(iee_e1722_tp_crf_pull_enum, ar_object);
-    b.set_supertype(iee_e1722_tp_crf_type_enum, ar_object);
-    b.set_supertype(iee_e1722_tp_rvf_color_space_enum, ar_object);
-    b.set_supertype(iee_e1722_tp_rvf_frame_rate_enum, ar_object);
-    b.set_supertype(iee_e1722_tp_rvf_pixel_depth_enum, ar_object);
-    b.set_supertype(iee_e1722_tp_rvf_pixel_format_enum, ar_object);
     b.set_supertype(ike_authentication_method_enum, ar_object);
     b.set_supertype(integer, ar_object);
     b.set_supertype(interval_type_enum, ar_object);
@@ -14587,12 +13485,10 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(ipv4_address_source_enum, ar_object);
     b.set_supertype(ipv6_address_source_enum, ar_object);
     b.set_supertype(item_label_pos_enum, ar_object);
-    b.set_supertype(j1939_nm_address_configuration_capability_enum, ar_object);
     b.set_supertype(keep_with_previous_enum, ar_object);
     b.set_supertype(key_usage_restriction_enum, ar_object);
     b.set_supertype(l_enum, ar_object);
     b.set_supertype(latency_constraint_type_enum, ar_object);
-    b.set_supertype(let_data_exchange_paradigm_enum, ar_object);
     b.set_supertype(lin_checksum_type, ar_object);
     b.set_supertype(list_enum, ar_object);
     b.set_supertype(log_trace_default_log_level_enum, ar_object);
@@ -14610,7 +13506,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(memory_section_type, ar_object);
     b.set_supertype(meta_class_name, ar_object);
     b.set_supertype(mime_type_string, ar_object);
-    b.set_supertype(mirroring_protocol_enum, ar_object);
     b.set_supertype(mode_activation_kind, ar_object);
     b.set_supertype(mode_error_reaction_policy_enum, ar_object);
     b.set_supertype(modification_type_enum, ar_object);
@@ -14619,7 +13514,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(network_target_address_type, ar_object);
     b.set_supertype(nm_coordinator_role_enum, ar_object);
     b.set_supertype(nm_handle_mapping_direction_enum, ar_object);
-    b.set_supertype(nm_state_request_enum, ar_object);
     b.set_supertype(name_token, ar_object);
     b.set_supertype(name_tokens, ar_object);
     b.set_supertype(normalized_instruction, ar_object);
@@ -14630,7 +13524,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(obd_ratio_connection_kind_enum, ar_object);
     b.set_supertype(operation_cycle_type_enum, ar_object);
     b.set_supertype(orient_enum, ar_object);
-    b.set_supertype(os_arti_adapter_launch_behavior_enum, ar_object);
     b.set_supertype(os_task_preemptability_enum, ar_object);
     b.set_supertype(pdu_collection_semantics_enum, ar_object);
     b.set_supertype(pdu_collection_trigger_enum, ar_object);
@@ -14719,7 +13612,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(sw_variable_access_impl_policy_enum, ar_object);
     b.set_supertype(swc_to_ecu_mapping_constraint_type, ar_object);
     b.set_supertype(swc_to_swc_operation_arguments_direction_enum, ar_object);
-    b.set_supertype(switch_stream_filter_action_port_modification_enum, ar_object);
     b.set_supertype(synchronization_type_enum, ar_object);
     b.set_supertype(table_separator_string, ar_object);
     b.set_supertype(tcp_role_enum, ar_object);
@@ -14745,7 +13637,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(time_value, ar_object);
     b.set_supertype(tls_version_enum, ar_object);
     b.set_supertype(tp_ack_type, ar_object);
-    b.set_supertype(trace_switch_enum, ar_object);
     b.set_supertype(transfer_property_enum, ar_object);
     b.set_supertype(transformer_class_enum, ar_object);
     b.set_supertype(transmission_mode_definition_enum, ar_object);
@@ -14764,7 +13655,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_supertype(verbatim_string_plain, ar_object);
     b.set_supertype(verification_status_indication_mode_enum, ar_object);
     b.set_supertype(view_tokens, ar_object);
-    b.set_supertype(violated_safety_condition_behavior_enum, ar_object);
     b.set_supertype(xml_space_enum, ar_object);
 
     // ── Composites Phase 3: Abstract flags ──
@@ -14863,8 +13753,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_abstract(compu_const_content, true);
     b.set_abstract(compu_content, true);
     b.set_abstract(compu_scale_contents, true);
-    b.set_abstract(coupling_element_abstract_details, true);
-    b.set_abstract(coupling_port_abstract_shaper, true);
     b.set_abstract(coupling_port_structural_element, true);
     b.set_abstract(cp_software_cluster_communication_resource_props, true);
     b.set_abstract(cp_software_cluster_resource, true);
@@ -14881,10 +13769,11 @@ AutosarSchema build_autosar_r23_11() {
     b.set_abstract(data_prototype_in_port_interface_instance_ref, true);
     b.set_abstract(data_prototype_in_system_ref, true);
     b.set_abstract(data_prototype_reference, true);
-    b.set_abstract(dds_cp_service_instance, true);
     b.set_abstract(dds_qos_props, true);
     b.set_abstract(dds_service_instance_props, true);
     b.set_abstract(describable, true);
+    b.set_abstract(deterministic_sync_instantiation, true);
+    b.set_abstract(deterministic_sync_verification_policy, true);
     b.set_abstract(diag_event_debounce_algorithm, true);
     b.set_abstract(diagnostic_abstract_alias_event, true);
     b.set_abstract(diagnostic_abstract_data_identifier, true);
@@ -14905,17 +13794,13 @@ AutosarSchema build_autosar_r23_11() {
     b.set_abstract(diagnostic_memory_addressable_range_access, true);
     b.set_abstract(diagnostic_memory_by_address, true);
     b.set_abstract(diagnostic_memory_destination, true);
-    b.set_abstract(diagnostic_multiple_resource_interface, true);
-    b.set_abstract(diagnostic_multiple_resource_port_mapping, true);
     b.set_abstract(diagnostic_port_interface, true);
     b.set_abstract(diagnostic_response_on_event_trigger, true);
     b.set_abstract(diagnostic_routine_subfunction, true);
     b.set_abstract(diagnostic_service_class, true);
     b.set_abstract(diagnostic_service_instance, true);
     b.set_abstract(diagnostic_service_mapping_diag_target, true);
-    b.set_abstract(diagnostic_sovd_configuration, true);
     b.set_abstract(diagnostic_sovd_port_interface, true);
-    b.set_abstract(diagnostic_sovd_service_instance, true);
     b.set_abstract(diagnostic_sw_mapping, true);
     b.set_abstract(diagnostic_trouble_code, true);
     b.set_abstract(do_ip_service_needs, true);
@@ -14971,11 +13856,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_abstract(ids_common_element, true);
     b.set_abstract(ids_mapping, true);
     b.set_abstract(ids_platform_instantiation, true);
-    b.set_abstract(idsm_abstract_port_interface, true);
-    b.set_abstract(iee_e1722_tp_acf_bus, true);
-    b.set_abstract(iee_e1722_tp_acf_bus_part, true);
-    b.set_abstract(iee_e1722_tp_av_connection, true);
-    b.set_abstract(iee_e1722_tp_connection, true);
     b.set_abstract(implementation, true);
     b.set_abstract(implementation_props, true);
     b.set_abstract(instantiation_rte_event_props, true);
@@ -15122,8 +14002,6 @@ AutosarSchema build_autosar_r23_11() {
     b.set_abstract(ttcan_cluster_content, true);
     b.set_abstract(ttcan_communication_controller_content, true);
     b.set_abstract(ucm_module_instantiation, true);
-    b.set_abstract(uploadable_deployment_element, true);
-    b.set_abstract(uploadable_design_element, true);
     b.set_abstract(uploadable_exclusive_package_element, true);
     b.set_abstract(uploadable_package_element, true);
     b.set_abstract(user_defined_cluster_content, true);
@@ -15134,7 +14012,7 @@ AutosarSchema build_autosar_r23_11() {
     b.set_abstract(whitespace_controlled, true);
 
     // ── Composites Phase 4: Roles ──
-    auto absolute_tolerance_r0 = b.add_role(absolute_tolerance, "absolute", time_value, fir::Multiplicity::Optional);
+    auto absolute_tolerance_r0 = b.add_role(absolute_tolerance, "absolute", time_value, fir::Multiplicity::One);
 
     auto abstract_access_point_r0 = b.add_role(abstract_access_point, "returnValueProvision", rte_api_return_value_provision_enum, fir::Multiplicity::Optional);
 
@@ -15147,7 +14025,7 @@ AutosarSchema build_autosar_r23_11() {
     auto abstract_can_communication_controller_attributes_r2 = b.add_role(abstract_can_communication_controller_attributes, "canControllerXlAttributes", can_controller_xl_configuration, fir::Multiplicity::Optional);
     auto abstract_can_communication_controller_attributes_r3 = b.add_role(abstract_can_communication_controller_attributes, "canControllerXlRequirements", can_controller_xl_configuration_requirements, fir::Multiplicity::Optional);
 
-    auto abstract_can_communication_controller_content_r0 = b.add_role(abstract_can_communication_controller_content, "canControllerAttributes", can_controller_configuration, fir::Multiplicity::Optional);
+    auto abstract_can_communication_controller_content_r0 = b.add_role(abstract_can_communication_controller_content, "canControllerAttributes", can_controller_configuration, fir::Multiplicity::One);
 
     auto abstract_enumeration_value_variation_point_r0 = b.add_role(abstract_enumeration_value_variation_point, "base", identifier_simple_t, fir::Multiplicity::Optional);
     auto abstract_enumeration_value_variation_point_r1 = b.add_role(abstract_enumeration_value_variation_point, "enumTable", ref_simple_t, fir::Multiplicity::Optional);
@@ -15212,8 +14090,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto adaptive_application_sw_component_type_r0 = b.add_role(adaptive_application_sw_component_type, "internalBehavior", adaptive_swc_internal_behavior, fir::Multiplicity::Many);
 
-    auto adaptive_firewall_module_instantiation_r0 = b.add_role(adaptive_firewall_module_instantiation, "stateDepFirewall", state_dependent_firewall, fir::Multiplicity::Many);
-    auto adaptive_firewall_module_instantiation_r1 = b.add_role(adaptive_firewall_module_instantiation, "stateDependentFirewall", state_dependent_firewall, fir::Multiplicity::Optional);
+    auto adaptive_firewall_module_instantiation_r0 = b.add_role(adaptive_firewall_module_instantiation, "stateDependentFirewall", state_dependent_firewall, fir::Multiplicity::Optional);
 
     auto adaptive_firewall_to_port_prototype_mapping_r0 = b.add_role(adaptive_firewall_to_port_prototype_mapping, "firewall", adaptive_firewall_module_instantiation, fir::Multiplicity::Optional);
     auto adaptive_firewall_to_port_prototype_mapping_r1 = b.add_role(adaptive_firewall_to_port_prototype_mapping, "rPortPrototype", r_port_prototype, fir::Multiplicity::Optional);
@@ -15239,7 +14116,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto aggregation_tailoring_r0 = b.add_role(aggregation_tailoring, "typeTailoring", abstract_class_tailoring, fir::Multiplicity::Many);
 
-    auto alias_name_assignment_r0 = b.add_role(alias_name_assignment, "shortLabel", string, fir::Multiplicity::Optional);
+    auto alias_name_assignment_r0 = b.add_role(alias_name_assignment, "shortLabel", string, fir::Multiplicity::One);
     auto alias_name_assignment_r1 = b.add_role(alias_name_assignment, "label", multilanguage_long_name, fir::Multiplicity::Optional);
     auto alias_name_assignment_r2 = b.add_role(alias_name_assignment, "identifiable", abstract_access_point, fir::Multiplicity::Optional);
     auto alias_name_assignment_r3 = b.add_role(alias_name_assignment, "flatInstance", flat_instance_descriptor, fir::Multiplicity::Optional);
@@ -15293,15 +14170,6 @@ AutosarSchema build_autosar_r23_11() {
     auto app_os_task_proxy_to_ecu_task_proxy_mapping_r1 = b.add_role(app_os_task_proxy_to_ecu_task_proxy_mapping, "ecuTaskProxy", os_task_proxy, fir::Multiplicity::Optional);
     auto app_os_task_proxy_to_ecu_task_proxy_mapping_r2 = b.add_role(app_os_task_proxy_to_ecu_task_proxy_mapping, "offset", integer, fir::Multiplicity::Optional);
 
-    auto applicability_info_r0 = b.add_role(applicability_info, "it", imposition_time, fir::Multiplicity::Optional);
-    auto applicability_info_r1 = b.add_role(applicability_info, "remark", documentation_block, fir::Multiplicity::Optional);
-    auto applicability_info_r2 = b.add_role(applicability_info, "std", applied_standard, fir::Multiplicity::Many);
-    auto applicability_info_r3 = b.add_role(applicability_info, "trace", age_constraint, fir::Multiplicity::Optional);
-
-    auto applicability_info_set_r0 = b.add_role(applicability_info_set, "applicabilityInfo", applicability_info, fir::Multiplicity::Many);
-    auto applicability_info_set_r1 = b.add_role(applicability_info_set, "appliedStandard", applied_standard, fir::Multiplicity::Many);
-    auto applicability_info_set_r2 = b.add_role(applicability_info_set, "usedImpositionTimeDefinitionGroup", imposition_time_definition_group, fir::Multiplicity::One);
-
     auto application_array_data_type_r0 = b.add_role(application_array_data_type, "dynamicArraySizeProfile", string, fir::Multiplicity::Optional);
     auto application_array_data_type_r1 = b.add_role(application_array_data_type, "element", application_array_element, fir::Multiplicity::Optional);
 
@@ -15336,7 +14204,7 @@ AutosarSchema build_autosar_r23_11() {
     auto application_endpoint_r0 = b.add_role(application_endpoint, "consumedServiceInstance", consumed_service_instance, fir::Multiplicity::Many);
     auto application_endpoint_r1 = b.add_role(application_endpoint, "discoveryTechnology", discovery_technology, fir::Multiplicity::Optional);
     auto application_endpoint_r2 = b.add_role(application_endpoint, "maxNumberOfConnections", positive_integer, fir::Multiplicity::Optional);
-    auto application_endpoint_r3 = b.add_role(application_endpoint, "networkEndpoint", network_endpoint, fir::Multiplicity::Optional);
+    auto application_endpoint_r3 = b.add_role(application_endpoint, "networkEndpoint", network_endpoint, fir::Multiplicity::One);
     auto application_endpoint_r4 = b.add_role(application_endpoint, "priority", positive_integer, fir::Multiplicity::Optional);
     auto application_endpoint_r5 = b.add_role(application_endpoint, "providedServiceInstance", provided_service_instance, fir::Multiplicity::Many);
     auto application_endpoint_r6 = b.add_role(application_endpoint, "remotingTechnology", remoting_technology, fir::Multiplicity::Optional);
@@ -15347,7 +14215,7 @@ AutosarSchema build_autosar_r23_11() {
     auto application_endpoint_ref_conditional_r0 = b.add_role(application_endpoint_ref_conditional, "applicationEndpoint", application_endpoint, fir::Multiplicity::One);
     auto application_endpoint_ref_conditional_r1 = b.add_role(application_endpoint_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto application_entry_r0 = b.add_role(application_entry, "frameTriggering", lin_frame_triggering, fir::Multiplicity::Optional);
+    auto application_entry_r0 = b.add_role(application_entry, "frameTriggering", lin_frame_triggering, fir::Multiplicity::One);
 
     auto application_error_r0 = b.add_role(application_error, "errorCode", integer, fir::Multiplicity::Optional);
 
@@ -15373,8 +14241,6 @@ AutosarSchema build_autosar_r23_11() {
     auto application_value_specification_r0 = b.add_role(application_value_specification, "category", identifier, fir::Multiplicity::Optional);
     auto application_value_specification_r1 = b.add_role(application_value_specification, "swAxisCont", sw_axis_cont, fir::Multiplicity::Many);
     auto application_value_specification_r2 = b.add_role(application_value_specification, "swValueCont", sw_value_cont, fir::Multiplicity::Optional);
-
-    auto applied_standard_r0 = b.add_role(applied_standard, "appliesTo", standard_name_enum, fir::Multiplicity::Optional);
 
     auto ar_object_r0 = b.add_role(ar_object, "checksum", string_simple_t, fir::Multiplicity::Optional);
     auto ar_object_r1 = b.add_role(ar_object, "timestamp", date_simple_t, fir::Multiplicity::Optional);
@@ -15436,18 +14302,18 @@ AutosarSchema build_autosar_r23_11() {
     auto artifact_checksum_to_crypto_provider_mapping_r1 = b.add_role(artifact_checksum_to_crypto_provider_mapping, "cryptoProvider", crypto_provider, fir::Multiplicity::Optional);
 
     auto artifact_locator_r0 = b.add_role(artifact_locator, "representedModelElement", abstract_access_point, fir::Multiplicity::Optional);
-    auto artifact_locator_r1 = b.add_role(artifact_locator, "uri", string, fir::Multiplicity::Optional);
+    auto artifact_locator_r1 = b.add_role(artifact_locator, "uri", string, fir::Multiplicity::One);
 
     auto assembly_sw_connector_r0 = b.add_role(assembly_sw_connector, "provider", p_port_in_composition_instance_ref, fir::Multiplicity::Optional);
     auto assembly_sw_connector_r1 = b.add_role(assembly_sw_connector, "requester", r_port_in_composition_instance_ref, fir::Multiplicity::Optional);
 
-    auto assign_frame_id_r0 = b.add_role(assign_frame_id, "assignedFrameTriggering", lin_frame_triggering, fir::Multiplicity::Optional);
+    auto assign_frame_id_r0 = b.add_role(assign_frame_id, "assignedFrameTriggering", lin_frame_triggering, fir::Multiplicity::One);
     auto assign_frame_id_r1 = b.add_role(assign_frame_id, "messageId", positive_integer, fir::Multiplicity::Optional);
 
     auto assign_frame_id_range_r0 = b.add_role(assign_frame_id_range, "framePid", frame_pid, fir::Multiplicity::Many);
-    auto assign_frame_id_range_r1 = b.add_role(assign_frame_id_range, "startIndex", integer, fir::Multiplicity::Optional);
+    auto assign_frame_id_range_r1 = b.add_role(assign_frame_id_range, "startIndex", integer, fir::Multiplicity::One);
 
-    auto assign_nad_r0 = b.add_role(assign_nad, "newNad", integer, fir::Multiplicity::Optional);
+    auto assign_nad_r0 = b.add_role(assign_nad, "newNad", integer, fir::Multiplicity::One);
 
     auto asynchronous_server_call_result_point_r0 = b.add_role(asynchronous_server_call_result_point, "asynchronousServerCallPoint", asynchronous_server_call_point, fir::Multiplicity::Optional);
     auto asynchronous_server_call_result_point_r1 = b.add_role(asynchronous_server_call_result_point, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -15773,8 +14639,8 @@ AutosarSchema build_autosar_r23_11() {
     auto bsw_variable_access_r2 = b.add_role(bsw_variable_access, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto buffer_properties_r0 = b.add_role(buffer_properties, "bufferComputation", compu_scale, fir::Multiplicity::Optional);
-    auto buffer_properties_r1 = b.add_role(buffer_properties, "headerLength", integer, fir::Multiplicity::Optional);
-    auto buffer_properties_r2 = b.add_role(buffer_properties, "inPlace", boolean, fir::Multiplicity::Optional);
+    auto buffer_properties_r1 = b.add_role(buffer_properties, "headerLength", integer, fir::Multiplicity::One);
+    auto buffer_properties_r2 = b.add_role(buffer_properties, "inPlace", boolean, fir::Multiplicity::One);
 
     auto build_action_r0 = b.add_role(build_action, "predecessorAction", build_action, fir::Multiplicity::Many);
     auto build_action_r1 = b.add_role(build_action, "followUpAction", build_action, fir::Multiplicity::Many);
@@ -15828,20 +14694,19 @@ AutosarSchema build_autosar_r23_11() {
     auto burst_pattern_event_triggering_r4 = b.add_role(burst_pattern_event_triggering, "patternPeriod", multidimensional_time, fir::Multiplicity::Optional);
     auto burst_pattern_event_triggering_r5 = b.add_role(burst_pattern_event_triggering, "minNumberOfOccurrences", positive_integer, fir::Multiplicity::Optional);
 
-    auto bus_mirror_can_id_range_mapping_r0 = b.add_role(bus_mirror_can_id_range_mapping, "destinationBaseId", positive_integer, fir::Multiplicity::Optional);
-    auto bus_mirror_can_id_range_mapping_r1 = b.add_role(bus_mirror_can_id_range_mapping, "sourceCanIdCode", positive_integer, fir::Multiplicity::Optional);
-    auto bus_mirror_can_id_range_mapping_r2 = b.add_role(bus_mirror_can_id_range_mapping, "sourceCanIdMask", positive_integer, fir::Multiplicity::Optional);
+    auto bus_mirror_can_id_range_mapping_r0 = b.add_role(bus_mirror_can_id_range_mapping, "destinationBaseId", positive_integer, fir::Multiplicity::One);
+    auto bus_mirror_can_id_range_mapping_r1 = b.add_role(bus_mirror_can_id_range_mapping, "sourceCanIdCode", positive_integer, fir::Multiplicity::One);
+    auto bus_mirror_can_id_range_mapping_r2 = b.add_role(bus_mirror_can_id_range_mapping, "sourceCanIdMask", positive_integer, fir::Multiplicity::One);
 
-    auto bus_mirror_can_id_to_can_id_mapping_r0 = b.add_role(bus_mirror_can_id_to_can_id_mapping, "remappedCanId", positive_integer, fir::Multiplicity::Optional);
+    auto bus_mirror_can_id_to_can_id_mapping_r0 = b.add_role(bus_mirror_can_id_to_can_id_mapping, "remappedCanId", positive_integer, fir::Multiplicity::One);
     auto bus_mirror_can_id_to_can_id_mapping_r1 = b.add_role(bus_mirror_can_id_to_can_id_mapping, "souceCanId", can_frame_triggering, fir::Multiplicity::Optional);
 
-    auto bus_mirror_channel_r0 = b.add_role(bus_mirror_channel, "busMirrorNetworkId", positive_integer, fir::Multiplicity::Optional);
+    auto bus_mirror_channel_r0 = b.add_role(bus_mirror_channel, "busMirrorNetworkId", positive_integer, fir::Multiplicity::One);
     auto bus_mirror_channel_r1 = b.add_role(bus_mirror_channel, "channel", physical_channel_ref_conditional, fir::Multiplicity::Many);
 
-    auto bus_mirror_channel_mapping_r0 = b.add_role(bus_mirror_channel_mapping, "mirroringProtocol", mirroring_protocol_enum, fir::Multiplicity::Optional);
-    auto bus_mirror_channel_mapping_r1 = b.add_role(bus_mirror_channel_mapping, "sourceChannel", bus_mirror_channel, fir::Multiplicity::Optional);
-    auto bus_mirror_channel_mapping_r2 = b.add_role(bus_mirror_channel_mapping, "targetChannel", bus_mirror_channel, fir::Multiplicity::Optional);
-    auto bus_mirror_channel_mapping_r3 = b.add_role(bus_mirror_channel_mapping, "targetPduTriggering", pdu_triggering_ref_conditional, fir::Multiplicity::Many);
+    auto bus_mirror_channel_mapping_r0 = b.add_role(bus_mirror_channel_mapping, "sourceChannel", bus_mirror_channel, fir::Multiplicity::Optional);
+    auto bus_mirror_channel_mapping_r1 = b.add_role(bus_mirror_channel_mapping, "targetChannel", bus_mirror_channel, fir::Multiplicity::Optional);
+    auto bus_mirror_channel_mapping_r2 = b.add_role(bus_mirror_channel_mapping, "targetPduTriggering", pdu_triggering_ref_conditional, fir::Multiplicity::Many);
 
     auto bus_mirror_channel_mapping_can_r0 = b.add_role(bus_mirror_channel_mapping_can, "canIdRangeMapping", bus_mirror_can_id_range_mapping, fir::Multiplicity::Many);
     auto bus_mirror_channel_mapping_can_r1 = b.add_role(bus_mirror_channel_mapping_can, "canIdToCanIdMapping", bus_mirror_can_id_to_can_id_mapping, fir::Multiplicity::Many);
@@ -15855,7 +14720,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto bus_mirror_channel_mapping_user_defined_r0 = b.add_role(bus_mirror_channel_mapping_user_defined, "transmissionDeadline", time_value, fir::Multiplicity::Optional);
 
-    auto bus_mirror_lin_pid_to_can_id_mapping_r0 = b.add_role(bus_mirror_lin_pid_to_can_id_mapping, "remappedCanId", positive_integer, fir::Multiplicity::Optional);
+    auto bus_mirror_lin_pid_to_can_id_mapping_r0 = b.add_role(bus_mirror_lin_pid_to_can_id_mapping, "remappedCanId", positive_integer, fir::Multiplicity::One);
     auto bus_mirror_lin_pid_to_can_id_mapping_r1 = b.add_role(bus_mirror_lin_pid_to_can_id_mapping, "sourceLinPid", lin_frame_triggering, fir::Multiplicity::Optional);
 
     b.add_role(c_identifier, "..", c_identifier_simple_t, fir::Multiplicity::One);
@@ -15871,9 +14736,9 @@ AutosarSchema build_autosar_r23_11() {
 
     auto can_cluster_r0 = b.add_role(can_cluster, "canClusterVariant", can_cluster_conditional, fir::Multiplicity::OneOrMore);
 
-    auto can_cluster_bus_off_recovery_r0 = b.add_role(can_cluster_bus_off_recovery, "borCounterL1ToL2", positive_integer, fir::Multiplicity::Optional);
-    auto can_cluster_bus_off_recovery_r1 = b.add_role(can_cluster_bus_off_recovery, "borTimeL1", time_value, fir::Multiplicity::Optional);
-    auto can_cluster_bus_off_recovery_r2 = b.add_role(can_cluster_bus_off_recovery, "borTimeL2", time_value, fir::Multiplicity::Optional);
+    auto can_cluster_bus_off_recovery_r0 = b.add_role(can_cluster_bus_off_recovery, "borCounterL1ToL2", positive_integer, fir::Multiplicity::One);
+    auto can_cluster_bus_off_recovery_r1 = b.add_role(can_cluster_bus_off_recovery, "borTimeL1", time_value, fir::Multiplicity::One);
+    auto can_cluster_bus_off_recovery_r2 = b.add_role(can_cluster_bus_off_recovery, "borTimeL2", time_value, fir::Multiplicity::One);
     auto can_cluster_bus_off_recovery_r3 = b.add_role(can_cluster_bus_off_recovery, "borTimeTxEnsured", time_value, fir::Multiplicity::Optional);
     auto can_cluster_bus_off_recovery_r4 = b.add_role(can_cluster_bus_off_recovery, "mainFunctionPeriod", time_value, fir::Multiplicity::Optional);
 
@@ -15890,9 +14755,9 @@ AutosarSchema build_autosar_r23_11() {
     auto can_communication_controller_conditional_r0 = b.add_role(can_communication_controller_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto can_controller_configuration_r0 = b.add_role(can_controller_configuration, "propSeg", integer, fir::Multiplicity::Optional);
-    auto can_controller_configuration_r1 = b.add_role(can_controller_configuration, "syncJumpWidth", integer, fir::Multiplicity::Optional);
-    auto can_controller_configuration_r2 = b.add_role(can_controller_configuration, "timeSeg1", integer, fir::Multiplicity::Optional);
-    auto can_controller_configuration_r3 = b.add_role(can_controller_configuration, "timeSeg2", integer, fir::Multiplicity::Optional);
+    auto can_controller_configuration_r1 = b.add_role(can_controller_configuration, "syncJumpWidth", integer, fir::Multiplicity::One);
+    auto can_controller_configuration_r2 = b.add_role(can_controller_configuration, "timeSeg1", integer, fir::Multiplicity::One);
+    auto can_controller_configuration_r3 = b.add_role(can_controller_configuration, "timeSeg2", integer, fir::Multiplicity::One);
 
     auto can_controller_configuration_requirements_r0 = b.add_role(can_controller_configuration_requirements, "maxNumberOfTimeQuantaPerBit", integer, fir::Multiplicity::Optional);
     auto can_controller_configuration_requirements_r1 = b.add_role(can_controller_configuration_requirements, "maxSamplePoint", float_, fir::Multiplicity::Optional);
@@ -15902,13 +14767,13 @@ AutosarSchema build_autosar_r23_11() {
     auto can_controller_configuration_requirements_r5 = b.add_role(can_controller_configuration_requirements, "minSyncJumpWidth", float_, fir::Multiplicity::Optional);
 
     auto can_controller_fd_configuration_r0 = b.add_role(can_controller_fd_configuration, "paddingValue", positive_integer, fir::Multiplicity::Optional);
-    auto can_controller_fd_configuration_r1 = b.add_role(can_controller_fd_configuration, "propSeg", positive_integer, fir::Multiplicity::Optional);
+    auto can_controller_fd_configuration_r1 = b.add_role(can_controller_fd_configuration, "propSeg", positive_integer, fir::Multiplicity::One);
     auto can_controller_fd_configuration_r2 = b.add_role(can_controller_fd_configuration, "sspOffset", positive_integer, fir::Multiplicity::Optional);
-    auto can_controller_fd_configuration_r3 = b.add_role(can_controller_fd_configuration, "syncJumpWidth", positive_integer, fir::Multiplicity::Optional);
-    auto can_controller_fd_configuration_r4 = b.add_role(can_controller_fd_configuration, "timeSeg1", positive_integer, fir::Multiplicity::Optional);
-    auto can_controller_fd_configuration_r5 = b.add_role(can_controller_fd_configuration, "timeSeg2", positive_integer, fir::Multiplicity::Optional);
+    auto can_controller_fd_configuration_r3 = b.add_role(can_controller_fd_configuration, "syncJumpWidth", positive_integer, fir::Multiplicity::One);
+    auto can_controller_fd_configuration_r4 = b.add_role(can_controller_fd_configuration, "timeSeg1", positive_integer, fir::Multiplicity::One);
+    auto can_controller_fd_configuration_r5 = b.add_role(can_controller_fd_configuration, "timeSeg2", positive_integer, fir::Multiplicity::One);
     auto can_controller_fd_configuration_r6 = b.add_role(can_controller_fd_configuration, "trcvDelayCompensationOffset", time_value, fir::Multiplicity::Optional);
-    auto can_controller_fd_configuration_r7 = b.add_role(can_controller_fd_configuration, "txBitRateSwitch", boolean, fir::Multiplicity::Optional);
+    auto can_controller_fd_configuration_r7 = b.add_role(can_controller_fd_configuration, "txBitRateSwitch", boolean, fir::Multiplicity::One);
 
     auto can_controller_fd_configuration_requirements_r0 = b.add_role(can_controller_fd_configuration_requirements, "maxNumberOfTimeQuantaPerBit", integer, fir::Multiplicity::Optional);
     auto can_controller_fd_configuration_requirements_r1 = b.add_role(can_controller_fd_configuration_requirements, "maxSamplePoint", float_, fir::Multiplicity::Optional);
@@ -15950,7 +14815,7 @@ AutosarSchema build_autosar_r23_11() {
     auto can_controller_xl_configuration_requirements_r15 = b.add_role(can_controller_xl_configuration_requirements, "trcvPwmModeEnabled", boolean, fir::Multiplicity::Optional);
 
     auto can_frame_triggering_r0 = b.add_role(can_frame_triggering, "absolutelyScheduledTiming", ttcan_absolutely_scheduled_timing, fir::Multiplicity::Many);
-    auto can_frame_triggering_r1 = b.add_role(can_frame_triggering, "canAddressingMode", can_addressing_mode_type, fir::Multiplicity::Optional);
+    auto can_frame_triggering_r1 = b.add_role(can_frame_triggering, "canAddressingMode", can_addressing_mode_type, fir::Multiplicity::One);
     auto can_frame_triggering_r2 = b.add_role(can_frame_triggering, "canFdFrameSupport", boolean, fir::Multiplicity::Optional);
     auto can_frame_triggering_r3 = b.add_role(can_frame_triggering, "canFrameRxBehavior", can_frame_rx_behavior_enum, fir::Multiplicity::Optional);
     auto can_frame_triggering_r4 = b.add_role(can_frame_triggering, "canFrameTxBehavior", can_frame_tx_behavior_enum, fir::Multiplicity::Optional);
@@ -15966,7 +14831,7 @@ AutosarSchema build_autosar_r23_11() {
     auto can_global_time_domain_props_r2 = b.add_role(can_global_time_domain_props, "ofsDataIDList", positive_integer, fir::Multiplicity::Many);
     auto can_global_time_domain_props_r3 = b.add_role(can_global_time_domain_props, "syncDataIDList", positive_integer, fir::Multiplicity::Many);
 
-    auto can_nm_cluster_r0 = b.add_role(can_nm_cluster, "nmBusloadReductionActive", boolean, fir::Multiplicity::Optional);
+    auto can_nm_cluster_r0 = b.add_role(can_nm_cluster, "nmBusloadReductionActive", boolean, fir::Multiplicity::One);
     auto can_nm_cluster_r1 = b.add_role(can_nm_cluster, "nmCarWakeUpBitPosition", positive_integer, fir::Multiplicity::Optional);
     auto can_nm_cluster_r2 = b.add_role(can_nm_cluster, "nmCarWakeUpFilterEnabled", boolean, fir::Multiplicity::Optional);
     auto can_nm_cluster_r3 = b.add_role(can_nm_cluster, "nmCarWakeUpFilterNodeId", positive_integer, fir::Multiplicity::Optional);
@@ -15974,19 +14839,19 @@ AutosarSchema build_autosar_r23_11() {
     auto can_nm_cluster_r5 = b.add_role(can_nm_cluster, "nmCbvPosition", integer, fir::Multiplicity::Optional);
     auto can_nm_cluster_r6 = b.add_role(can_nm_cluster, "nmChannelActive", boolean, fir::Multiplicity::Optional);
     auto can_nm_cluster_r7 = b.add_role(can_nm_cluster, "nmImmediateNmCycleTime", time_value, fir::Multiplicity::Optional);
-    auto can_nm_cluster_r8 = b.add_role(can_nm_cluster, "nmImmediateNmTransmissions", positive_integer, fir::Multiplicity::Optional);
-    auto can_nm_cluster_r9 = b.add_role(can_nm_cluster, "nmMessageTimeoutTime", time_value, fir::Multiplicity::Optional);
-    auto can_nm_cluster_r10 = b.add_role(can_nm_cluster, "nmMsgCycleTime", time_value, fir::Multiplicity::Optional);
-    auto can_nm_cluster_r11 = b.add_role(can_nm_cluster, "nmNetworkTimeout", time_value, fir::Multiplicity::Optional);
+    auto can_nm_cluster_r8 = b.add_role(can_nm_cluster, "nmImmediateNmTransmissions", positive_integer, fir::Multiplicity::One);
+    auto can_nm_cluster_r9 = b.add_role(can_nm_cluster, "nmMessageTimeoutTime", time_value, fir::Multiplicity::One);
+    auto can_nm_cluster_r10 = b.add_role(can_nm_cluster, "nmMsgCycleTime", time_value, fir::Multiplicity::One);
+    auto can_nm_cluster_r11 = b.add_role(can_nm_cluster, "nmNetworkTimeout", time_value, fir::Multiplicity::One);
     auto can_nm_cluster_r12 = b.add_role(can_nm_cluster, "nmNidPosition", integer, fir::Multiplicity::Optional);
-    auto can_nm_cluster_r13 = b.add_role(can_nm_cluster, "nmRemoteSleepIndicationTime", time_value, fir::Multiplicity::Optional);
-    auto can_nm_cluster_r14 = b.add_role(can_nm_cluster, "nmRepeatMessageTime", time_value, fir::Multiplicity::Optional);
+    auto can_nm_cluster_r13 = b.add_role(can_nm_cluster, "nmRemoteSleepIndicationTime", time_value, fir::Multiplicity::One);
+    auto can_nm_cluster_r14 = b.add_role(can_nm_cluster, "nmRepeatMessageTime", time_value, fir::Multiplicity::One);
     auto can_nm_cluster_r15 = b.add_role(can_nm_cluster, "nmUserDataLength", integer, fir::Multiplicity::Optional);
-    auto can_nm_cluster_r16 = b.add_role(can_nm_cluster, "nmWaitBusSleepTime", time_value, fir::Multiplicity::Optional);
+    auto can_nm_cluster_r16 = b.add_role(can_nm_cluster, "nmWaitBusSleepTime", time_value, fir::Multiplicity::One);
 
     auto can_nm_cluster_coupling_r0 = b.add_role(can_nm_cluster_coupling, "coupledCluster", can_nm_cluster, fir::Multiplicity::Many);
-    auto can_nm_cluster_coupling_r1 = b.add_role(can_nm_cluster_coupling, "nmBusloadReductionEnabled", boolean, fir::Multiplicity::Optional);
-    auto can_nm_cluster_coupling_r2 = b.add_role(can_nm_cluster_coupling, "nmImmediateRestartEnabled", boolean, fir::Multiplicity::Optional);
+    auto can_nm_cluster_coupling_r1 = b.add_role(can_nm_cluster_coupling, "nmBusloadReductionEnabled", boolean, fir::Multiplicity::One);
+    auto can_nm_cluster_coupling_r2 = b.add_role(can_nm_cluster_coupling, "nmImmediateRestartEnabled", boolean, fir::Multiplicity::One);
 
     auto can_nm_ecu_r0 = b.add_role(can_nm_ecu, "nmRepeatMsgIndicationEnabled", boolean, fir::Multiplicity::Optional);
 
@@ -15994,48 +14859,48 @@ AutosarSchema build_autosar_r23_11() {
     auto can_nm_node_r1 = b.add_role(can_nm_node, "canXlNmProps", can_xl_nm_node_props, fir::Multiplicity::Optional);
     auto can_nm_node_r2 = b.add_role(can_nm_node, "nmCarWakeUpFilterEnabled", boolean, fir::Multiplicity::Optional);
     auto can_nm_node_r3 = b.add_role(can_nm_node, "nmCarWakeUpRxEnabled", boolean, fir::Multiplicity::Optional);
-    auto can_nm_node_r4 = b.add_role(can_nm_node, "nmMsgCycleOffset", time_value, fir::Multiplicity::Optional);
-    auto can_nm_node_r5 = b.add_role(can_nm_node, "nmMsgReducedTime", time_value, fir::Multiplicity::Optional);
+    auto can_nm_node_r4 = b.add_role(can_nm_node, "nmMsgCycleOffset", time_value, fir::Multiplicity::One);
+    auto can_nm_node_r5 = b.add_role(can_nm_node, "nmMsgReducedTime", time_value, fir::Multiplicity::One);
     auto can_nm_node_r6 = b.add_role(can_nm_node, "nmRangeConfig", can_nm_range_config, fir::Multiplicity::Optional);
 
-    auto can_nm_range_config_r0 = b.add_role(can_nm_range_config, "lowerCanId", positive_integer, fir::Multiplicity::Optional);
-    auto can_nm_range_config_r1 = b.add_role(can_nm_range_config, "upperCanId", positive_integer, fir::Multiplicity::Optional);
+    auto can_nm_range_config_r0 = b.add_role(can_nm_range_config, "lowerCanId", positive_integer, fir::Multiplicity::One);
+    auto can_nm_range_config_r1 = b.add_role(can_nm_range_config, "upperCanId", positive_integer, fir::Multiplicity::One);
 
-    auto can_tp_address_r0 = b.add_role(can_tp_address, "tpAddress", integer, fir::Multiplicity::Optional);
+    auto can_tp_address_r0 = b.add_role(can_tp_address, "tpAddress", integer, fir::Multiplicity::One);
     auto can_tp_address_r1 = b.add_role(can_tp_address, "tpAddressExtensionValue", integer, fir::Multiplicity::Optional);
     auto can_tp_address_r2 = b.add_role(can_tp_address, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto can_tp_channel_r0 = b.add_role(can_tp_channel, "channelId", positive_integer, fir::Multiplicity::Optional);
+    auto can_tp_channel_r0 = b.add_role(can_tp_channel, "channelId", positive_integer, fir::Multiplicity::One);
     auto can_tp_channel_r1 = b.add_role(can_tp_channel, "channelMode", can_tp_channel_mode_type, fir::Multiplicity::Optional);
     auto can_tp_channel_r2 = b.add_role(can_tp_channel, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto can_tp_config_r0 = b.add_role(can_tp_config, "tpAddress", can_tp_address, fir::Multiplicity::Many);
-    auto can_tp_config_r1 = b.add_role(can_tp_config, "tpChannel", can_tp_channel, fir::Multiplicity::Many);
-    auto can_tp_config_r2 = b.add_role(can_tp_config, "tpConnection", can_tp_connection, fir::Multiplicity::Many);
-    auto can_tp_config_r3 = b.add_role(can_tp_config, "tpEcu", can_tp_ecu, fir::Multiplicity::Many);
-    auto can_tp_config_r4 = b.add_role(can_tp_config, "tpNode", can_tp_node, fir::Multiplicity::Many);
+    auto can_tp_config_r0 = b.add_role(can_tp_config, "tpAddress", can_tp_address, fir::Multiplicity::OneOrMore);
+    auto can_tp_config_r1 = b.add_role(can_tp_config, "tpChannel", can_tp_channel, fir::Multiplicity::OneOrMore);
+    auto can_tp_config_r2 = b.add_role(can_tp_config, "tpConnection", can_tp_connection, fir::Multiplicity::OneOrMore);
+    auto can_tp_config_r3 = b.add_role(can_tp_config, "tpEcu", can_tp_ecu, fir::Multiplicity::OneOrMore);
+    auto can_tp_config_r4 = b.add_role(can_tp_config, "tpNode", can_tp_node, fir::Multiplicity::OneOrMore);
 
-    auto can_tp_connection_r0 = b.add_role(can_tp_connection, "addressingFormat", can_tp_addressing_format_type, fir::Multiplicity::Optional);
-    auto can_tp_connection_r1 = b.add_role(can_tp_connection, "canTpChannel", can_tp_channel, fir::Multiplicity::Optional);
+    auto can_tp_connection_r0 = b.add_role(can_tp_connection, "addressingFormat", can_tp_addressing_format_type, fir::Multiplicity::One);
+    auto can_tp_connection_r1 = b.add_role(can_tp_connection, "canTpChannel", can_tp_channel, fir::Multiplicity::One);
     auto can_tp_connection_r2 = b.add_role(can_tp_connection, "cancellation", boolean, fir::Multiplicity::Optional);
-    auto can_tp_connection_r3 = b.add_role(can_tp_connection, "dataPdu", n_pdu, fir::Multiplicity::Optional);
+    auto can_tp_connection_r3 = b.add_role(can_tp_connection, "dataPdu", n_pdu, fir::Multiplicity::One);
     auto can_tp_connection_r4 = b.add_role(can_tp_connection, "flowControlPdu", n_pdu, fir::Multiplicity::Optional);
     auto can_tp_connection_r5 = b.add_role(can_tp_connection, "maxBlockSize", integer, fir::Multiplicity::Optional);
     auto can_tp_connection_r6 = b.add_role(can_tp_connection, "multicast", can_tp_address, fir::Multiplicity::Optional);
-    auto can_tp_connection_r7 = b.add_role(can_tp_connection, "paddingActivation", boolean, fir::Multiplicity::Optional);
+    auto can_tp_connection_r7 = b.add_role(can_tp_connection, "paddingActivation", boolean, fir::Multiplicity::One);
     auto can_tp_connection_r8 = b.add_role(can_tp_connection, "receiver", can_tp_node, fir::Multiplicity::Many);
     auto can_tp_connection_r9 = b.add_role(can_tp_connection, "taType", network_target_address_type, fir::Multiplicity::Optional);
     auto can_tp_connection_r10 = b.add_role(can_tp_connection, "timeoutBr", time_value, fir::Multiplicity::Optional);
     auto can_tp_connection_r11 = b.add_role(can_tp_connection, "timeoutBs", time_value, fir::Multiplicity::Optional);
     auto can_tp_connection_r12 = b.add_role(can_tp_connection, "timeoutCr", time_value, fir::Multiplicity::Optional);
     auto can_tp_connection_r13 = b.add_role(can_tp_connection, "timeoutCs", time_value, fir::Multiplicity::Optional);
-    auto can_tp_connection_r14 = b.add_role(can_tp_connection, "tpSdu", container_i_pdu, fir::Multiplicity::Optional);
+    auto can_tp_connection_r14 = b.add_role(can_tp_connection, "tpSdu", container_i_pdu, fir::Multiplicity::One);
     auto can_tp_connection_r15 = b.add_role(can_tp_connection, "transmitCancellation", boolean, fir::Multiplicity::Optional);
     auto can_tp_connection_r16 = b.add_role(can_tp_connection, "transmitter", can_tp_node, fir::Multiplicity::Optional);
     auto can_tp_connection_r17 = b.add_role(can_tp_connection, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto can_tp_ecu_r0 = b.add_role(can_tp_ecu, "cycleTimeMainFunction", time_value, fir::Multiplicity::Optional);
-    auto can_tp_ecu_r1 = b.add_role(can_tp_ecu, "ecuInstance", ecu_instance, fir::Multiplicity::Optional);
+    auto can_tp_ecu_r1 = b.add_role(can_tp_ecu, "ecuInstance", ecu_instance, fir::Multiplicity::One);
     auto can_tp_ecu_r2 = b.add_role(can_tp_ecu, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto can_tp_node_r0 = b.add_role(can_tp_node, "connector", abstract_can_communication_connector, fir::Multiplicity::Optional);
@@ -16098,16 +14963,16 @@ AutosarSchema build_autosar_r23_11() {
     auto client_com_spec_r4 = b.add_role(client_com_spec, "setter", field, fir::Multiplicity::Optional);
     auto client_com_spec_r5 = b.add_role(client_com_spec, "transformationComSpecProps", end_to_end_transformation_com_spec_props, fir::Multiplicity::Many);
 
-    auto client_id_definition_r0 = b.add_role(client_id_definition, "clientId", numerical, fir::Multiplicity::Optional);
-    auto client_id_definition_r1 = b.add_role(client_id_definition, "clientServerOperation", operation_in_system_instance_ref, fir::Multiplicity::Optional);
+    auto client_id_definition_r0 = b.add_role(client_id_definition, "clientId", numerical, fir::Multiplicity::One);
+    auto client_id_definition_r1 = b.add_role(client_id_definition, "clientServerOperation", operation_in_system_instance_ref, fir::Multiplicity::One);
     auto client_id_definition_r2 = b.add_role(client_id_definition, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto client_id_definition_set_r0 = b.add_role(client_id_definition_set, "clientIdDefinition", client_id_definition, fir::Multiplicity::Many);
 
     auto client_id_mapping_r0 = b.add_role(client_id_mapping, "systemSignal", system_signal, fir::Multiplicity::One);
 
-    auto client_id_range_r0 = b.add_role(client_id_range, "lowerLimit", limit_value_variation_point, fir::Multiplicity::Optional);
-    auto client_id_range_r1 = b.add_role(client_id_range, "upperLimit", limit_value_variation_point, fir::Multiplicity::Optional);
+    auto client_id_range_r0 = b.add_role(client_id_range, "lowerLimit", limit_value_variation_point, fir::Multiplicity::One);
+    auto client_id_range_r1 = b.add_role(client_id_range, "upperLimit", limit_value_variation_point, fir::Multiplicity::One);
 
     auto client_server_annotation_r0 = b.add_role(client_server_annotation, "operation", client_server_operation, fir::Multiplicity::Optional);
 
@@ -16166,14 +15031,14 @@ AutosarSchema build_autosar_r23_11() {
     auto client_server_to_signal_group_mapping_r1 = b.add_role(client_server_to_signal_group_mapping, "clientID", client_id_mapping, fir::Multiplicity::Optional);
     auto client_server_to_signal_group_mapping_r2 = b.add_role(client_server_to_signal_group_mapping, "compositeTypeMapping", client_server_array_type_mapping, fir::Multiplicity::Many);
     auto client_server_to_signal_group_mapping_r3 = b.add_role(client_server_to_signal_group_mapping, "emptySignal", empty_signal_mapping, fir::Multiplicity::Optional);
-    auto client_server_to_signal_group_mapping_r4 = b.add_role(client_server_to_signal_group_mapping, "mappedOperation", operation_in_system_instance_ref, fir::Multiplicity::Optional);
+    auto client_server_to_signal_group_mapping_r4 = b.add_role(client_server_to_signal_group_mapping, "mappedOperation", operation_in_system_instance_ref, fir::Multiplicity::One);
     auto client_server_to_signal_group_mapping_r5 = b.add_role(client_server_to_signal_group_mapping, "primitiveTypeMapping", client_server_primitive_type_mapping, fir::Multiplicity::Many);
     auto client_server_to_signal_group_mapping_r6 = b.add_role(client_server_to_signal_group_mapping, "requestGroup", system_signal_group, fir::Multiplicity::Optional);
     auto client_server_to_signal_group_mapping_r7 = b.add_role(client_server_to_signal_group_mapping, "responseGroup", system_signal_group, fir::Multiplicity::One);
     auto client_server_to_signal_group_mapping_r8 = b.add_role(client_server_to_signal_group_mapping, "sequenceCounter", sequence_counter_mapping, fir::Multiplicity::Optional);
 
-    auto client_server_to_signal_mapping_r0 = b.add_role(client_server_to_signal_mapping, "callSignal", system_signal, fir::Multiplicity::Optional);
-    auto client_server_to_signal_mapping_r1 = b.add_role(client_server_to_signal_mapping, "clientServerOperation", operation_in_system_instance_ref, fir::Multiplicity::Optional);
+    auto client_server_to_signal_mapping_r0 = b.add_role(client_server_to_signal_mapping, "callSignal", system_signal, fir::Multiplicity::One);
+    auto client_server_to_signal_mapping_r1 = b.add_role(client_server_to_signal_mapping, "clientServerOperation", operation_in_system_instance_ref, fir::Multiplicity::One);
     auto client_server_to_signal_mapping_r2 = b.add_role(client_server_to_signal_mapping, "lengthClientId", positive_integer, fir::Multiplicity::Optional);
     auto client_server_to_signal_mapping_r3 = b.add_role(client_server_to_signal_mapping, "lengthSequenceCounter", positive_integer, fir::Multiplicity::Optional);
     auto client_server_to_signal_mapping_r4 = b.add_role(client_server_to_signal_mapping, "returnSignal", system_signal, fir::Multiplicity::Optional);
@@ -16245,12 +15110,9 @@ AutosarSchema build_autosar_r23_11() {
     auto com_sec_oc_to_crypto_key_slot_mapping_r0 = b.add_role(com_sec_oc_to_crypto_key_slot_mapping, "cryptoKeySlot", crypto_key_slot, fir::Multiplicity::Optional);
     auto com_sec_oc_to_crypto_key_slot_mapping_r1 = b.add_role(com_sec_oc_to_crypto_key_slot_mapping, "serviceElementSecureComConfig", service_interface_element_secure_com_config, fir::Multiplicity::Optional);
 
-    auto com_trigger_grant_r0 = b.add_role(com_trigger_grant, "design", com_trigger_grant_design, fir::Multiplicity::Optional);
-    auto com_trigger_grant_r1 = b.add_role(com_trigger_grant, "serviceDeployment", dds_event_deployment, fir::Multiplicity::Optional);
-
     auto com_trigger_grant_design_r0 = b.add_role(com_trigger_grant_design, "trigger", trigger_in_executable_instance_ref, fir::Multiplicity::Optional);
 
-    auto comm_connector_port_r0 = b.add_role(comm_connector_port, "communicationDirection", communication_direction_type, fir::Multiplicity::Optional);
+    auto comm_connector_port_r0 = b.add_role(comm_connector_port, "communicationDirection", communication_direction_type, fir::Multiplicity::One);
     auto comm_connector_port_r1 = b.add_role(comm_connector_port, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto common_signal_path_r0 = b.add_role(common_signal_path, "operation", swc_to_swc_operation_arguments, fir::Multiplicity::Many);
@@ -16259,12 +15121,12 @@ AutosarSchema build_autosar_r23_11() {
     auto communication_buffer_locking_r0 = b.add_role(communication_buffer_locking, "supportBufferLocking", support_buffer_locking_enum, fir::Multiplicity::Optional);
 
     auto communication_cluster_content_r0 = b.add_role(communication_cluster_content, "baudrate", positive_unlimited_integer, fir::Multiplicity::Optional);
-    auto communication_cluster_content_r1 = b.add_role(communication_cluster_content, "physicalChannel", can_physical_channel, fir::Multiplicity::Many);
+    auto communication_cluster_content_r1 = b.add_role(communication_cluster_content, "physicalChannel", can_physical_channel, fir::Multiplicity::OneOrMore);
     auto communication_cluster_content_r2 = b.add_role(communication_cluster_content, "protocolName", string, fir::Multiplicity::Optional);
     auto communication_cluster_content_r3 = b.add_role(communication_cluster_content, "protocolVersion", string, fir::Multiplicity::Optional);
     auto communication_cluster_content_r4 = b.add_role(communication_cluster_content, "speed", integer, fir::Multiplicity::Optional);
 
-    auto communication_connector_r0 = b.add_role(communication_connector, "commController", abstract_can_communication_controller, fir::Multiplicity::Optional);
+    auto communication_connector_r0 = b.add_role(communication_connector, "commController", abstract_can_communication_controller, fir::Multiplicity::One);
     auto communication_connector_r1 = b.add_role(communication_connector, "createEcuWakeupSource", boolean, fir::Multiplicity::Optional);
     auto communication_connector_r2 = b.add_role(communication_connector, "dynamicPncToChannelMappingEnabled", boolean, fir::Multiplicity::Optional);
     auto communication_connector_r3 = b.add_role(communication_connector, "ecuCommPortInstance", frame_port, fir::Multiplicity::Many);
@@ -16279,8 +15141,8 @@ AutosarSchema build_autosar_r23_11() {
 
     auto communication_controller_content_r0 = b.add_role(communication_controller_content, "wakeUpByControllerSupported", boolean, fir::Multiplicity::Optional);
 
-    auto communication_controller_mapping_r0 = b.add_role(communication_controller_mapping, "communicationController", abstract_can_communication_controller, fir::Multiplicity::Optional);
-    auto communication_controller_mapping_r1 = b.add_role(communication_controller_mapping, "hwCommunicationController", hw_element, fir::Multiplicity::Optional);
+    auto communication_controller_mapping_r0 = b.add_role(communication_controller_mapping, "communicationController", abstract_can_communication_controller, fir::Multiplicity::One);
+    auto communication_controller_mapping_r1 = b.add_role(communication_controller_mapping, "hwCommunicationController", hw_element, fir::Multiplicity::One);
 
     auto compiler_r0 = b.add_role(compiler, "name", string, fir::Multiplicity::Optional);
     auto compiler_r1 = b.add_role(compiler, "options", string, fir::Multiplicity::Optional);
@@ -16289,7 +15151,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto complex_device_driver_sw_component_type_r0 = b.add_role(complex_device_driver_sw_component_type, "hardwareElement", hw_description_entity, fir::Multiplicity::Many);
 
-    auto component_clustering_r0 = b.add_role(component_clustering, "clusteredComponent", component_in_system_instance_ref, fir::Multiplicity::Many);
+    auto component_clustering_r0 = b.add_role(component_clustering, "clusteredComponent", component_in_system_instance_ref, fir::Multiplicity::OneOrMore);
     auto component_clustering_r1 = b.add_role(component_clustering, "mappingScope", mapping_scope_enum, fir::Multiplicity::Optional);
 
     auto component_in_composition_instance_ref_r0 = b.add_role(component_in_composition_instance_ref, "contextComponent", sw_component_prototype, fir::Multiplicity::Many);
@@ -16300,7 +15162,7 @@ AutosarSchema build_autosar_r23_11() {
     auto component_in_system_instance_ref_r2 = b.add_role(component_in_system_instance_ref, "targetComponent", sw_component_prototype, fir::Multiplicity::One);
 
     auto component_separation_r0 = b.add_role(component_separation, "mappingScope", mapping_scope_enum, fir::Multiplicity::Optional);
-    auto component_separation_r1 = b.add_role(component_separation, "separatedComponent", component_in_system_instance_ref, fir::Multiplicity::Many);
+    auto component_separation_r1 = b.add_role(component_separation, "separatedComponent", component_in_system_instance_ref, fir::Multiplicity::OneOrMore);
 
     auto composite_network_representation_r0 = b.add_role(composite_network_representation, "leafElement", application_composite_element_in_port_interface_instance_ref, fir::Multiplicity::Optional);
     auto composite_network_representation_r1 = b.add_role(composite_network_representation, "networkRepresentation", sw_data_def_props, fir::Multiplicity::Optional);
@@ -16323,7 +15185,6 @@ AutosarSchema build_autosar_r23_11() {
     auto composition_sw_component_type_r2 = b.add_role(composition_sw_component_type, "constantValueMapping", constant_specification_mapping_set, fir::Multiplicity::Many);
     auto composition_sw_component_type_r3 = b.add_role(composition_sw_component_type, "dataTypeMapping", data_type_mapping_set, fir::Multiplicity::Many);
     auto composition_sw_component_type_r4 = b.add_role(composition_sw_component_type, "instantiationRTEEventProps", instantiation_timing_event_props, fir::Multiplicity::Many);
-    auto composition_sw_component_type_r5 = b.add_role(composition_sw_component_type, "physicalDimensionMapping", physical_dimension_mapping_set, fir::Multiplicity::Optional);
 
     auto composition_sw_component_type_ref_conditional_r0 = b.add_role(composition_sw_component_type_ref_conditional, "compositionSwComponentType", composition_sw_component_type, fir::Multiplicity::One);
     auto composition_sw_component_type_ref_conditional_r1 = b.add_role(composition_sw_component_type_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -16351,16 +15212,15 @@ AutosarSchema build_autosar_r23_11() {
     auto compu_rational_coeffs_r0 = b.add_role(compu_rational_coeffs, "compuNumerator", compu_nominator_denominator, fir::Multiplicity::Optional);
     auto compu_rational_coeffs_r1 = b.add_role(compu_rational_coeffs, "compuDenominator", compu_nominator_denominator, fir::Multiplicity::Optional);
 
-    auto compu_scale_r0 = b.add_role(compu_scale, "a2lDisplayText", string, fir::Multiplicity::Optional);
-    auto compu_scale_r1 = b.add_role(compu_scale, "shortLabel", identifier, fir::Multiplicity::Optional);
-    auto compu_scale_r2 = b.add_role(compu_scale, "symbol", c_identifier, fir::Multiplicity::Optional);
-    auto compu_scale_r3 = b.add_role(compu_scale, "desc", multi_language_overview_paragraph, fir::Multiplicity::Optional);
-    auto compu_scale_r4 = b.add_role(compu_scale, "mask", positive_unlimited_integer, fir::Multiplicity::Optional);
-    auto compu_scale_r5 = b.add_role(compu_scale, "lowerLimit", limit_value_variation_point, fir::Multiplicity::Optional);
-    auto compu_scale_r6 = b.add_role(compu_scale, "upperLimit", limit_value_variation_point, fir::Multiplicity::Optional);
-    auto compu_scale_r7 = b.add_role(compu_scale, "compuInverseValue", compu_const, fir::Multiplicity::Optional);
+    auto compu_scale_r0 = b.add_role(compu_scale, "shortLabel", identifier, fir::Multiplicity::Optional);
+    auto compu_scale_r1 = b.add_role(compu_scale, "symbol", c_identifier, fir::Multiplicity::Optional);
+    auto compu_scale_r2 = b.add_role(compu_scale, "desc", multi_language_overview_paragraph, fir::Multiplicity::Optional);
+    auto compu_scale_r3 = b.add_role(compu_scale, "mask", positive_unlimited_integer, fir::Multiplicity::Optional);
+    auto compu_scale_r4 = b.add_role(compu_scale, "lowerLimit", limit_value_variation_point, fir::Multiplicity::Optional);
+    auto compu_scale_r5 = b.add_role(compu_scale, "upperLimit", limit_value_variation_point, fir::Multiplicity::Optional);
+    auto compu_scale_r6 = b.add_role(compu_scale, "compuInverseValue", compu_const, fir::Multiplicity::Optional);
     b.add_role(compu_scale, "compuScaleConstantContents", compu_scale_constant_contents, fir::Multiplicity::Optional);
-    auto compu_scale_r9 = b.add_role(compu_scale, "variationPoint", variation_point, fir::Multiplicity::Optional);
+    auto compu_scale_r8 = b.add_role(compu_scale, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto compu_scale_constant_contents_r0 = b.add_role(compu_scale_constant_contents, "compuConst", compu_const, fir::Multiplicity::Optional);
 
@@ -16377,11 +15237,11 @@ AutosarSchema build_autosar_r23_11() {
 
     auto condition_by_formula_r0 = b.add_role(condition_by_formula, "bindingTime", binding_time_enum_simple, fir::Multiplicity::One);
 
-    auto conditional_change_nad_r0 = b.add_role(conditional_change_nad, "byte", integer, fir::Multiplicity::Optional);
-    auto conditional_change_nad_r1 = b.add_role(conditional_change_nad, "id", positive_integer, fir::Multiplicity::Optional);
-    auto conditional_change_nad_r2 = b.add_role(conditional_change_nad, "invert", integer, fir::Multiplicity::Optional);
-    auto conditional_change_nad_r3 = b.add_role(conditional_change_nad, "mask", integer, fir::Multiplicity::Optional);
-    auto conditional_change_nad_r4 = b.add_role(conditional_change_nad, "newNad", integer, fir::Multiplicity::Optional);
+    auto conditional_change_nad_r0 = b.add_role(conditional_change_nad, "byte", integer, fir::Multiplicity::One);
+    auto conditional_change_nad_r1 = b.add_role(conditional_change_nad, "id", positive_integer, fir::Multiplicity::One);
+    auto conditional_change_nad_r2 = b.add_role(conditional_change_nad, "invert", integer, fir::Multiplicity::One);
+    auto conditional_change_nad_r3 = b.add_role(conditional_change_nad, "mask", integer, fir::Multiplicity::One);
+    auto conditional_change_nad_r4 = b.add_role(conditional_change_nad, "newNad", integer, fir::Multiplicity::One);
 
     auto confidence_interval_r0 = b.add_role(confidence_interval, "lowerBound", multidimensional_time, fir::Multiplicity::Optional);
     auto confidence_interval_r1 = b.add_role(confidence_interval, "propability", float_, fir::Multiplicity::Optional);
@@ -16424,26 +15284,25 @@ AutosarSchema build_autosar_r23_11() {
     auto consumed_provided_service_instance_group_ref_conditional_r0 = b.add_role(consumed_provided_service_instance_group_ref_conditional, "consumedProvidedServiceInstanceGroup", consumed_provided_service_instance_group, fir::Multiplicity::One);
     auto consumed_provided_service_instance_group_ref_conditional_r1 = b.add_role(consumed_provided_service_instance_group_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto consumed_service_instance_r0 = b.add_role(consumed_service_instance, "allowedServiceProvider", network_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto consumed_service_instance_r1 = b.add_role(consumed_service_instance, "autoRequire", boolean, fir::Multiplicity::Optional);
-    auto consumed_service_instance_r2 = b.add_role(consumed_service_instance, "blacklistedVersion", someip_service_version, fir::Multiplicity::Many);
-    auto consumed_service_instance_r3 = b.add_role(consumed_service_instance, "blocklistedVersion", someip_service_version, fir::Multiplicity::Many);
-    auto consumed_service_instance_r4 = b.add_role(consumed_service_instance, "consumedEventGroup", consumed_event_group, fir::Multiplicity::Many);
-    auto consumed_service_instance_r5 = b.add_role(consumed_service_instance, "eventMulticastSubscriptionAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto consumed_service_instance_r6 = b.add_role(consumed_service_instance, "instanceIdentifier", any_service_instance_id, fir::Multiplicity::Optional);
-    auto consumed_service_instance_r7 = b.add_role(consumed_service_instance, "localUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto consumed_service_instance_r8 = b.add_role(consumed_service_instance, "minorVersion", any_version_string, fir::Multiplicity::Optional);
-    auto consumed_service_instance_r9 = b.add_role(consumed_service_instance, "providedServiceInstance", provided_service_instance, fir::Multiplicity::Optional);
-    auto consumed_service_instance_r10 = b.add_role(consumed_service_instance, "remoteUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto consumed_service_instance_r11 = b.add_role(consumed_service_instance, "sdClientConfig", sd_client_config, fir::Multiplicity::Optional);
-    auto consumed_service_instance_r12 = b.add_role(consumed_service_instance, "sdClientTimerConfig", someip_sd_client_service_instance_config_ref_conditional, fir::Multiplicity::Many);
-    auto consumed_service_instance_r13 = b.add_role(consumed_service_instance, "serviceIdentifier", positive_integer, fir::Multiplicity::Optional);
-    auto consumed_service_instance_r14 = b.add_role(consumed_service_instance, "versionDrivenFindBehavior", service_version_acceptance_kind_enum, fir::Multiplicity::Optional);
+    auto consumed_service_instance_r0 = b.add_role(consumed_service_instance, "autoRequire", boolean, fir::Multiplicity::Optional);
+    auto consumed_service_instance_r1 = b.add_role(consumed_service_instance, "blacklistedVersion", someip_service_version, fir::Multiplicity::Many);
+    auto consumed_service_instance_r2 = b.add_role(consumed_service_instance, "blocklistedVersion", someip_service_version, fir::Multiplicity::Many);
+    auto consumed_service_instance_r3 = b.add_role(consumed_service_instance, "consumedEventGroup", consumed_event_group, fir::Multiplicity::Many);
+    auto consumed_service_instance_r4 = b.add_role(consumed_service_instance, "eventMulticastSubscriptionAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
+    auto consumed_service_instance_r5 = b.add_role(consumed_service_instance, "instanceIdentifier", any_service_instance_id, fir::Multiplicity::Optional);
+    auto consumed_service_instance_r6 = b.add_role(consumed_service_instance, "localUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
+    auto consumed_service_instance_r7 = b.add_role(consumed_service_instance, "minorVersion", any_version_string, fir::Multiplicity::Optional);
+    auto consumed_service_instance_r8 = b.add_role(consumed_service_instance, "providedServiceInstance", provided_service_instance, fir::Multiplicity::Optional);
+    auto consumed_service_instance_r9 = b.add_role(consumed_service_instance, "remoteUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
+    auto consumed_service_instance_r10 = b.add_role(consumed_service_instance, "sdClientConfig", sd_client_config, fir::Multiplicity::Optional);
+    auto consumed_service_instance_r11 = b.add_role(consumed_service_instance, "sdClientTimerConfig", someip_sd_client_service_instance_config_ref_conditional, fir::Multiplicity::Many);
+    auto consumed_service_instance_r12 = b.add_role(consumed_service_instance, "serviceIdentifier", positive_integer, fir::Multiplicity::Optional);
+    auto consumed_service_instance_r13 = b.add_role(consumed_service_instance, "versionDrivenFindBehavior", service_version_acceptance_kind_enum, fir::Multiplicity::Optional);
 
     auto consumed_service_instance_ref_conditional_r0 = b.add_role(consumed_service_instance_ref_conditional, "consumedServiceInstance", consumed_service_instance, fir::Multiplicity::One);
     auto consumed_service_instance_ref_conditional_r1 = b.add_role(consumed_service_instance_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto contained_i_pdu_props_r0 = b.add_role(contained_i_pdu_props, "collectionSemantics", contained_i_pdu_collection_semantics_enum, fir::Multiplicity::Optional);
+    auto contained_i_pdu_props_r0 = b.add_role(contained_i_pdu_props, "collectionSemantics", contained_i_pdu_collection_semantics_enum, fir::Multiplicity::One);
     auto contained_i_pdu_props_r1 = b.add_role(contained_i_pdu_props, "containedPduTriggering", pdu_triggering, fir::Multiplicity::Optional);
     auto contained_i_pdu_props_r2 = b.add_role(contained_i_pdu_props, "headerIdLongHeader", positive_integer, fir::Multiplicity::Optional);
     auto contained_i_pdu_props_r3 = b.add_role(contained_i_pdu_props, "headerIdShortHeader", positive_integer, fir::Multiplicity::Optional);
@@ -16457,27 +15316,18 @@ AutosarSchema build_autosar_r23_11() {
     auto container_i_pdu_r1 = b.add_role(container_i_pdu, "containedPduTriggering", pdu_triggering, fir::Multiplicity::Many);
     auto container_i_pdu_r2 = b.add_role(container_i_pdu, "containerTimeout", time_value, fir::Multiplicity::Optional);
     auto container_i_pdu_r3 = b.add_role(container_i_pdu, "containerTrigger", container_i_pdu_trigger_enum, fir::Multiplicity::Optional);
-    auto container_i_pdu_r4 = b.add_role(container_i_pdu, "headerType", container_i_pdu_header_type_enum, fir::Multiplicity::Optional);
+    auto container_i_pdu_r4 = b.add_role(container_i_pdu, "headerType", container_i_pdu_header_type_enum, fir::Multiplicity::One);
     auto container_i_pdu_r5 = b.add_role(container_i_pdu, "minimumRxContainerQueueSize", positive_integer, fir::Multiplicity::Optional);
     auto container_i_pdu_r6 = b.add_role(container_i_pdu, "minimumTxContainerQueueSize", positive_integer, fir::Multiplicity::Optional);
-    auto container_i_pdu_r7 = b.add_role(container_i_pdu, "rxAcceptContainedIPdu", rx_accept_contained_i_pdu_enum, fir::Multiplicity::Optional);
+    auto container_i_pdu_r7 = b.add_role(container_i_pdu, "rxAcceptContainedIPdu", rx_accept_contained_i_pdu_enum, fir::Multiplicity::One);
     auto container_i_pdu_r8 = b.add_role(container_i_pdu, "thresholdSize", positive_integer, fir::Multiplicity::Optional);
     auto container_i_pdu_r9 = b.add_role(container_i_pdu, "unusedBitPattern", positive_integer, fir::Multiplicity::Optional);
 
-    auto coupling_element_r0 = b.add_role(coupling_element, "communicationCluster", ethernet_cluster, fir::Multiplicity::Optional);
-    auto coupling_element_r1 = b.add_role(coupling_element, "couplingElementDetails", coupling_element_switch_details, fir::Multiplicity::Many);
-    auto coupling_element_r2 = b.add_role(coupling_element, "couplingPort", coupling_port, fir::Multiplicity::Many);
-    auto coupling_element_r3 = b.add_role(coupling_element, "couplingType", coupling_element_enum, fir::Multiplicity::Optional);
-    auto coupling_element_r4 = b.add_role(coupling_element, "ecuInstance", ecu_instance, fir::Multiplicity::Optional);
-    auto coupling_element_r5 = b.add_role(coupling_element, "firewallRule", state_dependent_firewall, fir::Multiplicity::Many);
-
-    auto coupling_element_abstract_details_r0 = b.add_role(coupling_element_abstract_details, "variationPoint", variation_point, fir::Multiplicity::Optional);
-
-    auto coupling_element_switch_details_r0 = b.add_role(coupling_element_switch_details, "flowMetering", switch_flow_metering_entry, fir::Multiplicity::Many);
-    auto coupling_element_switch_details_r1 = b.add_role(coupling_element_switch_details, "streamFilter", switch_stream_filter_entry, fir::Multiplicity::Many);
-    auto coupling_element_switch_details_r2 = b.add_role(coupling_element_switch_details, "streamGate", switch_stream_gate_entry, fir::Multiplicity::Many);
-    auto coupling_element_switch_details_r3 = b.add_role(coupling_element_switch_details, "switchStreamIdentification", switch_stream_identification, fir::Multiplicity::Many);
-    auto coupling_element_switch_details_r4 = b.add_role(coupling_element_switch_details, "trafficShaperGroup", switch_asynchronous_traffic_shaper_group_entry, fir::Multiplicity::Many);
+    auto coupling_element_r0 = b.add_role(coupling_element, "communicationCluster", ethernet_cluster, fir::Multiplicity::One);
+    auto coupling_element_r1 = b.add_role(coupling_element, "couplingPort", coupling_port, fir::Multiplicity::Many);
+    auto coupling_element_r2 = b.add_role(coupling_element, "couplingType", coupling_element_enum, fir::Multiplicity::One);
+    auto coupling_element_r3 = b.add_role(coupling_element, "ecuInstance", ecu_instance, fir::Multiplicity::Optional);
+    auto coupling_element_r4 = b.add_role(coupling_element, "firewallRule", state_dependent_firewall, fir::Multiplicity::Many);
 
     auto coupling_port_r0 = b.add_role(coupling_port, "connectionNegotiationBehavior", ethernet_connection_negotiation_enum, fir::Multiplicity::Optional);
     auto coupling_port_r1 = b.add_role(coupling_port, "couplingPortDetails", coupling_port_details, fir::Multiplicity::Optional);
@@ -16496,10 +15346,6 @@ AutosarSchema build_autosar_r23_11() {
     auto coupling_port_r14 = b.add_role(coupling_port, "wakeupSleepOnDatalineConfig", ethernet_wakeup_sleep_on_dataline_config, fir::Multiplicity::Optional);
     auto coupling_port_r15 = b.add_role(coupling_port, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto coupling_port_asynchronous_traffic_shaper_r0 = b.add_role(coupling_port_asynchronous_traffic_shaper, "committedBurstSize", positive_integer, fir::Multiplicity::Optional);
-    auto coupling_port_asynchronous_traffic_shaper_r1 = b.add_role(coupling_port_asynchronous_traffic_shaper, "committedInformationRate", positive_integer, fir::Multiplicity::Optional);
-    auto coupling_port_asynchronous_traffic_shaper_r2 = b.add_role(coupling_port_asynchronous_traffic_shaper, "trafficShaperGroup", switch_asynchronous_traffic_shaper_group_entry, fir::Multiplicity::Optional);
-
     auto coupling_port_connection_r0 = b.add_role(coupling_port_connection, "firstPort", coupling_port, fir::Multiplicity::Optional);
     auto coupling_port_connection_r1 = b.add_role(coupling_port_connection, "nodePort", coupling_port_ref_conditional, fir::Multiplicity::Many);
     auto coupling_port_connection_r2 = b.add_role(coupling_port_connection, "plcaLocalNodeCount", positive_integer, fir::Multiplicity::Optional);
@@ -16507,11 +15353,7 @@ AutosarSchema build_autosar_r23_11() {
     auto coupling_port_connection_r4 = b.add_role(coupling_port_connection, "secondPort", coupling_port, fir::Multiplicity::Optional);
     auto coupling_port_connection_r5 = b.add_role(coupling_port_connection, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto coupling_port_credit_based_shaper_r0 = b.add_role(coupling_port_credit_based_shaper, "idleSlope", positive_integer, fir::Multiplicity::Optional);
-    auto coupling_port_credit_based_shaper_r1 = b.add_role(coupling_port_credit_based_shaper, "lowerBoundary", positive_integer, fir::Multiplicity::Optional);
-    auto coupling_port_credit_based_shaper_r2 = b.add_role(coupling_port_credit_based_shaper, "upperBoundary", positive_integer, fir::Multiplicity::Optional);
-
-    auto coupling_port_details_r0 = b.add_role(coupling_port_details, "couplingPortStructuralElement", coupling_port_fifo, fir::Multiplicity::Many);
+    auto coupling_port_details_r0 = b.add_role(coupling_port_details, "couplingPortStructuralElement", coupling_port_fifo, fir::Multiplicity::OneOrMore);
     auto coupling_port_details_r1 = b.add_role(coupling_port_details, "ethernetPriorityRegeneration", ethernet_priority_regeneration, fir::Multiplicity::Many);
     auto coupling_port_details_r2 = b.add_role(coupling_port_details, "ethernetTrafficClassAssignment", coupling_port_traffic_class_assignment, fir::Multiplicity::Many);
     auto coupling_port_details_r3 = b.add_role(coupling_port_details, "globalTimeProps", global_time_coupling_port_props, fir::Multiplicity::Optional);
@@ -16520,25 +15362,24 @@ AutosarSchema build_autosar_r23_11() {
 
     auto coupling_port_fifo_r0 = b.add_role(coupling_port_fifo, "assignedTrafficClass", positive_integer, fir::Multiplicity::Many);
     auto coupling_port_fifo_r1 = b.add_role(coupling_port_fifo, "minimumFifoLength", positive_integer, fir::Multiplicity::Optional);
-    auto coupling_port_fifo_r2 = b.add_role(coupling_port_fifo, "shaper", coupling_port_asynchronous_traffic_shaper, fir::Multiplicity::Optional);
 
-    auto coupling_port_rate_policy_r0 = b.add_role(coupling_port_rate_policy, "dataLength", positive_integer, fir::Multiplicity::Optional);
-    auto coupling_port_rate_policy_r1 = b.add_role(coupling_port_rate_policy, "policyAction", coupling_port_rate_policy_action_enum, fir::Multiplicity::Optional);
+    auto coupling_port_rate_policy_r0 = b.add_role(coupling_port_rate_policy, "dataLength", positive_integer, fir::Multiplicity::One);
+    auto coupling_port_rate_policy_r1 = b.add_role(coupling_port_rate_policy, "policyAction", coupling_port_rate_policy_action_enum, fir::Multiplicity::One);
     auto coupling_port_rate_policy_r2 = b.add_role(coupling_port_rate_policy, "priority", positive_integer, fir::Multiplicity::Optional);
-    auto coupling_port_rate_policy_r3 = b.add_role(coupling_port_rate_policy, "timeInterval", time_value, fir::Multiplicity::Optional);
+    auto coupling_port_rate_policy_r3 = b.add_role(coupling_port_rate_policy, "timeInterval", time_value, fir::Multiplicity::One);
     auto coupling_port_rate_policy_r4 = b.add_role(coupling_port_rate_policy, "vLan", ethernet_physical_channel, fir::Multiplicity::Many);
 
     auto coupling_port_ref_conditional_r0 = b.add_role(coupling_port_ref_conditional, "couplingPort", coupling_port, fir::Multiplicity::One);
     auto coupling_port_ref_conditional_r1 = b.add_role(coupling_port_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto coupling_port_scheduler_r0 = b.add_role(coupling_port_scheduler, "portScheduler", ethernet_coupling_port_scheduler_enum, fir::Multiplicity::Optional);
-    auto coupling_port_scheduler_r1 = b.add_role(coupling_port_scheduler, "predecessor", coupling_port_fifo, fir::Multiplicity::Many);
+    auto coupling_port_scheduler_r0 = b.add_role(coupling_port_scheduler, "portScheduler", ethernet_coupling_port_scheduler_enum, fir::Multiplicity::One);
+    auto coupling_port_scheduler_r1 = b.add_role(coupling_port_scheduler, "predecessor", coupling_port_fifo, fir::Multiplicity::OneOrMore);
 
     auto coupling_port_shaper_r0 = b.add_role(coupling_port_shaper, "idleSlope", positive_integer, fir::Multiplicity::Optional);
     auto coupling_port_shaper_r1 = b.add_role(coupling_port_shaper, "predecessorFifo", coupling_port_fifo, fir::Multiplicity::One);
 
     auto coupling_port_traffic_class_assignment_r0 = b.add_role(coupling_port_traffic_class_assignment, "priority", positive_integer, fir::Multiplicity::Many);
-    auto coupling_port_traffic_class_assignment_r1 = b.add_role(coupling_port_traffic_class_assignment, "trafficClass", positive_integer, fir::Multiplicity::Optional);
+    auto coupling_port_traffic_class_assignment_r1 = b.add_role(coupling_port_traffic_class_assignment, "trafficClass", positive_integer, fir::Multiplicity::One);
 
     auto cp_software_cluster_r0 = b.add_role(cp_software_cluster, "softwareClusterId", positive_integer, fir::Multiplicity::Optional);
     auto cp_software_cluster_r1 = b.add_role(cp_software_cluster, "swComponentAssignment", sw_component_prototype_assignment, fir::Multiplicity::Many);
@@ -16556,9 +15397,8 @@ AutosarSchema build_autosar_r23_11() {
 
     auto cp_software_cluster_mapping_set_r0 = b.add_role(cp_software_cluster_mapping_set, "portElementToComResourceMapping", port_element_to_communication_resource_mapping, fir::Multiplicity::Many);
     auto cp_software_cluster_mapping_set_r1 = b.add_role(cp_software_cluster_mapping_set, "resourceToApplicationPartitionMapping", cp_software_cluster_resource_to_application_partition_mapping, fir::Multiplicity::Many);
-    auto cp_software_cluster_mapping_set_r2 = b.add_role(cp_software_cluster_mapping_set, "softwareClusterToApplicationPartitionMapping", cp_software_cluster_to_application_partition_mapping, fir::Multiplicity::Optional);
-    auto cp_software_cluster_mapping_set_r3 = b.add_role(cp_software_cluster_mapping_set, "softwareClusterToResourceMapping", cp_software_cluster_to_resource_mapping, fir::Multiplicity::Many);
-    auto cp_software_cluster_mapping_set_r4 = b.add_role(cp_software_cluster_mapping_set, "swcToApplicationPartitionMapping", swc_to_application_partition_mapping, fir::Multiplicity::Many);
+    auto cp_software_cluster_mapping_set_r2 = b.add_role(cp_software_cluster_mapping_set, "softwareClusterToResourceMapping", cp_software_cluster_to_resource_mapping, fir::Multiplicity::Many);
+    auto cp_software_cluster_mapping_set_r3 = b.add_role(cp_software_cluster_mapping_set, "swcToApplicationPartitionMapping", swc_to_application_partition_mapping, fir::Multiplicity::Many);
 
     auto cp_software_cluster_ref_conditional_r0 = b.add_role(cp_software_cluster_ref_conditional, "cpSoftwareCluster", cp_software_cluster, fir::Multiplicity::One);
     auto cp_software_cluster_ref_conditional_r1 = b.add_role(cp_software_cluster_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -16575,10 +15415,6 @@ AutosarSchema build_autosar_r23_11() {
     auto cp_software_cluster_resource_to_application_partition_mapping_r2 = b.add_role(cp_software_cluster_resource_to_application_partition_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto cp_software_cluster_service_resource_r0 = b.add_role(cp_software_cluster_service_resource, "resourceNeeds", ecuc_container_value, fir::Multiplicity::Many);
-
-    auto cp_software_cluster_to_application_partition_mapping_r0 = b.add_role(cp_software_cluster_to_application_partition_mapping, "applicationPartition", application_partition, fir::Multiplicity::Many);
-    auto cp_software_cluster_to_application_partition_mapping_r1 = b.add_role(cp_software_cluster_to_application_partition_mapping, "softwareCluster", cp_software_cluster, fir::Multiplicity::Optional);
-    auto cp_software_cluster_to_application_partition_mapping_r2 = b.add_role(cp_software_cluster_to_application_partition_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto cp_software_cluster_to_ecu_instance_mapping_r0 = b.add_role(cp_software_cluster_to_ecu_instance_mapping, "ecuInstance", ecu_instance, fir::Multiplicity::Optional);
     auto cp_software_cluster_to_ecu_instance_mapping_r1 = b.add_role(cp_software_cluster_to_ecu_instance_mapping, "machineId", positive_integer, fir::Multiplicity::Optional);
@@ -16680,11 +15516,11 @@ AutosarSchema build_autosar_r23_11() {
     auto crypto_service_certificate_r3 = b.add_role(crypto_service_certificate, "nextHigherCertificate", crypto_service_certificate, fir::Multiplicity::Optional);
     auto crypto_service_certificate_r4 = b.add_role(crypto_service_certificate, "serverNameIdentification", string, fir::Multiplicity::Optional);
 
-    auto crypto_service_key_r0 = b.add_role(crypto_service_key, "algorithmFamily", string, fir::Multiplicity::Optional);
+    auto crypto_service_key_r0 = b.add_role(crypto_service_key, "algorithmFamily", string, fir::Multiplicity::One);
     auto crypto_service_key_r1 = b.add_role(crypto_service_key, "developmentValue", application_assoc_map_value_specification, fir::Multiplicity::Optional);
     auto crypto_service_key_r2 = b.add_role(crypto_service_key, "keyGeneration", crypto_service_key_generation_enum, fir::Multiplicity::Optional);
     auto crypto_service_key_r3 = b.add_role(crypto_service_key, "keyStorageType", string, fir::Multiplicity::Optional);
-    auto crypto_service_key_r4 = b.add_role(crypto_service_key, "length", positive_integer, fir::Multiplicity::Optional);
+    auto crypto_service_key_r4 = b.add_role(crypto_service_key, "length", positive_integer, fir::Multiplicity::One);
 
     auto crypto_service_mapping_r0 = b.add_role(crypto_service_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
@@ -16701,13 +15537,13 @@ AutosarSchema build_autosar_r23_11() {
 
     auto crypto_signature_scheme_r0 = b.add_role(crypto_signature_scheme, "signatureSchemeId", positive_integer, fir::Multiplicity::Optional);
 
-    auto cycle_counter_r0 = b.add_role(cycle_counter, "cycleCounter", integer, fir::Multiplicity::Optional);
+    auto cycle_counter_r0 = b.add_role(cycle_counter, "cycleCounter", integer, fir::Multiplicity::One);
 
-    auto cycle_repetition_r0 = b.add_role(cycle_repetition, "baseCycle", integer, fir::Multiplicity::Optional);
-    auto cycle_repetition_r1 = b.add_role(cycle_repetition, "cycleRepetition", cycle_repetition_type, fir::Multiplicity::Optional);
+    auto cycle_repetition_r0 = b.add_role(cycle_repetition, "baseCycle", integer, fir::Multiplicity::One);
+    auto cycle_repetition_r1 = b.add_role(cycle_repetition, "cycleRepetition", cycle_repetition_type, fir::Multiplicity::One);
 
     auto cyclic_timing_r0 = b.add_role(cyclic_timing, "timeOffset", time_range_type, fir::Multiplicity::Optional);
-    auto cyclic_timing_r1 = b.add_role(cyclic_timing, "timePeriod", time_range_type, fir::Multiplicity::Optional);
+    auto cyclic_timing_r1 = b.add_role(cyclic_timing, "timePeriod", time_range_type, fir::Multiplicity::One);
 
     auto data_com_props_r0 = b.add_role(data_com_props, "dataConsistencyPolicy", data_consistency_policy_enum, fir::Multiplicity::Optional);
     auto data_com_props_r1 = b.add_role(data_com_props, "sendIndication", send_indication_enum, fir::Multiplicity::Optional);
@@ -16718,7 +15554,7 @@ AutosarSchema build_autosar_r23_11() {
     auto data_constr_rule_r1 = b.add_role(data_constr_rule, "physConstrs", phys_constrs, fir::Multiplicity::Optional);
     auto data_constr_rule_r2 = b.add_role(data_constr_rule, "internalConstrs", internal_constrs, fir::Multiplicity::Optional);
 
-    auto data_dump_entry_r0 = b.add_role(data_dump_entry, "byteValue", integer, fir::Multiplicity::Many);
+    auto data_dump_entry_r0 = b.add_role(data_dump_entry, "byteValue", integer, fir::Multiplicity::OneOrMore);
 
     auto data_exchange_point_r0 = b.add_role(data_exchange_point, "kind", data_exchange_point_kind, fir::Multiplicity::One);
     auto data_exchange_point_r1 = b.add_role(data_exchange_point, "referencedBaseline", baseline, fir::Multiplicity::One);
@@ -16759,7 +15595,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto data_prototype_in_client_server_interface_instance_ref_r0 = b.add_role(data_prototype_in_client_server_interface_instance_ref, "rootDataPrototypeInCs", argument_data_prototype, fir::Multiplicity::Optional);
     auto data_prototype_in_client_server_interface_instance_ref_r1 = b.add_role(data_prototype_in_client_server_interface_instance_ref, "contextDataPrototypeInCs", application_array_element, fir::Multiplicity::Many);
-    auto data_prototype_in_client_server_interface_instance_ref_r2 = b.add_role(data_prototype_in_client_server_interface_instance_ref, "targetDataPrototypeInCs", application_array_element, fir::Multiplicity::Optional);
+    auto data_prototype_in_client_server_interface_instance_ref_r2 = b.add_role(data_prototype_in_client_server_interface_instance_ref, "targetDataPrototypeInCs", application_array_element, fir::Multiplicity::One);
 
     auto data_prototype_in_port_interface_ref_r0 = b.add_role(data_prototype_in_port_interface_ref, "dataPrototypeInClientServerInterface", data_prototype_in_client_server_interface_instance_ref, fir::Multiplicity::Optional);
     auto data_prototype_in_port_interface_ref_r1 = b.add_role(data_prototype_in_port_interface_ref, "dataPrototypeInSenderReceiverInterface", data_prototype_in_sender_receiver_interface_instance_ref, fir::Multiplicity::Optional);
@@ -16768,7 +15604,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto data_prototype_in_sender_receiver_interface_instance_ref_r0 = b.add_role(data_prototype_in_sender_receiver_interface_instance_ref, "rootDataPrototypeInSr", argument_data_prototype, fir::Multiplicity::Optional);
     auto data_prototype_in_sender_receiver_interface_instance_ref_r1 = b.add_role(data_prototype_in_sender_receiver_interface_instance_ref, "contextDataPrototypeInSr", application_array_element, fir::Multiplicity::Many);
-    auto data_prototype_in_sender_receiver_interface_instance_ref_r2 = b.add_role(data_prototype_in_sender_receiver_interface_instance_ref, "targetDataPrototypeInSr", application_array_element, fir::Multiplicity::Optional);
+    auto data_prototype_in_sender_receiver_interface_instance_ref_r2 = b.add_role(data_prototype_in_sender_receiver_interface_instance_ref, "targetDataPrototypeInSr", application_array_element, fir::Multiplicity::One);
 
     auto data_prototype_in_service_interface_instance_ref_r0 = b.add_role(data_prototype_in_service_interface_instance_ref, "rootDataPrototype", argument_data_prototype, fir::Multiplicity::Optional);
     auto data_prototype_in_service_interface_instance_ref_r1 = b.add_role(data_prototype_in_service_interface_instance_ref, "contextDataPrototype", application_array_element, fir::Multiplicity::Many);
@@ -16810,8 +15646,8 @@ AutosarSchema build_autosar_r23_11() {
     auto data_send_completed_event_r0 = b.add_role(data_send_completed_event, "eventSource", variable_access, fir::Multiplicity::Optional);
 
     auto data_transformation_r0 = b.add_role(data_transformation, "dataTransformationKind", data_transformation_kind_enum, fir::Multiplicity::Optional);
-    auto data_transformation_r1 = b.add_role(data_transformation, "executeDespiteDataUnavailability", boolean, fir::Multiplicity::Optional);
-    auto data_transformation_r2 = b.add_role(data_transformation, "transformerChain", transformation_technology, fir::Multiplicity::Many);
+    auto data_transformation_r1 = b.add_role(data_transformation, "executeDespiteDataUnavailability", boolean, fir::Multiplicity::One);
+    auto data_transformation_r2 = b.add_role(data_transformation, "transformerChain", transformation_technology, fir::Multiplicity::OneOrMore);
     auto data_transformation_r3 = b.add_role(data_transformation, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto data_transformation_ref_conditional_r0 = b.add_role(data_transformation_ref_conditional, "dataTransformation", data_transformation, fir::Multiplicity::One);
@@ -16828,85 +15664,10 @@ AutosarSchema build_autosar_r23_11() {
 
     auto data_write_completed_event_r0 = b.add_role(data_write_completed_event, "eventSource", variable_access, fir::Multiplicity::Optional);
 
-    auto dcm_i_pdu_r0 = b.add_role(dcm_i_pdu, "diagPduType", diag_pdu_type, fir::Multiplicity::Optional);
-
-    auto dds_cp_config_r0 = b.add_role(dds_cp_config, "ddsDomain", dds_cp_domain, fir::Multiplicity::Many);
-    auto dds_cp_config_r1 = b.add_role(dds_cp_config, "ddsQosProfile", dds_cp_qos_profile, fir::Multiplicity::Many);
-
-    auto dds_cp_consumed_service_instance_r0 = b.add_role(dds_cp_consumed_service_instance, "consumedDdsOperation", dds_cp_service_instance_operation, fir::Multiplicity::Many);
-    auto dds_cp_consumed_service_instance_r1 = b.add_role(dds_cp_consumed_service_instance, "consumedDdsServiceEvent", dds_cp_service_instance_event, fir::Multiplicity::Many);
-    auto dds_cp_consumed_service_instance_r2 = b.add_role(dds_cp_consumed_service_instance, "localUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto dds_cp_consumed_service_instance_r3 = b.add_role(dds_cp_consumed_service_instance, "minorVersion", any_version_string, fir::Multiplicity::Optional);
-    auto dds_cp_consumed_service_instance_r4 = b.add_role(dds_cp_consumed_service_instance, "staticRemoteMulticastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto dds_cp_consumed_service_instance_r5 = b.add_role(dds_cp_consumed_service_instance, "staticRemoteUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-
-    auto dds_cp_domain_r0 = b.add_role(dds_cp_domain, "ddsPartition", dds_cp_partition, fir::Multiplicity::Many);
-    auto dds_cp_domain_r1 = b.add_role(dds_cp_domain, "ddsTopic", dds_cp_topic, fir::Multiplicity::Many);
-    auto dds_cp_domain_r2 = b.add_role(dds_cp_domain, "domainId", positive_integer, fir::Multiplicity::Optional);
-
-    auto dds_cp_i_signal_to_dds_topic_mapping_r0 = b.add_role(dds_cp_i_signal_to_dds_topic_mapping, "ddsTopic", dds_cp_topic, fir::Multiplicity::Optional);
-    auto dds_cp_i_signal_to_dds_topic_mapping_r1 = b.add_role(dds_cp_i_signal_to_dds_topic_mapping, "iSignal", i_signal, fir::Multiplicity::Optional);
-    auto dds_cp_i_signal_to_dds_topic_mapping_r2 = b.add_role(dds_cp_i_signal_to_dds_topic_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
-
-    auto dds_cp_partition_r0 = b.add_role(dds_cp_partition, "partitionName", string, fir::Multiplicity::Optional);
-
-    auto dds_cp_provided_service_instance_r0 = b.add_role(dds_cp_provided_service_instance, "localUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto dds_cp_provided_service_instance_r1 = b.add_role(dds_cp_provided_service_instance, "minorVersion", positive_integer, fir::Multiplicity::Optional);
-    auto dds_cp_provided_service_instance_r2 = b.add_role(dds_cp_provided_service_instance, "providedDdsOperation", dds_cp_service_instance_operation, fir::Multiplicity::Many);
-    auto dds_cp_provided_service_instance_r3 = b.add_role(dds_cp_provided_service_instance, "providedDdsServiceInstanceEvent", dds_cp_service_instance_event, fir::Multiplicity::Many);
-    auto dds_cp_provided_service_instance_r4 = b.add_role(dds_cp_provided_service_instance, "staticRemoteMulticastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto dds_cp_provided_service_instance_r5 = b.add_role(dds_cp_provided_service_instance, "staticRemoteUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-
-    auto dds_cp_qos_profile_r0 = b.add_role(dds_cp_qos_profile, "deadline", dds_deadline, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r1 = b.add_role(dds_cp_qos_profile, "destinationOrder", dds_destination_order, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r2 = b.add_role(dds_cp_qos_profile, "durability", dds_durability, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r3 = b.add_role(dds_cp_qos_profile, "durabilityService", dds_durability_service, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r4 = b.add_role(dds_cp_qos_profile, "history", dds_history, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r5 = b.add_role(dds_cp_qos_profile, "latencyBudget", dds_latency_budget, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r6 = b.add_role(dds_cp_qos_profile, "lifespan", dds_lifespan, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r7 = b.add_role(dds_cp_qos_profile, "liveliness", dds_liveliness, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r8 = b.add_role(dds_cp_qos_profile, "ownership", dds_ownership, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r9 = b.add_role(dds_cp_qos_profile, "ownershipStrength", dds_ownership_strength, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r10 = b.add_role(dds_cp_qos_profile, "reliability", dds_reliability, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r11 = b.add_role(dds_cp_qos_profile, "resourceLimits", dds_resource_limits, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r12 = b.add_role(dds_cp_qos_profile, "topicData", dds_topic_data, fir::Multiplicity::Optional);
-    auto dds_cp_qos_profile_r13 = b.add_role(dds_cp_qos_profile, "transportPriority", dds_transport_priority, fir::Multiplicity::Optional);
-
-    auto dds_cp_service_instance_r0 = b.add_role(dds_cp_service_instance, "ddsFieldReplyTopic", dds_cp_topic, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_r1 = b.add_role(dds_cp_service_instance, "ddsFieldRequestTopic", dds_cp_topic, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_r2 = b.add_role(dds_cp_service_instance, "ddsMethodReplyTopic", dds_cp_topic, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_r3 = b.add_role(dds_cp_service_instance, "ddsMethodRequestTopic", dds_cp_topic, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_r4 = b.add_role(dds_cp_service_instance, "ddsServiceQosProfile", dds_cp_qos_profile, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_r5 = b.add_role(dds_cp_service_instance, "serviceInstanceId", positive_integer, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_r6 = b.add_role(dds_cp_service_instance, "serviceInterfaceId", string, fir::Multiplicity::Optional);
-
-    auto dds_cp_service_instance_event_r0 = b.add_role(dds_cp_service_instance_event, "ddsEventQosProfile", dds_cp_qos_profile, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_event_r1 = b.add_role(dds_cp_service_instance_event, "ddsEvent", pdu_triggering, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_event_r2 = b.add_role(dds_cp_service_instance_event, "ddsEventTopic", dds_cp_topic, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_event_r3 = b.add_role(dds_cp_service_instance_event, "variationPoint", variation_point, fir::Multiplicity::Optional);
-
-    auto dds_cp_service_instance_operation_r0 = b.add_role(dds_cp_service_instance_operation, "ddsOperationRequestTriggering", pdu_triggering, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_operation_r1 = b.add_role(dds_cp_service_instance_operation, "ddsOperationResponseTriggering", pdu_triggering, fir::Multiplicity::Optional);
-    auto dds_cp_service_instance_operation_r2 = b.add_role(dds_cp_service_instance_operation, "variationPoint", variation_point, fir::Multiplicity::Optional);
-
-    auto dds_cp_topic_r0 = b.add_role(dds_cp_topic, "ddsPartition", dds_cp_partition, fir::Multiplicity::Optional);
-    auto dds_cp_topic_r1 = b.add_role(dds_cp_topic, "topicName", string, fir::Multiplicity::Optional);
-
-    auto dds_deadline_r0 = b.add_role(dds_deadline, "deadlinePeriod", float_, fir::Multiplicity::Optional);
-
-    auto dds_destination_order_r0 = b.add_role(dds_destination_order, "destinationOrderKind", dds_destination_order_kind_enum, fir::Multiplicity::Optional);
+    auto dcm_i_pdu_r0 = b.add_role(dcm_i_pdu, "diagPduType", diag_pdu_type, fir::Multiplicity::One);
 
     auto dds_domain_range_r0 = b.add_role(dds_domain_range, "max", positive_integer, fir::Multiplicity::Optional);
     auto dds_domain_range_r1 = b.add_role(dds_domain_range, "min", positive_integer, fir::Multiplicity::Optional);
-
-    auto dds_durability_r0 = b.add_role(dds_durability, "durabilityKind", dds_durability_kind_enum, fir::Multiplicity::Optional);
-
-    auto dds_durability_service_r0 = b.add_role(dds_durability_service, "durabilityServiceCleanupDelay", float_, fir::Multiplicity::Optional);
-    auto dds_durability_service_r1 = b.add_role(dds_durability_service, "durabilityServiceHistoryDepth", positive_integer, fir::Multiplicity::Optional);
-    auto dds_durability_service_r2 = b.add_role(dds_durability_service, "durabilityServiceHistoryKind", dds_durability_service_history_kind_enum, fir::Multiplicity::Optional);
-    auto dds_durability_service_r3 = b.add_role(dds_durability_service, "durabilityServiceMaxInstances", positive_integer, fir::Multiplicity::Optional);
-    auto dds_durability_service_r4 = b.add_role(dds_durability_service, "durabilityServiceMaxSamples", positive_integer, fir::Multiplicity::Optional);
-    auto dds_durability_service_r5 = b.add_role(dds_durability_service, "durabilityServiceMaxSamplesPerInstance", positive_integer, fir::Multiplicity::Optional);
 
     auto dds_event_deployment_r0 = b.add_role(dds_event_deployment, "eventTopicAccessRule", dds_topic_access_rule, fir::Multiplicity::Optional);
     auto dds_event_deployment_r1 = b.add_role(dds_event_deployment, "topicName", string, fir::Multiplicity::Optional);
@@ -16918,20 +15679,6 @@ AutosarSchema build_autosar_r23_11() {
 
     auto dds_field_qos_props_r0 = b.add_role(dds_field_qos_props, "field", dds_field_deployment, fir::Multiplicity::Optional);
 
-    auto dds_history_r0 = b.add_role(dds_history, "historyKind", dds_history_kind_enum, fir::Multiplicity::Optional);
-    auto dds_history_r1 = b.add_role(dds_history, "historyOrderDepth", positive_integer, fir::Multiplicity::Optional);
-
-    auto dds_latency_budget_r0 = b.add_role(dds_latency_budget, "latencyBudgetDuration", float_, fir::Multiplicity::Optional);
-
-    auto dds_lifespan_r0 = b.add_role(dds_lifespan, "lifespanDuration", float_, fir::Multiplicity::Optional);
-
-    auto dds_liveliness_r0 = b.add_role(dds_liveliness, "livelinessLeaseDuration", float_, fir::Multiplicity::Optional);
-    auto dds_liveliness_r1 = b.add_role(dds_liveliness, "livenessKind", dds_liveness_kind_enum, fir::Multiplicity::Optional);
-
-    auto dds_ownership_r0 = b.add_role(dds_ownership, "ownershipKind", dds_ownership_kind_enum, fir::Multiplicity::Optional);
-
-    auto dds_ownership_strength_r0 = b.add_role(dds_ownership_strength, "ownershipStrength", positive_integer, fir::Multiplicity::Optional);
-
     auto dds_provided_service_instance_r0 = b.add_role(dds_provided_service_instance, "discoveryType", dds_service_instance_discovery_type_enum, fir::Multiplicity::Optional);
     auto dds_provided_service_instance_r1 = b.add_role(dds_provided_service_instance, "eventQosProps", dds_event_qos_props, fir::Multiplicity::Many);
     auto dds_provided_service_instance_r2 = b.add_role(dds_provided_service_instance, "fieldNotifierQosProps", dds_field_qos_props, fir::Multiplicity::Many);
@@ -16940,18 +15687,11 @@ AutosarSchema build_autosar_r23_11() {
 
     auto dds_qos_props_r0 = b.add_role(dds_qos_props, "qosProfile", string, fir::Multiplicity::Optional);
 
-    auto dds_reliability_r0 = b.add_role(dds_reliability, "reliabilityKind", dds_reliability_kind_enum, fir::Multiplicity::Optional);
-    auto dds_reliability_r1 = b.add_role(dds_reliability, "reliabilityMaxBlockingTime", float_, fir::Multiplicity::Optional);
-
     auto dds_required_service_instance_r0 = b.add_role(dds_required_service_instance, "blocklistedVersion", dds_service_version, fir::Multiplicity::Many);
     auto dds_required_service_instance_r1 = b.add_role(dds_required_service_instance, "discoveryType", dds_service_instance_discovery_type_enum, fir::Multiplicity::Optional);
     auto dds_required_service_instance_r2 = b.add_role(dds_required_service_instance, "eventQosProps", dds_event_qos_props, fir::Multiplicity::Many);
     auto dds_required_service_instance_r3 = b.add_role(dds_required_service_instance, "fieldNotifierQosProps", dds_field_qos_props, fir::Multiplicity::Many);
     auto dds_required_service_instance_r4 = b.add_role(dds_required_service_instance, "requiredServiceInstanceId", any_service_instance_id, fir::Multiplicity::Optional);
-
-    auto dds_resource_limits_r0 = b.add_role(dds_resource_limits, "maxInstances", positive_integer, fir::Multiplicity::Optional);
-    auto dds_resource_limits_r1 = b.add_role(dds_resource_limits, "maxSamples", positive_integer, fir::Multiplicity::Optional);
-    auto dds_resource_limits_r2 = b.add_role(dds_resource_limits, "maxSamplesPerInstance", positive_integer, fir::Multiplicity::Optional);
 
     auto dds_rule_r0 = b.add_role(dds_rule, "appId", positive_integer, fir::Multiplicity::Optional);
     auto dds_rule_r1 = b.add_role(dds_rule, "hostId", positive_integer, fir::Multiplicity::Optional);
@@ -16999,10 +15739,6 @@ AutosarSchema build_autosar_r23_11() {
     auto dds_topic_access_rule_r4 = b.add_role(dds_topic_access_rule, "enableWriteAccessControl", boolean, fir::Multiplicity::Optional);
     auto dds_topic_access_rule_r5 = b.add_role(dds_topic_access_rule, "metadataProtectionKind", dds_protection_kind_enum, fir::Multiplicity::Optional);
 
-    auto dds_topic_data_r0 = b.add_role(dds_topic_data, "topicData", string, fir::Multiplicity::Optional);
-
-    auto dds_transport_priority_r0 = b.add_role(dds_transport_priority, "transportPriority", positive_integer, fir::Multiplicity::Optional);
-
     auto deadline_supervision_r0 = b.add_role(deadline_supervision, "maxDeadline", time_value, fir::Multiplicity::Optional);
     auto deadline_supervision_r1 = b.add_role(deadline_supervision, "minDeadline", time_value, fir::Multiplicity::Optional);
     auto deadline_supervision_r2 = b.add_role(deadline_supervision, "transition", checkpoint_transition, fir::Multiplicity::Optional);
@@ -17014,8 +15750,8 @@ AutosarSchema build_autosar_r23_11() {
     auto def_list_r0 = b.add_role(def_list, "defItem", def_item, fir::Multiplicity::OneOrMore);
     auto def_list_r1 = b.add_role(def_list, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto default_value_element_r0 = b.add_role(default_value_element, "elementByteValue", integer, fir::Multiplicity::Optional);
-    auto default_value_element_r1 = b.add_role(default_value_element, "elementPosition", integer, fir::Multiplicity::Optional);
+    auto default_value_element_r0 = b.add_role(default_value_element, "elementByteValue", integer, fir::Multiplicity::One);
+    auto default_value_element_r1 = b.add_role(default_value_element, "elementPosition", integer, fir::Multiplicity::One);
 
     auto delegated_port_annotation_r0 = b.add_role(delegated_port_annotation, "signalFan", signal_fan_enum, fir::Multiplicity::Optional);
 
@@ -17030,6 +15766,28 @@ AutosarSchema build_autosar_r23_11() {
     auto describable_r1 = b.add_role(describable, "category", category_string, fir::Multiplicity::Optional);
     auto describable_r2 = b.add_role(describable, "introduction", documentation_block, fir::Multiplicity::Optional);
     auto describable_r3 = b.add_role(describable, "adminData", admin_data, fir::Multiplicity::Optional);
+
+    auto deterministic_client_r0 = b.add_role(deterministic_client, "cycleTimeValue", time_value, fir::Multiplicity::Optional);
+    auto deterministic_client_r1 = b.add_role(deterministic_client, "deterministicSyncMaster", deterministic_sync_master, fir::Multiplicity::Optional);
+    auto deterministic_client_r2 = b.add_role(deterministic_client, "numberOfWorkers", positive_integer, fir::Multiplicity::Optional);
+
+    auto deterministic_client_resource_r0 = b.add_role(deterministic_client_resource, "numberOfInstructions", normalized_instruction, fir::Multiplicity::Optional);
+    auto deterministic_client_resource_r1 = b.add_role(deterministic_client_resource, "sequentialInstructionsBegin", normalized_instruction, fir::Multiplicity::Optional);
+    auto deterministic_client_resource_r2 = b.add_role(deterministic_client_resource, "sequentialInstructionsEnd", normalized_instruction, fir::Multiplicity::Optional);
+    auto deterministic_client_resource_r3 = b.add_role(deterministic_client_resource, "speedup", float_, fir::Multiplicity::Optional);
+
+    auto deterministic_client_resource_needs_r0 = b.add_role(deterministic_client_resource_needs, "hardwarePlatform", string, fir::Multiplicity::Optional);
+    auto deterministic_client_resource_needs_r1 = b.add_role(deterministic_client_resource_needs, "initResource", deterministic_client_resource, fir::Multiplicity::Optional);
+    auto deterministic_client_resource_needs_r2 = b.add_role(deterministic_client_resource_needs, "runResource", deterministic_client_resource, fir::Multiplicity::Optional);
+
+    auto deterministic_sync_m_out_of_n_r0 = b.add_role(deterministic_sync_m_out_of_n, "minimumNumberOfRequests", positive_integer, fir::Multiplicity::Optional);
+    auto deterministic_sync_m_out_of_n_r1 = b.add_role(deterministic_sync_m_out_of_n, "numberOfConnectedClients", positive_integer, fir::Multiplicity::Optional);
+
+    auto deterministic_sync_master_r0 = b.add_role(deterministic_sync_master, "maxRunCycleLoop", positive_integer, fir::Multiplicity::Optional);
+    auto deterministic_sync_master_r1 = b.add_role(deterministic_sync_master, "verificationMethod", deterministic_sync_m_out_of_n, fir::Multiplicity::Optional);
+
+    auto deterministic_sync_master_to_time_base_consumer_mapping_r0 = b.add_role(deterministic_sync_master_to_time_base_consumer_mapping, "deterministicSyncMaster", deterministic_sync_master, fir::Multiplicity::Optional);
+    auto deterministic_sync_master_to_time_base_consumer_mapping_r1 = b.add_role(deterministic_sync_master_to_time_base_consumer_mapping, "timeBaseConsumer", synchronized_time_base_consumer, fir::Multiplicity::Optional);
 
     auto dhcp_server_configuration_r0 = b.add_role(dhcp_server_configuration, "ipv4DhcpServerConfiguration", ipv4_dhcp_server_configuration, fir::Multiplicity::Optional);
     auto dhcp_server_configuration_r1 = b.add_role(dhcp_server_configuration, "ipv6DhcpServerConfiguration", ipv6_dhcp_server_configuration, fir::Multiplicity::Optional);
@@ -17061,12 +15819,11 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_abstract_parameter_r1 = b.add_role(diagnostic_abstract_parameter, "dataElement", diagnostic_data_element, fir::Multiplicity::Many);
     auto diagnostic_abstract_parameter_r2 = b.add_role(diagnostic_abstract_parameter, "parameterSize", positive_integer, fir::Multiplicity::Optional);
 
-    auto diagnostic_access_permission_r0 = b.add_role(diagnostic_access_permission, "authenticationEnabled", diagnostic_auth_role_proxy, fir::Multiplicity::Optional);
-    auto diagnostic_access_permission_r1 = b.add_role(diagnostic_access_permission, "authenticationRole", diagnostic_auth_role, fir::Multiplicity::Many);
-    auto diagnostic_access_permission_r2 = b.add_role(diagnostic_access_permission, "diagnosticSession", diagnostic_session, fir::Multiplicity::Many);
-    auto diagnostic_access_permission_r3 = b.add_role(diagnostic_access_permission, "environmentalCondition", diagnostic_environmental_condition, fir::Multiplicity::Optional);
-    auto diagnostic_access_permission_r4 = b.add_role(diagnostic_access_permission, "securityLevel", diagnostic_security_level, fir::Multiplicity::Many);
-    auto diagnostic_access_permission_r5 = b.add_role(diagnostic_access_permission, "sovdLock", diagnostic_sovd_lock, fir::Multiplicity::Optional);
+    auto diagnostic_access_permission_r0 = b.add_role(diagnostic_access_permission, "authenticationRole", diagnostic_auth_role, fir::Multiplicity::Many);
+    auto diagnostic_access_permission_r1 = b.add_role(diagnostic_access_permission, "diagnosticSession", diagnostic_session, fir::Multiplicity::Many);
+    auto diagnostic_access_permission_r2 = b.add_role(diagnostic_access_permission, "environmentalCondition", diagnostic_environmental_condition, fir::Multiplicity::Optional);
+    auto diagnostic_access_permission_r3 = b.add_role(diagnostic_access_permission, "securityLevel", diagnostic_security_level, fir::Multiplicity::Many);
+    auto diagnostic_access_permission_r4 = b.add_role(diagnostic_access_permission, "sovdLock", diagnostic_sovd_lock, fir::Multiplicity::Optional);
 
     auto diagnostic_aging_r0 = b.add_role(diagnostic_aging, "agingCycle", diagnostic_operation_cycle_ref_conditional, fir::Multiplicity::Many);
     auto diagnostic_aging_r1 = b.add_role(diagnostic_aging, "threshold", positive_integer_value_variation_point, fir::Multiplicity::Optional);
@@ -17074,20 +15831,10 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_auth_role_r0 = b.add_role(diagnostic_auth_role, "bitPosition", positive_integer, fir::Multiplicity::Optional);
     auto diagnostic_auth_role_r1 = b.add_role(diagnostic_auth_role, "isDefault", boolean, fir::Multiplicity::Optional);
 
-    auto diagnostic_auth_role_proxy_r0 = b.add_role(diagnostic_auth_role_proxy, "authenticationRole", diagnostic_auth_role, fir::Multiplicity::Many);
-
-    auto diagnostic_auth_transmit_certificate_r0 = b.add_role(diagnostic_auth_transmit_certificate, "certificateEvaluation", diagnostic_auth_transmit_certificate_evaluation, fir::Multiplicity::Many);
-
-    auto diagnostic_auth_transmit_certificate_evaluation_r0 = b.add_role(diagnostic_auth_transmit_certificate_evaluation, "evaluationId", positive_integer, fir::Multiplicity::Optional);
-    auto diagnostic_auth_transmit_certificate_evaluation_r1 = b.add_role(diagnostic_auth_transmit_certificate_evaluation, "function", string, fir::Multiplicity::Optional);
-
-    auto diagnostic_auth_transmit_certificate_mapping_r0 = b.add_role(diagnostic_auth_transmit_certificate_mapping, "cryptoServiceCertificate", crypto_service_certificate, fir::Multiplicity::Many);
-    auto diagnostic_auth_transmit_certificate_mapping_r1 = b.add_role(diagnostic_auth_transmit_certificate_mapping, "serviceInstance", diagnostic_auth_transmit_certificate_evaluation, fir::Multiplicity::Optional);
-
     auto diagnostic_authentication_r0 = b.add_role(diagnostic_authentication, "authenticationClass", diagnostic_authentication_class, fir::Multiplicity::Optional);
     auto diagnostic_authentication_r1 = b.add_role(diagnostic_authentication, "authenticationTimeout", time_value, fir::Multiplicity::Optional);
 
-    auto diagnostic_authentication_port_mapping_r0 = b.add_role(diagnostic_authentication_port_mapping, "diagnosticAuthentication", diagnostic_auth_transmit_certificate, fir::Multiplicity::Optional);
+    auto diagnostic_authentication_port_mapping_r0 = b.add_role(diagnostic_authentication_port_mapping, "diagnosticAuthentication", diagnostic_authentication, fir::Multiplicity::Optional);
     auto diagnostic_authentication_port_mapping_r1 = b.add_role(diagnostic_authentication_port_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
     auto diagnostic_authentication_port_mapping_r2 = b.add_role(diagnostic_authentication_port_mapping, "process", process_design, fir::Multiplicity::Optional);
 
@@ -17109,17 +15856,14 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_com_control_r1 = b.add_role(diagnostic_com_control, "customSubFunctionNumber", positive_integer, fir::Multiplicity::Optional);
 
     auto diagnostic_com_control_class_r0 = b.add_role(diagnostic_com_control_class, "allChannels", abstract_can_cluster, fir::Multiplicity::Many);
-    auto diagnostic_com_control_class_r1 = b.add_role(diagnostic_com_control_class, "allPhysicalChannels", ethernet_physical_channel, fir::Multiplicity::Many);
-    auto diagnostic_com_control_class_r2 = b.add_role(diagnostic_com_control_class, "specificChannel", diagnostic_com_control_specific_channel, fir::Multiplicity::Many);
-    auto diagnostic_com_control_class_r3 = b.add_role(diagnostic_com_control_class, "subNodeChannel", diagnostic_com_control_sub_node_channel, fir::Multiplicity::Many);
+    auto diagnostic_com_control_class_r1 = b.add_role(diagnostic_com_control_class, "specificChannel", diagnostic_com_control_specific_channel, fir::Multiplicity::Many);
+    auto diagnostic_com_control_class_r2 = b.add_role(diagnostic_com_control_class, "subNodeChannel", diagnostic_com_control_sub_node_channel, fir::Multiplicity::Many);
 
     auto diagnostic_com_control_specific_channel_r0 = b.add_role(diagnostic_com_control_specific_channel, "specificChannel", abstract_can_cluster, fir::Multiplicity::Optional);
-    auto diagnostic_com_control_specific_channel_r1 = b.add_role(diagnostic_com_control_specific_channel, "specificPhysicalChannel", ethernet_physical_channel, fir::Multiplicity::Optional);
-    auto diagnostic_com_control_specific_channel_r2 = b.add_role(diagnostic_com_control_specific_channel, "subnetNumber", positive_integer, fir::Multiplicity::Optional);
+    auto diagnostic_com_control_specific_channel_r1 = b.add_role(diagnostic_com_control_specific_channel, "subnetNumber", positive_integer, fir::Multiplicity::Optional);
 
     auto diagnostic_com_control_sub_node_channel_r0 = b.add_role(diagnostic_com_control_sub_node_channel, "subNodeChannel", abstract_can_cluster, fir::Multiplicity::Optional);
     auto diagnostic_com_control_sub_node_channel_r1 = b.add_role(diagnostic_com_control_sub_node_channel, "subNodeNumber", positive_integer, fir::Multiplicity::Optional);
-    auto diagnostic_com_control_sub_node_channel_r2 = b.add_role(diagnostic_com_control_sub_node_channel, "subNodePhysicalChannel", ethernet_physical_channel, fir::Multiplicity::Optional);
 
     auto diagnostic_common_element_ref_conditional_r0 = b.add_role(diagnostic_common_element_ref_conditional, "diagnosticCommonElement", cp_sw_cluster_resource_to_diag_data_elem_mapping, fir::Multiplicity::One);
     auto diagnostic_common_element_ref_conditional_r1 = b.add_role(diagnostic_common_element_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -17129,30 +15873,26 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_common_props_conditional_r0 = b.add_role(diagnostic_common_props_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto diagnostic_common_props_content_r0 = b.add_role(diagnostic_common_props_content, "agingRequiresTestedCycle", boolean, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r1 = b.add_role(diagnostic_common_props_content, "authenticationTimeout", time_value, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r2 = b.add_role(diagnostic_common_props_content, "clearDtcLimitation", diagnostic_clear_dtc_limitation_enum, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r3 = b.add_role(diagnostic_common_props_content, "debounceAlgorithmProps", diagnostic_debounce_algorithm_props, fir::Multiplicity::Many);
-    auto diagnostic_common_props_content_r4 = b.add_role(diagnostic_common_props_content, "defaultEndianness", byte_order_enum, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r5 = b.add_role(diagnostic_common_props_content, "diagnosticAddress", software_cluster_doip_diagnostic_address, fir::Multiplicity::Many);
-    auto diagnostic_common_props_content_r6 = b.add_role(diagnostic_common_props_content, "dtcStatusAvailabilityMask", positive_integer, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r7 = b.add_role(diagnostic_common_props_content, "environmentDataCapture", diagnostic_data_capture_enum, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r8 = b.add_role(diagnostic_common_props_content, "eventCombinationReportingBehavior", diagnostic_event_combination_reporting_behavior_enum, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r9 = b.add_role(diagnostic_common_props_content, "eventDisplacementStrategy", diagnostic_event_displacement_strategy_enum, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r10 = b.add_role(diagnostic_common_props_content, "externalAuthentication", diagnostic_external_authentication_identification, fir::Multiplicity::Many);
-    auto diagnostic_common_props_content_r11 = b.add_role(diagnostic_common_props_content, "maxNumberOfEventEntries", positive_integer, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r12 = b.add_role(diagnostic_common_props_content, "maxNumberOfRequestCorrectlyReceivedResponsePending", positive_integer, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r13 = b.add_role(diagnostic_common_props_content, "memoryEntryStorageTrigger", diagnostic_memory_entry_storage_trigger_enum, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r14 = b.add_role(diagnostic_common_props_content, "occurrenceCounterProcessing", diagnostic_occurrence_counter_processing_enum, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r15 = b.add_role(diagnostic_common_props_content, "resetConfirmedBitOnOverflow", boolean, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r16 = b.add_role(diagnostic_common_props_content, "resetPendingBitOnOverflow", boolean, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r17 = b.add_role(diagnostic_common_props_content, "responseOnAllRequestSids", boolean, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r18 = b.add_role(diagnostic_common_props_content, "responseOnSecondDeclinedRequest", boolean, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r19 = b.add_role(diagnostic_common_props_content, "securityDelayTimeOnBoot", time_value, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r20 = b.add_role(diagnostic_common_props_content, "statusBitHandlingTestFailedSinceLastClear", diagnostic_status_bit_handling_test_failed_since_last_clear_enum, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r21 = b.add_role(diagnostic_common_props_content, "statusBitStorageTestFailed", boolean, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r22 = b.add_role(diagnostic_common_props_content, "typeOfDtcSupported", diagnostic_type_of_dtc_supported_enum, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r23 = b.add_role(diagnostic_common_props_content, "typeOfEventCombinationSupported", diagnostic_event_combination_behavior_enum, fir::Multiplicity::Optional);
-    auto diagnostic_common_props_content_r24 = b.add_role(diagnostic_common_props_content, "typeOfFreezeFrameRecordNumeration", diagnostic_type_of_freeze_frame_record_numeration_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r1 = b.add_role(diagnostic_common_props_content, "clearDtcLimitation", diagnostic_clear_dtc_limitation_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r2 = b.add_role(diagnostic_common_props_content, "debounceAlgorithmProps", diagnostic_debounce_algorithm_props, fir::Multiplicity::Many);
+    auto diagnostic_common_props_content_r3 = b.add_role(diagnostic_common_props_content, "defaultEndianness", byte_order_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r4 = b.add_role(diagnostic_common_props_content, "dtcStatusAvailabilityMask", positive_integer, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r5 = b.add_role(diagnostic_common_props_content, "environmentDataCapture", diagnostic_data_capture_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r6 = b.add_role(diagnostic_common_props_content, "eventCombinationReportingBehavior", diagnostic_event_combination_reporting_behavior_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r7 = b.add_role(diagnostic_common_props_content, "eventDisplacementStrategy", diagnostic_event_displacement_strategy_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r8 = b.add_role(diagnostic_common_props_content, "maxNumberOfEventEntries", positive_integer, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r9 = b.add_role(diagnostic_common_props_content, "maxNumberOfRequestCorrectlyReceivedResponsePending", positive_integer, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r10 = b.add_role(diagnostic_common_props_content, "memoryEntryStorageTrigger", diagnostic_memory_entry_storage_trigger_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r11 = b.add_role(diagnostic_common_props_content, "occurrenceCounterProcessing", diagnostic_occurrence_counter_processing_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r12 = b.add_role(diagnostic_common_props_content, "resetConfirmedBitOnOverflow", boolean, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r13 = b.add_role(diagnostic_common_props_content, "responseOnAllRequestSids", boolean, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r14 = b.add_role(diagnostic_common_props_content, "responseOnSecondDeclinedRequest", boolean, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r15 = b.add_role(diagnostic_common_props_content, "securityDelayTimeOnBoot", time_value, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r16 = b.add_role(diagnostic_common_props_content, "statusBitHandlingTestFailedSinceLastClear", diagnostic_status_bit_handling_test_failed_since_last_clear_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r17 = b.add_role(diagnostic_common_props_content, "statusBitStorageTestFailed", boolean, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r18 = b.add_role(diagnostic_common_props_content, "typeOfDtcSupported", diagnostic_type_of_dtc_supported_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r19 = b.add_role(diagnostic_common_props_content, "typeOfEventCombinationSupported", diagnostic_event_combination_behavior_enum, fir::Multiplicity::Optional);
+    auto diagnostic_common_props_content_r20 = b.add_role(diagnostic_common_props_content, "typeOfFreezeFrameRecordNumeration", diagnostic_type_of_freeze_frame_record_numeration_enum, fir::Multiplicity::Optional);
 
     auto diagnostic_communication_manager_needs_r0 = b.add_role(diagnostic_communication_manager_needs, "serviceRequestCallbackType", diagnostic_service_request_callback_type_enum, fir::Multiplicity::Optional);
 
@@ -17254,7 +15994,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto diagnostic_ecu_reset_class_r0 = b.add_role(diagnostic_ecu_reset_class, "respondToReset", diagnostic_response_to_ecu_reset_enum, fir::Multiplicity::Optional);
 
-    auto diagnostic_enable_condition_group_r0 = b.add_role(diagnostic_enable_condition_group, "enableCondition", diagnostic_enable_condition_ref_conditional, fir::Multiplicity::Many);
+    auto diagnostic_enable_condition_group_r0 = b.add_role(diagnostic_enable_condition_group, "enableCondition", diagnostic_enable_condition_ref_conditional, fir::Multiplicity::OneOrMore);
 
     auto diagnostic_enable_condition_needs_r0 = b.add_role(diagnostic_enable_condition_needs, "initialStatus", event_acceptance_status_enum, fir::Multiplicity::Optional);
 
@@ -17268,7 +16008,7 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_enable_condition_ref_conditional_r0 = b.add_role(diagnostic_enable_condition_ref_conditional, "diagnosticEnableCondition", diagnostic_enable_condition, fir::Multiplicity::One);
     auto diagnostic_enable_condition_ref_conditional_r1 = b.add_role(diagnostic_enable_condition_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto diagnostic_env_bsw_mode_element_r0 = b.add_role(diagnostic_env_bsw_mode_element, "mode", mode_in_bsw_module_description_instance_ref, fir::Multiplicity::Optional);
+    auto diagnostic_env_bsw_mode_element_r0 = b.add_role(diagnostic_env_bsw_mode_element, "mode", mode_in_bsw_module_description_instance_ref, fir::Multiplicity::One);
 
     auto diagnostic_env_compare_condition_r0 = b.add_role(diagnostic_env_compare_condition, "compareType", diagnostic_compare_type_enum, fir::Multiplicity::Optional);
 
@@ -17370,7 +16110,7 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_external_authentication_identification_r0 = b.add_role(diagnostic_external_authentication_identification, "sourceAddressCode", positive_integer, fir::Multiplicity::Optional);
     auto diagnostic_external_authentication_identification_r1 = b.add_role(diagnostic_external_authentication_identification, "sourceAddressMask", positive_integer, fir::Multiplicity::Optional);
 
-    auto diagnostic_external_authentication_port_mapping_r0 = b.add_role(diagnostic_external_authentication_port_mapping, "diagnosticAuthentication", diagnostic_auth_transmit_certificate, fir::Multiplicity::Optional);
+    auto diagnostic_external_authentication_port_mapping_r0 = b.add_role(diagnostic_external_authentication_port_mapping, "diagnosticAuthentication", diagnostic_authentication, fir::Multiplicity::Optional);
     auto diagnostic_external_authentication_port_mapping_r1 = b.add_role(diagnostic_external_authentication_port_mapping, "process", process_design, fir::Multiplicity::Optional);
     auto diagnostic_external_authentication_port_mapping_r2 = b.add_role(diagnostic_external_authentication_port_mapping, "rPortPrototypeInExecutable", r_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
 
@@ -17471,7 +16211,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto diagnostic_master_to_slave_event_mapping_set_r0 = b.add_role(diagnostic_master_to_slave_event_mapping_set, "masterToSlaveEventMapping", diagnostic_master_to_slave_event_mapping, fir::Multiplicity::Many);
 
-    auto diagnostic_measurement_identifier_r0 = b.add_role(diagnostic_measurement_identifier, "obdMid", positive_integer_value_variation_point, fir::Multiplicity::Optional);
+    auto diagnostic_measurement_identifier_r0 = b.add_role(diagnostic_measurement_identifier, "obdMid", positive_integer_value_variation_point, fir::Multiplicity::One);
 
     auto diagnostic_memory_addressable_range_access_r0 = b.add_role(diagnostic_memory_addressable_range_access, "memoryRange", diagnostic_memory_identifier, fir::Multiplicity::Many);
 
@@ -17491,9 +16231,8 @@ AutosarSchema build_autosar_r23_11() {
 
     auto diagnostic_memory_destination_primary_r0 = b.add_role(diagnostic_memory_destination_primary, "typeOfDtcSupported", diagnostic_type_of_dtc_supported_enum, fir::Multiplicity::Optional);
 
-    auto diagnostic_memory_destination_user_defined_r0 = b.add_role(diagnostic_memory_destination_user_defined, "authRole", diagnostic_auth_role, fir::Multiplicity::Many);
-    auto diagnostic_memory_destination_user_defined_r1 = b.add_role(diagnostic_memory_destination_user_defined, "authenticationRole", diagnostic_auth_role, fir::Multiplicity::Optional);
-    auto diagnostic_memory_destination_user_defined_r2 = b.add_role(diagnostic_memory_destination_user_defined, "memoryId", positive_integer, fir::Multiplicity::Optional);
+    auto diagnostic_memory_destination_user_defined_r0 = b.add_role(diagnostic_memory_destination_user_defined, "authenticationRole", diagnostic_auth_role, fir::Multiplicity::Optional);
+    auto diagnostic_memory_destination_user_defined_r1 = b.add_role(diagnostic_memory_destination_user_defined, "memoryId", positive_integer, fir::Multiplicity::Optional);
 
     auto diagnostic_memory_identifier_r0 = b.add_role(diagnostic_memory_identifier, "accessPermission", diagnostic_access_permission, fir::Multiplicity::Optional);
     auto diagnostic_memory_identifier_r1 = b.add_role(diagnostic_memory_identifier, "id", positive_integer, fir::Multiplicity::Optional);
@@ -17505,20 +16244,6 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_monitor_port_mapping_r0 = b.add_role(diagnostic_monitor_port_mapping, "diagnosticEvent", diagnostic_event, fir::Multiplicity::Optional);
     auto diagnostic_monitor_port_mapping_r1 = b.add_role(diagnostic_monitor_port_mapping, "process", process_design, fir::Multiplicity::Optional);
     auto diagnostic_monitor_port_mapping_r2 = b.add_role(diagnostic_monitor_port_mapping, "rPortPrototypeInExecutable", r_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-
-    auto diagnostic_multiple_condition_port_mapping_r0 = b.add_role(diagnostic_multiple_condition_port_mapping, "diagnosticCondition", diagnostic_clear_condition, fir::Multiplicity::Optional);
-    auto diagnostic_multiple_condition_port_mapping_r1 = b.add_role(diagnostic_multiple_condition_port_mapping, "process", process_design, fir::Multiplicity::Optional);
-    auto diagnostic_multiple_condition_port_mapping_r2 = b.add_role(diagnostic_multiple_condition_port_mapping, "rPortPrototypeInExecutable", r_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-
-    auto diagnostic_multiple_event_port_mapping_r0 = b.add_role(diagnostic_multiple_event_port_mapping, "diagnosticEvent", diagnostic_event, fir::Multiplicity::Optional);
-    auto diagnostic_multiple_event_port_mapping_r1 = b.add_role(diagnostic_multiple_event_port_mapping, "process", process_design, fir::Multiplicity::Optional);
-    auto diagnostic_multiple_event_port_mapping_r2 = b.add_role(diagnostic_multiple_event_port_mapping, "rPortPrototypeInExecutable", r_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-
-    auto diagnostic_multiple_monitor_port_mapping_r0 = b.add_role(diagnostic_multiple_monitor_port_mapping, "diagnosticEvent", diagnostic_event, fir::Multiplicity::Optional);
-    auto diagnostic_multiple_monitor_port_mapping_r1 = b.add_role(diagnostic_multiple_monitor_port_mapping, "process", process_design, fir::Multiplicity::Optional);
-    auto diagnostic_multiple_monitor_port_mapping_r2 = b.add_role(diagnostic_multiple_monitor_port_mapping, "rPortPrototypeInExecutable", r_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-
-    auto diagnostic_multiple_resource_port_mapping_r0 = b.add_role(diagnostic_multiple_resource_port_mapping, "overrideId", positive_integer, fir::Multiplicity::Optional);
 
     auto diagnostic_operation_cycle_r0 = b.add_role(diagnostic_operation_cycle, "automaticEnd", boolean, fir::Multiplicity::Optional);
     auto diagnostic_operation_cycle_r1 = b.add_role(diagnostic_operation_cycle, "cycleAutostart", boolean, fir::Multiplicity::Optional);
@@ -17653,9 +16378,6 @@ AutosarSchema build_autosar_r23_11() {
 
     auto diagnostic_routine_subfunction_r0 = b.add_role(diagnostic_routine_subfunction, "accessPermission", diagnostic_access_permission, fir::Multiplicity::Optional);
 
-    auto diagnostic_secure_coding_mapping_r0 = b.add_role(diagnostic_secure_coding_mapping, "dataIdentifier", diagnostic_write_data_by_identifier, fir::Multiplicity::Many);
-    auto diagnostic_secure_coding_mapping_r1 = b.add_role(diagnostic_secure_coding_mapping, "validation", diagnostic_start_routine, fir::Multiplicity::Optional);
-
     auto diagnostic_security_access_r0 = b.add_role(diagnostic_security_access, "requestSeedId", positive_integer, fir::Multiplicity::Optional);
     auto diagnostic_security_access_r1 = b.add_role(diagnostic_security_access, "securityAccessClass", diagnostic_security_access_class, fir::Multiplicity::Optional);
     auto diagnostic_security_access_r2 = b.add_role(diagnostic_security_access, "securityDelayTimeOnBoot", time_value, fir::Multiplicity::Optional);
@@ -17684,7 +16406,7 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_service_data_mapping_r2 = b.add_role(diagnostic_service_data_mapping, "parameterElementAccess", diagnostic_parameter_element_access, fir::Multiplicity::Optional);
     auto diagnostic_service_data_mapping_r3 = b.add_role(diagnostic_service_data_mapping, "diagnosticParameter", diagnostic_parameter_ident, fir::Multiplicity::Optional);
 
-    auto diagnostic_service_generic_mapping_r0 = b.add_role(diagnostic_service_generic_mapping, "diagnosticServiceInstance", diagnostic_auth_transmit_certificate, fir::Multiplicity::Optional);
+    auto diagnostic_service_generic_mapping_r0 = b.add_role(diagnostic_service_generic_mapping, "diagnosticServiceInstance", diagnostic_authentication, fir::Multiplicity::Optional);
     auto diagnostic_service_generic_mapping_r1 = b.add_role(diagnostic_service_generic_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
     auto diagnostic_service_generic_mapping_r2 = b.add_role(diagnostic_service_generic_mapping, "process", process_design, fir::Multiplicity::Optional);
 
@@ -17698,19 +16420,18 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_service_sw_mapping_r5 = b.add_role(diagnostic_service_sw_mapping, "mappedSwcServiceDependencyInSystem", swc_service_dependency_in_system_instance_ref, fir::Multiplicity::Optional);
     auto diagnostic_service_sw_mapping_r6 = b.add_role(diagnostic_service_sw_mapping, "mappedSwcServiceDependency", swc_service_dependency_in_composition_instance_ref, fir::Multiplicity::Optional);
     auto diagnostic_service_sw_mapping_r7 = b.add_role(diagnostic_service_sw_mapping, "parameterElementAccess", diagnostic_parameter_element_access, fir::Multiplicity::Optional);
-    auto diagnostic_service_sw_mapping_r8 = b.add_role(diagnostic_service_sw_mapping, "serviceInstance", diagnostic_auth_transmit_certificate, fir::Multiplicity::Optional);
+    auto diagnostic_service_sw_mapping_r8 = b.add_role(diagnostic_service_sw_mapping, "serviceInstance", diagnostic_authentication, fir::Multiplicity::Optional);
 
     auto diagnostic_service_table_r0 = b.add_role(diagnostic_service_table, "diagnosticConnection", diagnostic_connection_ref_conditional, fir::Multiplicity::Many);
     auto diagnostic_service_table_r1 = b.add_role(diagnostic_service_table, "ecuInstance", ecu_instance, fir::Multiplicity::Optional);
     auto diagnostic_service_table_r2 = b.add_role(diagnostic_service_table, "protocolKind", name_token, fir::Multiplicity::Optional);
-    auto diagnostic_service_table_r3 = b.add_role(diagnostic_service_table, "serviceInstance", diagnostic_auth_transmit_certificate, fir::Multiplicity::Many);
+    auto diagnostic_service_table_r3 = b.add_role(diagnostic_service_table, "serviceInstance", diagnostic_authentication, fir::Multiplicity::Many);
 
     auto diagnostic_service_table_ref_conditional_r0 = b.add_role(diagnostic_service_table_ref_conditional, "diagnosticServiceTable", diagnostic_service_table, fir::Multiplicity::One);
     auto diagnostic_service_table_ref_conditional_r1 = b.add_role(diagnostic_service_table_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto diagnostic_service_validation_configuration_r0 = b.add_role(diagnostic_service_validation_configuration, "manufacturerValidationOrder", diagnostic_service_validation_mapping, fir::Multiplicity::Many);
-    auto diagnostic_service_validation_configuration_r1 = b.add_role(diagnostic_service_validation_configuration, "sovdValidationOrder", diagnostic_sovd_service_validation_port_mapping, fir::Multiplicity::Many);
-    auto diagnostic_service_validation_configuration_r2 = b.add_role(diagnostic_service_validation_configuration, "supplierValidationOrder", diagnostic_service_validation_mapping, fir::Multiplicity::Many);
+    auto diagnostic_service_validation_configuration_r1 = b.add_role(diagnostic_service_validation_configuration, "supplierValidationOrder", diagnostic_service_validation_mapping, fir::Multiplicity::Many);
 
     auto diagnostic_service_validation_mapping_r0 = b.add_role(diagnostic_service_validation_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
     auto diagnostic_service_validation_mapping_r1 = b.add_role(diagnostic_service_validation_mapping, "process", process_design, fir::Multiplicity::Optional);
@@ -17723,45 +16444,11 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_session_control_r0 = b.add_role(diagnostic_session_control, "diagnosticSession", diagnostic_session, fir::Multiplicity::Optional);
     auto diagnostic_session_control_r1 = b.add_role(diagnostic_session_control, "sessionControlClass", diagnostic_session_control_class, fir::Multiplicity::Optional);
 
-    auto diagnostic_session_control_class_r0 = b.add_role(diagnostic_session_control_class, "s3ServerTimeout", time_value, fir::Multiplicity::Optional);
-
     auto diagnostic_sovd_authorization_port_mapping_r0 = b.add_role(diagnostic_sovd_authorization_port_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
     auto diagnostic_sovd_authorization_port_mapping_r1 = b.add_role(diagnostic_sovd_authorization_port_mapping, "process", process_design, fir::Multiplicity::Optional);
 
-    auto diagnostic_sovd_bulk_data_r0 = b.add_role(diagnostic_sovd_bulk_data, "bulkDataCategory", string, fir::Multiplicity::Optional);
-
-    auto diagnostic_sovd_bulk_data_port_mapping_r0 = b.add_role(diagnostic_sovd_bulk_data_port_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-    auto diagnostic_sovd_bulk_data_port_mapping_r1 = b.add_role(diagnostic_sovd_bulk_data_port_mapping, "process", process_design, fir::Multiplicity::Optional);
-    auto diagnostic_sovd_bulk_data_port_mapping_r2 = b.add_role(diagnostic_sovd_bulk_data_port_mapping, "serviceInstance", diagnostic_sovd_bulk_data, fir::Multiplicity::Optional);
-
-    auto diagnostic_sovd_configuration_bulk_data_r0 = b.add_role(diagnostic_sovd_configuration_bulk_data, "contentType", string, fir::Multiplicity::Optional);
-    auto diagnostic_sovd_configuration_bulk_data_r1 = b.add_role(diagnostic_sovd_configuration_bulk_data, "version", string, fir::Multiplicity::Optional);
-
-    auto diagnostic_sovd_configuration_data_identifier_mapping_r0 = b.add_role(diagnostic_sovd_configuration_data_identifier_mapping, "dataIdentifier", diagnostic_data_identifier, fir::Multiplicity::Optional);
-    auto diagnostic_sovd_configuration_data_identifier_mapping_r1 = b.add_role(diagnostic_sovd_configuration_data_identifier_mapping, "serviceInstance", diagnostic_sovd_configuration_parameter, fir::Multiplicity::Optional);
-
-    auto diagnostic_sovd_configuration_port_mapping_r0 = b.add_role(diagnostic_sovd_configuration_port_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-    auto diagnostic_sovd_configuration_port_mapping_r1 = b.add_role(diagnostic_sovd_configuration_port_mapping, "process", process_design, fir::Multiplicity::Optional);
-    auto diagnostic_sovd_configuration_port_mapping_r2 = b.add_role(diagnostic_sovd_configuration_port_mapping, "serviceInstance", diagnostic_sovd_configuration, fir::Multiplicity::Optional);
-
-    auto diagnostic_sovd_method_r0 = b.add_role(diagnostic_sovd_method, "delete", diagnostic_sovd_method_primitive, fir::Multiplicity::Many);
-    auto diagnostic_sovd_method_r1 = b.add_role(diagnostic_sovd_method, "get", diagnostic_sovd_method_primitive, fir::Multiplicity::Many);
-    auto diagnostic_sovd_method_r2 = b.add_role(diagnostic_sovd_method, "post", diagnostic_sovd_method_primitive, fir::Multiplicity::Many);
-    auto diagnostic_sovd_method_r3 = b.add_role(diagnostic_sovd_method, "put", diagnostic_sovd_method_primitive, fir::Multiplicity::Many);
-
-    auto diagnostic_sovd_method_primitive_r0 = b.add_role(diagnostic_sovd_method_primitive, "accessPermission", diagnostic_access_permission, fir::Multiplicity::Optional);
-
     auto diagnostic_sovd_proximity_challenge_port_mapping_r0 = b.add_role(diagnostic_sovd_proximity_challenge_port_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
     auto diagnostic_sovd_proximity_challenge_port_mapping_r1 = b.add_role(diagnostic_sovd_proximity_challenge_port_mapping, "process", process_design, fir::Multiplicity::Optional);
-
-    auto diagnostic_sovd_service_instance_r0 = b.add_role(diagnostic_sovd_service_instance, "method", diagnostic_sovd_method, fir::Multiplicity::Optional);
-
-    auto diagnostic_sovd_service_validation_port_mapping_r0 = b.add_role(diagnostic_sovd_service_validation_port_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-    auto diagnostic_sovd_service_validation_port_mapping_r1 = b.add_role(diagnostic_sovd_service_validation_port_mapping, "process", process_design, fir::Multiplicity::Optional);
-
-    auto diagnostic_sovd_update_port_mapping_r0 = b.add_role(diagnostic_sovd_update_port_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-    auto diagnostic_sovd_update_port_mapping_r1 = b.add_role(diagnostic_sovd_update_port_mapping, "process", process_design, fir::Multiplicity::Optional);
-    auto diagnostic_sovd_update_port_mapping_r2 = b.add_role(diagnostic_sovd_update_port_mapping, "serviceInstance", diagnostic_sovd_update, fir::Multiplicity::Optional);
 
     auto diagnostic_start_routine_r0 = b.add_role(diagnostic_start_routine, "request", diagnostic_parameter, fir::Multiplicity::Many);
     auto diagnostic_start_routine_r1 = b.add_role(diagnostic_start_routine, "response", diagnostic_parameter, fir::Multiplicity::Many);
@@ -17769,7 +16456,7 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_stop_routine_r0 = b.add_role(diagnostic_stop_routine, "request", diagnostic_parameter, fir::Multiplicity::Many);
     auto diagnostic_stop_routine_r1 = b.add_role(diagnostic_stop_routine, "response", diagnostic_parameter, fir::Multiplicity::Many);
 
-    auto diagnostic_storage_condition_group_r0 = b.add_role(diagnostic_storage_condition_group, "storageCondition", diagnostic_storage_condition_ref_conditional, fir::Multiplicity::Many);
+    auto diagnostic_storage_condition_group_r0 = b.add_role(diagnostic_storage_condition_group, "storageCondition", diagnostic_storage_condition_ref_conditional, fir::Multiplicity::OneOrMore);
 
     auto diagnostic_storage_condition_needs_r0 = b.add_role(diagnostic_storage_condition_needs, "initialStatus", storage_condition_status_enum, fir::Multiplicity::Optional);
 
@@ -17784,8 +16471,8 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_support_info_byte_r0 = b.add_role(diagnostic_support_info_byte, "position", positive_integer, fir::Multiplicity::Optional);
     auto diagnostic_support_info_byte_r1 = b.add_role(diagnostic_support_info_byte, "size", positive_integer, fir::Multiplicity::Optional);
 
-    auto diagnostic_test_identifier_r0 = b.add_role(diagnostic_test_identifier, "id", positive_integer_value_variation_point, fir::Multiplicity::Optional);
-    auto diagnostic_test_identifier_r1 = b.add_role(diagnostic_test_identifier, "uasId", positive_integer_value_variation_point, fir::Multiplicity::Optional);
+    auto diagnostic_test_identifier_r0 = b.add_role(diagnostic_test_identifier, "id", positive_integer_value_variation_point, fir::Multiplicity::One);
+    auto diagnostic_test_identifier_r1 = b.add_role(diagnostic_test_identifier, "uasId", positive_integer_value_variation_point, fir::Multiplicity::One);
 
     auto diagnostic_test_result_r0 = b.add_role(diagnostic_test_result, "diagnosticEvent", diagnostic_event_ref_conditional, fir::Multiplicity::Many);
     auto diagnostic_test_result_r1 = b.add_role(diagnostic_test_result, "event", diagnostic_event, fir::Multiplicity::Optional);
@@ -17793,9 +16480,9 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_test_result_r3 = b.add_role(diagnostic_test_result, "testIdentifier", diagnostic_test_identifier, fir::Multiplicity::Optional);
     auto diagnostic_test_result_r4 = b.add_role(diagnostic_test_result, "updateKind", diagnostic_test_result_update_enum_value_variation_point, fir::Multiplicity::Optional);
 
-    auto diagnostic_test_routine_identifier_r0 = b.add_role(diagnostic_test_routine_identifier, "id", positive_integer, fir::Multiplicity::Optional);
-    auto diagnostic_test_routine_identifier_r1 = b.add_role(diagnostic_test_routine_identifier, "requestDataSize", positive_integer, fir::Multiplicity::Optional);
-    auto diagnostic_test_routine_identifier_r2 = b.add_role(diagnostic_test_routine_identifier, "responseDataSize", positive_integer, fir::Multiplicity::Optional);
+    auto diagnostic_test_routine_identifier_r0 = b.add_role(diagnostic_test_routine_identifier, "id", positive_integer, fir::Multiplicity::One);
+    auto diagnostic_test_routine_identifier_r1 = b.add_role(diagnostic_test_routine_identifier, "requestDataSize", positive_integer, fir::Multiplicity::One);
+    auto diagnostic_test_routine_identifier_r2 = b.add_role(diagnostic_test_routine_identifier, "responseDataSize", positive_integer, fir::Multiplicity::One);
 
     auto diagnostic_transfer_exit_r0 = b.add_role(diagnostic_transfer_exit, "transferExitClass", diagnostic_transfer_exit_class, fir::Multiplicity::Optional);
 
@@ -17837,15 +16524,13 @@ AutosarSchema build_autosar_r23_11() {
     auto diagnostic_trouble_code_ref_conditional_r0 = b.add_role(diagnostic_trouble_code_ref_conditional, "diagnosticTroubleCode", diagnostic_trouble_code, fir::Multiplicity::One);
     auto diagnostic_trouble_code_ref_conditional_r1 = b.add_role(diagnostic_trouble_code_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto diagnostic_trouble_code_uds_r0 = b.add_role(diagnostic_trouble_code_uds, "considerPtoStatus", boolean_value_variation_point, fir::Multiplicity::Optional);
+    auto diagnostic_trouble_code_uds_r0 = b.add_role(diagnostic_trouble_code_uds, "considerPtoStatus", boolean, fir::Multiplicity::Optional);
     auto diagnostic_trouble_code_uds_r1 = b.add_role(diagnostic_trouble_code_uds, "dtcProps", diagnostic_trouble_code_props, fir::Multiplicity::Optional);
     auto diagnostic_trouble_code_uds_r2 = b.add_role(diagnostic_trouble_code_uds, "eventObdReadinessGroup", name_token, fir::Multiplicity::Optional);
-    auto diagnostic_trouble_code_uds_r3 = b.add_role(diagnostic_trouble_code_uds, "eventReadinessGroup", event_obd_readiness_group, fir::Multiplicity::Many);
-    auto diagnostic_trouble_code_uds_r4 = b.add_role(diagnostic_trouble_code_uds, "functionalUnit", positive_integer_value_variation_point, fir::Multiplicity::Optional);
-    auto diagnostic_trouble_code_uds_r5 = b.add_role(diagnostic_trouble_code_uds, "obdDtcValue3Byte", positive_integer_value_variation_point, fir::Multiplicity::Optional);
-    auto diagnostic_trouble_code_uds_r6 = b.add_role(diagnostic_trouble_code_uds, "severity", diagnostic_uds_severity_enum_value_variation_point, fir::Multiplicity::Optional);
-    auto diagnostic_trouble_code_uds_r7 = b.add_role(diagnostic_trouble_code_uds, "udsDtcValue", positive_integer_value_variation_point, fir::Multiplicity::Optional);
-    auto diagnostic_trouble_code_uds_r8 = b.add_role(diagnostic_trouble_code_uds, "wwhObdDtcClass", diagnostic_wwh_obd_dtc_class_enum_value_variation_point, fir::Multiplicity::Optional);
+    auto diagnostic_trouble_code_uds_r3 = b.add_role(diagnostic_trouble_code_uds, "functionalUnit", positive_integer, fir::Multiplicity::Optional);
+    auto diagnostic_trouble_code_uds_r4 = b.add_role(diagnostic_trouble_code_uds, "severity", diagnostic_uds_severity_enum, fir::Multiplicity::Optional);
+    auto diagnostic_trouble_code_uds_r5 = b.add_role(diagnostic_trouble_code_uds, "udsDtcValue", positive_integer_value_variation_point, fir::Multiplicity::Optional);
+    auto diagnostic_trouble_code_uds_r6 = b.add_role(diagnostic_trouble_code_uds, "wwhObdDtcClass", diagnostic_wwh_obd_dtc_class_enum_value_variation_point, fir::Multiplicity::Optional);
 
     auto diagnostic_trouble_code_uds_to_clear_condition_group_mapping_r0 = b.add_role(diagnostic_trouble_code_uds_to_clear_condition_group_mapping, "clearConditionGroup", diagnostic_clear_condition_group, fir::Multiplicity::Optional);
     auto diagnostic_trouble_code_uds_to_clear_condition_group_mapping_r1 = b.add_role(diagnostic_trouble_code_uds_to_clear_condition_group_mapping, "troubleCodeUds", diagnostic_trouble_code_uds, fir::Multiplicity::Optional);
@@ -17945,7 +16630,7 @@ AutosarSchema build_autosar_r23_11() {
     auto do_ip_config_r0 = b.add_role(do_ip_config, "doipInterface", do_ip_interface, fir::Multiplicity::Many);
     auto do_ip_config_r1 = b.add_role(do_ip_config, "logicAddress", do_ip_logic_address, fir::Multiplicity::Optional);
 
-    auto do_ip_entity_r0 = b.add_role(do_ip_entity, "doIpEntityRole", do_ip_entity_role_enum, fir::Multiplicity::Optional);
+    auto do_ip_entity_r0 = b.add_role(do_ip_entity, "doIpEntityRole", do_ip_entity_role_enum, fir::Multiplicity::One);
 
     auto do_ip_instantiation_r0 = b.add_role(do_ip_instantiation, "eid", positive_unlimited_integer, fir::Multiplicity::Optional);
     auto do_ip_instantiation_r1 = b.add_role(do_ip_instantiation, "entityStatusMaxByteFieldUse", boolean, fir::Multiplicity::Optional);
@@ -17964,7 +16649,7 @@ AutosarSchema build_autosar_r23_11() {
     auto do_ip_interface_r4 = b.add_role(do_ip_interface, "generalInactivityTime", time_value, fir::Multiplicity::Optional);
     auto do_ip_interface_r5 = b.add_role(do_ip_interface, "initialInactivityTime", time_value, fir::Multiplicity::Optional);
     auto do_ip_interface_r6 = b.add_role(do_ip_interface, "initialVehicleAnnouncementTime", time_value, fir::Multiplicity::Optional);
-    auto do_ip_interface_r7 = b.add_role(do_ip_interface, "isActivationLineDependent", boolean, fir::Multiplicity::Optional);
+    auto do_ip_interface_r7 = b.add_role(do_ip_interface, "isActivationLineDependent", boolean, fir::Multiplicity::One);
     auto do_ip_interface_r8 = b.add_role(do_ip_interface, "maxTesterConnections", positive_integer, fir::Multiplicity::Optional);
     auto do_ip_interface_r9 = b.add_role(do_ip_interface, "socketConnection", static_socket_connection, fir::Multiplicity::Many);
     auto do_ip_interface_r10 = b.add_role(do_ip_interface, "useMacAddressForIdentification", boolean, fir::Multiplicity::Optional);
@@ -17972,7 +16657,7 @@ AutosarSchema build_autosar_r23_11() {
     auto do_ip_interface_r12 = b.add_role(do_ip_interface, "vehicleAnnouncementCount", positive_integer, fir::Multiplicity::Optional);
     auto do_ip_interface_r13 = b.add_role(do_ip_interface, "vehicleAnnouncementInterval", time_value, fir::Multiplicity::Optional);
 
-    auto do_ip_logic_address_r0 = b.add_role(do_ip_logic_address, "address", integer, fir::Multiplicity::Optional);
+    auto do_ip_logic_address_r0 = b.add_role(do_ip_logic_address, "address", integer, fir::Multiplicity::One);
     auto do_ip_logic_address_r1 = b.add_role(do_ip_logic_address, "doIpLogicAddressProps", do_ip_logic_target_address_props, fir::Multiplicity::Optional);
 
     auto do_ip_logic_tester_address_props_r0 = b.add_role(do_ip_logic_tester_address_props, "doIpTesterRoutingActivation", do_ip_routing_activation, fir::Multiplicity::Many);
@@ -18015,11 +16700,11 @@ AutosarSchema build_autosar_r23_11() {
     auto do_ip_rule_r8 = b.add_role(do_ip_rule, "udsService", positive_integer, fir::Multiplicity::Optional);
 
     auto do_ip_tp_config_r0 = b.add_role(do_ip_tp_config, "doIpLogicAddress", do_ip_logic_address, fir::Multiplicity::Many);
-    auto do_ip_tp_config_r1 = b.add_role(do_ip_tp_config, "tpConnection", do_ip_tp_connection, fir::Multiplicity::Many);
+    auto do_ip_tp_config_r1 = b.add_role(do_ip_tp_config, "tpConnection", do_ip_tp_connection, fir::Multiplicity::OneOrMore);
 
-    auto do_ip_tp_connection_r0 = b.add_role(do_ip_tp_connection, "doIpSourceAddress", do_ip_logic_address, fir::Multiplicity::Optional);
-    auto do_ip_tp_connection_r1 = b.add_role(do_ip_tp_connection, "doIpTargetAddress", do_ip_logic_address, fir::Multiplicity::Optional);
-    auto do_ip_tp_connection_r2 = b.add_role(do_ip_tp_connection, "tpSdu", pdu_triggering, fir::Multiplicity::Optional);
+    auto do_ip_tp_connection_r0 = b.add_role(do_ip_tp_connection, "doIpSourceAddress", do_ip_logic_address, fir::Multiplicity::One);
+    auto do_ip_tp_connection_r1 = b.add_role(do_ip_tp_connection, "doIpTargetAddress", do_ip_logic_address, fir::Multiplicity::One);
+    auto do_ip_tp_connection_r2 = b.add_role(do_ip_tp_connection, "tpSdu", pdu_triggering, fir::Multiplicity::One);
 
     auto doc_revision_r0 = b.add_role(doc_revision, "revisionLabel", revision_label_string, fir::Multiplicity::Optional);
     auto doc_revision_r1 = b.add_role(doc_revision, "revisionLabelP1", revision_label_string, fir::Multiplicity::Optional);
@@ -18056,12 +16741,12 @@ AutosarSchema build_autosar_r23_11() {
     auto dtc_status_change_notification_needs_r0 = b.add_role(dtc_status_change_notification_needs, "dtcFormatType", dtc_format_type_enum, fir::Multiplicity::Optional);
     auto dtc_status_change_notification_needs_r1 = b.add_role(dtc_status_change_notification_needs, "notificationTime", diagnostic_clear_dtc_notification_enum, fir::Multiplicity::Optional);
 
-    auto dynamic_part_r0 = b.add_role(dynamic_part, "dynamicPartAlternative", dynamic_part_alternative, fir::Multiplicity::Many);
+    auto dynamic_part_r0 = b.add_role(dynamic_part, "dynamicPartAlternative", dynamic_part_alternative, fir::Multiplicity::OneOrMore);
     auto dynamic_part_r1 = b.add_role(dynamic_part, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto dynamic_part_alternative_r0 = b.add_role(dynamic_part_alternative, "iPdu", i_signal_i_pdu, fir::Multiplicity::Optional);
-    auto dynamic_part_alternative_r1 = b.add_role(dynamic_part_alternative, "initialDynamicPart", boolean, fir::Multiplicity::Optional);
-    auto dynamic_part_alternative_r2 = b.add_role(dynamic_part_alternative, "selectorFieldCode", integer, fir::Multiplicity::Optional);
+    auto dynamic_part_alternative_r0 = b.add_role(dynamic_part_alternative, "iPdu", i_signal_i_pdu, fir::Multiplicity::One);
+    auto dynamic_part_alternative_r1 = b.add_role(dynamic_part_alternative, "initialDynamicPart", boolean, fir::Multiplicity::One);
+    auto dynamic_part_alternative_r2 = b.add_role(dynamic_part_alternative, "selectorFieldCode", integer, fir::Multiplicity::One);
 
     auto e2_e_profile_compatibility_props_r0 = b.add_role(e2_e_profile_compatibility_props, "transitToInvalidExtended", boolean, fir::Multiplicity::Optional);
 
@@ -18088,33 +16773,31 @@ AutosarSchema build_autosar_r23_11() {
     auto ecu_instance_r1 = b.add_role(ecu_instance, "associatedConsumedProvidedServiceInstanceGroup", consumed_provided_service_instance_group_ref_conditional, fir::Multiplicity::Many);
     auto ecu_instance_r2 = b.add_role(ecu_instance, "associatedPdurIPduGroup", pdur_i_pdu_group, fir::Multiplicity::Many);
     auto ecu_instance_r3 = b.add_role(ecu_instance, "canTpAddress", can_tp_address, fir::Multiplicity::Many);
-    auto ecu_instance_r4 = b.add_role(ecu_instance, "channelSynchronousWakeup", boolean, fir::Multiplicity::Optional);
-    auto ecu_instance_r5 = b.add_role(ecu_instance, "clientIdRange", client_id_range, fir::Multiplicity::Optional);
-    auto ecu_instance_r6 = b.add_role(ecu_instance, "comConfigurationGwTimeBase", time_value, fir::Multiplicity::Optional);
-    auto ecu_instance_r7 = b.add_role(ecu_instance, "comConfigurationRxTimeBase", time_value, fir::Multiplicity::Optional);
-    auto ecu_instance_r8 = b.add_role(ecu_instance, "comConfigurationTxTimeBase", time_value, fir::Multiplicity::Optional);
-    auto ecu_instance_r9 = b.add_role(ecu_instance, "comEnableMDTForCyclicTransmission", boolean, fir::Multiplicity::Optional);
-    auto ecu_instance_r10 = b.add_role(ecu_instance, "commController", can_communication_controller, fir::Multiplicity::Many);
-    auto ecu_instance_r11 = b.add_role(ecu_instance, "connector", can_communication_connector, fir::Multiplicity::Many);
-    auto ecu_instance_r12 = b.add_role(ecu_instance, "diagnosticAddress", integer, fir::Multiplicity::Optional);
-    auto ecu_instance_r13 = b.add_role(ecu_instance, "diagnosticProps", diagnostic_ecu_props, fir::Multiplicity::Optional);
-    auto ecu_instance_r14 = b.add_role(ecu_instance, "dltConfig", dlt_config, fir::Multiplicity::Optional);
-    auto ecu_instance_r15 = b.add_role(ecu_instance, "doIpConfig", do_ip_config, fir::Multiplicity::Optional);
-    auto ecu_instance_r16 = b.add_role(ecu_instance, "ecuInstanceProps", ecu_instance_props, fir::Multiplicity::Many);
-    auto ecu_instance_r17 = b.add_role(ecu_instance, "ecuTaskProxy", os_task_proxy, fir::Multiplicity::Many);
-    auto ecu_instance_r18 = b.add_role(ecu_instance, "ethSwitchPortGroupDerivation", boolean, fir::Multiplicity::Optional);
-    auto ecu_instance_r19 = b.add_role(ecu_instance, "firewallRule", state_dependent_firewall, fir::Multiplicity::Many);
-    auto ecu_instance_r20 = b.add_role(ecu_instance, "partition", ecu_partition, fir::Multiplicity::Many);
-    auto ecu_instance_r21 = b.add_role(ecu_instance, "pnResetTime", time_value, fir::Multiplicity::Optional);
-    auto ecu_instance_r22 = b.add_role(ecu_instance, "pncNmRequest", boolean, fir::Multiplicity::Optional);
-    auto ecu_instance_r23 = b.add_role(ecu_instance, "pncPrepareSleepTimer", time_value, fir::Multiplicity::Optional);
-    auto ecu_instance_r24 = b.add_role(ecu_instance, "pncSynchronousWakeup", boolean, fir::Multiplicity::Optional);
-    auto ecu_instance_r25 = b.add_role(ecu_instance, "sleepModeSupported", boolean, fir::Multiplicity::Optional);
-    auto ecu_instance_r26 = b.add_role(ecu_instance, "tcpIpIcmpProps", eth_tcp_ip_icmp_props, fir::Multiplicity::Optional);
-    auto ecu_instance_r27 = b.add_role(ecu_instance, "tcpIpProps", eth_tcp_ip_props, fir::Multiplicity::Optional);
-    auto ecu_instance_r28 = b.add_role(ecu_instance, "tpAddress", tp_address, fir::Multiplicity::Many);
-    auto ecu_instance_r29 = b.add_role(ecu_instance, "v2xSupported", v2x_support_enum, fir::Multiplicity::Optional);
-    auto ecu_instance_r30 = b.add_role(ecu_instance, "wakeUpOverBusSupported", boolean, fir::Multiplicity::Optional);
+    auto ecu_instance_r4 = b.add_role(ecu_instance, "clientIdRange", client_id_range, fir::Multiplicity::Optional);
+    auto ecu_instance_r5 = b.add_role(ecu_instance, "comConfigurationGwTimeBase", time_value, fir::Multiplicity::Optional);
+    auto ecu_instance_r6 = b.add_role(ecu_instance, "comConfigurationRxTimeBase", time_value, fir::Multiplicity::Optional);
+    auto ecu_instance_r7 = b.add_role(ecu_instance, "comConfigurationTxTimeBase", time_value, fir::Multiplicity::Optional);
+    auto ecu_instance_r8 = b.add_role(ecu_instance, "comEnableMDTForCyclicTransmission", boolean, fir::Multiplicity::Optional);
+    auto ecu_instance_r9 = b.add_role(ecu_instance, "commController", can_communication_controller, fir::Multiplicity::OneOrMore);
+    auto ecu_instance_r10 = b.add_role(ecu_instance, "connector", can_communication_connector, fir::Multiplicity::Many);
+    auto ecu_instance_r11 = b.add_role(ecu_instance, "diagnosticAddress", integer, fir::Multiplicity::Optional);
+    auto ecu_instance_r12 = b.add_role(ecu_instance, "diagnosticProps", diagnostic_ecu_props, fir::Multiplicity::Optional);
+    auto ecu_instance_r13 = b.add_role(ecu_instance, "dltConfig", dlt_config, fir::Multiplicity::Optional);
+    auto ecu_instance_r14 = b.add_role(ecu_instance, "doIpConfig", do_ip_config, fir::Multiplicity::Optional);
+    auto ecu_instance_r15 = b.add_role(ecu_instance, "ecuInstanceProps", ecu_instance_props, fir::Multiplicity::Many);
+    auto ecu_instance_r16 = b.add_role(ecu_instance, "ecuTaskProxy", os_task_proxy, fir::Multiplicity::Many);
+    auto ecu_instance_r17 = b.add_role(ecu_instance, "ethSwitchPortGroupDerivation", boolean, fir::Multiplicity::Optional);
+    auto ecu_instance_r18 = b.add_role(ecu_instance, "partition", ecu_partition, fir::Multiplicity::Many);
+    auto ecu_instance_r19 = b.add_role(ecu_instance, "pnResetTime", time_value, fir::Multiplicity::Optional);
+    auto ecu_instance_r20 = b.add_role(ecu_instance, "pncNmRequest", boolean, fir::Multiplicity::Optional);
+    auto ecu_instance_r21 = b.add_role(ecu_instance, "pncPrepareSleepTimer", time_value, fir::Multiplicity::Optional);
+    auto ecu_instance_r22 = b.add_role(ecu_instance, "pncSynchronousWakeup", boolean, fir::Multiplicity::Optional);
+    auto ecu_instance_r23 = b.add_role(ecu_instance, "sleepModeSupported", boolean, fir::Multiplicity::One);
+    auto ecu_instance_r24 = b.add_role(ecu_instance, "tcpIpIcmpProps", eth_tcp_ip_icmp_props, fir::Multiplicity::Optional);
+    auto ecu_instance_r25 = b.add_role(ecu_instance, "tcpIpProps", eth_tcp_ip_props, fir::Multiplicity::Optional);
+    auto ecu_instance_r26 = b.add_role(ecu_instance, "tpAddress", tp_address, fir::Multiplicity::Many);
+    auto ecu_instance_r27 = b.add_role(ecu_instance, "v2xSupported", v2x_support_enum, fir::Multiplicity::Optional);
+    auto ecu_instance_r28 = b.add_role(ecu_instance, "wakeUpOverBusSupported", boolean, fir::Multiplicity::One);
 
     auto ecu_instance_props_r0 = b.add_role(ecu_instance_props, "diagnosticAddress", positive_integer, fir::Multiplicity::Optional);
     auto ecu_instance_props_r1 = b.add_role(ecu_instance_props, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -18122,17 +16805,17 @@ AutosarSchema build_autosar_r23_11() {
     auto ecu_instance_ref_conditional_r0 = b.add_role(ecu_instance_ref_conditional, "ecuInstance", ecu_instance, fir::Multiplicity::One);
     auto ecu_instance_ref_conditional_r1 = b.add_role(ecu_instance_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto ecu_mapping_r0 = b.add_role(ecu_mapping, "commControllerMapping", communication_controller_mapping, fir::Multiplicity::Many);
-    auto ecu_mapping_r1 = b.add_role(ecu_mapping, "ecuInstance", ecu_instance, fir::Multiplicity::Optional);
-    auto ecu_mapping_r2 = b.add_role(ecu_mapping, "ecu", hw_element, fir::Multiplicity::Optional);
+    auto ecu_mapping_r0 = b.add_role(ecu_mapping, "commControllerMapping", communication_controller_mapping, fir::Multiplicity::OneOrMore);
+    auto ecu_mapping_r1 = b.add_role(ecu_mapping, "ecuInstance", ecu_instance, fir::Multiplicity::One);
+    auto ecu_mapping_r2 = b.add_role(ecu_mapping, "ecu", hw_element, fir::Multiplicity::One);
     auto ecu_mapping_r3 = b.add_role(ecu_mapping, "hwPortMapping", hw_port_mapping, fir::Multiplicity::OneOrMore);
     auto ecu_mapping_r4 = b.add_role(ecu_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto ecu_partition_r0 = b.add_role(ecu_partition, "execInUserMode", boolean, fir::Multiplicity::Optional);
+    auto ecu_partition_r0 = b.add_role(ecu_partition, "execInUserMode", boolean, fir::Multiplicity::One);
 
     auto ecu_resource_estimation_r0 = b.add_role(ecu_resource_estimation, "introduction", documentation_block, fir::Multiplicity::Optional);
     auto ecu_resource_estimation_r1 = b.add_role(ecu_resource_estimation, "bswResourceEstimation", resource_consumption, fir::Multiplicity::Optional);
-    auto ecu_resource_estimation_r2 = b.add_role(ecu_resource_estimation, "ecuInstance", ecu_instance, fir::Multiplicity::Optional);
+    auto ecu_resource_estimation_r2 = b.add_role(ecu_resource_estimation, "ecuInstance", ecu_instance, fir::Multiplicity::One);
     auto ecu_resource_estimation_r3 = b.add_role(ecu_resource_estimation, "rteResourceEstimation", resource_consumption, fir::Multiplicity::Optional);
     auto ecu_resource_estimation_r4 = b.add_role(ecu_resource_estimation, "swCompToEcuMapping", swc_to_ecu_mapping, fir::Multiplicity::Many);
     auto ecu_resource_estimation_r5 = b.add_role(ecu_resource_estimation, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -18363,9 +17046,9 @@ AutosarSchema build_autosar_r23_11() {
     auto end_to_end_protection_r2 = b.add_role(end_to_end_protection, "endToEndProtectionVariablePrototype", end_to_end_protection_variable_prototype, fir::Multiplicity::Many);
     auto end_to_end_protection_r3 = b.add_role(end_to_end_protection, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto end_to_end_protection_i_signal_i_pdu_r0 = b.add_role(end_to_end_protection_i_signal_i_pdu, "dataOffset", integer, fir::Multiplicity::Optional);
-    auto end_to_end_protection_i_signal_i_pdu_r1 = b.add_role(end_to_end_protection_i_signal_i_pdu, "iSignalGroup", i_signal_group, fir::Multiplicity::Optional);
-    auto end_to_end_protection_i_signal_i_pdu_r2 = b.add_role(end_to_end_protection_i_signal_i_pdu, "iSignalIPdu", i_signal_i_pdu, fir::Multiplicity::Optional);
+    auto end_to_end_protection_i_signal_i_pdu_r0 = b.add_role(end_to_end_protection_i_signal_i_pdu, "dataOffset", integer, fir::Multiplicity::One);
+    auto end_to_end_protection_i_signal_i_pdu_r1 = b.add_role(end_to_end_protection_i_signal_i_pdu, "iSignalGroup", i_signal_group, fir::Multiplicity::One);
+    auto end_to_end_protection_i_signal_i_pdu_r2 = b.add_role(end_to_end_protection_i_signal_i_pdu, "iSignalIPdu", i_signal_i_pdu, fir::Multiplicity::One);
     auto end_to_end_protection_i_signal_i_pdu_r3 = b.add_role(end_to_end_protection_i_signal_i_pdu, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto end_to_end_protection_set_r0 = b.add_role(end_to_end_protection_set, "endToEndProtection", end_to_end_protection, fir::Multiplicity::Many);
@@ -18409,7 +17092,7 @@ AutosarSchema build_autosar_r23_11() {
     auto end_to_end_transformation_description_r13 = b.add_role(end_to_end_transformation_description, "minOkStateValid", positive_integer, fir::Multiplicity::Optional);
     auto end_to_end_transformation_description_r14 = b.add_role(end_to_end_transformation_description, "offset", positive_integer, fir::Multiplicity::Optional);
     auto end_to_end_transformation_description_r15 = b.add_role(end_to_end_transformation_description, "profileBehavior", end_to_end_profile_behavior_enum, fir::Multiplicity::Optional);
-    auto end_to_end_transformation_description_r16 = b.add_role(end_to_end_transformation_description, "profileName", name_token, fir::Multiplicity::Optional);
+    auto end_to_end_transformation_description_r16 = b.add_role(end_to_end_transformation_description, "profileName", name_token, fir::Multiplicity::One);
     auto end_to_end_transformation_description_r17 = b.add_role(end_to_end_transformation_description, "syncCounterInit", positive_integer, fir::Multiplicity::Optional);
     auto end_to_end_transformation_description_r18 = b.add_role(end_to_end_transformation_description, "upperHeaderBitsToShift", positive_integer, fir::Multiplicity::Optional);
     auto end_to_end_transformation_description_r19 = b.add_role(end_to_end_transformation_description, "windowSize", positive_integer, fir::Multiplicity::Optional);
@@ -18466,15 +17149,12 @@ AutosarSchema build_autosar_r23_11() {
 
     auto eoc_executable_entity_ref_abstract_r0 = b.add_role(eoc_executable_entity_ref_abstract, "directSuccessor", eoc_event_ref, fir::Multiplicity::Many);
 
-    auto eoc_executable_entity_ref_group_r0 = b.add_role(eoc_executable_entity_ref_group, "letDataExchangeParadigm", let_data_exchange_paradigm_enum, fir::Multiplicity::Optional);
-    auto eoc_executable_entity_ref_group_r1 = b.add_role(eoc_executable_entity_ref_group, "letInterval", timing_description_event_chain, fir::Multiplicity::Many);
-    auto eoc_executable_entity_ref_group_r2 = b.add_role(eoc_executable_entity_ref_group, "maxCycleRepetitions", positive_integer, fir::Multiplicity::Optional);
-    auto eoc_executable_entity_ref_group_r3 = b.add_role(eoc_executable_entity_ref_group, "maxCycles", integer, fir::Multiplicity::Optional);
-    auto eoc_executable_entity_ref_group_r4 = b.add_role(eoc_executable_entity_ref_group, "maxSlots", integer, fir::Multiplicity::Optional);
-    auto eoc_executable_entity_ref_group_r5 = b.add_role(eoc_executable_entity_ref_group, "maxSlotsPerCycle", positive_integer, fir::Multiplicity::Optional);
-    auto eoc_executable_entity_ref_group_r6 = b.add_role(eoc_executable_entity_ref_group, "nestedElement", eoc_event_ref, fir::Multiplicity::Many);
-    auto eoc_executable_entity_ref_group_r7 = b.add_role(eoc_executable_entity_ref_group, "successor", eoc_event_ref, fir::Multiplicity::Many);
-    auto eoc_executable_entity_ref_group_r8 = b.add_role(eoc_executable_entity_ref_group, "triggeringEvent", td_event_bsw, fir::Multiplicity::Optional);
+    auto eoc_executable_entity_ref_group_r0 = b.add_role(eoc_executable_entity_ref_group, "letInterval", timing_description_event_chain, fir::Multiplicity::Many);
+    auto eoc_executable_entity_ref_group_r1 = b.add_role(eoc_executable_entity_ref_group, "maxCycles", integer, fir::Multiplicity::Optional);
+    auto eoc_executable_entity_ref_group_r2 = b.add_role(eoc_executable_entity_ref_group, "maxSlots", integer, fir::Multiplicity::Optional);
+    auto eoc_executable_entity_ref_group_r3 = b.add_role(eoc_executable_entity_ref_group, "nestedElement", eoc_event_ref, fir::Multiplicity::Many);
+    auto eoc_executable_entity_ref_group_r4 = b.add_role(eoc_executable_entity_ref_group, "successor", eoc_event_ref, fir::Multiplicity::Many);
+    auto eoc_executable_entity_ref_group_r5 = b.add_role(eoc_executable_entity_ref_group, "triggeringEvent", td_event_bsw, fir::Multiplicity::Optional);
 
     auto error_tracer_needs_r0 = b.add_role(error_tracer_needs, "tracedFailure", development_error, fir::Multiplicity::Many);
 
@@ -18482,16 +17162,14 @@ AutosarSchema build_autosar_r23_11() {
     auto eth_global_time_domain_props_r1 = b.add_role(eth_global_time_domain_props, "destinationPhysicalAddress", mac_address_string, fir::Multiplicity::Optional);
     auto eth_global_time_domain_props_r2 = b.add_role(eth_global_time_domain_props, "fupDataIDList", positive_integer, fir::Multiplicity::Many);
     auto eth_global_time_domain_props_r3 = b.add_role(eth_global_time_domain_props, "managedCouplingPort", eth_global_time_managed_coupling_port, fir::Multiplicity::Many);
-    auto eth_global_time_domain_props_r4 = b.add_role(eth_global_time_domain_props, "messageCompliance", eth_global_time_message_format_enum, fir::Multiplicity::Optional);
+    auto eth_global_time_domain_props_r4 = b.add_role(eth_global_time_domain_props, "messageCompliance", eth_global_time_message_format_enum, fir::Multiplicity::One);
     auto eth_global_time_domain_props_r5 = b.add_role(eth_global_time_domain_props, "vlanPriority", positive_integer, fir::Multiplicity::Optional);
 
     auto eth_global_time_managed_coupling_port_r0 = b.add_role(eth_global_time_managed_coupling_port, "couplingPort", coupling_port, fir::Multiplicity::Optional);
-    auto eth_global_time_managed_coupling_port_r1 = b.add_role(eth_global_time_managed_coupling_port, "globalTimePortRole", global_time_port_role_enum, fir::Multiplicity::Optional);
-    auto eth_global_time_managed_coupling_port_r2 = b.add_role(eth_global_time_managed_coupling_port, "globalTimeTxPeriod", time_value, fir::Multiplicity::Optional);
-    auto eth_global_time_managed_coupling_port_r3 = b.add_role(eth_global_time_managed_coupling_port, "pdelayLatencyThreshold", time_value, fir::Multiplicity::Optional);
-    auto eth_global_time_managed_coupling_port_r4 = b.add_role(eth_global_time_managed_coupling_port, "pdelayRequestPeriod", time_value, fir::Multiplicity::Optional);
-    auto eth_global_time_managed_coupling_port_r5 = b.add_role(eth_global_time_managed_coupling_port, "pdelayRespAndRespFollowUpTimeout", time_value, fir::Multiplicity::Optional);
-    auto eth_global_time_managed_coupling_port_r6 = b.add_role(eth_global_time_managed_coupling_port, "pdelayResponseEnabled", boolean, fir::Multiplicity::Optional);
+    auto eth_global_time_managed_coupling_port_r1 = b.add_role(eth_global_time_managed_coupling_port, "pdelayLatencyThreshold", time_value, fir::Multiplicity::Optional);
+    auto eth_global_time_managed_coupling_port_r2 = b.add_role(eth_global_time_managed_coupling_port, "pdelayRequestPeriod", time_value, fir::Multiplicity::Optional);
+    auto eth_global_time_managed_coupling_port_r3 = b.add_role(eth_global_time_managed_coupling_port, "pdelayRespAndRespFollowUpTimeout", time_value, fir::Multiplicity::Optional);
+    auto eth_global_time_managed_coupling_port_r4 = b.add_role(eth_global_time_managed_coupling_port, "pdelayResponseEnabled", boolean, fir::Multiplicity::One);
 
     auto eth_ip_props_r0 = b.add_role(eth_ip_props, "ipv4Props", ipv4_props, fir::Multiplicity::Optional);
     auto eth_ip_props_r1 = b.add_role(eth_ip_props, "ipv6Props", ipv6_props, fir::Multiplicity::Optional);
@@ -18558,8 +17236,8 @@ AutosarSchema build_autosar_r23_11() {
     auto ethernet_physical_channel_r1 = b.add_role(ethernet_physical_channel, "soAdConfig", so_ad_config, fir::Multiplicity::Optional);
     auto ethernet_physical_channel_r2 = b.add_role(ethernet_physical_channel, "vlan", vlan_config, fir::Multiplicity::Optional);
 
-    auto ethernet_priority_regeneration_r0 = b.add_role(ethernet_priority_regeneration, "ingressPriority", positive_integer, fir::Multiplicity::Optional);
-    auto ethernet_priority_regeneration_r1 = b.add_role(ethernet_priority_regeneration, "regeneratedPriority", positive_integer, fir::Multiplicity::Optional);
+    auto ethernet_priority_regeneration_r0 = b.add_role(ethernet_priority_regeneration, "ingressPriority", positive_integer, fir::Multiplicity::One);
+    auto ethernet_priority_regeneration_r1 = b.add_role(ethernet_priority_regeneration, "regeneratedPriority", positive_integer, fir::Multiplicity::One);
 
     auto ethernet_raw_data_stream_client_mapping_r0 = b.add_role(ethernet_raw_data_stream_client_mapping, "remoteServerConfig", ethernet_raw_data_stream_remote_server_config, fir::Multiplicity::Optional);
 
@@ -18599,7 +17277,7 @@ AutosarSchema build_autosar_r23_11() {
     auto evaluated_variant_set_r1 = b.add_role(evaluated_variant_set, "evaluatedElement", abstract_can_cluster, fir::Multiplicity::Many);
     auto evaluated_variant_set_r2 = b.add_role(evaluated_variant_set, "evaluatedVariant", predefined_variant, fir::Multiplicity::Many);
 
-    auto event_controlled_timing_r0 = b.add_role(event_controlled_timing, "numberOfRepetitions", integer, fir::Multiplicity::Optional);
+    auto event_controlled_timing_r0 = b.add_role(event_controlled_timing, "numberOfRepetitions", integer, fir::Multiplicity::One);
     auto event_controlled_timing_r1 = b.add_role(event_controlled_timing, "repetitionPeriod", time_range_type, fir::Multiplicity::Optional);
 
     auto event_handler_r0 = b.add_role(event_handler, "applicationEndpoint", application_endpoint, fir::Multiplicity::Optional);
@@ -18639,8 +17317,7 @@ AutosarSchema build_autosar_r23_11() {
     auto executable_r2 = b.add_role(executable, "minimumTimerGranularity", time_value, fir::Multiplicity::Optional);
     auto executable_r3 = b.add_role(executable, "reportingBehavior", execution_state_reporting_behavior_enum, fir::Multiplicity::Optional);
     auto executable_r4 = b.add_role(executable, "rootSwComponentPrototype", root_sw_component_prototype, fir::Multiplicity::Optional);
-    auto executable_r5 = b.add_role(executable, "traceSwitchConfiguration", trace_switch_configuration, fir::Multiplicity::Many);
-    auto executable_r6 = b.add_role(executable, "version", strong_revision_label_string, fir::Multiplicity::Optional);
+    auto executable_r5 = b.add_role(executable, "version", strong_revision_label_string, fir::Multiplicity::Optional);
 
     auto executable_entity_r0 = b.add_role(executable_entity, "activationReason", executable_entity_activation_reason, fir::Multiplicity::Many);
     auto executable_entity_r1 = b.add_role(executable_entity, "canEnter", exclusive_area_ref_conditional, fir::Multiplicity::Many);
@@ -18656,7 +17333,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto executable_logging_implementation_props_r0 = b.add_role(executable_logging_implementation_props, "usesTimeBaseResource", boolean, fir::Multiplicity::Optional);
 
-    auto executable_timing_r0 = b.add_role(executable_timing, "executable", executable, fir::Multiplicity::Many);
+    auto executable_timing_r0 = b.add_role(executable_timing, "executable", executable, fir::Multiplicity::OneOrMore);
 
     auto execution_dependency_r0 = b.add_role(execution_dependency, "processState", mode_in_process_instance_ref, fir::Multiplicity::Optional);
 
@@ -18726,9 +17403,7 @@ AutosarSchema build_autosar_r23_11() {
     auto firewall_rule_r9 = b.add_role(firewall_rule, "transportLayerRule", tcp_rule, fir::Multiplicity::Optional);
 
     auto firewall_rule_props_r0 = b.add_role(firewall_rule_props, "action", firewall_action_enum, fir::Multiplicity::Optional);
-    auto firewall_rule_props_r1 = b.add_role(firewall_rule_props, "matchingEgressRule", firewall_rule, fir::Multiplicity::Many);
-    auto firewall_rule_props_r2 = b.add_role(firewall_rule_props, "matchingIngressRule", firewall_rule, fir::Multiplicity::Many);
-    auto firewall_rule_props_r3 = b.add_role(firewall_rule_props, "matchingRule", firewall_rule, fir::Multiplicity::Many);
+    auto firewall_rule_props_r1 = b.add_role(firewall_rule_props, "matchingRule", firewall_rule, fir::Multiplicity::Many);
 
     auto firewall_state_in_firwall_state_switch_interface_instance_ref_r0 = b.add_role(firewall_state_in_firwall_state_switch_interface_instance_ref, "contextModeDeclarationGroupPrototype", mode_declaration_group_prototype, fir::Multiplicity::Optional);
     auto firewall_state_in_firwall_state_switch_interface_instance_ref_r1 = b.add_role(firewall_state_in_firwall_state_switch_interface_instance_ref, "targetModeDeclaration", mode_declaration, fir::Multiplicity::Optional);
@@ -18742,14 +17417,14 @@ AutosarSchema build_autosar_r23_11() {
     auto flat_instance_descriptor_r4 = b.add_role(flat_instance_descriptor, "ecuExtractReference", any_instance_ref, fir::Multiplicity::Optional);
     auto flat_instance_descriptor_r5 = b.add_role(flat_instance_descriptor, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto flat_map_r0 = b.add_role(flat_map, "instance", flat_instance_descriptor, fir::Multiplicity::Many);
+    auto flat_map_r0 = b.add_role(flat_map, "instance", flat_instance_descriptor, fir::Multiplicity::OneOrMore);
 
-    auto flexray_absolutely_scheduled_timing_r0 = b.add_role(flexray_absolutely_scheduled_timing, "communicationCycle", cycle_counter, fir::Multiplicity::Optional);
-    auto flexray_absolutely_scheduled_timing_r1 = b.add_role(flexray_absolutely_scheduled_timing, "slotID", positive_integer, fir::Multiplicity::Optional);
+    auto flexray_absolutely_scheduled_timing_r0 = b.add_role(flexray_absolutely_scheduled_timing, "communicationCycle", cycle_counter, fir::Multiplicity::One);
+    auto flexray_absolutely_scheduled_timing_r1 = b.add_role(flexray_absolutely_scheduled_timing, "slotID", positive_integer, fir::Multiplicity::One);
 
-    auto flexray_ar_tp_channel_r0 = b.add_role(flexray_ar_tp_channel, "ackType", fr_ar_tp_ack_type, fir::Multiplicity::Optional);
+    auto flexray_ar_tp_channel_r0 = b.add_role(flexray_ar_tp_channel, "ackType", fr_ar_tp_ack_type, fir::Multiplicity::One);
     auto flexray_ar_tp_channel_r1 = b.add_role(flexray_ar_tp_channel, "cancellation", boolean, fir::Multiplicity::Optional);
-    auto flexray_ar_tp_channel_r2 = b.add_role(flexray_ar_tp_channel, "extendedAddressing", boolean, fir::Multiplicity::Optional);
+    auto flexray_ar_tp_channel_r2 = b.add_role(flexray_ar_tp_channel, "extendedAddressing", boolean, fir::Multiplicity::One);
     auto flexray_ar_tp_channel_r3 = b.add_role(flexray_ar_tp_channel, "flowControlPdu", n_pdu, fir::Multiplicity::Optional);
     auto flexray_ar_tp_channel_r4 = b.add_role(flexray_ar_tp_channel, "maxAr", integer, fir::Multiplicity::Optional);
     auto flexray_ar_tp_channel_r5 = b.add_role(flexray_ar_tp_channel, "maxAs", integer, fir::Multiplicity::Optional);
@@ -18758,10 +17433,10 @@ AutosarSchema build_autosar_r23_11() {
     auto flexray_ar_tp_channel_r8 = b.add_role(flexray_ar_tp_channel, "maxFcWait", positive_integer, fir::Multiplicity::Optional);
     auto flexray_ar_tp_channel_r9 = b.add_role(flexray_ar_tp_channel, "maxFrIf", integer, fir::Multiplicity::Optional);
     auto flexray_ar_tp_channel_r10 = b.add_role(flexray_ar_tp_channel, "maxRetries", integer, fir::Multiplicity::Optional);
-    auto flexray_ar_tp_channel_r11 = b.add_role(flexray_ar_tp_channel, "maximumMessageLength", maximum_message_length_type, fir::Multiplicity::Optional);
+    auto flexray_ar_tp_channel_r11 = b.add_role(flexray_ar_tp_channel, "maximumMessageLength", maximum_message_length_type, fir::Multiplicity::One);
     auto flexray_ar_tp_channel_r12 = b.add_role(flexray_ar_tp_channel, "minimumMulticastSeperationTime", time_value, fir::Multiplicity::Optional);
-    auto flexray_ar_tp_channel_r13 = b.add_role(flexray_ar_tp_channel, "minimumSeparationTime", time_value, fir::Multiplicity::Optional);
-    auto flexray_ar_tp_channel_r14 = b.add_role(flexray_ar_tp_channel, "multicastSegmentation", boolean, fir::Multiplicity::Optional);
+    auto flexray_ar_tp_channel_r13 = b.add_role(flexray_ar_tp_channel, "minimumSeparationTime", time_value, fir::Multiplicity::One);
+    auto flexray_ar_tp_channel_r14 = b.add_role(flexray_ar_tp_channel, "multicastSegmentation", boolean, fir::Multiplicity::One);
     auto flexray_ar_tp_channel_r15 = b.add_role(flexray_ar_tp_channel, "nPdu", n_pdu, fir::Multiplicity::Many);
     auto flexray_ar_tp_channel_r16 = b.add_role(flexray_ar_tp_channel, "pduPool", n_pdu, fir::Multiplicity::Many);
     auto flexray_ar_tp_channel_r17 = b.add_role(flexray_ar_tp_channel, "timeBr", time_value, fir::Multiplicity::Optional);
@@ -18772,7 +17447,7 @@ AutosarSchema build_autosar_r23_11() {
     auto flexray_ar_tp_channel_r22 = b.add_role(flexray_ar_tp_channel, "timeoutAs", time_value, fir::Multiplicity::Optional);
     auto flexray_ar_tp_channel_r23 = b.add_role(flexray_ar_tp_channel, "timeoutBs", time_value, fir::Multiplicity::Optional);
     auto flexray_ar_tp_channel_r24 = b.add_role(flexray_ar_tp_channel, "timeoutCr", time_value, fir::Multiplicity::Optional);
-    auto flexray_ar_tp_channel_r25 = b.add_role(flexray_ar_tp_channel, "tpConnection", flexray_ar_tp_connection, fir::Multiplicity::Many);
+    auto flexray_ar_tp_channel_r25 = b.add_role(flexray_ar_tp_channel, "tpConnection", flexray_ar_tp_connection, fir::Multiplicity::OneOrMore);
     auto flexray_ar_tp_channel_r26 = b.add_role(flexray_ar_tp_channel, "transmitCancellation", boolean, fir::Multiplicity::Optional);
     auto flexray_ar_tp_channel_r27 = b.add_role(flexray_ar_tp_channel, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
@@ -18781,12 +17456,12 @@ AutosarSchema build_autosar_r23_11() {
     auto flexray_ar_tp_config_r2 = b.add_role(flexray_ar_tp_config, "tpNode", flexray_ar_tp_node, fir::Multiplicity::Many);
 
     auto flexray_ar_tp_connection_r0 = b.add_role(flexray_ar_tp_connection, "connectionPrioPdus", integer, fir::Multiplicity::Optional);
-    auto flexray_ar_tp_connection_r1 = b.add_role(flexray_ar_tp_connection, "directTpSdu", container_i_pdu, fir::Multiplicity::Optional);
+    auto flexray_ar_tp_connection_r1 = b.add_role(flexray_ar_tp_connection, "directTpSdu", container_i_pdu, fir::Multiplicity::One);
     auto flexray_ar_tp_connection_r2 = b.add_role(flexray_ar_tp_connection, "flowControlPdu", n_pdu, fir::Multiplicity::Optional);
     auto flexray_ar_tp_connection_r3 = b.add_role(flexray_ar_tp_connection, "multicast", tp_address, fir::Multiplicity::Optional);
     auto flexray_ar_tp_connection_r4 = b.add_role(flexray_ar_tp_connection, "reversedTpSdu", container_i_pdu, fir::Multiplicity::Optional);
-    auto flexray_ar_tp_connection_r5 = b.add_role(flexray_ar_tp_connection, "source", flexray_ar_tp_node, fir::Multiplicity::Optional);
-    auto flexray_ar_tp_connection_r6 = b.add_role(flexray_ar_tp_connection, "target", flexray_ar_tp_node, fir::Multiplicity::Many);
+    auto flexray_ar_tp_connection_r5 = b.add_role(flexray_ar_tp_connection, "source", flexray_ar_tp_node, fir::Multiplicity::One);
+    auto flexray_ar_tp_connection_r6 = b.add_role(flexray_ar_tp_connection, "target", flexray_ar_tp_node, fir::Multiplicity::OneOrMore);
     auto flexray_ar_tp_connection_r7 = b.add_role(flexray_ar_tp_connection, "transmitPdu", n_pdu, fir::Multiplicity::Many);
 
     auto flexray_ar_tp_node_r0 = b.add_role(flexray_ar_tp_node, "connector", flexray_communication_connector, fir::Multiplicity::Many);
@@ -18797,55 +17472,55 @@ AutosarSchema build_autosar_r23_11() {
 
     auto flexray_cluster_conditional_r0 = b.add_role(flexray_cluster_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto flexray_cluster_content_r0 = b.add_role(flexray_cluster_content, "actionPointOffset", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r1 = b.add_role(flexray_cluster_content, "bit", time_value, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r2 = b.add_role(flexray_cluster_content, "casRxLowMax", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r3 = b.add_role(flexray_cluster_content, "coldStartAttempts", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r4 = b.add_role(flexray_cluster_content, "cycle", time_value, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r5 = b.add_role(flexray_cluster_content, "cycleCountMax", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r6 = b.add_role(flexray_cluster_content, "detectNitError", boolean, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r7 = b.add_role(flexray_cluster_content, "dynamicSlotIdlePhase", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r8 = b.add_role(flexray_cluster_content, "ignoreAfterTx", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r9 = b.add_role(flexray_cluster_content, "listenNoise", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r10 = b.add_role(flexray_cluster_content, "macroPerCycle", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r11 = b.add_role(flexray_cluster_content, "macrotickDuration", time_value, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r12 = b.add_role(flexray_cluster_content, "maxWithoutClockCorrectionFatal", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r13 = b.add_role(flexray_cluster_content, "maxWithoutClockCorrectionPassive", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r14 = b.add_role(flexray_cluster_content, "minislotActionPointOffset", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r15 = b.add_role(flexray_cluster_content, "minislotDuration", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r16 = b.add_role(flexray_cluster_content, "networkIdleTime", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r17 = b.add_role(flexray_cluster_content, "networkManagementVectorLength", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r18 = b.add_role(flexray_cluster_content, "numberOfMinislots", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r19 = b.add_role(flexray_cluster_content, "numberOfStaticSlots", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r20 = b.add_role(flexray_cluster_content, "offsetCorrectionStart", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r21 = b.add_role(flexray_cluster_content, "payloadLengthStatic", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r22 = b.add_role(flexray_cluster_content, "safetyMargin", integer, fir::Multiplicity::Optional);
+    auto flexray_cluster_content_r0 = b.add_role(flexray_cluster_content, "actionPointOffset", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r1 = b.add_role(flexray_cluster_content, "bit", time_value, fir::Multiplicity::One);
+    auto flexray_cluster_content_r2 = b.add_role(flexray_cluster_content, "casRxLowMax", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r3 = b.add_role(flexray_cluster_content, "coldStartAttempts", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r4 = b.add_role(flexray_cluster_content, "cycle", time_value, fir::Multiplicity::One);
+    auto flexray_cluster_content_r5 = b.add_role(flexray_cluster_content, "cycleCountMax", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r6 = b.add_role(flexray_cluster_content, "detectNitError", boolean, fir::Multiplicity::One);
+    auto flexray_cluster_content_r7 = b.add_role(flexray_cluster_content, "dynamicSlotIdlePhase", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r8 = b.add_role(flexray_cluster_content, "ignoreAfterTx", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r9 = b.add_role(flexray_cluster_content, "listenNoise", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r10 = b.add_role(flexray_cluster_content, "macroPerCycle", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r11 = b.add_role(flexray_cluster_content, "macrotickDuration", time_value, fir::Multiplicity::One);
+    auto flexray_cluster_content_r12 = b.add_role(flexray_cluster_content, "maxWithoutClockCorrectionFatal", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r13 = b.add_role(flexray_cluster_content, "maxWithoutClockCorrectionPassive", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r14 = b.add_role(flexray_cluster_content, "minislotActionPointOffset", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r15 = b.add_role(flexray_cluster_content, "minislotDuration", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r16 = b.add_role(flexray_cluster_content, "networkIdleTime", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r17 = b.add_role(flexray_cluster_content, "networkManagementVectorLength", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r18 = b.add_role(flexray_cluster_content, "numberOfMinislots", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r19 = b.add_role(flexray_cluster_content, "numberOfStaticSlots", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r20 = b.add_role(flexray_cluster_content, "offsetCorrectionStart", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r21 = b.add_role(flexray_cluster_content, "payloadLengthStatic", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r22 = b.add_role(flexray_cluster_content, "safetyMargin", integer, fir::Multiplicity::One);
     auto flexray_cluster_content_r23 = b.add_role(flexray_cluster_content, "sampleClockPeriod", time_value, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r24 = b.add_role(flexray_cluster_content, "staticSlotDuration", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r25 = b.add_role(flexray_cluster_content, "symbolWindow", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r26 = b.add_role(flexray_cluster_content, "symbolWindowActionPointOffset", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r27 = b.add_role(flexray_cluster_content, "syncFrameIdCountMax", integer, fir::Multiplicity::Optional);
+    auto flexray_cluster_content_r24 = b.add_role(flexray_cluster_content, "staticSlotDuration", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r25 = b.add_role(flexray_cluster_content, "symbolWindow", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r26 = b.add_role(flexray_cluster_content, "symbolWindowActionPointOffset", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r27 = b.add_role(flexray_cluster_content, "syncFrameIdCountMax", integer, fir::Multiplicity::One);
     auto flexray_cluster_content_r28 = b.add_role(flexray_cluster_content, "tranceiverStandbyDelay", float_, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r29 = b.add_role(flexray_cluster_content, "transmissionStartSequenceDuration", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r30 = b.add_role(flexray_cluster_content, "wakeupRxIdle", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r31 = b.add_role(flexray_cluster_content, "wakeupRxLow", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r32 = b.add_role(flexray_cluster_content, "wakeupRxWindow", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r33 = b.add_role(flexray_cluster_content, "wakeupTxActive", integer, fir::Multiplicity::Optional);
-    auto flexray_cluster_content_r34 = b.add_role(flexray_cluster_content, "wakeupTxIdle", integer, fir::Multiplicity::Optional);
+    auto flexray_cluster_content_r29 = b.add_role(flexray_cluster_content, "transmissionStartSequenceDuration", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r30 = b.add_role(flexray_cluster_content, "wakeupRxIdle", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r31 = b.add_role(flexray_cluster_content, "wakeupRxLow", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r32 = b.add_role(flexray_cluster_content, "wakeupRxWindow", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r33 = b.add_role(flexray_cluster_content, "wakeupTxActive", integer, fir::Multiplicity::One);
+    auto flexray_cluster_content_r34 = b.add_role(flexray_cluster_content, "wakeupTxIdle", integer, fir::Multiplicity::One);
 
     auto flexray_communication_connector_r0 = b.add_role(flexray_communication_connector, "nmReadySleepTime", float_, fir::Multiplicity::Optional);
     auto flexray_communication_connector_r1 = b.add_role(flexray_communication_connector, "pncFilterDataMask", positive_unlimited_integer, fir::Multiplicity::Optional);
-    auto flexray_communication_connector_r2 = b.add_role(flexray_communication_connector, "wakeUpChannel", boolean, fir::Multiplicity::Optional);
+    auto flexray_communication_connector_r2 = b.add_role(flexray_communication_connector, "wakeUpChannel", boolean, fir::Multiplicity::One);
 
     auto flexray_communication_controller_r0 = b.add_role(flexray_communication_controller, "flexrayCommunicationControllerVariant", flexray_communication_controller_conditional, fir::Multiplicity::OneOrMore);
 
     auto flexray_communication_controller_conditional_r0 = b.add_role(flexray_communication_controller_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto flexray_communication_controller_content_r0 = b.add_role(flexray_communication_controller_content, "acceptedStartupRange", integer, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r1 = b.add_role(flexray_communication_controller_content, "allowHaltDueToClock", boolean, fir::Multiplicity::Optional);
+    auto flexray_communication_controller_content_r0 = b.add_role(flexray_communication_controller_content, "acceptedStartupRange", integer, fir::Multiplicity::One);
+    auto flexray_communication_controller_content_r1 = b.add_role(flexray_communication_controller_content, "allowHaltDueToClock", boolean, fir::Multiplicity::One);
     auto flexray_communication_controller_content_r2 = b.add_role(flexray_communication_controller_content, "allowPassiveToActive", integer, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r3 = b.add_role(flexray_communication_controller_content, "clusterDriftDamping", integer, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r4 = b.add_role(flexray_communication_controller_content, "decodingCorrection", integer, fir::Multiplicity::Optional);
+    auto flexray_communication_controller_content_r3 = b.add_role(flexray_communication_controller_content, "clusterDriftDamping", integer, fir::Multiplicity::One);
+    auto flexray_communication_controller_content_r4 = b.add_role(flexray_communication_controller_content, "decodingCorrection", integer, fir::Multiplicity::One);
     auto flexray_communication_controller_content_r5 = b.add_role(flexray_communication_controller_content, "delayCompensationA", integer, fir::Multiplicity::Optional);
     auto flexray_communication_controller_content_r6 = b.add_role(flexray_communication_controller_content, "delayCompensationB", integer, fir::Multiplicity::Optional);
     auto flexray_communication_controller_content_r7 = b.add_role(flexray_communication_controller_content, "externOffsetCorrection", integer, fir::Multiplicity::Optional);
@@ -18854,64 +17529,64 @@ AutosarSchema build_autosar_r23_11() {
     auto flexray_communication_controller_content_r10 = b.add_role(flexray_communication_controller_content, "fallBackInternal", boolean, fir::Multiplicity::Optional);
     auto flexray_communication_controller_content_r11 = b.add_role(flexray_communication_controller_content, "flexrayFifo", flexray_fifo_configuration, fir::Multiplicity::Many);
     auto flexray_communication_controller_content_r12 = b.add_role(flexray_communication_controller_content, "keySlotID", positive_integer, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r13 = b.add_role(flexray_communication_controller_content, "keySlotOnlyEnabled", boolean, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r14 = b.add_role(flexray_communication_controller_content, "keySlotUsedForStartUp", boolean, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r15 = b.add_role(flexray_communication_controller_content, "keySlotUsedForSync", boolean, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r16 = b.add_role(flexray_communication_controller_content, "latestTX", integer, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r17 = b.add_role(flexray_communication_controller_content, "listenTimeout", integer, fir::Multiplicity::Optional);
+    auto flexray_communication_controller_content_r13 = b.add_role(flexray_communication_controller_content, "keySlotOnlyEnabled", boolean, fir::Multiplicity::One);
+    auto flexray_communication_controller_content_r14 = b.add_role(flexray_communication_controller_content, "keySlotUsedForStartUp", boolean, fir::Multiplicity::One);
+    auto flexray_communication_controller_content_r15 = b.add_role(flexray_communication_controller_content, "keySlotUsedForSync", boolean, fir::Multiplicity::One);
+    auto flexray_communication_controller_content_r16 = b.add_role(flexray_communication_controller_content, "latestTX", integer, fir::Multiplicity::One);
+    auto flexray_communication_controller_content_r17 = b.add_role(flexray_communication_controller_content, "listenTimeout", integer, fir::Multiplicity::One);
     auto flexray_communication_controller_content_r18 = b.add_role(flexray_communication_controller_content, "macroInitialOffsetA", integer, fir::Multiplicity::Optional);
     auto flexray_communication_controller_content_r19 = b.add_role(flexray_communication_controller_content, "macroInitialOffsetB", integer, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r20 = b.add_role(flexray_communication_controller_content, "maximumDynamicPayloadLength", integer, fir::Multiplicity::Optional);
+    auto flexray_communication_controller_content_r20 = b.add_role(flexray_communication_controller_content, "maximumDynamicPayloadLength", integer, fir::Multiplicity::One);
     auto flexray_communication_controller_content_r21 = b.add_role(flexray_communication_controller_content, "microInitialOffsetA", integer, fir::Multiplicity::Optional);
     auto flexray_communication_controller_content_r22 = b.add_role(flexray_communication_controller_content, "microInitialOffsetB", integer, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r23 = b.add_role(flexray_communication_controller_content, "microPerCycle", integer, fir::Multiplicity::Optional);
+    auto flexray_communication_controller_content_r23 = b.add_role(flexray_communication_controller_content, "microPerCycle", integer, fir::Multiplicity::One);
     auto flexray_communication_controller_content_r24 = b.add_role(flexray_communication_controller_content, "microtickDuration", time_value, fir::Multiplicity::Optional);
     auto flexray_communication_controller_content_r25 = b.add_role(flexray_communication_controller_content, "nmVectorEarlyUpdate", boolean, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r26 = b.add_role(flexray_communication_controller_content, "offsetCorrectionOut", integer, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r27 = b.add_role(flexray_communication_controller_content, "rateCorrectionOut", integer, fir::Multiplicity::Optional);
+    auto flexray_communication_controller_content_r26 = b.add_role(flexray_communication_controller_content, "offsetCorrectionOut", integer, fir::Multiplicity::One);
+    auto flexray_communication_controller_content_r27 = b.add_role(flexray_communication_controller_content, "rateCorrectionOut", integer, fir::Multiplicity::One);
     auto flexray_communication_controller_content_r28 = b.add_role(flexray_communication_controller_content, "samplesPerMicrotick", integer, fir::Multiplicity::Optional);
     auto flexray_communication_controller_content_r29 = b.add_role(flexray_communication_controller_content, "secondKeySlotId", positive_integer, fir::Multiplicity::Optional);
     auto flexray_communication_controller_content_r30 = b.add_role(flexray_communication_controller_content, "twoKeySlotMode", boolean, fir::Multiplicity::Optional);
-    auto flexray_communication_controller_content_r31 = b.add_role(flexray_communication_controller_content, "wakeUpPattern", integer, fir::Multiplicity::Optional);
+    auto flexray_communication_controller_content_r31 = b.add_role(flexray_communication_controller_content, "wakeUpPattern", integer, fir::Multiplicity::One);
 
-    auto flexray_fifo_configuration_r0 = b.add_role(flexray_fifo_configuration, "admitWithoutMessageId", boolean, fir::Multiplicity::Optional);
-    auto flexray_fifo_configuration_r1 = b.add_role(flexray_fifo_configuration, "baseCycle", integer, fir::Multiplicity::Optional);
+    auto flexray_fifo_configuration_r0 = b.add_role(flexray_fifo_configuration, "admitWithoutMessageId", boolean, fir::Multiplicity::One);
+    auto flexray_fifo_configuration_r1 = b.add_role(flexray_fifo_configuration, "baseCycle", integer, fir::Multiplicity::One);
     auto flexray_fifo_configuration_r2 = b.add_role(flexray_fifo_configuration, "channel", flexray_physical_channel, fir::Multiplicity::Optional);
-    auto flexray_fifo_configuration_r3 = b.add_role(flexray_fifo_configuration, "cycleRepetition", integer, fir::Multiplicity::Optional);
-    auto flexray_fifo_configuration_r4 = b.add_role(flexray_fifo_configuration, "fifoDepth", integer, fir::Multiplicity::Optional);
-    auto flexray_fifo_configuration_r5 = b.add_role(flexray_fifo_configuration, "fifoRange", flexray_fifo_range, fir::Multiplicity::Many);
-    auto flexray_fifo_configuration_r6 = b.add_role(flexray_fifo_configuration, "msgIdMask", integer, fir::Multiplicity::Optional);
-    auto flexray_fifo_configuration_r7 = b.add_role(flexray_fifo_configuration, "msgIdMatch", integer, fir::Multiplicity::Optional);
+    auto flexray_fifo_configuration_r3 = b.add_role(flexray_fifo_configuration, "cycleRepetition", integer, fir::Multiplicity::One);
+    auto flexray_fifo_configuration_r4 = b.add_role(flexray_fifo_configuration, "fifoDepth", integer, fir::Multiplicity::One);
+    auto flexray_fifo_configuration_r5 = b.add_role(flexray_fifo_configuration, "fifoRange", flexray_fifo_range, fir::Multiplicity::OneOrMore);
+    auto flexray_fifo_configuration_r6 = b.add_role(flexray_fifo_configuration, "msgIdMask", integer, fir::Multiplicity::One);
+    auto flexray_fifo_configuration_r7 = b.add_role(flexray_fifo_configuration, "msgIdMatch", integer, fir::Multiplicity::One);
 
-    auto flexray_fifo_range_r0 = b.add_role(flexray_fifo_range, "rangeMax", integer, fir::Multiplicity::Optional);
-    auto flexray_fifo_range_r1 = b.add_role(flexray_fifo_range, "rangeMin", integer, fir::Multiplicity::Optional);
+    auto flexray_fifo_range_r0 = b.add_role(flexray_fifo_range, "rangeMax", integer, fir::Multiplicity::One);
+    auto flexray_fifo_range_r1 = b.add_role(flexray_fifo_range, "rangeMin", integer, fir::Multiplicity::One);
 
     auto flexray_frame_triggering_r0 = b.add_role(flexray_frame_triggering, "absolutelyScheduledTiming", flexray_absolutely_scheduled_timing, fir::Multiplicity::Many);
-    auto flexray_frame_triggering_r1 = b.add_role(flexray_frame_triggering, "allowDynamicLSduLength", boolean, fir::Multiplicity::Optional);
+    auto flexray_frame_triggering_r1 = b.add_role(flexray_frame_triggering, "allowDynamicLSduLength", boolean, fir::Multiplicity::One);
     auto flexray_frame_triggering_r2 = b.add_role(flexray_frame_triggering, "messageId", positive_integer, fir::Multiplicity::Optional);
-    auto flexray_frame_triggering_r3 = b.add_role(flexray_frame_triggering, "payloadPreambleIndicator", boolean, fir::Multiplicity::Optional);
+    auto flexray_frame_triggering_r3 = b.add_role(flexray_frame_triggering, "payloadPreambleIndicator", boolean, fir::Multiplicity::One);
 
     auto flexray_nm_cluster_r0 = b.add_role(flexray_nm_cluster, "nmCarWakeUpBitPosition", positive_integer, fir::Multiplicity::Optional);
     auto flexray_nm_cluster_r1 = b.add_role(flexray_nm_cluster, "nmCarWakeUpFilterEnabled", boolean, fir::Multiplicity::Optional);
     auto flexray_nm_cluster_r2 = b.add_role(flexray_nm_cluster, "nmCarWakeUpFilterNodeId", positive_integer, fir::Multiplicity::Optional);
     auto flexray_nm_cluster_r3 = b.add_role(flexray_nm_cluster, "nmCarWakeUpRxEnabled", boolean, fir::Multiplicity::Optional);
     auto flexray_nm_cluster_r4 = b.add_role(flexray_nm_cluster, "nmControlBitVectorActive", boolean, fir::Multiplicity::Optional);
-    auto flexray_nm_cluster_r5 = b.add_role(flexray_nm_cluster, "nmDataCycle", integer, fir::Multiplicity::Optional);
+    auto flexray_nm_cluster_r5 = b.add_role(flexray_nm_cluster, "nmDataCycle", integer, fir::Multiplicity::One);
     auto flexray_nm_cluster_r6 = b.add_role(flexray_nm_cluster, "nmDataEnabled", boolean, fir::Multiplicity::Optional);
     auto flexray_nm_cluster_r7 = b.add_role(flexray_nm_cluster, "nmDetectionLock", time_value, fir::Multiplicity::Optional);
     auto flexray_nm_cluster_r8 = b.add_role(flexray_nm_cluster, "nmMainFunctionPeriod", time_value, fir::Multiplicity::Optional);
-    auto flexray_nm_cluster_r9 = b.add_role(flexray_nm_cluster, "nmMessageTimeoutTime", time_value, fir::Multiplicity::Optional);
+    auto flexray_nm_cluster_r9 = b.add_role(flexray_nm_cluster, "nmMessageTimeoutTime", time_value, fir::Multiplicity::One);
     auto flexray_nm_cluster_r10 = b.add_role(flexray_nm_cluster, "nmReadySleepCount", integer, fir::Multiplicity::Optional);
-    auto flexray_nm_cluster_r11 = b.add_role(flexray_nm_cluster, "nmRemoteSleepIndicationTime", time_value, fir::Multiplicity::Optional);
+    auto flexray_nm_cluster_r11 = b.add_role(flexray_nm_cluster, "nmRemoteSleepIndicationTime", time_value, fir::Multiplicity::One);
     auto flexray_nm_cluster_r12 = b.add_role(flexray_nm_cluster, "nmRepeatMessageBitActive", boolean, fir::Multiplicity::Optional);
-    auto flexray_nm_cluster_r13 = b.add_role(flexray_nm_cluster, "nmRepeatMessageTime", time_value, fir::Multiplicity::Optional);
-    auto flexray_nm_cluster_r14 = b.add_role(flexray_nm_cluster, "nmRepetitionCycle", integer, fir::Multiplicity::Optional);
-    auto flexray_nm_cluster_r15 = b.add_role(flexray_nm_cluster, "nmVotingCycle", integer, fir::Multiplicity::Optional);
+    auto flexray_nm_cluster_r13 = b.add_role(flexray_nm_cluster, "nmRepeatMessageTime", time_value, fir::Multiplicity::One);
+    auto flexray_nm_cluster_r14 = b.add_role(flexray_nm_cluster, "nmRepetitionCycle", integer, fir::Multiplicity::One);
+    auto flexray_nm_cluster_r15 = b.add_role(flexray_nm_cluster, "nmVotingCycle", integer, fir::Multiplicity::One);
 
     auto flexray_nm_cluster_coupling_r0 = b.add_role(flexray_nm_cluster_coupling, "coupledCluster", flexray_nm_cluster, fir::Multiplicity::Many);
     auto flexray_nm_cluster_coupling_r1 = b.add_role(flexray_nm_cluster_coupling, "nmControlBitVectorEnabled", boolean, fir::Multiplicity::Optional);
     auto flexray_nm_cluster_coupling_r2 = b.add_role(flexray_nm_cluster_coupling, "nmDataDisabled", boolean, fir::Multiplicity::Optional);
-    auto flexray_nm_cluster_coupling_r3 = b.add_role(flexray_nm_cluster_coupling, "nmScheduleVariant", flexray_nm_schedule_variant, fir::Multiplicity::Optional);
+    auto flexray_nm_cluster_coupling_r3 = b.add_role(flexray_nm_cluster_coupling, "nmScheduleVariant", flexray_nm_schedule_variant, fir::Multiplicity::One);
 
     auto flexray_nm_ecu_r0 = b.add_role(flexray_nm_ecu, "nmHwVoteEnabled", boolean, fir::Multiplicity::Optional);
     auto flexray_nm_ecu_r1 = b.add_role(flexray_nm_ecu, "nmMainFunctionAcrossFrCycle", boolean, fir::Multiplicity::Optional);
@@ -18919,23 +17594,23 @@ AutosarSchema build_autosar_r23_11() {
 
     auto flexray_nm_node_r0 = b.add_role(flexray_nm_node, "nmInstanceId", positive_integer, fir::Multiplicity::Optional);
 
-    auto flexray_physical_channel_r0 = b.add_role(flexray_physical_channel, "channelName", flexray_channel_name, fir::Multiplicity::Optional);
+    auto flexray_physical_channel_r0 = b.add_role(flexray_physical_channel, "channelName", flexray_channel_name, fir::Multiplicity::One);
 
-    auto flexray_tp_config_r0 = b.add_role(flexray_tp_config, "pduPool", flexray_tp_pdu_pool, fir::Multiplicity::Many);
-    auto flexray_tp_config_r1 = b.add_role(flexray_tp_config, "tpAddress", tp_address, fir::Multiplicity::Many);
+    auto flexray_tp_config_r0 = b.add_role(flexray_tp_config, "pduPool", flexray_tp_pdu_pool, fir::Multiplicity::OneOrMore);
+    auto flexray_tp_config_r1 = b.add_role(flexray_tp_config, "tpAddress", tp_address, fir::Multiplicity::OneOrMore);
     auto flexray_tp_config_r2 = b.add_role(flexray_tp_config, "tpConnection", flexray_tp_connection, fir::Multiplicity::Many);
     auto flexray_tp_config_r3 = b.add_role(flexray_tp_config, "tpConnectionControl", flexray_tp_connection_control, fir::Multiplicity::Many);
-    auto flexray_tp_config_r4 = b.add_role(flexray_tp_config, "tpEcu", flexray_tp_ecu, fir::Multiplicity::Many);
+    auto flexray_tp_config_r4 = b.add_role(flexray_tp_config, "tpEcu", flexray_tp_ecu, fir::Multiplicity::OneOrMore);
     auto flexray_tp_config_r5 = b.add_role(flexray_tp_config, "tpNode", flexray_tp_node, fir::Multiplicity::Many);
 
-    auto flexray_tp_connection_r0 = b.add_role(flexray_tp_connection, "bandwidthLimitation", boolean, fir::Multiplicity::Optional);
-    auto flexray_tp_connection_r1 = b.add_role(flexray_tp_connection, "directTpSdu", container_i_pdu, fir::Multiplicity::Optional);
+    auto flexray_tp_connection_r0 = b.add_role(flexray_tp_connection, "bandwidthLimitation", boolean, fir::Multiplicity::One);
+    auto flexray_tp_connection_r1 = b.add_role(flexray_tp_connection, "directTpSdu", container_i_pdu, fir::Multiplicity::One);
     auto flexray_tp_connection_r2 = b.add_role(flexray_tp_connection, "multicast", tp_address, fir::Multiplicity::Optional);
-    auto flexray_tp_connection_r3 = b.add_role(flexray_tp_connection, "receiver", flexray_tp_node, fir::Multiplicity::Many);
+    auto flexray_tp_connection_r3 = b.add_role(flexray_tp_connection, "receiver", flexray_tp_node, fir::Multiplicity::OneOrMore);
     auto flexray_tp_connection_r4 = b.add_role(flexray_tp_connection, "reversedTpSdu", container_i_pdu, fir::Multiplicity::Optional);
     auto flexray_tp_connection_r5 = b.add_role(flexray_tp_connection, "rxPduPool", flexray_tp_pdu_pool, fir::Multiplicity::Optional);
-    auto flexray_tp_connection_r6 = b.add_role(flexray_tp_connection, "tpConnectionControl", flexray_tp_connection_control, fir::Multiplicity::Optional);
-    auto flexray_tp_connection_r7 = b.add_role(flexray_tp_connection, "transmitter", flexray_tp_node, fir::Multiplicity::Optional);
+    auto flexray_tp_connection_r6 = b.add_role(flexray_tp_connection, "tpConnectionControl", flexray_tp_connection_control, fir::Multiplicity::One);
+    auto flexray_tp_connection_r7 = b.add_role(flexray_tp_connection, "transmitter", flexray_tp_node, fir::Multiplicity::One);
     auto flexray_tp_connection_r8 = b.add_role(flexray_tp_connection, "txPduPool", flexray_tp_pdu_pool, fir::Multiplicity::Optional);
     auto flexray_tp_connection_r9 = b.add_role(flexray_tp_connection, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
@@ -18962,8 +17637,8 @@ AutosarSchema build_autosar_r23_11() {
 
     auto flexray_tp_ecu_r0 = b.add_role(flexray_tp_ecu, "cancellation", boolean, fir::Multiplicity::Optional);
     auto flexray_tp_ecu_r1 = b.add_role(flexray_tp_ecu, "cycleTimeMainFunction", time_value, fir::Multiplicity::Optional);
-    auto flexray_tp_ecu_r2 = b.add_role(flexray_tp_ecu, "ecuInstance", ecu_instance, fir::Multiplicity::Optional);
-    auto flexray_tp_ecu_r3 = b.add_role(flexray_tp_ecu, "fullDuplexEnabled", boolean, fir::Multiplicity::Optional);
+    auto flexray_tp_ecu_r2 = b.add_role(flexray_tp_ecu, "ecuInstance", ecu_instance, fir::Multiplicity::One);
+    auto flexray_tp_ecu_r3 = b.add_role(flexray_tp_ecu, "fullDuplexEnabled", boolean, fir::Multiplicity::One);
     auto flexray_tp_ecu_r4 = b.add_role(flexray_tp_ecu, "transmitCancellation", boolean, fir::Multiplicity::Optional);
     auto flexray_tp_ecu_r5 = b.add_role(flexray_tp_ecu, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
@@ -18971,7 +17646,7 @@ AutosarSchema build_autosar_r23_11() {
     auto flexray_tp_node_r1 = b.add_role(flexray_tp_node, "tpAddress", tp_address, fir::Multiplicity::Optional);
     auto flexray_tp_node_r2 = b.add_role(flexray_tp_node, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto flexray_tp_pdu_pool_r0 = b.add_role(flexray_tp_pdu_pool, "nPdu", n_pdu, fir::Multiplicity::Many);
+    auto flexray_tp_pdu_pool_r0 = b.add_role(flexray_tp_pdu_pool, "nPdu", n_pdu, fir::Multiplicity::OneOrMore);
     auto flexray_tp_pdu_pool_r1 = b.add_role(flexray_tp_pdu_pool, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto fm_attribute_def_r0 = b.add_role(fm_attribute_def, "defaultValue", numerical, fir::Multiplicity::Optional);
@@ -19030,7 +17705,7 @@ AutosarSchema build_autosar_r23_11() {
     auto fm_formula_by_features_and_sw_systemconsts_r1 = b.add_role(fm_formula_by_features_and_sw_systemconsts, "feature", fm_feature, fir::Multiplicity::Many);
 
     auto forbidden_signal_path_r0 = b.add_role(forbidden_signal_path, "operation", swc_to_swc_operation_arguments, fir::Multiplicity::Many);
-    auto forbidden_signal_path_r1 = b.add_role(forbidden_signal_path, "physicalChannel", abstract_can_physical_channel, fir::Multiplicity::Many);
+    auto forbidden_signal_path_r1 = b.add_role(forbidden_signal_path, "physicalChannel", abstract_can_physical_channel, fir::Multiplicity::OneOrMore);
     auto forbidden_signal_path_r2 = b.add_role(forbidden_signal_path, "signal", swc_to_swc_signal, fir::Multiplicity::Many);
 
     b.add_role(foreign_model_reference, "..", ref_simple_t, fir::Multiplicity::One);
@@ -19044,19 +17719,19 @@ AutosarSchema build_autosar_r23_11() {
     auto frame_r1 = b.add_role(frame, "pduToFrameMapping", pdu_to_frame_mapping, fir::Multiplicity::Many);
 
     auto frame_mapping_r0 = b.add_role(frame_mapping, "introduction", documentation_block, fir::Multiplicity::Optional);
-    auto frame_mapping_r1 = b.add_role(frame_mapping, "sourceFrame", can_frame_triggering, fir::Multiplicity::Optional);
-    auto frame_mapping_r2 = b.add_role(frame_mapping, "targetFrame", can_frame_triggering, fir::Multiplicity::Optional);
+    auto frame_mapping_r1 = b.add_role(frame_mapping, "sourceFrame", can_frame_triggering, fir::Multiplicity::One);
+    auto frame_mapping_r2 = b.add_role(frame_mapping, "targetFrame", can_frame_triggering, fir::Multiplicity::One);
     auto frame_mapping_r3 = b.add_role(frame_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto frame_pid_r0 = b.add_role(frame_pid, "index", integer, fir::Multiplicity::Optional);
-    auto frame_pid_r1 = b.add_role(frame_pid, "pid", positive_integer, fir::Multiplicity::Optional);
+    auto frame_pid_r0 = b.add_role(frame_pid, "index", integer, fir::Multiplicity::One);
+    auto frame_pid_r1 = b.add_role(frame_pid, "pid", positive_integer, fir::Multiplicity::One);
 
     auto frame_triggering_r0 = b.add_role(frame_triggering, "framePort", frame_port, fir::Multiplicity::Many);
-    auto frame_triggering_r1 = b.add_role(frame_triggering, "frame", abstract_ethernet_frame, fir::Multiplicity::Optional);
+    auto frame_triggering_r1 = b.add_role(frame_triggering, "frame", abstract_ethernet_frame, fir::Multiplicity::One);
     auto frame_triggering_r2 = b.add_role(frame_triggering, "pduTriggering", pdu_triggering_ref_conditional, fir::Multiplicity::Many);
     auto frame_triggering_r3 = b.add_role(frame_triggering, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto free_format_r0 = b.add_role(free_format, "byteValue", integer, fir::Multiplicity::Many);
+    auto free_format_r0 = b.add_role(free_format, "byteValue", integer, fir::Multiplicity::OneOrMore);
 
     auto function_group_phm_state_reference_r0 = b.add_role(function_group_phm_state_reference, "functionGroupState", function_group_state_in_function_group_set_instance_ref, fir::Multiplicity::Optional);
 
@@ -19067,17 +17742,13 @@ AutosarSchema build_autosar_r23_11() {
 
     auto function_inhibition_availability_needs_r0 = b.add_role(function_inhibition_availability_needs, "controlledFid", function_inhibition_needs, fir::Multiplicity::Optional);
 
-    auto functional_cluster_interacts_with_persistency_deployment_mapping_r0 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "contractVersion", strong_revision_label_string, fir::Multiplicity::Optional);
-    auto functional_cluster_interacts_with_persistency_deployment_mapping_r1 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "functionalCluster", adaptive_firewall_module_instantiation, fir::Multiplicity::Optional);
-    auto functional_cluster_interacts_with_persistency_deployment_mapping_r2 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "maxNumberOfFiles", positive_integer, fir::Multiplicity::Optional);
-    auto functional_cluster_interacts_with_persistency_deployment_mapping_r3 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "persistencyAccess", functional_cluster_persistency_access_enum, fir::Multiplicity::Optional);
-    auto functional_cluster_interacts_with_persistency_deployment_mapping_r4 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "persistencyDeployment", persistency_deployment, fir::Multiplicity::Optional);
-    auto functional_cluster_interacts_with_persistency_deployment_mapping_r5 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "process", process, fir::Multiplicity::Optional);
+    auto functional_cluster_interacts_with_persistency_deployment_mapping_r0 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "functionalCluster", adaptive_firewall_module_instantiation, fir::Multiplicity::Optional);
+    auto functional_cluster_interacts_with_persistency_deployment_mapping_r1 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "maxNumberOfFiles", positive_integer, fir::Multiplicity::Optional);
+    auto functional_cluster_interacts_with_persistency_deployment_mapping_r2 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "persistencyAccess", functional_cluster_persistency_access_enum, fir::Multiplicity::Optional);
+    auto functional_cluster_interacts_with_persistency_deployment_mapping_r3 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "persistencyDeployment", persistency_deployment, fir::Multiplicity::Optional);
+    auto functional_cluster_interacts_with_persistency_deployment_mapping_r4 = b.add_role(functional_cluster_interacts_with_persistency_deployment_mapping, "process", process, fir::Multiplicity::Optional);
 
-    auto functional_cluster_to_security_event_definition_mapping_r0 = b.add_role(functional_cluster_to_security_event_definition_mapping, "moduleInstantiation", adaptive_firewall_module_instantiation, fir::Multiplicity::Optional);
-    auto functional_cluster_to_security_event_definition_mapping_r1 = b.add_role(functional_cluster_to_security_event_definition_mapping, "securityEvent", security_event_definition, fir::Multiplicity::Optional);
-
-    auto gateway_r0 = b.add_role(gateway, "ecu", ecu_instance, fir::Multiplicity::Optional);
+    auto gateway_r0 = b.add_role(gateway, "ecu", ecu_instance, fir::Multiplicity::One);
     auto gateway_r1 = b.add_role(gateway, "frameMapping", frame_mapping, fir::Multiplicity::Many);
     auto gateway_r2 = b.add_role(gateway, "iPduMapping", i_pdu_mapping, fir::Multiplicity::Many);
     auto gateway_r3 = b.add_role(gateway, "signalMapping", i_signal_mapping, fir::Multiplicity::Many);
@@ -19095,7 +17766,7 @@ AutosarSchema build_autosar_r23_11() {
     auto generic_model_reference_r2 = b.add_role(generic_model_reference, "dest", nmtoken_string_simple_t, fir::Multiplicity::One);
 
     auto generic_tp_r0 = b.add_role(generic_tp, "tpAddress", string, fir::Multiplicity::Optional);
-    auto generic_tp_r1 = b.add_role(generic_tp, "tpTechnology", string, fir::Multiplicity::Optional);
+    auto generic_tp_r1 = b.add_role(generic_tp, "tpTechnology", string, fir::Multiplicity::One);
 
     auto global_supervision_r0 = b.add_role(global_supervision, "aliveSupervision", alive_supervision, fir::Multiplicity::Many);
     auto global_supervision_r1 = b.add_role(global_supervision, "deadlineSupervision", deadline_supervision, fir::Multiplicity::Many);
@@ -19107,9 +17778,9 @@ AutosarSchema build_autosar_r23_11() {
 
     auto global_time_can_master_r0 = b.add_role(global_time_can_master, "crcSecured", global_time_crc_support_enum, fir::Multiplicity::Optional);
     auto global_time_can_master_r1 = b.add_role(global_time_can_master, "followUpOffset", time_value, fir::Multiplicity::Optional);
-    auto global_time_can_master_r2 = b.add_role(global_time_can_master, "syncConfirmationTimeout", time_value, fir::Multiplicity::Optional);
+    auto global_time_can_master_r2 = b.add_role(global_time_can_master, "syncConfirmationTimeout", time_value, fir::Multiplicity::One);
 
-    auto global_time_can_slave_r0 = b.add_role(global_time_can_slave, "crcValidated", global_time_crc_validation_enum, fir::Multiplicity::Optional);
+    auto global_time_can_slave_r0 = b.add_role(global_time_can_slave, "crcValidated", global_time_crc_validation_enum, fir::Multiplicity::One);
     auto global_time_can_slave_r1 = b.add_role(global_time_can_slave, "sequenceCounterJumpWidth", positive_integer, fir::Multiplicity::Optional);
 
     auto global_time_correction_props_r0 = b.add_role(global_time_correction_props, "offsetCorrectionAdaptionInterval", time_value, fir::Multiplicity::Optional);
@@ -19117,11 +17788,11 @@ AutosarSchema build_autosar_r23_11() {
     auto global_time_correction_props_r2 = b.add_role(global_time_correction_props, "rateCorrectionMeasurementDuration", time_value, fir::Multiplicity::Optional);
     auto global_time_correction_props_r3 = b.add_role(global_time_correction_props, "rateCorrectionsPerMeasurementDuration", positive_integer, fir::Multiplicity::Optional);
 
-    auto global_time_coupling_port_props_r0 = b.add_role(global_time_coupling_port_props, "propagationDelay", time_value, fir::Multiplicity::Optional);
+    auto global_time_coupling_port_props_r0 = b.add_role(global_time_coupling_port_props, "propagationDelay", time_value, fir::Multiplicity::One);
 
     auto global_time_domain_r0 = b.add_role(global_time_domain, "communicationCluster", abstract_can_cluster, fir::Multiplicity::Many);
     auto global_time_domain_r1 = b.add_role(global_time_domain, "debounceTime", time_value, fir::Multiplicity::Optional);
-    auto global_time_domain_r2 = b.add_role(global_time_domain, "domainId", positive_integer, fir::Multiplicity::Optional);
+    auto global_time_domain_r2 = b.add_role(global_time_domain, "domainId", positive_integer, fir::Multiplicity::One);
     auto global_time_domain_r3 = b.add_role(global_time_domain, "followUpTimeoutValue", time_value, fir::Multiplicity::Optional);
     auto global_time_domain_r4 = b.add_role(global_time_domain, "gateway", global_time_gateway, fir::Multiplicity::Many);
     auto global_time_domain_r5 = b.add_role(global_time_domain, "globalTimeCorrectionProps", global_time_correction_props, fir::Multiplicity::Optional);
@@ -19144,30 +17815,29 @@ AutosarSchema build_autosar_r23_11() {
     auto global_time_domain_ref_conditional_r1 = b.add_role(global_time_domain_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto global_time_eth_master_r0 = b.add_role(global_time_eth_master, "crcSecured", global_time_crc_support_enum, fir::Multiplicity::Optional);
-    auto global_time_eth_master_r1 = b.add_role(global_time_eth_master, "holdOverTime", time_value, fir::Multiplicity::Optional);
-    auto global_time_eth_master_r2 = b.add_role(global_time_eth_master, "subTlvConfig", eth_t_syn_sub_tlv_config, fir::Multiplicity::Optional);
+    auto global_time_eth_master_r1 = b.add_role(global_time_eth_master, "subTlvConfig", eth_t_syn_sub_tlv_config, fir::Multiplicity::Optional);
 
     auto global_time_eth_slave_r0 = b.add_role(global_time_eth_slave, "crcValidated", global_time_crc_validation_enum, fir::Multiplicity::Optional);
     auto global_time_eth_slave_r1 = b.add_role(global_time_eth_slave, "timeHardwareCorrectionThreshold", time_value, fir::Multiplicity::Optional);
 
-    auto global_time_fr_master_r0 = b.add_role(global_time_fr_master, "crcSecured", global_time_crc_support_enum, fir::Multiplicity::Optional);
+    auto global_time_fr_master_r0 = b.add_role(global_time_fr_master, "crcSecured", global_time_crc_support_enum, fir::Multiplicity::One);
 
-    auto global_time_fr_slave_r0 = b.add_role(global_time_fr_slave, "crcValidated", global_time_crc_validation_enum, fir::Multiplicity::Optional);
+    auto global_time_fr_slave_r0 = b.add_role(global_time_fr_slave, "crcValidated", global_time_crc_validation_enum, fir::Multiplicity::One);
     auto global_time_fr_slave_r1 = b.add_role(global_time_fr_slave, "sequenceCounterJumpWidth", positive_integer, fir::Multiplicity::Optional);
 
-    auto global_time_gateway_r0 = b.add_role(global_time_gateway, "host", ecu_instance, fir::Multiplicity::Optional);
-    auto global_time_gateway_r1 = b.add_role(global_time_gateway, "master", global_time_can_master, fir::Multiplicity::Optional);
-    auto global_time_gateway_r2 = b.add_role(global_time_gateway, "slave", global_time_can_slave, fir::Multiplicity::Optional);
+    auto global_time_gateway_r0 = b.add_role(global_time_gateway, "host", ecu_instance, fir::Multiplicity::One);
+    auto global_time_gateway_r1 = b.add_role(global_time_gateway, "master", global_time_can_master, fir::Multiplicity::One);
+    auto global_time_gateway_r2 = b.add_role(global_time_gateway, "slave", global_time_can_slave, fir::Multiplicity::One);
     auto global_time_gateway_r3 = b.add_role(global_time_gateway, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto global_time_master_r0 = b.add_role(global_time_master, "communicationConnector", abstract_can_communication_connector, fir::Multiplicity::Optional);
+    auto global_time_master_r0 = b.add_role(global_time_master, "communicationConnector", abstract_can_communication_connector, fir::Multiplicity::One);
     auto global_time_master_r1 = b.add_role(global_time_master, "icvSecured", global_time_icv_support_enum, fir::Multiplicity::Optional);
     auto global_time_master_r2 = b.add_role(global_time_master, "immediateResumeTime", time_value, fir::Multiplicity::Optional);
-    auto global_time_master_r3 = b.add_role(global_time_master, "isSystemWideGlobalTimeMaster", boolean, fir::Multiplicity::Optional);
-    auto global_time_master_r4 = b.add_role(global_time_master, "syncPeriod", time_value, fir::Multiplicity::Optional);
+    auto global_time_master_r3 = b.add_role(global_time_master, "isSystemWideGlobalTimeMaster", boolean, fir::Multiplicity::One);
+    auto global_time_master_r4 = b.add_role(global_time_master, "syncPeriod", time_value, fir::Multiplicity::One);
     auto global_time_master_r5 = b.add_role(global_time_master, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto global_time_slave_r0 = b.add_role(global_time_slave, "communicationConnector", abstract_can_communication_connector, fir::Multiplicity::Optional);
+    auto global_time_slave_r0 = b.add_role(global_time_slave, "communicationConnector", abstract_can_communication_connector, fir::Multiplicity::One);
     auto global_time_slave_r1 = b.add_role(global_time_slave, "followUpTimeoutValue", time_value, fir::Multiplicity::Optional);
     auto global_time_slave_r2 = b.add_role(global_time_slave, "icvVerification", global_time_icv_verification_enum, fir::Multiplicity::Optional);
     auto global_time_slave_r3 = b.add_role(global_time_slave, "timeLeapFutureThreshold", time_value, fir::Multiplicity::Optional);
@@ -19214,9 +17884,9 @@ AutosarSchema build_autosar_r23_11() {
     auto heap_usage_r3 = b.add_role(heap_usage, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto http_tp_r0 = b.add_role(http_tp, "contentType", string, fir::Multiplicity::Optional);
-    auto http_tp_r1 = b.add_role(http_tp, "protocolVersion", string, fir::Multiplicity::Optional);
+    auto http_tp_r1 = b.add_role(http_tp, "protocolVersion", string, fir::Multiplicity::One);
     auto http_tp_r2 = b.add_role(http_tp, "requestMethod", request_method_enum, fir::Multiplicity::Optional);
-    auto http_tp_r3 = b.add_role(http_tp, "tcpTpConfig", tcp_tp, fir::Multiplicity::Optional);
+    auto http_tp_r3 = b.add_role(http_tp, "tcpTpConfig", tcp_tp, fir::Multiplicity::One);
     auto http_tp_r4 = b.add_role(http_tp, "uri", uri_string, fir::Multiplicity::Optional);
 
     auto hw_attribute_def_r0 = b.add_role(hw_attribute_def, "hwAttributeLiteral", hw_attribute_literal_def, fir::Multiplicity::Many);
@@ -19247,10 +17917,8 @@ AutosarSchema build_autosar_r23_11() {
     auto hw_element_ref_conditional_r0 = b.add_role(hw_element_ref_conditional, "hwElement", hw_element, fir::Multiplicity::One);
     auto hw_element_ref_conditional_r1 = b.add_role(hw_element_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto hw_pin_r0 = b.add_role(hw_pin, "functionName", string, fir::Multiplicity::Many);
-    auto hw_pin_r1 = b.add_role(hw_pin, "packagingPinName", string, fir::Multiplicity::Optional);
-    auto hw_pin_r2 = b.add_role(hw_pin, "pinNumber", integer, fir::Multiplicity::Optional);
-    auto hw_pin_r3 = b.add_role(hw_pin, "variationPoint", variation_point, fir::Multiplicity::Optional);
+    auto hw_pin_r0 = b.add_role(hw_pin, "pinNumber", integer, fir::Multiplicity::Optional);
+    auto hw_pin_r1 = b.add_role(hw_pin, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto hw_pin_connector_r0 = b.add_role(hw_pin_connector, "hwPin", hw_pin, fir::Multiplicity::Many);
     auto hw_pin_connector_r1 = b.add_role(hw_pin_connector, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -19265,16 +17933,16 @@ AutosarSchema build_autosar_r23_11() {
     b.add_role(hw_pin_group_content, "hwPin", hw_pin, fir::Multiplicity::Many);
     b.add_role(hw_pin_group_content, "hwPinGroup", hw_pin_group, fir::Multiplicity::Many);
 
-    auto hw_port_mapping_r0 = b.add_role(hw_port_mapping, "communicationConnector", abstract_can_communication_connector, fir::Multiplicity::Optional);
-    auto hw_port_mapping_r1 = b.add_role(hw_port_mapping, "hwCommunicationPort", hw_pin_group, fir::Multiplicity::Optional);
+    auto hw_port_mapping_r0 = b.add_role(hw_port_mapping, "communicationConnector", abstract_can_communication_connector, fir::Multiplicity::One);
+    auto hw_port_mapping_r1 = b.add_role(hw_port_mapping, "hwCommunicationPort", hw_pin_group, fir::Multiplicity::One);
 
     auto i_pdu_r0 = b.add_role(i_pdu, "containedIPduProps", contained_i_pdu_props, fir::Multiplicity::Optional);
 
     auto i_pdu_mapping_r0 = b.add_role(i_pdu_mapping, "introduction", documentation_block, fir::Multiplicity::Optional);
     auto i_pdu_mapping_r1 = b.add_role(i_pdu_mapping, "pduMaxLength", positive_integer, fir::Multiplicity::Optional);
     auto i_pdu_mapping_r2 = b.add_role(i_pdu_mapping, "pdurTpChunkSize", positive_integer, fir::Multiplicity::Optional);
-    auto i_pdu_mapping_r3 = b.add_role(i_pdu_mapping, "sourceIPdu", pdu_triggering, fir::Multiplicity::Optional);
-    auto i_pdu_mapping_r4 = b.add_role(i_pdu_mapping, "targetIPdu", target_i_pdu_ref, fir::Multiplicity::Optional);
+    auto i_pdu_mapping_r3 = b.add_role(i_pdu_mapping, "sourceIPdu", pdu_triggering, fir::Multiplicity::One);
+    auto i_pdu_mapping_r4 = b.add_role(i_pdu_mapping, "targetIPdu", target_i_pdu_ref, fir::Multiplicity::One);
     auto i_pdu_mapping_r5 = b.add_role(i_pdu_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto i_pdu_port_r0 = b.add_role(i_pdu_port, "iPduSignalProcessing", i_pdu_signal_processing_enum, fir::Multiplicity::Optional);
@@ -19287,34 +17955,34 @@ AutosarSchema build_autosar_r23_11() {
     auto i_pdu_timing_r1 = b.add_role(i_pdu_timing, "transmissionModeDeclaration", transmission_mode_declaration, fir::Multiplicity::Optional);
     auto i_pdu_timing_r2 = b.add_role(i_pdu_timing, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto i_pv6_ext_header_filter_list_r0 = b.add_role(i_pv6_ext_header_filter_list, "allowedIPv6ExtHeader", positive_integer, fir::Multiplicity::Many);
+    auto i_pv6_ext_header_filter_list_r0 = b.add_role(i_pv6_ext_header_filter_list, "allowedIPv6ExtHeader", positive_integer, fir::Multiplicity::OneOrMore);
 
     auto i_pv6_ext_header_filter_set_r0 = b.add_role(i_pv6_ext_header_filter_set, "extHeaderFilterList", i_pv6_ext_header_filter_list, fir::Multiplicity::Many);
 
     auto i_signal_r0 = b.add_role(i_signal, "dataTransformation", data_transformation_ref_conditional, fir::Multiplicity::Many);
-    auto i_signal_r1 = b.add_role(i_signal, "dataTypePolicy", data_type_policy_enum, fir::Multiplicity::Optional);
+    auto i_signal_r1 = b.add_role(i_signal, "dataTypePolicy", data_type_policy_enum, fir::Multiplicity::One);
     auto i_signal_r2 = b.add_role(i_signal, "iSignalProps", i_signal_props, fir::Multiplicity::Optional);
     auto i_signal_r3 = b.add_role(i_signal, "iSignalType", i_signal_type_enum, fir::Multiplicity::Optional);
     auto i_signal_r4 = b.add_role(i_signal, "initValue", application_assoc_map_value_specification, fir::Multiplicity::Optional);
-    auto i_signal_r5 = b.add_role(i_signal, "length", unlimited_integer, fir::Multiplicity::Optional);
+    auto i_signal_r5 = b.add_role(i_signal, "length", unlimited_integer, fir::Multiplicity::One);
     auto i_signal_r6 = b.add_role(i_signal, "networkRepresentationProps", sw_data_def_props, fir::Multiplicity::Optional);
-    auto i_signal_r7 = b.add_role(i_signal, "systemSignal", system_signal, fir::Multiplicity::Optional);
+    auto i_signal_r7 = b.add_role(i_signal, "systemSignal", system_signal, fir::Multiplicity::One);
     auto i_signal_r8 = b.add_role(i_signal, "timeoutSubstitutionValue", application_assoc_map_value_specification, fir::Multiplicity::Optional);
     auto i_signal_r9 = b.add_role(i_signal, "transformationISignalProps", end_to_end_transformation_i_signal_props, fir::Multiplicity::Many);
 
     auto i_signal_group_r0 = b.add_role(i_signal_group, "comBasedSignalGroupTransformation", data_transformation_ref_conditional, fir::Multiplicity::Many);
     auto i_signal_group_r1 = b.add_role(i_signal_group, "iSignal", i_signal, fir::Multiplicity::Many);
-    auto i_signal_group_r2 = b.add_role(i_signal_group, "systemSignalGroup", system_signal_group, fir::Multiplicity::Optional);
+    auto i_signal_group_r2 = b.add_role(i_signal_group, "systemSignalGroup", system_signal_group, fir::Multiplicity::One);
     auto i_signal_group_r3 = b.add_role(i_signal_group, "transformationISignalProps", end_to_end_transformation_i_signal_props, fir::Multiplicity::Many);
 
     auto i_signal_i_pdu_r0 = b.add_role(i_signal_i_pdu, "iPduTimingSpecification", i_pdu_timing, fir::Multiplicity::Many);
     auto i_signal_i_pdu_r1 = b.add_role(i_signal_i_pdu, "iSignalToPduMapping", i_signal_to_i_pdu_mapping, fir::Multiplicity::Many);
     auto i_signal_i_pdu_r2 = b.add_role(i_signal_i_pdu, "pduCounter", signal_i_pdu_counter, fir::Multiplicity::Many);
     auto i_signal_i_pdu_r3 = b.add_role(i_signal_i_pdu, "pduReplication", signal_i_pdu_replication, fir::Multiplicity::Many);
-    auto i_signal_i_pdu_r4 = b.add_role(i_signal_i_pdu, "unusedBitPattern", integer, fir::Multiplicity::Optional);
+    auto i_signal_i_pdu_r4 = b.add_role(i_signal_i_pdu, "unusedBitPattern", integer, fir::Multiplicity::One);
 
-    auto i_signal_i_pdu_group_r0 = b.add_role(i_signal_i_pdu_group, "communicationDirection", communication_direction_type, fir::Multiplicity::Optional);
-    auto i_signal_i_pdu_group_r1 = b.add_role(i_signal_i_pdu_group, "communicationMode", string, fir::Multiplicity::Optional);
+    auto i_signal_i_pdu_group_r0 = b.add_role(i_signal_i_pdu_group, "communicationDirection", communication_direction_type, fir::Multiplicity::One);
+    auto i_signal_i_pdu_group_r1 = b.add_role(i_signal_i_pdu_group, "communicationMode", string, fir::Multiplicity::One);
     auto i_signal_i_pdu_group_r2 = b.add_role(i_signal_i_pdu_group, "containedISignalIPduGroup", i_signal_i_pdu_group, fir::Multiplicity::Many);
     auto i_signal_i_pdu_group_r3 = b.add_role(i_signal_i_pdu_group, "iSignalIPdu", i_signal_i_pdu_ref_conditional, fir::Multiplicity::Many);
     auto i_signal_i_pdu_group_r4 = b.add_role(i_signal_i_pdu_group, "nmPdu", nm_pdu_ref_conditional, fir::Multiplicity::Many);
@@ -19323,17 +17991,16 @@ AutosarSchema build_autosar_r23_11() {
     auto i_signal_i_pdu_ref_conditional_r1 = b.add_role(i_signal_i_pdu_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto i_signal_mapping_r0 = b.add_role(i_signal_mapping, "introduction", documentation_block, fir::Multiplicity::Optional);
-    auto i_signal_mapping_r1 = b.add_role(i_signal_mapping, "sourceSignal", i_signal_triggering, fir::Multiplicity::Optional);
-    auto i_signal_mapping_r2 = b.add_role(i_signal_mapping, "targetSignal", i_signal_triggering, fir::Multiplicity::Optional);
+    auto i_signal_mapping_r1 = b.add_role(i_signal_mapping, "sourceSignal", i_signal_triggering, fir::Multiplicity::One);
+    auto i_signal_mapping_r2 = b.add_role(i_signal_mapping, "targetSignal", i_signal_triggering, fir::Multiplicity::One);
     auto i_signal_mapping_r3 = b.add_role(i_signal_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto i_signal_port_r0 = b.add_role(i_signal_port, "dataFilter", data_filter, fir::Multiplicity::Optional);
-    auto i_signal_port_r1 = b.add_role(i_signal_port, "ddsQosProfile", dds_cp_qos_profile, fir::Multiplicity::Optional);
-    auto i_signal_port_r2 = b.add_role(i_signal_port, "firstTimeout", time_value, fir::Multiplicity::Optional);
-    auto i_signal_port_r3 = b.add_role(i_signal_port, "handleInvalid", handle_invalid_enum, fir::Multiplicity::Optional);
-    auto i_signal_port_r4 = b.add_role(i_signal_port, "timeout", time_value, fir::Multiplicity::Optional);
+    auto i_signal_port_r1 = b.add_role(i_signal_port, "firstTimeout", time_value, fir::Multiplicity::Optional);
+    auto i_signal_port_r2 = b.add_role(i_signal_port, "handleInvalid", handle_invalid_enum, fir::Multiplicity::Optional);
+    auto i_signal_port_r3 = b.add_role(i_signal_port, "timeout", time_value, fir::Multiplicity::Optional);
 
-    auto i_signal_props_r0 = b.add_role(i_signal_props, "handleOutOfRange", handle_out_of_range_enum, fir::Multiplicity::Optional);
+    auto i_signal_props_r0 = b.add_role(i_signal_props, "handleOutOfRange", handle_out_of_range_enum, fir::Multiplicity::One);
 
     auto i_signal_to_i_pdu_mapping_r0 = b.add_role(i_signal_to_i_pdu_mapping, "iSignalGroup", i_signal_group, fir::Multiplicity::Optional);
     auto i_signal_to_i_pdu_mapping_r1 = b.add_role(i_signal_to_i_pdu_mapping, "iSignal", i_signal, fir::Multiplicity::Optional);
@@ -19380,10 +18047,6 @@ AutosarSchema build_autosar_r23_11() {
     auto ids_platform_instantiation_r0 = b.add_role(ids_platform_instantiation, "networkInterface", platform_module_ethernet_endpoint_configuration, fir::Multiplicity::Many);
     auto ids_platform_instantiation_r1 = b.add_role(ids_platform_instantiation, "timeBase", time_base_resource_ref_conditional, fir::Multiplicity::Many);
 
-    auto idsm_context_provider_mapping_r0 = b.add_role(idsm_context_provider_mapping, "idsPlatformInstantiation", ids_platform_instantiation, fir::Multiplicity::Optional);
-    auto idsm_context_provider_mapping_r1 = b.add_role(idsm_context_provider_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-    auto idsm_context_provider_mapping_r2 = b.add_role(idsm_context_provider_mapping, "process", process, fir::Multiplicity::Optional);
-
     auto idsm_instance_r0 = b.add_role(idsm_instance, "blockState", block_state, fir::Multiplicity::Many);
     auto idsm_instance_r1 = b.add_role(idsm_instance, "ecuInstance", ecu_instance_ref_conditional, fir::Multiplicity::Many);
     auto idsm_instance_r2 = b.add_role(idsm_instance, "idsmInstanceId", positive_integer, fir::Multiplicity::Optional);
@@ -19414,10 +18077,6 @@ AutosarSchema build_autosar_r23_11() {
     auto idsm_signature_support_cp_r0 = b.add_role(idsm_signature_support_cp, "authentication", crypto_service_primitive, fir::Multiplicity::Optional);
     auto idsm_signature_support_cp_r1 = b.add_role(idsm_signature_support_cp, "cryptoServiceKey", crypto_service_key, fir::Multiplicity::Optional);
 
-    auto idsm_timestamp_provider_mapping_r0 = b.add_role(idsm_timestamp_provider_mapping, "idsPlatformInstantiation", ids_platform_instantiation, fir::Multiplicity::Optional);
-    auto idsm_timestamp_provider_mapping_r1 = b.add_role(idsm_timestamp_provider_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-    auto idsm_timestamp_provider_mapping_r2 = b.add_role(idsm_timestamp_provider_mapping, "process", process, fir::Multiplicity::Optional);
-
     auto idsm_traffic_limitation_r0 = b.add_role(idsm_traffic_limitation, "maxBytesInInterval", positive_integer, fir::Multiplicity::Optional);
     auto idsm_traffic_limitation_r1 = b.add_role(idsm_traffic_limitation, "timeInterval", float_, fir::Multiplicity::Optional);
 
@@ -19425,94 +18084,14 @@ AutosarSchema build_autosar_r23_11() {
     auto idsm_traffic_limitation_ref_conditional_r1 = b.add_role(idsm_traffic_limitation_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto ieee1722_tp_r0 = b.add_role(ieee1722_tp, "relativeRepresentationTime", time_value, fir::Multiplicity::Optional);
-    auto ieee1722_tp_r1 = b.add_role(ieee1722_tp, "streamIdentifier", positive_integer, fir::Multiplicity::Optional);
+    auto ieee1722_tp_r1 = b.add_role(ieee1722_tp, "streamIdentifier", positive_integer, fir::Multiplicity::One);
     auto ieee1722_tp_r2 = b.add_role(ieee1722_tp, "subType", positive_integer, fir::Multiplicity::Optional);
     auto ieee1722_tp_r3 = b.add_role(ieee1722_tp, "version", positive_integer, fir::Multiplicity::Optional);
 
-    auto iee_e1722_tp_aaf_connection_r0 = b.add_role(iee_e1722_tp_aaf_connection, "aafAes3DataType", iee_e1722_tp_aaf_aes3_data_type_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_aaf_connection_r1 = b.add_role(iee_e1722_tp_aaf_connection, "aafFormat", iee_e1722_tp_aaf_format_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_aaf_connection_r2 = b.add_role(iee_e1722_tp_aaf_connection, "aafNominalRate", iee_e1722_tp_aaf_nominal_rate_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_aaf_connection_r3 = b.add_role(iee_e1722_tp_aaf_connection, "aes3DataTypeH", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_aaf_connection_r4 = b.add_role(iee_e1722_tp_aaf_connection, "aes3DataTypeL", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_aaf_connection_r5 = b.add_role(iee_e1722_tp_aaf_connection, "channelsPerFrame", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_aaf_connection_r6 = b.add_role(iee_e1722_tp_aaf_connection, "eventDefaultValue", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_aaf_connection_r7 = b.add_role(iee_e1722_tp_aaf_connection, "pcmBitDepth", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_aaf_connection_r8 = b.add_role(iee_e1722_tp_aaf_connection, "sparseTimestampEnabled", boolean, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_aaf_connection_r9 = b.add_role(iee_e1722_tp_aaf_connection, "streamsPerFrame", positive_integer, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_acf_bus_r0 = b.add_role(iee_e1722_tp_acf_bus, "acfPart", iee_e1722_tp_acf_can_part, fir::Multiplicity::Many);
-    auto iee_e1722_tp_acf_bus_r1 = b.add_role(iee_e1722_tp_acf_bus, "busId", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_bus_r2 = b.add_role(iee_e1722_tp_acf_bus, "variationPoint", variation_point, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_acf_bus_part_r0 = b.add_role(iee_e1722_tp_acf_bus_part, "collectionTrigger", pdu_collection_trigger_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_bus_part_r1 = b.add_role(iee_e1722_tp_acf_bus_part, "variationPoint", variation_point, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_acf_can_r0 = b.add_role(iee_e1722_tp_acf_can, "messageType", iee_e1722_tp_acf_can_message_type_enum, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_acf_can_part_r0 = b.add_role(iee_e1722_tp_acf_can_part, "canAddressingMode", can_addressing_mode_type, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_can_part_r1 = b.add_role(iee_e1722_tp_acf_can_part, "canBitRateSwitch", boolean, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_can_part_r2 = b.add_role(iee_e1722_tp_acf_can_part, "canFrameTxBehavior", can_frame_tx_behavior_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_can_part_r3 = b.add_role(iee_e1722_tp_acf_can_part, "canIdentifier", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_can_part_r4 = b.add_role(iee_e1722_tp_acf_can_part, "canIdentifierMask", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_can_part_r5 = b.add_role(iee_e1722_tp_acf_can_part, "canIdentifierRange", rx_identifier_range, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_can_part_r6 = b.add_role(iee_e1722_tp_acf_can_part, "sdu", pdu_triggering, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_acf_connection_r0 = b.add_role(iee_e1722_tp_acf_connection, "acfTransportedBus", iee_e1722_tp_acf_can, fir::Multiplicity::Many);
-    auto iee_e1722_tp_acf_connection_r1 = b.add_role(iee_e1722_tp_acf_connection, "collectionThreshold", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_connection_r2 = b.add_role(iee_e1722_tp_acf_connection, "collectionTimeout", time_value, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_connection_r3 = b.add_role(iee_e1722_tp_acf_connection, "mixedBusTypeCollection", boolean, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_acf_lin_r0 = b.add_role(iee_e1722_tp_acf_lin, "baseFrequency", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_lin_r1 = b.add_role(iee_e1722_tp_acf_lin, "frameSyncEnabled", boolean, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_lin_r2 = b.add_role(iee_e1722_tp_acf_lin, "timestampInterval", positive_integer, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_acf_lin_part_r0 = b.add_role(iee_e1722_tp_acf_lin_part, "linIdentifier", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_acf_lin_part_r1 = b.add_role(iee_e1722_tp_acf_lin_part, "sdu", pdu_triggering, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_av_connection_r0 = b.add_role(iee_e1722_tp_av_connection, "maxTransitTime", time_value, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_av_connection_r1 = b.add_role(iee_e1722_tp_av_connection, "sdu", pdu_triggering, fir::Multiplicity::Many);
-
-    auto iee_e1722_tp_config_r0 = b.add_role(iee_e1722_tp_config, "tpConnection", iee_e1722_tp_connection_ref_conditional, fir::Multiplicity::Many);
-
-    auto iee_e1722_tp_connection_r0 = b.add_role(iee_e1722_tp_connection, "communicationDirection", communication_direction_type, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_connection_r1 = b.add_role(iee_e1722_tp_connection, "destinationMacAddress", mac_address_string, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_connection_r2 = b.add_role(iee_e1722_tp_connection, "macAddressStreamId", mac_address_string, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_connection_r3 = b.add_role(iee_e1722_tp_connection, "pdu", pdu_triggering, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_connection_r4 = b.add_role(iee_e1722_tp_connection, "uniqueStreamId", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_connection_r5 = b.add_role(iee_e1722_tp_connection, "version", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_connection_r6 = b.add_role(iee_e1722_tp_connection, "vlanPriority", positive_integer, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_connection_ref_conditional_r0 = b.add_role(iee_e1722_tp_connection_ref_conditional, "iEEE1722TpConnection", iee_e1722_tp_aaf_connection, fir::Multiplicity::One);
-    auto iee_e1722_tp_connection_ref_conditional_r1 = b.add_role(iee_e1722_tp_connection_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_crf_connection_r0 = b.add_role(iee_e1722_tp_crf_connection, "baseFrequency", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_crf_connection_r1 = b.add_role(iee_e1722_tp_crf_connection, "crfPull", iee_e1722_tp_crf_pull_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_crf_connection_r2 = b.add_role(iee_e1722_tp_crf_connection, "crfType", iee_e1722_tp_crf_type_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_crf_connection_r3 = b.add_role(iee_e1722_tp_crf_connection, "frameSyncEnabled", boolean, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_crf_connection_r4 = b.add_role(iee_e1722_tp_crf_connection, "timestampInterval", positive_integer, fir::Multiplicity::Optional);
-
-    auto ieee1722_tp_ethernet_frame_r0 = b.add_role(ieee1722_tp_ethernet_frame, "relativeRepresentationTime", time_value, fir::Multiplicity::Optional);
-    auto ieee1722_tp_ethernet_frame_r1 = b.add_role(ieee1722_tp_ethernet_frame, "streamIdentifier", positive_integer, fir::Multiplicity::Optional);
-    auto ieee1722_tp_ethernet_frame_r2 = b.add_role(ieee1722_tp_ethernet_frame, "subType", positive_integer, fir::Multiplicity::Optional);
-    auto ieee1722_tp_ethernet_frame_r3 = b.add_role(ieee1722_tp_ethernet_frame, "version", positive_integer, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_iidc_connection_r0 = b.add_role(iee_e1722_tp_iidc_connection, "iidcChannel", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_iidc_connection_r1 = b.add_role(iee_e1722_tp_iidc_connection, "iidcDataBlockSize", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_iidc_connection_r2 = b.add_role(iee_e1722_tp_iidc_connection, "iidcFractionNumber", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_iidc_connection_r3 = b.add_role(iee_e1722_tp_iidc_connection, "iidcSourcePacketHeader", boolean, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_iidc_connection_r4 = b.add_role(iee_e1722_tp_iidc_connection, "iidcStreamFormat", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_iidc_connection_r5 = b.add_role(iee_e1722_tp_iidc_connection, "iidcSy", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_iidc_connection_r6 = b.add_role(iee_e1722_tp_iidc_connection, "iidcTCode", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_iidc_connection_r7 = b.add_role(iee_e1722_tp_iidc_connection, "iidcTag", positive_integer, fir::Multiplicity::Optional);
-
-    auto iee_e1722_tp_rvf_connection_r0 = b.add_role(iee_e1722_tp_rvf_connection, "rvfActivePixels", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_rvf_connection_r1 = b.add_role(iee_e1722_tp_rvf_connection, "rvfColorSpace", iee_e1722_tp_rvf_color_space_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_rvf_connection_r2 = b.add_role(iee_e1722_tp_rvf_connection, "rvfEventDefault", positive_integer, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_rvf_connection_r3 = b.add_role(iee_e1722_tp_rvf_connection, "rvfFrameRate", iee_e1722_tp_rvf_frame_rate_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_rvf_connection_r4 = b.add_role(iee_e1722_tp_rvf_connection, "rvfInterlaced", boolean, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_rvf_connection_r5 = b.add_role(iee_e1722_tp_rvf_connection, "rvfPixelDepth", iee_e1722_tp_rvf_pixel_depth_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_rvf_connection_r6 = b.add_role(iee_e1722_tp_rvf_connection, "rvfPixelFormat", iee_e1722_tp_rvf_pixel_format_enum, fir::Multiplicity::Optional);
-    auto iee_e1722_tp_rvf_connection_r7 = b.add_role(iee_e1722_tp_rvf_connection, "rvfTotalLines", positive_integer, fir::Multiplicity::Optional);
+    auto ieee1722_tp_ethernet_frame_r0 = b.add_role(ieee1722_tp_ethernet_frame, "relativeRepresentationTime", time_value, fir::Multiplicity::One);
+    auto ieee1722_tp_ethernet_frame_r1 = b.add_role(ieee1722_tp_ethernet_frame, "streamIdentifier", positive_integer, fir::Multiplicity::One);
+    auto ieee1722_tp_ethernet_frame_r2 = b.add_role(ieee1722_tp_ethernet_frame, "subType", positive_integer, fir::Multiplicity::One);
+    auto ieee1722_tp_ethernet_frame_r3 = b.add_role(ieee1722_tp_ethernet_frame, "version", positive_integer, fir::Multiplicity::One);
 
     auto implementation_r0 = b.add_role(implementation, "buildActionManifest", build_action_manifest_ref_conditional, fir::Multiplicity::Many);
     auto implementation_r1 = b.add_role(implementation, "codeDescriptor", code, fir::Multiplicity::Many);
@@ -19564,8 +18143,6 @@ AutosarSchema build_autosar_r23_11() {
 
     auto implementation_props_r0 = b.add_role(implementation_props, "symbol", c_identifier, fir::Multiplicity::Optional);
 
-    auto imposition_time_definition_group_r0 = b.add_role(imposition_time_definition_group, "impositionTime", imposition_time, fir::Multiplicity::Many);
-
     auto included_data_type_set_r0 = b.add_role(included_data_type_set, "dataType", abstract_implementation_data_type, fir::Multiplicity::Many);
     auto included_data_type_set_r1 = b.add_role(included_data_type_set, "literalPrefix", identifier, fir::Multiplicity::Optional);
 
@@ -19581,7 +18158,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto indexed_array_element_r0 = b.add_role(indexed_array_element, "applicationArrayElement", application_array_element, fir::Multiplicity::Optional);
     auto indexed_array_element_r1 = b.add_role(indexed_array_element, "implementationArrayElement", implementation_data_type_element, fir::Multiplicity::Optional);
-    auto indexed_array_element_r2 = b.add_role(indexed_array_element, "index", integer, fir::Multiplicity::Optional);
+    auto indexed_array_element_r2 = b.add_role(indexed_array_element, "index", integer, fir::Multiplicity::One);
 
     auto indicator_status_needs_r0 = b.add_role(indicator_status_needs, "type", diagnostic_indicator_type_enum, fir::Multiplicity::Optional);
 
@@ -19589,8 +18166,8 @@ AutosarSchema build_autosar_r23_11() {
     auto infrastructure_services_r1 = b.add_role(infrastructure_services, "doIpEntity", do_ip_entity, fir::Multiplicity::Optional);
     auto infrastructure_services_r2 = b.add_role(infrastructure_services, "timeSynchronization", time_synchronization, fir::Multiplicity::Optional);
 
-    auto initial_sd_delay_config_r0 = b.add_role(initial_sd_delay_config, "initialDelayMaxValue", time_value, fir::Multiplicity::Optional);
-    auto initial_sd_delay_config_r1 = b.add_role(initial_sd_delay_config, "initialDelayMinValue", time_value, fir::Multiplicity::Optional);
+    auto initial_sd_delay_config_r0 = b.add_role(initial_sd_delay_config, "initialDelayMaxValue", time_value, fir::Multiplicity::One);
+    auto initial_sd_delay_config_r1 = b.add_role(initial_sd_delay_config, "initialDelayMinValue", time_value, fir::Multiplicity::One);
     auto initial_sd_delay_config_r2 = b.add_role(initial_sd_delay_config, "initialRepetitionsBaseDelay", time_value, fir::Multiplicity::Optional);
     auto initial_sd_delay_config_r3 = b.add_role(initial_sd_delay_config, "initialRepetitionsMax", positive_integer, fir::Multiplicity::Optional);
 
@@ -19784,32 +18361,31 @@ AutosarSchema build_autosar_r23_11() {
     auto ipv6_fragmentation_props_r5 = b.add_role(ipv6_fragmentation_props, "tcpIpIpTxFragmentBufferSize", positive_integer, fir::Multiplicity::Optional);
 
     auto ipv6_ndp_props_r0 = b.add_role(ipv6_ndp_props, "tcpIpNdpDefaultReachableTime", time_value, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r1 = b.add_role(ipv6_ndp_props, "tcpIpNdpDefaultRetransTimer", time_value, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r1 = b.add_role(ipv6_ndp_props, "tcpIpNdpDefaultRetransTimer", time_value, fir::Multiplicity::One);
     auto ipv6_ndp_props_r2 = b.add_role(ipv6_ndp_props, "tcpIpNdpDefaultRouterListSize", positive_integer, fir::Multiplicity::Optional);
     auto ipv6_ndp_props_r3 = b.add_role(ipv6_ndp_props, "tcpIpNdpDefensiveProcessing", boolean, fir::Multiplicity::Optional);
     auto ipv6_ndp_props_r4 = b.add_role(ipv6_ndp_props, "tcpIpNdpDelayFirstProbeTime", positive_integer, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r5 = b.add_role(ipv6_ndp_props, "tcpIpNdpDelayFirstProbeTimeValue", time_value, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r6 = b.add_role(ipv6_ndp_props, "tcpIpNdpDestinationCacheSize", positive_integer, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r7 = b.add_role(ipv6_ndp_props, "tcpIpNdpDynamicHopLimitEnabled", boolean, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r8 = b.add_role(ipv6_ndp_props, "tcpIpNdpDynamicMtuEnabled", boolean, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r9 = b.add_role(ipv6_ndp_props, "tcpIpNdpDynamicReachableTimeEnabled", boolean, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r10 = b.add_role(ipv6_ndp_props, "tcpIpNdpDynamicRetransTimeEnabled", boolean, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r11 = b.add_role(ipv6_ndp_props, "tcpIpNdpMaxRandomFactor", positive_integer, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r12 = b.add_role(ipv6_ndp_props, "tcpIpNdpMaxRtrSolicitationDelay", time_value, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r13 = b.add_role(ipv6_ndp_props, "tcpIpNdpMaxRtrSolicitations", positive_integer, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r14 = b.add_role(ipv6_ndp_props, "tcpIpNdpMinRandomFactor", positive_integer, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r15 = b.add_role(ipv6_ndp_props, "tcpIpNdpNeighborUnreachabilityDetectionEnabled", boolean, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r16 = b.add_role(ipv6_ndp_props, "tcpIpNdpNumMulticastSolicitations", positive_integer, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r17 = b.add_role(ipv6_ndp_props, "tcpIpNdpNumUnicastSolicitations", positive_integer, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r18 = b.add_role(ipv6_ndp_props, "tcpIpNdpPacketQueueEnabled", boolean, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r19 = b.add_role(ipv6_ndp_props, "tcpIpNdpPrefixListSize", positive_integer, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r20 = b.add_role(ipv6_ndp_props, "tcpIpNdpRandomReachableTimeEnabled", boolean, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r21 = b.add_role(ipv6_ndp_props, "tcpIpNdpRndRtrSolicitationDelayEnabled", boolean, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r22 = b.add_role(ipv6_ndp_props, "tcpIpNdpRtrSolicitationInterval", time_value, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r23 = b.add_role(ipv6_ndp_props, "tcpIpNdpSlaacDadNumberOfTransmissions", positive_integer, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r24 = b.add_role(ipv6_ndp_props, "tcpIpNdpSlaacDadRetransmissionDelay", time_value, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r25 = b.add_role(ipv6_ndp_props, "tcpIpNdpSlaacDelayEnabled", boolean, fir::Multiplicity::Optional);
-    auto ipv6_ndp_props_r26 = b.add_role(ipv6_ndp_props, "tcpIpNdpSlaacOptimisticDadEnabled", boolean, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r5 = b.add_role(ipv6_ndp_props, "tcpIpNdpDestinationCacheSize", positive_integer, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r6 = b.add_role(ipv6_ndp_props, "tcpIpNdpDynamicHopLimitEnabled", boolean, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r7 = b.add_role(ipv6_ndp_props, "tcpIpNdpDynamicMtuEnabled", boolean, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r8 = b.add_role(ipv6_ndp_props, "tcpIpNdpDynamicReachableTimeEnabled", boolean, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r9 = b.add_role(ipv6_ndp_props, "tcpIpNdpDynamicRetransTimeEnabled", boolean, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r10 = b.add_role(ipv6_ndp_props, "tcpIpNdpMaxRandomFactor", positive_integer, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r11 = b.add_role(ipv6_ndp_props, "tcpIpNdpMaxRtrSolicitationDelay", time_value, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r12 = b.add_role(ipv6_ndp_props, "tcpIpNdpMaxRtrSolicitations", positive_integer, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r13 = b.add_role(ipv6_ndp_props, "tcpIpNdpMinRandomFactor", positive_integer, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r14 = b.add_role(ipv6_ndp_props, "tcpIpNdpNeighborUnreachabilityDetectionEnabled", boolean, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r15 = b.add_role(ipv6_ndp_props, "tcpIpNdpNumMulticastSolicitations", positive_integer, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r16 = b.add_role(ipv6_ndp_props, "tcpIpNdpNumUnicastSolicitations", positive_integer, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r17 = b.add_role(ipv6_ndp_props, "tcpIpNdpPacketQueueEnabled", boolean, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r18 = b.add_role(ipv6_ndp_props, "tcpIpNdpPrefixListSize", positive_integer, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r19 = b.add_role(ipv6_ndp_props, "tcpIpNdpRandomReachableTimeEnabled", boolean, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r20 = b.add_role(ipv6_ndp_props, "tcpIpNdpRndRtrSolicitationDelayEnabled", boolean, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r21 = b.add_role(ipv6_ndp_props, "tcpIpNdpRtrSolicitationInterval", time_value, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r22 = b.add_role(ipv6_ndp_props, "tcpIpNdpSlaacDadNumberOfTransmissions", positive_integer, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r23 = b.add_role(ipv6_ndp_props, "tcpIpNdpSlaacDadRetransmissionDelay", time_value, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r24 = b.add_role(ipv6_ndp_props, "tcpIpNdpSlaacDelayEnabled", boolean, fir::Multiplicity::Optional);
+    auto ipv6_ndp_props_r25 = b.add_role(ipv6_ndp_props, "tcpIpNdpSlaacOptimisticDadEnabled", boolean, fir::Multiplicity::Optional);
 
     auto ipv6_props_r0 = b.add_role(ipv6_props, "dhcpProps", dhcpv6_props, fir::Multiplicity::Optional);
     auto ipv6_props_r1 = b.add_role(ipv6_props, "fragmentationProps", ipv6_fragmentation_props, fir::Multiplicity::Optional);
@@ -19836,7 +18412,7 @@ AutosarSchema build_autosar_r23_11() {
     auto j1939_cluster_content_r1 = b.add_role(j1939_cluster_content, "request2Support", boolean, fir::Multiplicity::Optional);
     auto j1939_cluster_content_r2 = b.add_role(j1939_cluster_content, "usesAddressArbitration", boolean, fir::Multiplicity::Optional);
 
-    auto j1939_controller_application_r0 = b.add_role(j1939_controller_application, "functionId", positive_integer, fir::Multiplicity::Optional);
+    auto j1939_controller_application_r0 = b.add_role(j1939_controller_application, "functionId", positive_integer, fir::Multiplicity::One);
     auto j1939_controller_application_r1 = b.add_role(j1939_controller_application, "swComponentPrototype", component_in_system_instance_ref, fir::Multiplicity::Optional);
 
     auto j1939_controller_application_to_j1939_nm_node_mapping_r0 = b.add_role(j1939_controller_application_to_j1939_nm_node_mapping, "j1939ControllerApplication", j1939_controller_application, fir::Multiplicity::Optional);
@@ -19845,35 +18421,33 @@ AutosarSchema build_autosar_r23_11() {
     auto j1939_dcm_i_pdu_r0 = b.add_role(j1939_dcm_i_pdu, "diagnosticMessageType", positive_integer, fir::Multiplicity::Optional);
 
     auto j1939_nm_cluster_r0 = b.add_role(j1939_nm_cluster, "addressClaimEnabled", boolean, fir::Multiplicity::Optional);
-    auto j1939_nm_cluster_r1 = b.add_role(j1939_nm_cluster, "usesDynamicAddressing", boolean, fir::Multiplicity::Optional);
 
-    auto j1939_nm_node_r0 = b.add_role(j1939_nm_node, "addressConfigurationCapability", j1939_nm_address_configuration_capability_enum, fir::Multiplicity::Optional);
-    auto j1939_nm_node_r1 = b.add_role(j1939_nm_node, "nodeName", j1939_node_name, fir::Multiplicity::Optional);
+    auto j1939_nm_node_r0 = b.add_role(j1939_nm_node, "nodeName", j1939_node_name, fir::Multiplicity::Optional);
 
-    auto j1939_node_name_r0 = b.add_role(j1939_node_name, "arbitraryAddressCapable", boolean, fir::Multiplicity::Optional);
-    auto j1939_node_name_r1 = b.add_role(j1939_node_name, "ecuInstance", integer, fir::Multiplicity::Optional);
-    auto j1939_node_name_r2 = b.add_role(j1939_node_name, "function", integer, fir::Multiplicity::Optional);
-    auto j1939_node_name_r3 = b.add_role(j1939_node_name, "functionInstance", integer, fir::Multiplicity::Optional);
-    auto j1939_node_name_r4 = b.add_role(j1939_node_name, "identitiyNumber", integer, fir::Multiplicity::Optional);
-    auto j1939_node_name_r5 = b.add_role(j1939_node_name, "industryGroup", integer, fir::Multiplicity::Optional);
-    auto j1939_node_name_r6 = b.add_role(j1939_node_name, "manufacturerCode", integer, fir::Multiplicity::Optional);
-    auto j1939_node_name_r7 = b.add_role(j1939_node_name, "vehicleSystem", integer, fir::Multiplicity::Optional);
-    auto j1939_node_name_r8 = b.add_role(j1939_node_name, "vehicleSystemInstance", integer, fir::Multiplicity::Optional);
+    auto j1939_node_name_r0 = b.add_role(j1939_node_name, "arbitraryAddressCapable", boolean, fir::Multiplicity::One);
+    auto j1939_node_name_r1 = b.add_role(j1939_node_name, "ecuInstance", integer, fir::Multiplicity::One);
+    auto j1939_node_name_r2 = b.add_role(j1939_node_name, "function", integer, fir::Multiplicity::One);
+    auto j1939_node_name_r3 = b.add_role(j1939_node_name, "functionInstance", integer, fir::Multiplicity::One);
+    auto j1939_node_name_r4 = b.add_role(j1939_node_name, "identitiyNumber", integer, fir::Multiplicity::One);
+    auto j1939_node_name_r5 = b.add_role(j1939_node_name, "industryGroup", integer, fir::Multiplicity::One);
+    auto j1939_node_name_r6 = b.add_role(j1939_node_name, "manufacturerCode", integer, fir::Multiplicity::One);
+    auto j1939_node_name_r7 = b.add_role(j1939_node_name, "vehicleSystem", integer, fir::Multiplicity::One);
+    auto j1939_node_name_r8 = b.add_role(j1939_node_name, "vehicleSystemInstance", integer, fir::Multiplicity::One);
 
     auto j1939_shared_address_cluster_r0 = b.add_role(j1939_shared_address_cluster, "participatingJ1939Cluster", j1939_cluster, fir::Multiplicity::Many);
     auto j1939_shared_address_cluster_r1 = b.add_role(j1939_shared_address_cluster, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto j1939_tp_config_r0 = b.add_role(j1939_tp_config, "tpAddress", tp_address, fir::Multiplicity::Many);
-    auto j1939_tp_config_r1 = b.add_role(j1939_tp_config, "tpConnection", j1939_tp_connection, fir::Multiplicity::Many);
-    auto j1939_tp_config_r2 = b.add_role(j1939_tp_config, "tpNode", j1939_tp_node, fir::Multiplicity::Many);
+    auto j1939_tp_config_r0 = b.add_role(j1939_tp_config, "tpAddress", tp_address, fir::Multiplicity::OneOrMore);
+    auto j1939_tp_config_r1 = b.add_role(j1939_tp_config, "tpConnection", j1939_tp_connection, fir::Multiplicity::OneOrMore);
+    auto j1939_tp_config_r2 = b.add_role(j1939_tp_config, "tpNode", j1939_tp_node, fir::Multiplicity::OneOrMore);
 
-    auto j1939_tp_connection_r0 = b.add_role(j1939_tp_connection, "broadcast", boolean, fir::Multiplicity::Optional);
+    auto j1939_tp_connection_r0 = b.add_role(j1939_tp_connection, "broadcast", boolean, fir::Multiplicity::One);
     auto j1939_tp_connection_r1 = b.add_role(j1939_tp_connection, "bufferRatio", positive_integer, fir::Multiplicity::Optional);
     auto j1939_tp_connection_r2 = b.add_role(j1939_tp_connection, "cancellation", boolean, fir::Multiplicity::Optional);
-    auto j1939_tp_connection_r3 = b.add_role(j1939_tp_connection, "dataPdu", n_pdu, fir::Multiplicity::Optional);
+    auto j1939_tp_connection_r3 = b.add_role(j1939_tp_connection, "dataPdu", n_pdu, fir::Multiplicity::One);
     auto j1939_tp_connection_r4 = b.add_role(j1939_tp_connection, "directPdu", n_pdu, fir::Multiplicity::Optional);
     auto j1939_tp_connection_r5 = b.add_role(j1939_tp_connection, "dynamicBs", boolean, fir::Multiplicity::Optional);
-    auto j1939_tp_connection_r6 = b.add_role(j1939_tp_connection, "flowControlPdu", n_pdu, fir::Multiplicity::Many);
+    auto j1939_tp_connection_r6 = b.add_role(j1939_tp_connection, "flowControlPdu", n_pdu, fir::Multiplicity::OneOrMore);
     auto j1939_tp_connection_r7 = b.add_role(j1939_tp_connection, "maxBs", positive_integer, fir::Multiplicity::Optional);
     auto j1939_tp_connection_r8 = b.add_role(j1939_tp_connection, "maxExpBs", positive_integer, fir::Multiplicity::Optional);
     auto j1939_tp_connection_r9 = b.add_role(j1939_tp_connection, "receiver", j1939_tp_node, fir::Multiplicity::Many);
@@ -19891,7 +18465,7 @@ AutosarSchema build_autosar_r23_11() {
     auto j1939_tp_pg_r1 = b.add_role(j1939_tp_pg, "pgn", integer, fir::Multiplicity::Optional);
     auto j1939_tp_pg_r2 = b.add_role(j1939_tp_pg, "requestable", boolean, fir::Multiplicity::Optional);
     auto j1939_tp_pg_r3 = b.add_role(j1939_tp_pg, "sdu", container_i_pdu, fir::Multiplicity::Many);
-    auto j1939_tp_pg_r4 = b.add_role(j1939_tp_pg, "tpSdu", container_i_pdu, fir::Multiplicity::Optional);
+    auto j1939_tp_pg_r4 = b.add_role(j1939_tp_pg, "tpSdu", container_i_pdu, fir::Multiplicity::One);
 
     auto keyword_r0 = b.add_role(keyword, "abbrName", name_token, fir::Multiplicity::One);
     auto keyword_r1 = b.add_role(keyword, "classification", name_token, fir::Multiplicity::Many);
@@ -19955,20 +18529,20 @@ AutosarSchema build_autosar_r23_11() {
     auto lin_communication_connector_r2 = b.add_role(lin_communication_connector, "linOrderedConfigurableFrame", lin_ordered_configurable_frame, fir::Multiplicity::Many);
     auto lin_communication_connector_r3 = b.add_role(lin_communication_connector, "scheduleChangeNextTimeBase", boolean, fir::Multiplicity::Optional);
 
-    auto lin_communication_controller_content_r0 = b.add_role(lin_communication_controller_content, "protocolVersion", string, fir::Multiplicity::Optional);
+    auto lin_communication_controller_content_r0 = b.add_role(lin_communication_controller_content, "protocolVersion", string, fir::Multiplicity::One);
 
-    auto lin_configurable_frame_r0 = b.add_role(lin_configurable_frame, "frame", lin_event_triggered_frame, fir::Multiplicity::Optional);
+    auto lin_configurable_frame_r0 = b.add_role(lin_configurable_frame, "frame", lin_event_triggered_frame, fir::Multiplicity::One);
     auto lin_configurable_frame_r1 = b.add_role(lin_configurable_frame, "messageId", positive_integer, fir::Multiplicity::Optional);
 
     auto lin_configuration_entry_r0 = b.add_role(lin_configuration_entry, "assignedController", lin_slave, fir::Multiplicity::Optional);
     auto lin_configuration_entry_r1 = b.add_role(lin_configuration_entry, "assignedLinSlaveConfig", lin_slave_config_ident, fir::Multiplicity::Optional);
 
     auto lin_error_response_r0 = b.add_role(lin_error_response, "frameTriggering", lin_frame_triggering, fir::Multiplicity::Optional);
-    auto lin_error_response_r1 = b.add_role(lin_error_response, "responseErrorPosition", integer, fir::Multiplicity::Optional);
+    auto lin_error_response_r1 = b.add_role(lin_error_response, "responseErrorPosition", integer, fir::Multiplicity::One);
     auto lin_error_response_r2 = b.add_role(lin_error_response, "responseError", i_signal_triggering, fir::Multiplicity::Optional);
 
     auto lin_event_triggered_frame_r0 = b.add_role(lin_event_triggered_frame, "collisionResolvingSchedule", lin_schedule_table, fir::Multiplicity::Optional);
-    auto lin_event_triggered_frame_r1 = b.add_role(lin_event_triggered_frame, "linUnconditionalFrame", lin_unconditional_frame, fir::Multiplicity::Many);
+    auto lin_event_triggered_frame_r1 = b.add_role(lin_event_triggered_frame, "linUnconditionalFrame", lin_unconditional_frame, fir::Multiplicity::OneOrMore);
 
     auto lin_frame_triggering_r0 = b.add_role(lin_frame_triggering, "identifier", integer, fir::Multiplicity::Optional);
     auto lin_frame_triggering_r1 = b.add_role(lin_frame_triggering, "linChecksum", lin_checksum_type, fir::Multiplicity::Optional);
@@ -19981,23 +18555,23 @@ AutosarSchema build_autosar_r23_11() {
     auto lin_master_content_r1 = b.add_role(lin_master_content, "timeBase", time_value, fir::Multiplicity::Optional);
     auto lin_master_content_r2 = b.add_role(lin_master_content, "timeBaseJitter", time_value, fir::Multiplicity::Optional);
 
-    auto lin_ordered_configurable_frame_r0 = b.add_role(lin_ordered_configurable_frame, "frame", lin_event_triggered_frame, fir::Multiplicity::Optional);
-    auto lin_ordered_configurable_frame_r1 = b.add_role(lin_ordered_configurable_frame, "index", integer, fir::Multiplicity::Optional);
+    auto lin_ordered_configurable_frame_r0 = b.add_role(lin_ordered_configurable_frame, "frame", lin_event_triggered_frame, fir::Multiplicity::One);
+    auto lin_ordered_configurable_frame_r1 = b.add_role(lin_ordered_configurable_frame, "index", integer, fir::Multiplicity::One);
 
     auto lin_physical_channel_r0 = b.add_role(lin_physical_channel, "busIdleTimeoutPeriod", time_value, fir::Multiplicity::Optional);
     auto lin_physical_channel_r1 = b.add_role(lin_physical_channel, "scheduleTable", lin_schedule_table, fir::Multiplicity::Many);
 
     auto lin_schedule_table_r0 = b.add_role(lin_schedule_table, "resumePosition", resume_position, fir::Multiplicity::Optional);
     auto lin_schedule_table_r1 = b.add_role(lin_schedule_table, "runMode", run_mode, fir::Multiplicity::Optional);
-    auto lin_schedule_table_r2 = b.add_role(lin_schedule_table, "tableEntry", application_entry, fir::Multiplicity::Many);
+    auto lin_schedule_table_r2 = b.add_role(lin_schedule_table, "tableEntry", application_entry, fir::Multiplicity::OneOrMore);
     auto lin_schedule_table_r3 = b.add_role(lin_schedule_table, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto lin_slave_r0 = b.add_role(lin_slave, "linSlaveVariant", lin_slave_conditional, fir::Multiplicity::OneOrMore);
 
     auto lin_slave_conditional_r0 = b.add_role(lin_slave_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto lin_slave_config_r0 = b.add_role(lin_slave_config, "configuredNad", integer, fir::Multiplicity::Optional);
-    auto lin_slave_config_r1 = b.add_role(lin_slave_config, "functionId", positive_integer, fir::Multiplicity::Optional);
+    auto lin_slave_config_r0 = b.add_role(lin_slave_config, "configuredNad", integer, fir::Multiplicity::One);
+    auto lin_slave_config_r1 = b.add_role(lin_slave_config, "functionId", positive_integer, fir::Multiplicity::One);
     auto lin_slave_config_r2 = b.add_role(lin_slave_config, "ident", lin_slave_config_ident, fir::Multiplicity::Optional);
     auto lin_slave_config_r3 = b.add_role(lin_slave_config, "initialNad", integer, fir::Multiplicity::Optional);
     auto lin_slave_config_r4 = b.add_role(lin_slave_config, "linConfigurableFrame", lin_configurable_frame, fir::Multiplicity::Many);
@@ -20005,38 +18579,38 @@ AutosarSchema build_autosar_r23_11() {
     auto lin_slave_config_r6 = b.add_role(lin_slave_config, "linOrderedConfigurableFrame", lin_ordered_configurable_frame, fir::Multiplicity::Many);
     auto lin_slave_config_r7 = b.add_role(lin_slave_config, "linSlaveEcu", lin_slave, fir::Multiplicity::Optional);
     auto lin_slave_config_r8 = b.add_role(lin_slave_config, "protocolVersion", string, fir::Multiplicity::Optional);
-    auto lin_slave_config_r9 = b.add_role(lin_slave_config, "supplierId", positive_integer, fir::Multiplicity::Optional);
-    auto lin_slave_config_r10 = b.add_role(lin_slave_config, "variantId", positive_integer, fir::Multiplicity::Optional);
+    auto lin_slave_config_r9 = b.add_role(lin_slave_config, "supplierId", positive_integer, fir::Multiplicity::One);
+    auto lin_slave_config_r10 = b.add_role(lin_slave_config, "variantId", positive_integer, fir::Multiplicity::One);
 
     auto lin_slave_content_r0 = b.add_role(lin_slave_content, "assignNad", boolean, fir::Multiplicity::Optional);
-    auto lin_slave_content_r1 = b.add_role(lin_slave_content, "configuredNad", integer, fir::Multiplicity::Optional);
-    auto lin_slave_content_r2 = b.add_role(lin_slave_content, "functionId", positive_integer, fir::Multiplicity::Optional);
+    auto lin_slave_content_r1 = b.add_role(lin_slave_content, "configuredNad", integer, fir::Multiplicity::One);
+    auto lin_slave_content_r2 = b.add_role(lin_slave_content, "functionId", positive_integer, fir::Multiplicity::One);
     auto lin_slave_content_r3 = b.add_role(lin_slave_content, "initialNad", integer, fir::Multiplicity::Optional);
-    auto lin_slave_content_r4 = b.add_role(lin_slave_content, "linErrorResponse", lin_error_response, fir::Multiplicity::Optional);
+    auto lin_slave_content_r4 = b.add_role(lin_slave_content, "linErrorResponse", lin_error_response, fir::Multiplicity::One);
     auto lin_slave_content_r5 = b.add_role(lin_slave_content, "nasTimeout", time_value, fir::Multiplicity::Optional);
     auto lin_slave_content_r6 = b.add_role(lin_slave_content, "saveConfiguration", boolean, fir::Multiplicity::Optional);
-    auto lin_slave_content_r7 = b.add_role(lin_slave_content, "supplierId", positive_integer, fir::Multiplicity::Optional);
-    auto lin_slave_content_r8 = b.add_role(lin_slave_content, "variantId", positive_integer, fir::Multiplicity::Optional);
+    auto lin_slave_content_r7 = b.add_role(lin_slave_content, "supplierId", positive_integer, fir::Multiplicity::One);
+    auto lin_slave_content_r8 = b.add_role(lin_slave_content, "variantId", positive_integer, fir::Multiplicity::One);
 
-    auto lin_sporadic_frame_r0 = b.add_role(lin_sporadic_frame, "substitutedFrame", lin_unconditional_frame, fir::Multiplicity::Many);
+    auto lin_sporadic_frame_r0 = b.add_role(lin_sporadic_frame, "substitutedFrame", lin_unconditional_frame, fir::Multiplicity::OneOrMore);
 
-    auto lin_tp_config_r0 = b.add_role(lin_tp_config, "tpAddress", tp_address, fir::Multiplicity::Many);
+    auto lin_tp_config_r0 = b.add_role(lin_tp_config, "tpAddress", tp_address, fir::Multiplicity::OneOrMore);
     auto lin_tp_config_r1 = b.add_role(lin_tp_config, "tpConnection", lin_tp_connection, fir::Multiplicity::Many);
     auto lin_tp_config_r2 = b.add_role(lin_tp_config, "tpNode", lin_tp_node, fir::Multiplicity::Many);
 
-    auto lin_tp_connection_r0 = b.add_role(lin_tp_connection, "dataPdu", n_pdu, fir::Multiplicity::Optional);
+    auto lin_tp_connection_r0 = b.add_role(lin_tp_connection, "dataPdu", n_pdu, fir::Multiplicity::One);
     auto lin_tp_connection_r1 = b.add_role(lin_tp_connection, "dropNotRequestedNad", boolean, fir::Multiplicity::Optional);
     auto lin_tp_connection_r2 = b.add_role(lin_tp_connection, "flowControl", n_pdu, fir::Multiplicity::Optional);
-    auto lin_tp_connection_r3 = b.add_role(lin_tp_connection, "linTpNSdu", container_i_pdu, fir::Multiplicity::Optional);
+    auto lin_tp_connection_r3 = b.add_role(lin_tp_connection, "linTpNSdu", container_i_pdu, fir::Multiplicity::One);
     auto lin_tp_connection_r4 = b.add_role(lin_tp_connection, "maxNumberOfRespPendingFrames", positive_integer, fir::Multiplicity::Optional);
     auto lin_tp_connection_r5 = b.add_role(lin_tp_connection, "multicast", tp_address, fir::Multiplicity::Optional);
     auto lin_tp_connection_r6 = b.add_role(lin_tp_connection, "p2Max", time_value, fir::Multiplicity::Optional);
     auto lin_tp_connection_r7 = b.add_role(lin_tp_connection, "p2Timing", time_value, fir::Multiplicity::Optional);
-    auto lin_tp_connection_r8 = b.add_role(lin_tp_connection, "receiver", lin_tp_node, fir::Multiplicity::Many);
+    auto lin_tp_connection_r8 = b.add_role(lin_tp_connection, "receiver", lin_tp_node, fir::Multiplicity::OneOrMore);
     auto lin_tp_connection_r9 = b.add_role(lin_tp_connection, "timeoutAs", time_value, fir::Multiplicity::Optional);
     auto lin_tp_connection_r10 = b.add_role(lin_tp_connection, "timeoutCr", time_value, fir::Multiplicity::Optional);
     auto lin_tp_connection_r11 = b.add_role(lin_tp_connection, "timeoutCs", time_value, fir::Multiplicity::Optional);
-    auto lin_tp_connection_r12 = b.add_role(lin_tp_connection, "transmitter", lin_tp_node, fir::Multiplicity::Optional);
+    auto lin_tp_connection_r12 = b.add_role(lin_tp_connection, "transmitter", lin_tp_node, fir::Multiplicity::One);
     auto lin_tp_connection_r13 = b.add_role(lin_tp_connection, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto lin_tp_node_r0 = b.add_role(lin_tp_node, "connector", abstract_can_communication_connector, fir::Multiplicity::Optional);
@@ -20073,9 +18647,9 @@ AutosarSchema build_autosar_r23_11() {
     auto lt_message_collection_to_port_prototype_mapping_r0 = b.add_role(lt_message_collection_to_port_prototype_mapping, "logAndTraceMessageCollectionSet", log_and_trace_message_collection_set, fir::Multiplicity::Optional);
     auto lt_message_collection_to_port_prototype_mapping_r1 = b.add_role(lt_message_collection_to_port_prototype_mapping, "rPortPrototype", r_port_prototype, fir::Multiplicity::Optional);
 
-    auto mac_multicast_configuration_r0 = b.add_role(mac_multicast_configuration, "macMulticastGroup", mac_multicast_group, fir::Multiplicity::Optional);
+    auto mac_multicast_configuration_r0 = b.add_role(mac_multicast_configuration, "macMulticastGroup", mac_multicast_group, fir::Multiplicity::One);
 
-    auto mac_multicast_group_r0 = b.add_role(mac_multicast_group, "macMulticastAddress", mac_address_string, fir::Multiplicity::Optional);
+    auto mac_multicast_group_r0 = b.add_role(mac_multicast_group, "macMulticastAddress", mac_address_string, fir::Multiplicity::One);
 
     auto mac_sec_cipher_suite_config_r0 = b.add_role(mac_sec_cipher_suite_config, "cipherSuite", string, fir::Multiplicity::Optional);
     auto mac_sec_cipher_suite_config_r1 = b.add_role(mac_sec_cipher_suite_config, "cipherSuitePriority", positive_integer, fir::Multiplicity::Optional);
@@ -20127,7 +18701,7 @@ AutosarSchema build_autosar_r23_11() {
     auto machine_design_r7 = b.add_role(machine_design, "tcpIpIcmpProps", eth_tcp_ip_icmp_props, fir::Multiplicity::Many);
     auto machine_design_r8 = b.add_role(machine_design, "tcpIpProps", eth_tcp_ip_props, fir::Multiplicity::Many);
 
-    auto machine_timing_r0 = b.add_role(machine_timing, "machine", machine, fir::Multiplicity::Optional);
+    auto machine_timing_r0 = b.add_role(machine_timing, "machine", machine, fir::Multiplicity::One);
 
     auto map_r0 = b.add_role(map, "area", area, fir::Multiplicity::OneOrMore);
     auto map_r1 = b.add_role(map, "class", string_simple_t, fir::Multiplicity::Optional);
@@ -20349,7 +18923,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto mode_declaration_mapping_set_r0 = b.add_role(mode_declaration_mapping_set, "modeDeclarationMapping", mode_declaration_mapping, fir::Multiplicity::Many);
 
-    auto mode_driven_transmission_mode_condition_r0 = b.add_role(mode_driven_transmission_mode_condition, "modeDeclaration", mode_declaration, fir::Multiplicity::Many);
+    auto mode_driven_transmission_mode_condition_r0 = b.add_role(mode_driven_transmission_mode_condition, "modeDeclaration", mode_declaration, fir::Multiplicity::OneOrMore);
 
     auto mode_error_behavior_r0 = b.add_role(mode_error_behavior, "defaultMode", mode_declaration, fir::Multiplicity::Optional);
     auto mode_error_behavior_r1 = b.add_role(mode_error_behavior, "errorReactionPolicy", mode_error_reaction_policy_enum, fir::Multiplicity::Optional);
@@ -20457,20 +19031,13 @@ AutosarSchema build_autosar_r23_11() {
     auto multiplexed_i_pdu_r5 = b.add_role(multiplexed_i_pdu, "triggerMode", trigger_mode, fir::Multiplicity::Optional);
     auto multiplexed_i_pdu_r6 = b.add_role(multiplexed_i_pdu, "unusedBitPattern", integer, fir::Multiplicity::Optional);
 
-    auto multiplexed_part_r0 = b.add_role(multiplexed_part, "segmentPosition", segment_position, fir::Multiplicity::Many);
+    auto multiplexed_part_r0 = b.add_role(multiplexed_part, "segmentPosition", segment_position, fir::Multiplicity::OneOrMore);
 
     auto network_endpoint_r0 = b.add_role(network_endpoint, "fullyQualifiedDomainName", string, fir::Multiplicity::Optional);
     auto network_endpoint_r1 = b.add_role(network_endpoint, "infrastructureServices", infrastructure_services, fir::Multiplicity::Optional);
     auto network_endpoint_r2 = b.add_role(network_endpoint, "ipSecConfig", ip_sec_config, fir::Multiplicity::Optional);
-    auto network_endpoint_r3 = b.add_role(network_endpoint, "networkEndpointAddress", ipv4_configuration, fir::Multiplicity::Many);
+    auto network_endpoint_r3 = b.add_role(network_endpoint, "networkEndpointAddress", ipv4_configuration, fir::Multiplicity::OneOrMore);
     auto network_endpoint_r4 = b.add_role(network_endpoint, "priority", positive_integer, fir::Multiplicity::Optional);
-
-    auto network_endpoint_ref_conditional_r0 = b.add_role(network_endpoint_ref_conditional, "networkEndpoint", network_endpoint, fir::Multiplicity::One);
-    auto network_endpoint_ref_conditional_r1 = b.add_role(network_endpoint_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
-
-    auto network_handle_port_mapping_r0 = b.add_role(network_handle_port_mapping, "networkHandle", nm_network_handle, fir::Multiplicity::Optional);
-    auto network_handle_port_mapping_r1 = b.add_role(network_handle_port_mapping, "pPortPrototypeInExecutable", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
-    auto network_handle_port_mapping_r2 = b.add_role(network_handle_port_mapping, "process", process, fir::Multiplicity::Optional);
 
     auto network_segment_identification_r0 = b.add_role(network_segment_identification, "networkSegmentId", positive_integer, fir::Multiplicity::Optional);
 
@@ -20501,7 +19068,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto nm_ecu_r0 = b.add_role(nm_ecu, "busDependentNmEcu", can_nm_ecu, fir::Multiplicity::Many);
     auto nm_ecu_r1 = b.add_role(nm_ecu, "busSpecificNmEcu", can_nm_ecu, fir::Multiplicity::Optional);
-    auto nm_ecu_r2 = b.add_role(nm_ecu, "ecuInstance", ecu_instance, fir::Multiplicity::Optional);
+    auto nm_ecu_r2 = b.add_role(nm_ecu, "ecuInstance", ecu_instance, fir::Multiplicity::One);
     auto nm_ecu_r3 = b.add_role(nm_ecu, "nmBusSynchronizationEnabled", boolean, fir::Multiplicity::Optional);
     auto nm_ecu_r4 = b.add_role(nm_ecu, "nmComControlEnabled", boolean, fir::Multiplicity::Optional);
     auto nm_ecu_r5 = b.add_role(nm_ecu, "nmCoordinator", nm_coordinator, fir::Multiplicity::Optional);
@@ -20522,9 +19089,6 @@ AutosarSchema build_autosar_r23_11() {
     auto nm_handle_to_function_group_state_mapping_r2 = b.add_role(nm_handle_to_function_group_state_mapping, "nmHandle", nm_network_handle, fir::Multiplicity::Optional);
 
     auto nm_instantiation_r0 = b.add_role(nm_instantiation, "networkHandle", nm_network_handle, fir::Multiplicity::Many);
-
-    auto nm_interacts_with_sm_mapping_r0 = b.add_role(nm_interacts_with_sm_mapping, "nmNetworkHandle", nm_network_handle, fir::Multiplicity::Optional);
-    auto nm_interacts_with_sm_mapping_r1 = b.add_role(nm_interacts_with_sm_mapping, "stateRequest", state_management_request_error, fir::Multiplicity::Optional);
 
     auto nm_network_handle_r0 = b.add_role(nm_network_handle, "partialNetwork", pnc_mapping_ident, fir::Multiplicity::Many);
     auto nm_network_handle_r1 = b.add_role(nm_network_handle, "vlan", ethernet_communication_connector, fir::Multiplicity::Many);
@@ -20681,16 +19245,15 @@ AutosarSchema build_autosar_r23_11() {
     auto operation_in_system_instance_ref_r0 = b.add_role(operation_in_system_instance_ref, "contextComposition", root_sw_composition_prototype, fir::Multiplicity::Optional);
     auto operation_in_system_instance_ref_r1 = b.add_role(operation_in_system_instance_ref, "contextComponent", sw_component_prototype, fir::Multiplicity::Many);
     auto operation_in_system_instance_ref_r2 = b.add_role(operation_in_system_instance_ref, "contextPort", abstract_provided_port_prototype, fir::Multiplicity::One);
-    auto operation_in_system_instance_ref_r3 = b.add_role(operation_in_system_instance_ref, "targetOperation", client_server_operation, fir::Multiplicity::Optional);
+    auto operation_in_system_instance_ref_r3 = b.add_role(operation_in_system_instance_ref, "targetOperation", client_server_operation, fir::Multiplicity::One);
 
     auto operation_invoked_event_r0 = b.add_role(operation_invoked_event, "operation", p_operation_in_atomic_swc_instance_ref, fir::Multiplicity::Optional);
 
-    auto ordered_master_r0 = b.add_role(ordered_master, "index", positive_integer, fir::Multiplicity::Optional);
-    auto ordered_master_r1 = b.add_role(ordered_master, "timeSyncServer", time_sync_server_configuration, fir::Multiplicity::Optional);
+    auto ordered_master_r0 = b.add_role(ordered_master, "index", positive_integer, fir::Multiplicity::One);
+    auto ordered_master_r1 = b.add_role(ordered_master, "timeSyncServer", time_sync_server_configuration, fir::Multiplicity::One);
 
-    auto os_module_instantiation_r0 = b.add_role(os_module_instantiation, "osArtiAdapterLaunchBehavior", os_arti_adapter_launch_behavior_enum, fir::Multiplicity::Optional);
-    auto os_module_instantiation_r1 = b.add_role(os_module_instantiation, "resourceGroup", resource_group, fir::Multiplicity::Many);
-    auto os_module_instantiation_r2 = b.add_role(os_module_instantiation, "supportedTimerGranularity", time_value, fir::Multiplicity::Optional);
+    auto os_module_instantiation_r0 = b.add_role(os_module_instantiation, "resourceGroup", resource_group, fir::Multiplicity::Many);
+    auto os_module_instantiation_r1 = b.add_role(os_module_instantiation, "supportedTimerGranularity", time_value, fir::Multiplicity::Optional);
 
     auto os_task_proxy_r0 = b.add_role(os_task_proxy, "period", time_value, fir::Multiplicity::Optional);
     auto os_task_proxy_r1 = b.add_role(os_task_proxy, "preemptability", os_task_preemptability_enum, fir::Multiplicity::Optional);
@@ -20778,16 +19341,16 @@ AutosarSchema build_autosar_r23_11() {
     auto pdu_activation_routing_group_r2 = b.add_role(pdu_activation_routing_group, "iPduIdentifierUdp", so_con_i_pdu_identifier, fir::Multiplicity::Many);
     auto pdu_activation_routing_group_r3 = b.add_role(pdu_activation_routing_group, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto pdu_mapping_default_value_r0 = b.add_role(pdu_mapping_default_value, "defaultValueElement", default_value_element, fir::Multiplicity::Many);
+    auto pdu_mapping_default_value_r0 = b.add_role(pdu_mapping_default_value, "defaultValueElement", default_value_element, fir::Multiplicity::OneOrMore);
 
-    auto pdu_to_frame_mapping_r0 = b.add_role(pdu_to_frame_mapping, "packingByteOrder", byte_order_enum, fir::Multiplicity::Optional);
-    auto pdu_to_frame_mapping_r1 = b.add_role(pdu_to_frame_mapping, "pdu", container_i_pdu, fir::Multiplicity::Optional);
-    auto pdu_to_frame_mapping_r2 = b.add_role(pdu_to_frame_mapping, "startPosition", integer, fir::Multiplicity::Optional);
+    auto pdu_to_frame_mapping_r0 = b.add_role(pdu_to_frame_mapping, "packingByteOrder", byte_order_enum, fir::Multiplicity::One);
+    auto pdu_to_frame_mapping_r1 = b.add_role(pdu_to_frame_mapping, "pdu", container_i_pdu, fir::Multiplicity::One);
+    auto pdu_to_frame_mapping_r2 = b.add_role(pdu_to_frame_mapping, "startPosition", integer, fir::Multiplicity::One);
     auto pdu_to_frame_mapping_r3 = b.add_role(pdu_to_frame_mapping, "updateIndicationBitPosition", integer, fir::Multiplicity::Optional);
     auto pdu_to_frame_mapping_r4 = b.add_role(pdu_to_frame_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto pdu_triggering_r0 = b.add_role(pdu_triggering, "iPduPort", i_pdu_port, fir::Multiplicity::Many);
-    auto pdu_triggering_r1 = b.add_role(pdu_triggering, "iPdu", container_i_pdu, fir::Multiplicity::Optional);
+    auto pdu_triggering_r1 = b.add_role(pdu_triggering, "iPdu", container_i_pdu, fir::Multiplicity::One);
     auto pdu_triggering_r2 = b.add_role(pdu_triggering, "iSignalTriggering", i_signal_triggering_ref_conditional, fir::Multiplicity::Many);
     auto pdu_triggering_r3 = b.add_role(pdu_triggering, "secOcCryptoMapping", sec_oc_crypto_service_mapping, fir::Multiplicity::Optional);
     auto pdu_triggering_r4 = b.add_role(pdu_triggering, "triggerIPduSendCondition", trigger_i_pdu_send_condition, fir::Multiplicity::Many);
@@ -20796,7 +19359,7 @@ AutosarSchema build_autosar_r23_11() {
     auto pdu_triggering_ref_conditional_r0 = b.add_role(pdu_triggering_ref_conditional, "pduTriggering", pdu_triggering, fir::Multiplicity::One);
     auto pdu_triggering_ref_conditional_r1 = b.add_role(pdu_triggering_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto pdur_i_pdu_group_r0 = b.add_role(pdur_i_pdu_group, "communicationMode", string, fir::Multiplicity::Optional);
+    auto pdur_i_pdu_group_r0 = b.add_role(pdur_i_pdu_group, "communicationMode", string, fir::Multiplicity::One);
     auto pdur_i_pdu_group_r1 = b.add_role(pdur_i_pdu_group, "iPdu", pdu_triggering_ref_conditional, fir::Multiplicity::Many);
 
     auto per_instance_memory_r0 = b.add_role(per_instance_memory, "initValue", string, fir::Multiplicity::Optional);
@@ -20815,7 +19378,7 @@ AutosarSchema build_autosar_r23_11() {
     auto periodic_event_triggering_r2 = b.add_role(periodic_event_triggering, "period", multidimensional_time, fir::Multiplicity::Optional);
 
     auto permissible_signal_path_r0 = b.add_role(permissible_signal_path, "operation", swc_to_swc_operation_arguments, fir::Multiplicity::Many);
-    auto permissible_signal_path_r1 = b.add_role(permissible_signal_path, "physicalChannel", abstract_can_physical_channel, fir::Multiplicity::Many);
+    auto permissible_signal_path_r1 = b.add_role(permissible_signal_path, "physicalChannel", abstract_can_physical_channel, fir::Multiplicity::OneOrMore);
     auto permissible_signal_path_r2 = b.add_role(permissible_signal_path, "signal", swc_to_swc_signal, fir::Multiplicity::Many);
 
     auto persistency_data_required_com_spec_r0 = b.add_role(persistency_data_required_com_spec, "dataElement", persistency_data_element, fir::Multiplicity::Optional);
@@ -20859,18 +19422,16 @@ AutosarSchema build_autosar_r23_11() {
     auto persistency_file_storage_interface_r0 = b.add_role(persistency_file_storage_interface, "fileElement", persistency_file_element, fir::Multiplicity::Many);
     auto persistency_file_storage_interface_r1 = b.add_role(persistency_file_storage_interface, "maxNumberOfFiles", positive_integer, fir::Multiplicity::Optional);
 
-    auto persistency_interface_r0 = b.add_role(persistency_interface, "contractVersion", strong_revision_label_string, fir::Multiplicity::Optional);
-    auto persistency_interface_r1 = b.add_role(persistency_interface, "minimumSustainedSize", positive_integer, fir::Multiplicity::Optional);
-    auto persistency_interface_r2 = b.add_role(persistency_interface, "redundancy", persistency_redundancy_enum, fir::Multiplicity::Optional);
-    auto persistency_interface_r3 = b.add_role(persistency_interface, "redundancyHandling", persistency_redundancy_crc, fir::Multiplicity::Many);
-    auto persistency_interface_r4 = b.add_role(persistency_interface, "updateStrategy", persistency_collection_level_update_strategy_enum, fir::Multiplicity::Optional);
+    auto persistency_interface_r0 = b.add_role(persistency_interface, "minimumSustainedSize", positive_integer, fir::Multiplicity::Optional);
+    auto persistency_interface_r1 = b.add_role(persistency_interface, "redundancy", persistency_redundancy_enum, fir::Multiplicity::Optional);
+    auto persistency_interface_r2 = b.add_role(persistency_interface, "redundancyHandling", persistency_redundancy_crc, fir::Multiplicity::Many);
+    auto persistency_interface_r3 = b.add_role(persistency_interface, "updateStrategy", persistency_collection_level_update_strategy_enum, fir::Multiplicity::Optional);
 
     auto persistency_interface_element_r0 = b.add_role(persistency_interface_element, "updateStrategy", persistency_element_level_update_strategy_enum, fir::Multiplicity::Optional);
 
     auto persistency_key_value_data_type_mapping_r0 = b.add_role(persistency_key_value_data_type_mapping, "currentDataType", abstract_implementation_data_type, fir::Multiplicity::Optional);
-    auto persistency_key_value_data_type_mapping_r1 = b.add_role(persistency_key_value_data_type_mapping, "previousContractVersion", strong_revision_label_string, fir::Multiplicity::Optional);
-    auto persistency_key_value_data_type_mapping_r2 = b.add_role(persistency_key_value_data_type_mapping, "previousDataType", abstract_implementation_data_type, fir::Multiplicity::Optional);
-    auto persistency_key_value_data_type_mapping_r3 = b.add_role(persistency_key_value_data_type_mapping, "previousExecutableVersion", strong_revision_label_string, fir::Multiplicity::Optional);
+    auto persistency_key_value_data_type_mapping_r1 = b.add_role(persistency_key_value_data_type_mapping, "previousDataType", abstract_implementation_data_type, fir::Multiplicity::Optional);
+    auto persistency_key_value_data_type_mapping_r2 = b.add_role(persistency_key_value_data_type_mapping, "previousExecutableVersion", strong_revision_label_string, fir::Multiplicity::Optional);
 
     auto persistency_key_value_pair_r0 = b.add_role(persistency_key_value_pair, "initValue", application_assoc_map_value_specification, fir::Multiplicity::Optional);
     auto persistency_key_value_pair_r1 = b.add_role(persistency_key_value_pair, "valueDataType", abstract_implementation_data_type, fir::Multiplicity::Optional);
@@ -20956,10 +19517,8 @@ AutosarSchema build_autosar_r23_11() {
     auto platform_module_ethernet_endpoint_configuration_r0 = b.add_role(platform_module_ethernet_endpoint_configuration, "communicationConnector", ethernet_communication_connector, fir::Multiplicity::Optional);
     auto platform_module_ethernet_endpoint_configuration_r1 = b.add_role(platform_module_ethernet_endpoint_configuration, "ipv4MulticastIpAddress", ip4_address_string, fir::Multiplicity::Optional);
     auto platform_module_ethernet_endpoint_configuration_r2 = b.add_role(platform_module_ethernet_endpoint_configuration, "ipv6MulticastIpAddress", ip6_address_string, fir::Multiplicity::Optional);
-    auto platform_module_ethernet_endpoint_configuration_r3 = b.add_role(platform_module_ethernet_endpoint_configuration, "secureComPropsForTcp", dds_secure_com_props, fir::Multiplicity::Optional);
-    auto platform_module_ethernet_endpoint_configuration_r4 = b.add_role(platform_module_ethernet_endpoint_configuration, "secureComPropsForUdp", dds_secure_com_props, fir::Multiplicity::Optional);
-    auto platform_module_ethernet_endpoint_configuration_r5 = b.add_role(platform_module_ethernet_endpoint_configuration, "tcpPort", ap_application_endpoint, fir::Multiplicity::Optional);
-    auto platform_module_ethernet_endpoint_configuration_r6 = b.add_role(platform_module_ethernet_endpoint_configuration, "udpPort", ap_application_endpoint, fir::Multiplicity::Optional);
+    auto platform_module_ethernet_endpoint_configuration_r3 = b.add_role(platform_module_ethernet_endpoint_configuration, "tcpPort", ap_application_endpoint, fir::Multiplicity::Optional);
+    auto platform_module_ethernet_endpoint_configuration_r4 = b.add_role(platform_module_ethernet_endpoint_configuration, "udpPort", ap_application_endpoint, fir::Multiplicity::Optional);
 
     auto plca_props_r0 = b.add_role(plca_props, "plcaLocalNodeId", positive_integer, fir::Multiplicity::Optional);
     auto plca_props_r1 = b.add_role(plca_props, "plcaMaxBurstCount", positive_integer, fir::Multiplicity::Optional);
@@ -20970,7 +19529,7 @@ AutosarSchema build_autosar_r23_11() {
     auto pnc_mapping_r2 = b.add_role(pnc_mapping, "physicalChannel", abstract_can_physical_channel, fir::Multiplicity::Many);
     auto pnc_mapping_r3 = b.add_role(pnc_mapping, "pncConsumedProvidedServiceInstanceGroup", consumed_provided_service_instance_group_ref_conditional, fir::Multiplicity::Many);
     auto pnc_mapping_r4 = b.add_role(pnc_mapping, "pncGroup", i_signal_i_pdu_group, fir::Multiplicity::Many);
-    auto pnc_mapping_r5 = b.add_role(pnc_mapping, "pncIdentifier", positive_integer, fir::Multiplicity::Optional);
+    auto pnc_mapping_r5 = b.add_role(pnc_mapping, "pncIdentifier", positive_integer, fir::Multiplicity::One);
     auto pnc_mapping_r6 = b.add_role(pnc_mapping, "pncPdurGroup", pdur_i_pdu_group, fir::Multiplicity::Many);
     auto pnc_mapping_r7 = b.add_role(pnc_mapping, "pncWakeupEnable", boolean, fir::Multiplicity::Optional);
     auto pnc_mapping_r8 = b.add_role(pnc_mapping, "relevantForDynamicPncMapping", ecu_instance, fir::Multiplicity::Many);
@@ -21053,9 +19612,8 @@ AutosarSchema build_autosar_r23_11() {
     auto port_prototype_blueprint_mapping_r0 = b.add_role(port_prototype_blueprint_mapping, "portPrototypeBlueprint", port_prototype_blueprint, fir::Multiplicity::One);
     auto port_prototype_blueprint_mapping_r1 = b.add_role(port_prototype_blueprint_mapping, "derivedPortPrototype", abstract_provided_port_prototype, fir::Multiplicity::One);
 
-    auto port_prototype_in_executable_instance_ref_r0 = b.add_role(port_prototype_in_executable_instance_ref, "contextRootSwComponentPrototype", root_sw_component_prototype, fir::Multiplicity::Optional);
-    auto port_prototype_in_executable_instance_ref_r1 = b.add_role(port_prototype_in_executable_instance_ref, "contextComponentPrototype", sw_component_prototype, fir::Multiplicity::Many);
-    auto port_prototype_in_executable_instance_ref_r2 = b.add_role(port_prototype_in_executable_instance_ref, "targetPortPrototype", abstract_provided_port_prototype, fir::Multiplicity::Optional);
+    auto port_prototype_in_executable_instance_ref_r0 = b.add_role(port_prototype_in_executable_instance_ref, "contextComponentPrototype", sw_component_prototype, fir::Multiplicity::Many);
+    auto port_prototype_in_executable_instance_ref_r1 = b.add_role(port_prototype_in_executable_instance_ref, "targetPortPrototype", abstract_provided_port_prototype, fir::Multiplicity::Optional);
 
     auto port_prototype_ref_conditional_r0 = b.add_role(port_prototype_ref_conditional, "portPrototype", abstract_provided_port_prototype, fir::Multiplicity::One);
     auto port_prototype_ref_conditional_r1 = b.add_role(port_prototype_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -21120,7 +19678,8 @@ AutosarSchema build_autosar_r23_11() {
 
     auto process_argument_r0 = b.add_role(process_argument, "argument", string, fir::Multiplicity::Optional);
 
-    auto process_design_r0 = b.add_role(process_design, "executable", executable, fir::Multiplicity::Many);
+    auto process_design_r0 = b.add_role(process_design, "deterministicClientResourceNeeds", deterministic_client_resource_needs, fir::Multiplicity::Many);
+    auto process_design_r1 = b.add_role(process_design, "executable", executable, fir::Multiplicity::Many);
 
     auto process_design_to_machine_design_mapping_r0 = b.add_role(process_design_to_machine_design_mapping, "machineDesign", machine_design, fir::Multiplicity::Optional);
     auto process_design_to_machine_design_mapping_r1 = b.add_role(process_design_to_machine_design_mapping, "processDesign", process_design, fir::Multiplicity::Optional);
@@ -21141,20 +19700,19 @@ AutosarSchema build_autosar_r23_11() {
 
     auto processor_core_r0 = b.add_role(processor_core, "coreId", positive_integer, fir::Multiplicity::Optional);
 
-    auto provided_service_instance_r0 = b.add_role(provided_service_instance, "allowedServiceConsumer", network_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto provided_service_instance_r1 = b.add_role(provided_service_instance, "autoAvailable", boolean, fir::Multiplicity::Optional);
-    auto provided_service_instance_r2 = b.add_role(provided_service_instance, "eventHandler", event_handler, fir::Multiplicity::Many);
-    auto provided_service_instance_r3 = b.add_role(provided_service_instance, "instanceIdentifier", positive_integer, fir::Multiplicity::Optional);
-    auto provided_service_instance_r4 = b.add_role(provided_service_instance, "loadBalancingPriority", positive_integer, fir::Multiplicity::Optional);
-    auto provided_service_instance_r5 = b.add_role(provided_service_instance, "loadBalancingWeight", positive_integer, fir::Multiplicity::Optional);
-    auto provided_service_instance_r6 = b.add_role(provided_service_instance, "localUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto provided_service_instance_r7 = b.add_role(provided_service_instance, "minorVersion", positive_integer, fir::Multiplicity::Optional);
-    auto provided_service_instance_r8 = b.add_role(provided_service_instance, "priority", positive_integer, fir::Multiplicity::Optional);
-    auto provided_service_instance_r9 = b.add_role(provided_service_instance, "remoteMulticastSubscriptionAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto provided_service_instance_r10 = b.add_role(provided_service_instance, "remoteUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
-    auto provided_service_instance_r11 = b.add_role(provided_service_instance, "sdServerConfig", sd_server_config, fir::Multiplicity::Optional);
-    auto provided_service_instance_r12 = b.add_role(provided_service_instance, "sdServerTimerConfig", someip_sd_server_service_instance_config_ref_conditional, fir::Multiplicity::Many);
-    auto provided_service_instance_r13 = b.add_role(provided_service_instance, "serviceIdentifier", positive_integer, fir::Multiplicity::Optional);
+    auto provided_service_instance_r0 = b.add_role(provided_service_instance, "autoAvailable", boolean, fir::Multiplicity::Optional);
+    auto provided_service_instance_r1 = b.add_role(provided_service_instance, "eventHandler", event_handler, fir::Multiplicity::Many);
+    auto provided_service_instance_r2 = b.add_role(provided_service_instance, "instanceIdentifier", positive_integer, fir::Multiplicity::Optional);
+    auto provided_service_instance_r3 = b.add_role(provided_service_instance, "loadBalancingPriority", positive_integer, fir::Multiplicity::Optional);
+    auto provided_service_instance_r4 = b.add_role(provided_service_instance, "loadBalancingWeight", positive_integer, fir::Multiplicity::Optional);
+    auto provided_service_instance_r5 = b.add_role(provided_service_instance, "localUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
+    auto provided_service_instance_r6 = b.add_role(provided_service_instance, "minorVersion", positive_integer, fir::Multiplicity::Optional);
+    auto provided_service_instance_r7 = b.add_role(provided_service_instance, "priority", positive_integer, fir::Multiplicity::Optional);
+    auto provided_service_instance_r8 = b.add_role(provided_service_instance, "remoteMulticastSubscriptionAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
+    auto provided_service_instance_r9 = b.add_role(provided_service_instance, "remoteUnicastAddress", application_endpoint_ref_conditional, fir::Multiplicity::Many);
+    auto provided_service_instance_r10 = b.add_role(provided_service_instance, "sdServerConfig", sd_server_config, fir::Multiplicity::Optional);
+    auto provided_service_instance_r11 = b.add_role(provided_service_instance, "sdServerTimerConfig", someip_sd_server_service_instance_config_ref_conditional, fir::Multiplicity::Many);
+    auto provided_service_instance_r12 = b.add_role(provided_service_instance, "serviceIdentifier", positive_integer, fir::Multiplicity::Optional);
 
     auto provided_service_instance_ref_conditional_r0 = b.add_role(provided_service_instance_ref_conditional, "providedServiceInstance", provided_service_instance, fir::Multiplicity::One);
     auto provided_service_instance_ref_conditional_r1 = b.add_role(provided_service_instance_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -21278,13 +19836,13 @@ AutosarSchema build_autosar_r23_11() {
     auto referrable_ref_conditional_r0 = b.add_role(referrable_ref_conditional, "referrable", abstract_access_point, fir::Multiplicity::One);
     auto referrable_ref_conditional_r1 = b.add_role(referrable_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto relative_tolerance_r0 = b.add_role(relative_tolerance, "relative", integer, fir::Multiplicity::Optional);
+    auto relative_tolerance_r0 = b.add_role(relative_tolerance, "relative", integer, fir::Multiplicity::One);
 
     auto remoting_technology_r0 = b.add_role(remoting_technology, "name", remoting_technology_enum, fir::Multiplicity::One);
     auto remoting_technology_r1 = b.add_role(remoting_technology, "version", string, fir::Multiplicity::One);
 
-    auto request_response_delay_r0 = b.add_role(request_response_delay, "maxValue", time_value, fir::Multiplicity::Optional);
-    auto request_response_delay_r1 = b.add_role(request_response_delay, "minValue", time_value, fir::Multiplicity::Optional);
+    auto request_response_delay_r0 = b.add_role(request_response_delay, "maxValue", time_value, fir::Multiplicity::One);
+    auto request_response_delay_r1 = b.add_role(request_response_delay, "minValue", time_value, fir::Multiplicity::One);
 
     auto required_method_in_executable_instance_ref_r0 = b.add_role(required_method_in_executable_instance_ref, "contextRootSwComponentPrototype", root_sw_component_prototype, fir::Multiplicity::Optional);
     auto required_method_in_executable_instance_ref_r1 = b.add_role(required_method_in_executable_instance_ref, "contextComponentPrototype", sw_component_prototype, fir::Multiplicity::Many);
@@ -21348,7 +19906,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto root_sw_composition_prototype_r0 = b.add_role(root_sw_composition_prototype, "calibrationParameterValueSet", calibration_parameter_value_set, fir::Multiplicity::Many);
     auto root_sw_composition_prototype_r1 = b.add_role(root_sw_composition_prototype, "flatMap", flat_map, fir::Multiplicity::Optional);
-    auto root_sw_composition_prototype_r2 = b.add_role(root_sw_composition_prototype, "softwareComposition", composition_sw_component_type, fir::Multiplicity::Optional);
+    auto root_sw_composition_prototype_r2 = b.add_role(root_sw_composition_prototype, "softwareComposition", composition_sw_component_type, fir::Multiplicity::One);
     auto root_sw_composition_prototype_r3 = b.add_role(root_sw_composition_prototype, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto rough_estimate_heap_usage_r0 = b.add_role(rough_estimate_heap_usage, "memoryConsumption", positive_integer, fir::Multiplicity::Optional);
@@ -21454,8 +20012,8 @@ AutosarSchema build_autosar_r23_11() {
     auto rte_plugin_props_r0 = b.add_role(rte_plugin_props, "associatedCrossSwClusterComRtePlugin", ecuc_container_value, fir::Multiplicity::Optional);
     auto rte_plugin_props_r1 = b.add_role(rte_plugin_props, "associatedRtePlugin", ecuc_container_value, fir::Multiplicity::Optional);
 
-    auto rtp_tp_r0 = b.add_role(rtp_tp, "ssrc", positive_integer, fir::Multiplicity::Optional);
-    auto rtp_tp_r1 = b.add_role(rtp_tp, "tcpUdpConfig", tcp_tp, fir::Multiplicity::Optional);
+    auto rtp_tp_r0 = b.add_role(rtp_tp, "ssrc", positive_integer, fir::Multiplicity::One);
+    auto rtp_tp_r1 = b.add_role(rtp_tp, "tcpUdpConfig", tcp_tp, fir::Multiplicity::One);
 
     b.add_role(rule_arguments, "v", numerical, fir::Multiplicity::Many);
     b.add_role(rule_arguments, "vf", numerical_value_variation_point, fir::Multiplicity::Many);
@@ -21507,8 +20065,8 @@ AutosarSchema build_autosar_r23_11() {
     auto runnable_entity_in_composition_instance_ref_r1 = b.add_role(runnable_entity_in_composition_instance_ref, "targetRunnableEntity", runnable_entity, fir::Multiplicity::Optional);
     auto runnable_entity_in_composition_instance_ref_r2 = b.add_role(runnable_entity_in_composition_instance_ref, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto rx_identifier_range_r0 = b.add_role(rx_identifier_range, "lowerCanId", positive_integer, fir::Multiplicity::Optional);
-    auto rx_identifier_range_r1 = b.add_role(rx_identifier_range, "upperCanId", positive_integer, fir::Multiplicity::Optional);
+    auto rx_identifier_range_r0 = b.add_role(rx_identifier_range, "lowerCanId", positive_integer, fir::Multiplicity::One);
+    auto rx_identifier_range_r1 = b.add_role(rx_identifier_range, "upperCanId", positive_integer, fir::Multiplicity::One);
 
     auto scale_constr_r0 = b.add_role(scale_constr, "shortLabel", identifier, fir::Multiplicity::Optional);
     auto scale_constr_r1 = b.add_role(scale_constr, "desc", multi_language_overview_paragraph, fir::Multiplicity::Optional);
@@ -21517,8 +20075,8 @@ AutosarSchema build_autosar_r23_11() {
     auto scale_constr_r4 = b.add_role(scale_constr, "validity", scale_constr_validity_enum_simple, fir::Multiplicity::Optional);
 
     auto schedule_table_entry_r0 = b.add_role(schedule_table_entry, "introduction", documentation_block, fir::Multiplicity::Optional);
-    auto schedule_table_entry_r1 = b.add_role(schedule_table_entry, "delay", time_value, fir::Multiplicity::Optional);
-    auto schedule_table_entry_r2 = b.add_role(schedule_table_entry, "positionInTable", integer, fir::Multiplicity::Optional);
+    auto schedule_table_entry_r1 = b.add_role(schedule_table_entry, "delay", time_value, fir::Multiplicity::One);
+    auto schedule_table_entry_r2 = b.add_role(schedule_table_entry, "positionInTable", integer, fir::Multiplicity::One);
 
     b.add_role(sd, "..", verbatim_string_plain_simple_t, fir::Multiplicity::One);
     auto sd_r1 = b.add_role(sd, "gid", nmtoken_string_simple_t, fir::Multiplicity::One);
@@ -21529,7 +20087,7 @@ AutosarSchema build_autosar_r23_11() {
     auto sd_client_config_r2 = b.add_role(sd_client_config, "clientServiceMinorVersion", positive_integer, fir::Multiplicity::Optional);
     auto sd_client_config_r3 = b.add_role(sd_client_config, "initialFindBehavior", initial_sd_delay_config, fir::Multiplicity::Optional);
     auto sd_client_config_r4 = b.add_role(sd_client_config, "requestResponseDelay", request_response_delay, fir::Multiplicity::Optional);
-    auto sd_client_config_r5 = b.add_role(sd_client_config, "ttl", positive_integer, fir::Multiplicity::Optional);
+    auto sd_client_config_r5 = b.add_role(sd_client_config, "ttl", positive_integer, fir::Multiplicity::One);
 
     auto sd_server_config_r0 = b.add_role(sd_server_config, "capabilityRecord", tag_with_optional_value, fir::Multiplicity::Many);
     auto sd_server_config_r1 = b.add_role(sd_server_config, "initialOfferBehavior", initial_sd_delay_config, fir::Multiplicity::Optional);
@@ -21537,7 +20095,7 @@ AutosarSchema build_autosar_r23_11() {
     auto sd_server_config_r3 = b.add_role(sd_server_config, "requestResponseDelay", request_response_delay, fir::Multiplicity::Optional);
     auto sd_server_config_r4 = b.add_role(sd_server_config, "serverServiceMajorVersion", positive_integer, fir::Multiplicity::Optional);
     auto sd_server_config_r5 = b.add_role(sd_server_config, "serverServiceMinorVersion", positive_integer, fir::Multiplicity::Optional);
-    auto sd_server_config_r6 = b.add_role(sd_server_config, "ttl", positive_integer, fir::Multiplicity::Optional);
+    auto sd_server_config_r6 = b.add_role(sd_server_config, "ttl", positive_integer, fir::Multiplicity::One);
 
     auto sdf_r0 = b.add_role(sdf, "value", numerical_value_variation_point, fir::Multiplicity::Optional);
     auto sdf_r1 = b.add_role(sdf, "gid", nmtoken_string_simple_t, fir::Multiplicity::One);
@@ -21605,21 +20163,21 @@ AutosarSchema build_autosar_r23_11() {
     auto secure_communication_props_r0 = b.add_role(secure_communication_props, "authAlgorithm", string, fir::Multiplicity::Optional);
     auto secure_communication_props_r1 = b.add_role(secure_communication_props, "authDataFreshnessLength", positive_integer, fir::Multiplicity::Optional);
     auto secure_communication_props_r2 = b.add_role(secure_communication_props, "authDataFreshnessStartPosition", positive_integer, fir::Multiplicity::Optional);
-    auto secure_communication_props_r3 = b.add_role(secure_communication_props, "authInfoTxLength", positive_integer, fir::Multiplicity::Optional);
+    auto secure_communication_props_r3 = b.add_role(secure_communication_props, "authInfoTxLength", positive_integer, fir::Multiplicity::One);
     auto secure_communication_props_r4 = b.add_role(secure_communication_props, "authenticationBuildAttempts", positive_integer, fir::Multiplicity::Optional);
-    auto secure_communication_props_r5 = b.add_role(secure_communication_props, "authenticationRetries", positive_integer, fir::Multiplicity::Optional);
-    auto secure_communication_props_r6 = b.add_role(secure_communication_props, "dataId", positive_integer, fir::Multiplicity::Optional);
+    auto secure_communication_props_r5 = b.add_role(secure_communication_props, "authenticationRetries", positive_integer, fir::Multiplicity::One);
+    auto secure_communication_props_r6 = b.add_role(secure_communication_props, "dataId", positive_integer, fir::Multiplicity::One);
     auto secure_communication_props_r7 = b.add_role(secure_communication_props, "freshnessCounterSyncAttempts", positive_integer, fir::Multiplicity::Optional);
     auto secure_communication_props_r8 = b.add_role(secure_communication_props, "freshnessTimestampTimePeriodFactor", positive_integer, fir::Multiplicity::Optional);
     auto secure_communication_props_r9 = b.add_role(secure_communication_props, "freshnessValueId", positive_integer, fir::Multiplicity::Optional);
-    auto secure_communication_props_r10 = b.add_role(secure_communication_props, "freshnessValueLength", positive_integer, fir::Multiplicity::Optional);
-    auto secure_communication_props_r11 = b.add_role(secure_communication_props, "freshnessValueTxLength", positive_integer, fir::Multiplicity::Optional);
+    auto secure_communication_props_r10 = b.add_role(secure_communication_props, "freshnessValueLength", positive_integer, fir::Multiplicity::One);
+    auto secure_communication_props_r11 = b.add_role(secure_communication_props, "freshnessValueTxLength", positive_integer, fir::Multiplicity::One);
     auto secure_communication_props_r12 = b.add_role(secure_communication_props, "messageLinkLength", positive_integer, fir::Multiplicity::Optional);
     auto secure_communication_props_r13 = b.add_role(secure_communication_props, "messageLinkPosition", positive_integer, fir::Multiplicity::Optional);
     auto secure_communication_props_r14 = b.add_role(secure_communication_props, "secondaryFreshnessValueId", positive_integer, fir::Multiplicity::Optional);
     auto secure_communication_props_r15 = b.add_role(secure_communication_props, "securedAreaLength", positive_integer, fir::Multiplicity::Optional);
     auto secure_communication_props_r16 = b.add_role(secure_communication_props, "securedAreaOffset", positive_integer, fir::Multiplicity::Optional);
-    auto secure_communication_props_r17 = b.add_role(secure_communication_props, "useFreshnessTimestamp", boolean, fir::Multiplicity::Optional);
+    auto secure_communication_props_r17 = b.add_role(secure_communication_props, "useFreshnessTimestamp", boolean, fir::Multiplicity::One);
 
     auto secure_communication_props_set_r0 = b.add_role(secure_communication_props_set, "authenticationProps", secure_communication_authentication_props, fir::Multiplicity::Many);
     auto secure_communication_props_set_r1 = b.add_role(secure_communication_props_set, "freshnessProps", secure_communication_freshness_props, fir::Multiplicity::Many);
@@ -21629,8 +20187,8 @@ AutosarSchema build_autosar_r23_11() {
     auto secured_i_pdu_r0 = b.add_role(secured_i_pdu, "authenticationProps", secure_communication_authentication_props, fir::Multiplicity::Optional);
     auto secured_i_pdu_r1 = b.add_role(secured_i_pdu, "dynamicRuntimeLengthHandling", boolean, fir::Multiplicity::Optional);
     auto secured_i_pdu_r2 = b.add_role(secured_i_pdu, "freshnessProps", secure_communication_freshness_props, fir::Multiplicity::Optional);
-    auto secured_i_pdu_r3 = b.add_role(secured_i_pdu, "payload", pdu_triggering, fir::Multiplicity::Optional);
-    auto secured_i_pdu_r4 = b.add_role(secured_i_pdu, "secureCommunicationProps", secure_communication_props, fir::Multiplicity::Optional);
+    auto secured_i_pdu_r3 = b.add_role(secured_i_pdu, "payload", pdu_triggering, fir::Multiplicity::One);
+    auto secured_i_pdu_r4 = b.add_role(secured_i_pdu, "secureCommunicationProps", secure_communication_props, fir::Multiplicity::One);
     auto secured_i_pdu_r5 = b.add_role(secured_i_pdu, "useAsCryptographicIPdu", boolean, fir::Multiplicity::Optional);
     auto secured_i_pdu_r6 = b.add_role(secured_i_pdu, "useSecuredPduHeader", secured_pdu_header_enum, fir::Multiplicity::Optional);
 
@@ -21688,9 +20246,9 @@ AutosarSchema build_autosar_r23_11() {
     auto security_event_threshold_filter_r0 = b.add_role(security_event_threshold_filter, "intervalLength", time_value, fir::Multiplicity::Optional);
     auto security_event_threshold_filter_r1 = b.add_role(security_event_threshold_filter, "thresholdNumber", positive_integer, fir::Multiplicity::Optional);
 
-    auto segment_position_r0 = b.add_role(segment_position, "segmentByteOrder", byte_order_enum, fir::Multiplicity::Optional);
-    auto segment_position_r1 = b.add_role(segment_position, "segmentLength", integer, fir::Multiplicity::Optional);
-    auto segment_position_r2 = b.add_role(segment_position, "segmentPosition", integer, fir::Multiplicity::Optional);
+    auto segment_position_r0 = b.add_role(segment_position, "segmentByteOrder", byte_order_enum, fir::Multiplicity::One);
+    auto segment_position_r1 = b.add_role(segment_position, "segmentLength", integer, fir::Multiplicity::One);
+    auto segment_position_r2 = b.add_role(segment_position, "segmentPosition", integer, fir::Multiplicity::One);
 
     auto sender_com_spec_r0 = b.add_role(sender_com_spec, "compositeNetworkRepresentation", composite_network_representation, fir::Multiplicity::Many);
     auto sender_com_spec_r1 = b.add_role(sender_com_spec, "dataElement", argument_data_prototype, fir::Multiplicity::Optional);
@@ -21703,7 +20261,7 @@ AutosarSchema build_autosar_r23_11() {
     auto sender_com_spec_r8 = b.add_role(sender_com_spec, "usesEndToEndProtection", boolean_value_variation_point, fir::Multiplicity::Optional);
 
     auto sender_rec_array_element_mapping_r0 = b.add_role(sender_rec_array_element_mapping, "complexTypeMapping", sender_rec_array_type_mapping, fir::Multiplicity::Optional);
-    auto sender_rec_array_element_mapping_r1 = b.add_role(sender_rec_array_element_mapping, "indexedArrayElement", indexed_array_element, fir::Multiplicity::Optional);
+    auto sender_rec_array_element_mapping_r1 = b.add_role(sender_rec_array_element_mapping, "indexedArrayElement", indexed_array_element, fir::Multiplicity::One);
     auto sender_rec_array_element_mapping_r2 = b.add_role(sender_rec_array_element_mapping, "systemSignal", system_signal, fir::Multiplicity::Optional);
 
     auto sender_rec_array_type_mapping_r0 = b.add_role(sender_rec_array_type_mapping, "arrayElementMapping", sender_rec_array_element_mapping, fir::Multiplicity::Many);
@@ -21725,21 +20283,21 @@ AutosarSchema build_autosar_r23_11() {
     auto sender_receiver_annotation_r3 = b.add_role(sender_receiver_annotation, "processingKind", processing_kind_enum, fir::Multiplicity::Optional);
 
     auto sender_receiver_composite_element_to_signal_mapping_r0 = b.add_role(sender_receiver_composite_element_to_signal_mapping, "dataElement", variable_data_prototype_in_system_instance_ref, fir::Multiplicity::Optional);
-    auto sender_receiver_composite_element_to_signal_mapping_r1 = b.add_role(sender_receiver_composite_element_to_signal_mapping, "systemSignal", system_signal, fir::Multiplicity::Optional);
-    auto sender_receiver_composite_element_to_signal_mapping_r2 = b.add_role(sender_receiver_composite_element_to_signal_mapping, "typeMapping", sender_rec_array_type_mapping, fir::Multiplicity::Optional);
+    auto sender_receiver_composite_element_to_signal_mapping_r1 = b.add_role(sender_receiver_composite_element_to_signal_mapping, "systemSignal", system_signal, fir::Multiplicity::One);
+    auto sender_receiver_composite_element_to_signal_mapping_r2 = b.add_role(sender_receiver_composite_element_to_signal_mapping, "typeMapping", sender_rec_array_type_mapping, fir::Multiplicity::One);
 
     auto sender_receiver_interface_r0 = b.add_role(sender_receiver_interface, "dataElement", variable_data_prototype, fir::Multiplicity::Many);
     auto sender_receiver_interface_r1 = b.add_role(sender_receiver_interface, "invalidationPolicy", invalidation_policy, fir::Multiplicity::Many);
     auto sender_receiver_interface_r2 = b.add_role(sender_receiver_interface, "metaDataItemSet", meta_data_item_set, fir::Multiplicity::Many);
 
-    auto sender_receiver_to_signal_group_mapping_r0 = b.add_role(sender_receiver_to_signal_group_mapping, "dataElement", variable_data_prototype_in_system_instance_ref, fir::Multiplicity::Optional);
-    auto sender_receiver_to_signal_group_mapping_r1 = b.add_role(sender_receiver_to_signal_group_mapping, "signalGroup", system_signal_group, fir::Multiplicity::Optional);
-    auto sender_receiver_to_signal_group_mapping_r2 = b.add_role(sender_receiver_to_signal_group_mapping, "typeMapping", sender_rec_array_type_mapping, fir::Multiplicity::Optional);
+    auto sender_receiver_to_signal_group_mapping_r0 = b.add_role(sender_receiver_to_signal_group_mapping, "dataElement", variable_data_prototype_in_system_instance_ref, fir::Multiplicity::One);
+    auto sender_receiver_to_signal_group_mapping_r1 = b.add_role(sender_receiver_to_signal_group_mapping, "signalGroup", system_signal_group, fir::Multiplicity::One);
+    auto sender_receiver_to_signal_group_mapping_r2 = b.add_role(sender_receiver_to_signal_group_mapping, "typeMapping", sender_rec_array_type_mapping, fir::Multiplicity::One);
 
-    auto sender_receiver_to_signal_mapping_r0 = b.add_role(sender_receiver_to_signal_mapping, "dataElement", variable_data_prototype_in_system_instance_ref, fir::Multiplicity::Optional);
+    auto sender_receiver_to_signal_mapping_r0 = b.add_role(sender_receiver_to_signal_mapping, "dataElement", variable_data_prototype_in_system_instance_ref, fir::Multiplicity::One);
     auto sender_receiver_to_signal_mapping_r1 = b.add_role(sender_receiver_to_signal_mapping, "senderToSignalTextTableMapping", text_table_mapping, fir::Multiplicity::Optional);
     auto sender_receiver_to_signal_mapping_r2 = b.add_role(sender_receiver_to_signal_mapping, "signalToReceiverTextTableMapping", text_table_mapping, fir::Multiplicity::Optional);
-    auto sender_receiver_to_signal_mapping_r3 = b.add_role(sender_receiver_to_signal_mapping, "systemSignal", system_signal, fir::Multiplicity::Optional);
+    auto sender_receiver_to_signal_mapping_r3 = b.add_role(sender_receiver_to_signal_mapping, "systemSignal", system_signal, fir::Multiplicity::One);
 
     auto sensor_actuator_sw_component_type_r0 = b.add_role(sensor_actuator_sw_component_type, "sensorActuator", hw_description_entity, fir::Multiplicity::Optional);
 
@@ -21767,10 +20325,8 @@ AutosarSchema build_autosar_r23_11() {
 
     auto service_event_deployment_r0 = b.add_role(service_event_deployment, "event", variable_data_prototype, fir::Multiplicity::Optional);
     auto service_event_deployment_r1 = b.add_role(service_event_deployment, "trigger", trigger, fir::Multiplicity::Optional);
-    auto service_event_deployment_r2 = b.add_role(service_event_deployment, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto service_field_deployment_r0 = b.add_role(service_field_deployment, "field", field, fir::Multiplicity::Optional);
-    auto service_field_deployment_r1 = b.add_role(service_field_deployment, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto service_instance_collection_set_r0 = b.add_role(service_instance_collection_set, "serviceInstance", consumed_service_instance, fir::Multiplicity::Many);
 
@@ -21834,9 +20390,8 @@ AutosarSchema build_autosar_r23_11() {
     auto service_interface_trigger_mapping_r1 = b.add_role(service_interface_trigger_mapping, "targetTrigger", trigger, fir::Multiplicity::Optional);
 
     auto service_method_deployment_r0 = b.add_role(service_method_deployment, "method", client_server_operation, fir::Multiplicity::Optional);
-    auto service_method_deployment_r1 = b.add_role(service_method_deployment, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto service_timing_r0 = b.add_role(service_timing, "serviceInstance", adaptive_platform_service_instance, fir::Multiplicity::Many);
+    auto service_timing_r0 = b.add_role(service_timing, "serviceInstance", adaptive_platform_service_instance, fir::Multiplicity::OneOrMore);
 
     auto short_name_fragment_r0 = b.add_role(short_name_fragment, "role", string, fir::Multiplicity::One);
     auto short_name_fragment_r1 = b.add_role(short_name_fragment, "fragment", identifier, fir::Multiplicity::One);
@@ -21871,7 +20426,7 @@ AutosarSchema build_autosar_r23_11() {
     auto signal_i_pdu_counter_r3 = b.add_role(signal_i_pdu_counter, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto signal_i_pdu_replication_r0 = b.add_role(signal_i_pdu_replication, "pduReplicationVoting", integer, fir::Multiplicity::Optional);
-    auto signal_i_pdu_replication_r1 = b.add_role(signal_i_pdu_replication, "replicaPdus", i_signal_i_pdu, fir::Multiplicity::Many);
+    auto signal_i_pdu_replication_r1 = b.add_role(signal_i_pdu_replication, "replicaPdus", i_signal_i_pdu, fir::Multiplicity::OneOrMore);
     auto signal_i_pdu_replication_r2 = b.add_role(signal_i_pdu_replication, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto signal_path_constraint_r0 = b.add_role(signal_path_constraint, "introduction", documentation_block, fir::Multiplicity::One);
@@ -21905,13 +20460,10 @@ AutosarSchema build_autosar_r23_11() {
 
     auto sl_paragraph_r0 = b.add_role(sl_paragraph, "L", l_enum_simple, fir::Multiplicity::Optional);
 
-    auto sm_interacts_with_nm_mapping_r0 = b.add_role(sm_interacts_with_nm_mapping, "actionItem", state_management_nm_action_item, fir::Multiplicity::Optional);
-    auto sm_interacts_with_nm_mapping_r1 = b.add_role(sm_interacts_with_nm_mapping, "nmNetworkHandle", nm_network_handle, fir::Multiplicity::Optional);
-
     auto so_ad_config_r0 = b.add_role(so_ad_config, "connection", socket_connection, fir::Multiplicity::Many);
     auto so_ad_config_r1 = b.add_role(so_ad_config, "connectionBundle", socket_connection_bundle, fir::Multiplicity::Many);
     auto so_ad_config_r2 = b.add_role(so_ad_config, "logicAddress", logic_address, fir::Multiplicity::Many);
-    auto so_ad_config_r3 = b.add_role(so_ad_config, "socketAddress", socket_address, fir::Multiplicity::Many);
+    auto so_ad_config_r3 = b.add_role(so_ad_config, "socketAddress", socket_address, fir::Multiplicity::OneOrMore);
 
     auto so_ad_routing_group_r0 = b.add_role(so_ad_routing_group, "eventGroupControlType", event_group_control_type_enum, fir::Multiplicity::Optional);
 
@@ -21964,12 +20516,12 @@ AutosarSchema build_autosar_r23_11() {
     auto socket_connection_r18 = b.add_role(socket_connection, "socketProtocol", so_ad_protocol_type, fir::Multiplicity::Optional);
     auto socket_connection_r19 = b.add_role(socket_connection, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto socket_connection_bundle_r0 = b.add_role(socket_connection_bundle, "bundledConnection", socket_connection, fir::Multiplicity::Many);
+    auto socket_connection_bundle_r0 = b.add_role(socket_connection_bundle, "bundledConnection", socket_connection, fir::Multiplicity::OneOrMore);
     auto socket_connection_bundle_r1 = b.add_role(socket_connection_bundle, "differentiatedServiceField", positive_integer, fir::Multiplicity::Optional);
     auto socket_connection_bundle_r2 = b.add_role(socket_connection_bundle, "flowLabel", positive_integer, fir::Multiplicity::Optional);
     auto socket_connection_bundle_r3 = b.add_role(socket_connection_bundle, "pathMtuDiscoveryEnabled", boolean, fir::Multiplicity::Optional);
     auto socket_connection_bundle_r4 = b.add_role(socket_connection_bundle, "pdu", socket_connection_ipdu_identifier, fir::Multiplicity::Many);
-    auto socket_connection_bundle_r5 = b.add_role(socket_connection_bundle, "serverPort", socket_address, fir::Multiplicity::Optional);
+    auto socket_connection_bundle_r5 = b.add_role(socket_connection_bundle, "serverPort", socket_address, fir::Multiplicity::One);
     auto socket_connection_bundle_r6 = b.add_role(socket_connection_bundle, "udpChecksumHandling", udp_checksum_calculation_enum, fir::Multiplicity::Optional);
     auto socket_connection_bundle_r7 = b.add_role(socket_connection_bundle, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
@@ -21987,9 +20539,9 @@ AutosarSchema build_autosar_r23_11() {
     auto software_cluster_r1 = b.add_role(software_cluster, "artifactLocator", artifact_locator, fir::Multiplicity::Many);
     auto software_cluster_r2 = b.add_role(software_cluster, "claimedFunctionGroup", mode_declaration_group_prototype, fir::Multiplicity::Many);
     auto software_cluster_r3 = b.add_role(software_cluster, "conflictsTo", software_cluster_dependency_formula, fir::Multiplicity::Optional);
-    auto software_cluster_r4 = b.add_role(software_cluster, "containedARElement", abstract_can_cluster, fir::Multiplicity::Many);
+    auto software_cluster_r4 = b.add_role(software_cluster, "containedARElement", abstract_execution_context, fir::Multiplicity::Many);
     auto software_cluster_r5 = b.add_role(software_cluster, "containedFibexElement", abstract_can_cluster, fir::Multiplicity::Many);
-    auto software_cluster_r6 = b.add_role(software_cluster, "containedPackageElement", abstract_can_cluster, fir::Multiplicity::Many);
+    auto software_cluster_r6 = b.add_role(software_cluster, "containedPackageElement", abstract_execution_context, fir::Multiplicity::Many);
     auto software_cluster_r7 = b.add_role(software_cluster, "containedProcess", process, fir::Multiplicity::Many);
     auto software_cluster_r8 = b.add_role(software_cluster, "dependsOn", software_cluster_dependency_formula, fir::Multiplicity::Optional);
     auto software_cluster_r9 = b.add_role(software_cluster, "design", software_cluster_design, fir::Multiplicity::Many);
@@ -22015,11 +20567,10 @@ AutosarSchema build_autosar_r23_11() {
     auto software_cluster_design_r0 = b.add_role(software_cluster_design, "containedProcess", process_design, fir::Multiplicity::Many);
     auto software_cluster_design_r1 = b.add_role(software_cluster_design, "diagnosticContribution", diagnostic_contribution_set, fir::Multiplicity::Many);
     auto software_cluster_design_r2 = b.add_role(software_cluster_design, "intendedTargetMachine", machine_design, fir::Multiplicity::Many);
-    auto software_cluster_design_r3 = b.add_role(software_cluster_design, "requiredARElement", abstract_can_cluster, fir::Multiplicity::Many);
-    auto software_cluster_design_r4 = b.add_role(software_cluster_design, "requiredDesignElement", abstract_can_cluster, fir::Multiplicity::Many);
-    auto software_cluster_design_r5 = b.add_role(software_cluster_design, "requiredFibexElement", abstract_can_cluster, fir::Multiplicity::Many);
-    auto software_cluster_design_r6 = b.add_role(software_cluster_design, "requiredPackageElement", abstract_can_cluster, fir::Multiplicity::Many);
-    auto software_cluster_design_r7 = b.add_role(software_cluster_design, "rootComposition", root_sw_cluster_design_component_prototype, fir::Multiplicity::Optional);
+    auto software_cluster_design_r3 = b.add_role(software_cluster_design, "requiredARElement", abstract_execution_context, fir::Multiplicity::Many);
+    auto software_cluster_design_r4 = b.add_role(software_cluster_design, "requiredFibexElement", abstract_can_cluster, fir::Multiplicity::Many);
+    auto software_cluster_design_r5 = b.add_role(software_cluster_design, "requiredPackageElement", abstract_execution_context, fir::Multiplicity::Many);
+    auto software_cluster_design_r6 = b.add_role(software_cluster_design, "rootComposition", root_sw_cluster_design_component_prototype, fir::Multiplicity::Optional);
 
     auto software_cluster_diagnostic_address_r0 = b.add_role(software_cluster_diagnostic_address, "addressSemantics", software_cluster_diagnostic_address_semantics_enum, fir::Multiplicity::Optional);
 
@@ -22032,8 +20583,6 @@ AutosarSchema build_autosar_r23_11() {
     auto software_cluster_doip_diagnostic_address_r0 = b.add_role(software_cluster_doip_diagnostic_address, "diagnosticAddress", positive_integer, fir::Multiplicity::Optional);
 
     auto software_cluster_sovd_address_r0 = b.add_role(software_cluster_sovd_address, "componentQualifier", string, fir::Multiplicity::Optional);
-
-    auto software_cluster_uds_diagnostic_address_r0 = b.add_role(software_cluster_uds_diagnostic_address, "diagnosticAddress", positive_integer, fir::Multiplicity::Optional);
 
     auto software_context_r0 = b.add_role(software_context, "input", string, fir::Multiplicity::Optional);
     auto software_context_r1 = b.add_role(software_context, "state", string, fir::Multiplicity::Optional);
@@ -22065,11 +20614,10 @@ AutosarSchema build_autosar_r23_11() {
 
     auto someip_event_deployment_r0 = b.add_role(someip_event_deployment, "burstSize", positive_integer, fir::Multiplicity::Optional);
     auto someip_event_deployment_r1 = b.add_role(someip_event_deployment, "eventId", positive_integer, fir::Multiplicity::Optional);
-    auto someip_event_deployment_r2 = b.add_role(someip_event_deployment, "eventReceptionDefaultValue", application_assoc_map_value_specification, fir::Multiplicity::Optional);
-    auto someip_event_deployment_r3 = b.add_role(someip_event_deployment, "maximumSegmentLength", positive_integer, fir::Multiplicity::Optional);
-    auto someip_event_deployment_r4 = b.add_role(someip_event_deployment, "separationTime", time_value, fir::Multiplicity::Optional);
-    auto someip_event_deployment_r5 = b.add_role(someip_event_deployment, "serializer", serialization_technology_enum, fir::Multiplicity::Optional);
-    auto someip_event_deployment_r6 = b.add_role(someip_event_deployment, "transportProtocol", transport_layer_protocol_enum, fir::Multiplicity::Optional);
+    auto someip_event_deployment_r2 = b.add_role(someip_event_deployment, "maximumSegmentLength", positive_integer, fir::Multiplicity::Optional);
+    auto someip_event_deployment_r3 = b.add_role(someip_event_deployment, "separationTime", time_value, fir::Multiplicity::Optional);
+    auto someip_event_deployment_r4 = b.add_role(someip_event_deployment, "serializer", serialization_technology_enum, fir::Multiplicity::Optional);
+    auto someip_event_deployment_r5 = b.add_role(someip_event_deployment, "transportProtocol", transport_layer_protocol_enum, fir::Multiplicity::Optional);
 
     auto someip_event_group_r0 = b.add_role(someip_event_group, "eventGroupId", positive_integer, fir::Multiplicity::Optional);
     auto someip_event_group_r1 = b.add_role(someip_event_group, "event", someip_event_deployment, fir::Multiplicity::Many);
@@ -22126,7 +20674,7 @@ AutosarSchema build_autosar_r23_11() {
     auto someip_sd_client_event_group_timing_config_r0 = b.add_role(someip_sd_client_event_group_timing_config, "requestResponseDelay", request_response_delay, fir::Multiplicity::Optional);
     auto someip_sd_client_event_group_timing_config_r1 = b.add_role(someip_sd_client_event_group_timing_config, "subscribeEventgroupRetryDelay", time_value, fir::Multiplicity::Optional);
     auto someip_sd_client_event_group_timing_config_r2 = b.add_role(someip_sd_client_event_group_timing_config, "subscribeEventgroupRetryMax", positive_integer, fir::Multiplicity::Optional);
-    auto someip_sd_client_event_group_timing_config_r3 = b.add_role(someip_sd_client_event_group_timing_config, "timeToLive", positive_integer, fir::Multiplicity::Optional);
+    auto someip_sd_client_event_group_timing_config_r3 = b.add_role(someip_sd_client_event_group_timing_config, "timeToLive", positive_integer, fir::Multiplicity::One);
 
     auto someip_sd_client_event_group_timing_config_ref_conditional_r0 = b.add_role(someip_sd_client_event_group_timing_config_ref_conditional, "someipSdClientEventGroupTimingConfig", someip_sd_client_event_group_timing_config, fir::Multiplicity::One);
     auto someip_sd_client_event_group_timing_config_ref_conditional_r1 = b.add_role(someip_sd_client_event_group_timing_config_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -22156,7 +20704,7 @@ AutosarSchema build_autosar_r23_11() {
     auto someip_sd_server_service_instance_config_r1 = b.add_role(someip_sd_server_service_instance_config, "offerCyclicDelay", time_value, fir::Multiplicity::Optional);
     auto someip_sd_server_service_instance_config_r2 = b.add_role(someip_sd_server_service_instance_config, "priority", positive_integer, fir::Multiplicity::Optional);
     auto someip_sd_server_service_instance_config_r3 = b.add_role(someip_sd_server_service_instance_config, "requestResponseDelay", request_response_delay, fir::Multiplicity::Optional);
-    auto someip_sd_server_service_instance_config_r4 = b.add_role(someip_sd_server_service_instance_config, "serviceOfferTimeToLive", positive_integer, fir::Multiplicity::Optional);
+    auto someip_sd_server_service_instance_config_r4 = b.add_role(someip_sd_server_service_instance_config, "serviceOfferTimeToLive", positive_integer, fir::Multiplicity::One);
 
     auto someip_sd_server_service_instance_config_ref_conditional_r0 = b.add_role(someip_sd_server_service_instance_config_ref_conditional, "someipSdServerServiceInstanceConfig", someip_sd_server_service_instance_config, fir::Multiplicity::One);
     auto someip_sd_server_service_instance_config_ref_conditional_r1 = b.add_role(someip_sd_server_service_instance_config_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
@@ -22177,7 +20725,7 @@ AutosarSchema build_autosar_r23_11() {
     auto someip_service_interface_deployment_r2 = b.add_role(someip_service_interface_deployment, "serviceInterfaceVersion", someip_service_version, fir::Multiplicity::Optional);
 
     auto someip_service_version_r0 = b.add_role(someip_service_version, "majorVersion", positive_integer, fir::Multiplicity::Optional);
-    auto someip_service_version_r1 = b.add_role(someip_service_version, "minorVersion", positive_integer, fir::Multiplicity::Optional);
+    auto someip_service_version_r1 = b.add_role(someip_service_version, "minorVersion", positive_integer, fir::Multiplicity::One);
 
     auto someip_tp_channel_r0 = b.add_role(someip_tp_channel, "burstSize", positive_integer, fir::Multiplicity::Optional);
     auto someip_tp_channel_r1 = b.add_role(someip_tp_channel, "rxTimeoutTime", time_value, fir::Multiplicity::Optional);
@@ -22191,9 +20739,9 @@ AutosarSchema build_autosar_r23_11() {
     auto someip_tp_connection_r2 = b.add_role(someip_tp_connection, "tpSdu", pdu_triggering, fir::Multiplicity::Optional);
     auto someip_tp_connection_r3 = b.add_role(someip_tp_connection, "transportPdu", pdu_triggering, fir::Multiplicity::Optional);
 
-    auto someip_transformation_description_r0 = b.add_role(someip_transformation_description, "alignment", positive_integer, fir::Multiplicity::Optional);
-    auto someip_transformation_description_r1 = b.add_role(someip_transformation_description, "byteOrder", byte_order_enum, fir::Multiplicity::Optional);
-    auto someip_transformation_description_r2 = b.add_role(someip_transformation_description, "interfaceVersion", positive_integer, fir::Multiplicity::Optional);
+    auto someip_transformation_description_r0 = b.add_role(someip_transformation_description, "alignment", positive_integer, fir::Multiplicity::One);
+    auto someip_transformation_description_r1 = b.add_role(someip_transformation_description, "byteOrder", byte_order_enum, fir::Multiplicity::One);
+    auto someip_transformation_description_r2 = b.add_role(someip_transformation_description, "interfaceVersion", positive_integer, fir::Multiplicity::One);
 
     auto someip_transformation_i_signal_props_r0 = b.add_role(someip_transformation_i_signal_props, "someipTransformationISignalPropsVariant", someip_transformation_i_signal_props_conditional, fir::Multiplicity::OneOrMore);
 
@@ -22257,17 +20805,15 @@ AutosarSchema build_autosar_r23_11() {
 
     auto startup_config_r0 = b.add_role(startup_config, "environmentVariable", tag_with_optional_value, fir::Multiplicity::Many);
     auto startup_config_r1 = b.add_role(startup_config, "executionError", process_execution_error, fir::Multiplicity::Optional);
-    auto startup_config_r2 = b.add_role(startup_config, "permissionToCreateChildProcess", boolean, fir::Multiplicity::Optional);
-    auto startup_config_r3 = b.add_role(startup_config, "processArgument", process_argument, fir::Multiplicity::Many);
-    auto startup_config_r4 = b.add_role(startup_config, "schedulingPolicy", string, fir::Multiplicity::Optional);
-    auto startup_config_r5 = b.add_role(startup_config, "schedulingPriority", integer, fir::Multiplicity::Optional);
-    auto startup_config_r6 = b.add_role(startup_config, "terminationBehavior", termination_behavior_enum, fir::Multiplicity::Optional);
-    auto startup_config_r7 = b.add_role(startup_config, "timeout", enter_exit_timeout, fir::Multiplicity::Optional);
+    auto startup_config_r2 = b.add_role(startup_config, "processArgument", process_argument, fir::Multiplicity::Many);
+    auto startup_config_r3 = b.add_role(startup_config, "schedulingPolicy", string, fir::Multiplicity::Optional);
+    auto startup_config_r4 = b.add_role(startup_config, "schedulingPriority", integer, fir::Multiplicity::Optional);
+    auto startup_config_r5 = b.add_role(startup_config, "terminationBehavior", termination_behavior_enum, fir::Multiplicity::Optional);
+    auto startup_config_r6 = b.add_role(startup_config, "timeout", enter_exit_timeout, fir::Multiplicity::Optional);
 
     auto state_dependent_firewall_r0 = b.add_role(state_dependent_firewall, "defaultAction", firewall_action_enum, fir::Multiplicity::Optional);
     auto state_dependent_firewall_r1 = b.add_role(state_dependent_firewall, "firewallRuleProps", firewall_rule_props, fir::Multiplicity::Many);
     auto state_dependent_firewall_r2 = b.add_role(state_dependent_firewall, "firewallState", firewall_state_in_firwall_state_switch_interface_instance_ref, fir::Multiplicity::Many);
-    auto state_dependent_firewall_r3 = b.add_role(state_dependent_firewall, "firewallStateModeDeclaration", mode_declaration, fir::Multiplicity::Many);
 
     auto state_dependent_startup_config_r0 = b.add_role(state_dependent_startup_config, "executionDependency", execution_dependency, fir::Multiplicity::Many);
     auto state_dependent_startup_config_r1 = b.add_role(state_dependent_startup_config, "functionGroupState", function_group_state_in_function_group_set_instance_ref, fir::Multiplicity::Many);
@@ -22275,7 +20821,7 @@ AutosarSchema build_autosar_r23_11() {
     auto state_dependent_startup_config_r3 = b.add_role(state_dependent_startup_config, "resourceGroup", resource_group, fir::Multiplicity::Optional);
     auto state_dependent_startup_config_r4 = b.add_role(state_dependent_startup_config, "startupConfig", startup_config, fir::Multiplicity::Optional);
 
-    auto state_management_action_list_r0 = b.add_role(state_management_action_list, "actionItem", state_management_nm_action_item, fir::Multiplicity::Many);
+    auto state_management_action_list_r0 = b.add_role(state_management_action_list, "actionItem", state_management_set_function_group_state_action_item, fir::Multiplicity::Many);
     auto state_management_action_list_r1 = b.add_role(state_management_action_list, "affectedState", mode_declaration_in_state_management_state_notification_instance_ref, fir::Multiplicity::Optional);
 
     auto state_management_compare_condition_r0 = b.add_role(state_management_compare_condition, "compareType", state_management_compare_enum, fir::Multiplicity::Optional);
@@ -22289,8 +20835,6 @@ AutosarSchema build_autosar_r23_11() {
     auto state_management_module_instantiation_r1 = b.add_role(state_management_module_instantiation, "notification", state_management_state_notification, fir::Multiplicity::Many);
     auto state_management_module_instantiation_r2 = b.add_role(state_management_module_instantiation, "request", state_management_request_error, fir::Multiplicity::Many);
 
-    auto state_management_nm_action_item_r0 = b.add_role(state_management_nm_action_item, "nmStateRequest", nm_state_request_enum, fir::Multiplicity::Optional);
-
     auto state_management_request_error_r0 = b.add_role(state_management_request_error, "rule", state_management_request_rule, fir::Multiplicity::Many);
 
     auto state_management_request_rule_r0 = b.add_role(state_management_request_rule, "formula", state_management_compare_formula, fir::Multiplicity::Optional);
@@ -22301,11 +20845,8 @@ AutosarSchema build_autosar_r23_11() {
     auto state_management_set_function_group_state_action_item_r0 = b.add_role(state_management_set_function_group_state_action_item, "portPrototype", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
     auto state_management_set_function_group_state_action_item_r1 = b.add_role(state_management_set_function_group_state_action_item, "setFunctionGroupState", function_group_state_in_function_group_set_instance_ref, fir::Multiplicity::Optional);
 
-    auto state_management_sleep_action_item_r0 = b.add_role(state_management_sleep_action_item, "sleepTime", time_value, fir::Multiplicity::Optional);
-
-    auto state_management_state_machine_action_item_r0 = b.add_role(state_management_state_machine_action_item, "overrideInitialState", mode_declaration_in_state_management_state_notification_instance_ref, fir::Multiplicity::Optional);
-    auto state_management_state_machine_action_item_r1 = b.add_role(state_management_state_machine_action_item, "startStateMachine", mode_declaration_group_prototype, fir::Multiplicity::Optional);
-    auto state_management_state_machine_action_item_r2 = b.add_role(state_management_state_machine_action_item, "stopStateMachine", mode_declaration_group_prototype, fir::Multiplicity::Optional);
+    auto state_management_state_machine_action_item_r0 = b.add_role(state_management_state_machine_action_item, "start", mode_declaration_group_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
+    auto state_management_state_machine_action_item_r1 = b.add_role(state_management_state_machine_action_item, "stop", mode_declaration_group_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
 
     auto state_management_state_notification_r0 = b.add_role(state_management_state_notification, "notificationPort", p_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
     auto state_management_state_notification_r1 = b.add_role(state_management_state_notification, "stateMachine", mode_declaration_group_prototype, fir::Multiplicity::Optional);
@@ -22314,7 +20855,7 @@ AutosarSchema build_autosar_r23_11() {
 
     auto state_management_trigger_compare_rule_r0 = b.add_role(state_management_trigger_compare_rule, "assumedCurrentState", mode_declaration_in_state_management_state_notification_instance_ref, fir::Multiplicity::Optional);
 
-    auto static_part_r0 = b.add_role(static_part, "iPdu", i_signal_i_pdu, fir::Multiplicity::Optional);
+    auto static_part_r0 = b.add_role(static_part, "iPdu", i_signal_i_pdu, fir::Multiplicity::One);
     auto static_part_r1 = b.add_role(static_part, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto static_socket_connection_r0 = b.add_role(static_socket_connection, "iPduIdentifier", so_con_i_pdu_identifier_ref_conditional, fir::Multiplicity::Many);
@@ -22328,33 +20869,6 @@ AutosarSchema build_autosar_r23_11() {
     auto std_r2 = b.add_role(std, "date", date_time, fir::Multiplicity::Optional);
     auto std_r3 = b.add_role(std, "url", url, fir::Multiplicity::Optional);
     auto std_r4 = b.add_role(std, "position", string, fir::Multiplicity::Optional);
-
-    auto stream_filter_iee_e1722_tp_r0 = b.add_role(stream_filter_iee_e1722_tp, "streamId", positive_unlimited_integer, fir::Multiplicity::Optional);
-
-    auto stream_filter_ipv4_address_r0 = b.add_role(stream_filter_ipv4_address, "ipv4Address", ip4_address_string, fir::Multiplicity::Optional);
-    auto stream_filter_ipv4_address_r1 = b.add_role(stream_filter_ipv4_address, "ipv4AddressMask", ip4_address_string, fir::Multiplicity::Optional);
-
-    auto stream_filter_ipv6_address_r0 = b.add_role(stream_filter_ipv6_address, "ipv6Address", ip6_address_string, fir::Multiplicity::Optional);
-    auto stream_filter_ipv6_address_r1 = b.add_role(stream_filter_ipv6_address, "ipv6AddressMask", ip6_address_string, fir::Multiplicity::Optional);
-
-    auto stream_filter_mac_address_r0 = b.add_role(stream_filter_mac_address, "macAddress", mac_address_string, fir::Multiplicity::Optional);
-    auto stream_filter_mac_address_r1 = b.add_role(stream_filter_mac_address, "macAddressMask", mac_address_string, fir::Multiplicity::Optional);
-
-    auto stream_filter_port_range_r0 = b.add_role(stream_filter_port_range, "max", positive_integer, fir::Multiplicity::Optional);
-    auto stream_filter_port_range_r1 = b.add_role(stream_filter_port_range, "min", positive_integer, fir::Multiplicity::Optional);
-
-    auto stream_filter_rule_data_link_layer_r0 = b.add_role(stream_filter_rule_data_link_layer, "destinationMacAddress", stream_filter_mac_address, fir::Multiplicity::Optional);
-    auto stream_filter_rule_data_link_layer_r1 = b.add_role(stream_filter_rule_data_link_layer, "etherType", positive_integer, fir::Multiplicity::Optional);
-    auto stream_filter_rule_data_link_layer_r2 = b.add_role(stream_filter_rule_data_link_layer, "sourceMacAddress", stream_filter_mac_address, fir::Multiplicity::Optional);
-    auto stream_filter_rule_data_link_layer_r3 = b.add_role(stream_filter_rule_data_link_layer, "vlanId", positive_integer, fir::Multiplicity::Optional);
-    auto stream_filter_rule_data_link_layer_r4 = b.add_role(stream_filter_rule_data_link_layer, "vlanPriority", positive_integer, fir::Multiplicity::Optional);
-
-    auto stream_filter_rule_ip_tp_r0 = b.add_role(stream_filter_rule_ip_tp, "destinationIpv4Address", stream_filter_ipv4_address, fir::Multiplicity::Optional);
-    auto stream_filter_rule_ip_tp_r1 = b.add_role(stream_filter_rule_ip_tp, "destinationIpv6Address", stream_filter_ipv6_address, fir::Multiplicity::Optional);
-    auto stream_filter_rule_ip_tp_r2 = b.add_role(stream_filter_rule_ip_tp, "destinationPort", stream_filter_port_range, fir::Multiplicity::Many);
-    auto stream_filter_rule_ip_tp_r3 = b.add_role(stream_filter_rule_ip_tp, "sourceIpv4Address", stream_filter_ipv4_address, fir::Multiplicity::Optional);
-    auto stream_filter_rule_ip_tp_r4 = b.add_role(stream_filter_rule_ip_tp, "sourceIpv6Address", stream_filter_ipv6_address, fir::Multiplicity::Optional);
-    auto stream_filter_rule_ip_tp_r5 = b.add_role(stream_filter_rule_ip_tp, "sourcePort", stream_filter_port_range, fir::Multiplicity::Many);
 
     auto structured_req_r0 = b.add_role(structured_req, "date", date_time, fir::Multiplicity::One);
     auto structured_req_r1 = b.add_role(structured_req, "issuedBy", string, fir::Multiplicity::One);
@@ -22665,59 +21179,25 @@ AutosarSchema build_autosar_r23_11() {
     auto swc_to_application_partition_mapping_r1 = b.add_role(swc_to_application_partition_mapping, "swComponentPrototype", component_in_system_instance_ref, fir::Multiplicity::Optional);
     auto swc_to_application_partition_mapping_r2 = b.add_role(swc_to_application_partition_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto swc_to_ecu_mapping_r0 = b.add_role(swc_to_ecu_mapping, "component", component_in_system_instance_ref, fir::Multiplicity::Many);
+    auto swc_to_ecu_mapping_r0 = b.add_role(swc_to_ecu_mapping, "component", component_in_system_instance_ref, fir::Multiplicity::OneOrMore);
     auto swc_to_ecu_mapping_r1 = b.add_role(swc_to_ecu_mapping, "controlledHwElement", hw_element, fir::Multiplicity::Optional);
-    auto swc_to_ecu_mapping_r2 = b.add_role(swc_to_ecu_mapping, "ecuInstance", ecu_instance, fir::Multiplicity::Optional);
+    auto swc_to_ecu_mapping_r2 = b.add_role(swc_to_ecu_mapping, "ecuInstance", ecu_instance, fir::Multiplicity::One);
     auto swc_to_ecu_mapping_r3 = b.add_role(swc_to_ecu_mapping, "partition", ecu_partition, fir::Multiplicity::Optional);
     auto swc_to_ecu_mapping_r4 = b.add_role(swc_to_ecu_mapping, "processingUnit", hw_element, fir::Multiplicity::Optional);
     auto swc_to_ecu_mapping_r5 = b.add_role(swc_to_ecu_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto swc_to_ecu_mapping_constraint_r0 = b.add_role(swc_to_ecu_mapping_constraint, "component", component_in_system_instance_ref, fir::Multiplicity::Optional);
+    auto swc_to_ecu_mapping_constraint_r0 = b.add_role(swc_to_ecu_mapping_constraint, "component", component_in_system_instance_ref, fir::Multiplicity::One);
     auto swc_to_ecu_mapping_constraint_r1 = b.add_role(swc_to_ecu_mapping_constraint, "ecuInstance", ecu_instance, fir::Multiplicity::Many);
     auto swc_to_ecu_mapping_constraint_r2 = b.add_role(swc_to_ecu_mapping_constraint, "swcToEcuMappingConstraintType", swc_to_ecu_mapping_constraint_type, fir::Multiplicity::One);
 
-    auto swc_to_impl_mapping_r0 = b.add_role(swc_to_impl_mapping, "componentImplementation", swc_implementation, fir::Multiplicity::Optional);
-    auto swc_to_impl_mapping_r1 = b.add_role(swc_to_impl_mapping, "component", component_in_system_instance_ref, fir::Multiplicity::Many);
+    auto swc_to_impl_mapping_r0 = b.add_role(swc_to_impl_mapping, "componentImplementation", swc_implementation, fir::Multiplicity::One);
+    auto swc_to_impl_mapping_r1 = b.add_role(swc_to_impl_mapping, "component", component_in_system_instance_ref, fir::Multiplicity::OneOrMore);
     auto swc_to_impl_mapping_r2 = b.add_role(swc_to_impl_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto swc_to_swc_operation_arguments_r0 = b.add_role(swc_to_swc_operation_arguments, "direction", swc_to_swc_operation_arguments_direction_enum, fir::Multiplicity::Optional);
-    auto swc_to_swc_operation_arguments_r1 = b.add_role(swc_to_swc_operation_arguments, "operation", operation_in_system_instance_ref, fir::Multiplicity::Many);
+    auto swc_to_swc_operation_arguments_r0 = b.add_role(swc_to_swc_operation_arguments, "direction", swc_to_swc_operation_arguments_direction_enum, fir::Multiplicity::One);
+    auto swc_to_swc_operation_arguments_r1 = b.add_role(swc_to_swc_operation_arguments, "operation", operation_in_system_instance_ref, fir::Multiplicity::OneOrMore);
 
-    auto swc_to_swc_signal_r0 = b.add_role(swc_to_swc_signal, "dataElement", variable_data_prototype_in_system_instance_ref, fir::Multiplicity::Many);
-
-    auto switch_asynchronous_traffic_shaper_group_entry_r0 = b.add_role(switch_asynchronous_traffic_shaper_group_entry, "maximumResidenceTime", positive_integer, fir::Multiplicity::Optional);
-
-    auto switch_flow_metering_entry_r0 = b.add_role(switch_flow_metering_entry, "colorMode", flow_metering_color_mode_enum, fir::Multiplicity::Optional);
-    auto switch_flow_metering_entry_r1 = b.add_role(switch_flow_metering_entry, "committedBurstSize", positive_integer, fir::Multiplicity::Optional);
-    auto switch_flow_metering_entry_r2 = b.add_role(switch_flow_metering_entry, "committedInformationRate", positive_integer, fir::Multiplicity::Optional);
-    auto switch_flow_metering_entry_r3 = b.add_role(switch_flow_metering_entry, "couplingFlag", boolean, fir::Multiplicity::Optional);
-    auto switch_flow_metering_entry_r4 = b.add_role(switch_flow_metering_entry, "excessBurstSize", positive_integer, fir::Multiplicity::Optional);
-    auto switch_flow_metering_entry_r5 = b.add_role(switch_flow_metering_entry, "excessInformationRate", positive_integer, fir::Multiplicity::Optional);
-
-    auto switch_stream_filter_action_dest_port_modification_r0 = b.add_role(switch_stream_filter_action_dest_port_modification, "egressPort", coupling_port, fir::Multiplicity::Many);
-    auto switch_stream_filter_action_dest_port_modification_r1 = b.add_role(switch_stream_filter_action_dest_port_modification, "modification", switch_stream_filter_action_port_modification_enum, fir::Multiplicity::Optional);
-
-    auto switch_stream_filter_entry_r0 = b.add_role(switch_stream_filter_entry, "asynchronousTrafficShaper", coupling_port_asynchronous_traffic_shaper, fir::Multiplicity::Optional);
-    auto switch_stream_filter_entry_r1 = b.add_role(switch_stream_filter_entry, "filterPriority", positive_integer, fir::Multiplicity::Optional);
-    auto switch_stream_filter_entry_r2 = b.add_role(switch_stream_filter_entry, "flowMetering", switch_flow_metering_entry, fir::Multiplicity::Optional);
-    auto switch_stream_filter_entry_r3 = b.add_role(switch_stream_filter_entry, "maxSduSize", positive_integer, fir::Multiplicity::Optional);
-    auto switch_stream_filter_entry_r4 = b.add_role(switch_stream_filter_entry, "streamGate", switch_stream_gate_entry, fir::Multiplicity::Optional);
-    auto switch_stream_filter_entry_r5 = b.add_role(switch_stream_filter_entry, "streamIdentificationHandle", switch_stream_identification, fir::Multiplicity::Many);
-    auto switch_stream_filter_entry_r6 = b.add_role(switch_stream_filter_entry, "streamIdentificationWildcard", boolean, fir::Multiplicity::Optional);
-
-    auto switch_stream_filter_rule_r0 = b.add_role(switch_stream_filter_rule, "dataLinkLayerRule", stream_filter_rule_data_link_layer, fir::Multiplicity::Optional);
-    auto switch_stream_filter_rule_r1 = b.add_role(switch_stream_filter_rule, "ieee1722TpRule", stream_filter_iee_e1722_tp, fir::Multiplicity::Optional);
-    auto switch_stream_filter_rule_r2 = b.add_role(switch_stream_filter_rule, "ipTpRule", stream_filter_rule_ip_tp, fir::Multiplicity::Optional);
-
-    auto switch_stream_gate_entry_r0 = b.add_role(switch_stream_gate_entry, "internalPriorityValue", positive_integer, fir::Multiplicity::Optional);
-
-    auto switch_stream_identification_r0 = b.add_role(switch_stream_identification, "egressPort", coupling_port, fir::Multiplicity::Many);
-    auto switch_stream_identification_r1 = b.add_role(switch_stream_identification, "filterActionBlockSource", boolean, fir::Multiplicity::Optional);
-    auto switch_stream_identification_r2 = b.add_role(switch_stream_identification, "filterActionDestPortModification", switch_stream_filter_action_dest_port_modification, fir::Multiplicity::Optional);
-    auto switch_stream_identification_r3 = b.add_role(switch_stream_identification, "filterActionDropFrame", boolean, fir::Multiplicity::Optional);
-    auto switch_stream_identification_r4 = b.add_role(switch_stream_identification, "filterActionVlanModification", positive_integer, fir::Multiplicity::Optional);
-    auto switch_stream_identification_r5 = b.add_role(switch_stream_identification, "ingressPort", coupling_port, fir::Multiplicity::Many);
-    auto switch_stream_identification_r6 = b.add_role(switch_stream_identification, "streamFilterRule", switch_stream_filter_rule, fir::Multiplicity::Optional);
+    auto swc_to_swc_signal_r0 = b.add_role(swc_to_swc_signal, "dataElement", variable_data_prototype_in_system_instance_ref, fir::Multiplicity::OneOrMore);
 
     b.add_role(symbol_string, "..", symbol_string_simple_t, fir::Multiplicity::One);
     auto symbol_string_r1 = b.add_role(symbol_string, "namePattern", string_simple_t, fir::Multiplicity::One);
@@ -22754,47 +21234,35 @@ AutosarSchema build_autosar_r23_11() {
     auto system_r9 = b.add_role(system, "pncVectorOffset", positive_integer, fir::Multiplicity::Optional);
     auto system_r10 = b.add_role(system, "rootSoftwareComposition", root_sw_composition_prototype, fir::Multiplicity::Many);
     auto system_r11 = b.add_role(system, "swCluster", cp_software_cluster_ref_conditional, fir::Multiplicity::Many);
-    auto system_r12 = b.add_role(system, "systemVersion", revision_label_string, fir::Multiplicity::Optional);
+    auto system_r12 = b.add_role(system, "systemVersion", revision_label_string, fir::Multiplicity::One);
 
     auto system_mapping_r0 = b.add_role(system_mapping, "appOsTaskProxyToEcuTaskProxyMapping", app_os_task_proxy_to_ecu_task_proxy_mapping, fir::Multiplicity::Many);
     auto system_mapping_r1 = b.add_role(system_mapping, "applicationPartitionToEcuPartitionMapping", application_partition_to_ecu_partition_mapping, fir::Multiplicity::Many);
     auto system_mapping_r2 = b.add_role(system_mapping, "comManagementMapping", com_management_mapping, fir::Multiplicity::Many);
     auto system_mapping_r3 = b.add_role(system_mapping, "cryptoServiceMapping", sec_oc_crypto_service_mapping, fir::Multiplicity::Many);
     auto system_mapping_r4 = b.add_role(system_mapping, "dataMapping", client_server_to_signal_group_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r5 = b.add_role(system_mapping, "ddsISignalToTopicMapping", dds_cp_i_signal_to_dds_topic_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r6 = b.add_role(system_mapping, "ecuResourceMapping", ecu_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r7 = b.add_role(system_mapping, "j1939ControllerApplicationToJ1939NmNodeMapping", j1939_controller_application_to_j1939_nm_node_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r8 = b.add_role(system_mapping, "mappingConstraint", component_clustering, fir::Multiplicity::Many);
-    auto system_mapping_r9 = b.add_role(system_mapping, "pncMapping", pnc_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r10 = b.add_role(system_mapping, "portElementToComResourceMapping", port_element_to_communication_resource_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r11 = b.add_role(system_mapping, "resourceEstimation", ecu_resource_estimation, fir::Multiplicity::Many);
-    auto system_mapping_r12 = b.add_role(system_mapping, "resourceToApplicationPartitionMapping", cp_software_cluster_resource_to_application_partition_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r13 = b.add_role(system_mapping, "rteEventSeparation", rte_event_in_system_separation, fir::Multiplicity::Many);
-    auto system_mapping_r14 = b.add_role(system_mapping, "rteEventToOsTaskProxyMapping", rte_event_in_system_to_os_task_proxy_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r15 = b.add_role(system_mapping, "signalPathConstraint", common_signal_path, fir::Multiplicity::Many);
-    auto system_mapping_r16 = b.add_role(system_mapping, "softwareClusterToApplicationPartitionMapping", cp_software_cluster_to_application_partition_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r17 = b.add_role(system_mapping, "softwareClusterToResourceMapping", cp_software_cluster_to_resource_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r18 = b.add_role(system_mapping, "swClusterMapping", cp_software_cluster_to_ecu_instance_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r19 = b.add_role(system_mapping, "swImplMapping", swc_to_impl_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r20 = b.add_role(system_mapping, "swMapping", swc_to_ecu_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r21 = b.add_role(system_mapping, "swcToApplicationPartitionMapping", swc_to_application_partition_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r22 = b.add_role(system_mapping, "systemSignalGroupToComResourceMapping", system_signal_group_to_communication_resource_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r23 = b.add_role(system_mapping, "systemSignalToComResourceMapping", system_signal_to_communication_resource_mapping, fir::Multiplicity::Many);
-    auto system_mapping_r24 = b.add_role(system_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
+    auto system_mapping_r5 = b.add_role(system_mapping, "ecuResourceMapping", ecu_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r6 = b.add_role(system_mapping, "j1939ControllerApplicationToJ1939NmNodeMapping", j1939_controller_application_to_j1939_nm_node_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r7 = b.add_role(system_mapping, "mappingConstraint", component_clustering, fir::Multiplicity::Many);
+    auto system_mapping_r8 = b.add_role(system_mapping, "pncMapping", pnc_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r9 = b.add_role(system_mapping, "portElementToComResourceMapping", port_element_to_communication_resource_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r10 = b.add_role(system_mapping, "resourceEstimation", ecu_resource_estimation, fir::Multiplicity::Many);
+    auto system_mapping_r11 = b.add_role(system_mapping, "resourceToApplicationPartitionMapping", cp_software_cluster_resource_to_application_partition_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r12 = b.add_role(system_mapping, "rteEventSeparation", rte_event_in_system_separation, fir::Multiplicity::Many);
+    auto system_mapping_r13 = b.add_role(system_mapping, "rteEventToOsTaskProxyMapping", rte_event_in_system_to_os_task_proxy_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r14 = b.add_role(system_mapping, "signalPathConstraint", common_signal_path, fir::Multiplicity::Many);
+    auto system_mapping_r15 = b.add_role(system_mapping, "softwareClusterToResourceMapping", cp_software_cluster_to_resource_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r16 = b.add_role(system_mapping, "swClusterMapping", cp_software_cluster_to_ecu_instance_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r17 = b.add_role(system_mapping, "swImplMapping", swc_to_impl_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r18 = b.add_role(system_mapping, "swMapping", swc_to_ecu_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r19 = b.add_role(system_mapping, "swcToApplicationPartitionMapping", swc_to_application_partition_mapping, fir::Multiplicity::Many);
+    auto system_mapping_r20 = b.add_role(system_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto system_signal_r0 = b.add_role(system_signal, "dynamicLength", boolean, fir::Multiplicity::Optional);
+    auto system_signal_r0 = b.add_role(system_signal, "dynamicLength", boolean, fir::Multiplicity::One);
     auto system_signal_r1 = b.add_role(system_signal, "physicalProps", sw_data_def_props, fir::Multiplicity::Optional);
 
     auto system_signal_group_r0 = b.add_role(system_signal_group, "systemSignal", system_signal, fir::Multiplicity::Many);
     auto system_signal_group_r1 = b.add_role(system_signal_group, "transformingSystemSignal", system_signal, fir::Multiplicity::Optional);
-
-    auto system_signal_group_to_communication_resource_mapping_r0 = b.add_role(system_signal_group_to_communication_resource_mapping, "softwareClusterComResource", cp_software_cluster_communication_resource, fir::Multiplicity::Optional);
-    auto system_signal_group_to_communication_resource_mapping_r1 = b.add_role(system_signal_group_to_communication_resource_mapping, "systemSignalGroup", system_signal_group, fir::Multiplicity::Optional);
-    auto system_signal_group_to_communication_resource_mapping_r2 = b.add_role(system_signal_group_to_communication_resource_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
-
-    auto system_signal_to_communication_resource_mapping_r0 = b.add_role(system_signal_to_communication_resource_mapping, "softwareClusterComResource", cp_software_cluster_communication_resource, fir::Multiplicity::Optional);
-    auto system_signal_to_communication_resource_mapping_r1 = b.add_role(system_signal_to_communication_resource_mapping, "systemSignal", system_signal, fir::Multiplicity::Optional);
-    auto system_signal_to_communication_resource_mapping_r2 = b.add_role(system_signal_to_communication_resource_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto system_timing_r0 = b.add_role(system_timing, "system", system, fir::Multiplicity::Optional);
 
@@ -22810,13 +21278,13 @@ AutosarSchema build_autosar_r23_11() {
     auto table_r9 = b.add_role(table, "rowsep", table_separator_string_simple_t, fir::Multiplicity::Optional);
     auto table_r10 = b.add_role(table, "tabstyle", nmtoken_string_simple_t, fir::Multiplicity::Optional);
 
-    auto tag_with_optional_value_r0 = b.add_role(tag_with_optional_value, "key", string, fir::Multiplicity::Optional);
+    auto tag_with_optional_value_r0 = b.add_role(tag_with_optional_value, "key", string, fir::Multiplicity::One);
     auto tag_with_optional_value_r1 = b.add_role(tag_with_optional_value, "sequenceOffset", integer, fir::Multiplicity::Optional);
     auto tag_with_optional_value_r2 = b.add_role(tag_with_optional_value, "value", string, fir::Multiplicity::Optional);
     auto tag_with_optional_value_r3 = b.add_role(tag_with_optional_value, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto target_i_pdu_ref_r0 = b.add_role(target_i_pdu_ref, "defaultValue", pdu_mapping_default_value, fir::Multiplicity::Optional);
-    auto target_i_pdu_ref_r1 = b.add_role(target_i_pdu_ref, "targetIPdu", pdu_triggering, fir::Multiplicity::Optional);
+    auto target_i_pdu_ref_r1 = b.add_role(target_i_pdu_ref, "targetIPdu", pdu_triggering, fir::Multiplicity::One);
 
     auto tbody_r0 = b.add_role(tbody, "row", row, fir::Multiplicity::OneOrMore);
     auto tbody_r1 = b.add_role(tbody, "valign", valign_enum_simple, fir::Multiplicity::Optional);
@@ -22830,7 +21298,7 @@ AutosarSchema build_autosar_r23_11() {
     auto tcp_ip_icmpv6_props_r3 = b.add_role(tcp_ip_icmpv6_props, "tcpIpIcmpV6MsgDestinationUnreachableEnabled", boolean, fir::Multiplicity::Optional);
     auto tcp_ip_icmpv6_props_r4 = b.add_role(tcp_ip_icmpv6_props, "tcpIpIcmpV6MsgParameterProblemEnabled", boolean, fir::Multiplicity::Optional);
 
-    auto tcp_option_filter_list_r0 = b.add_role(tcp_option_filter_list, "allowedTcpOption", positive_integer, fir::Multiplicity::Many);
+    auto tcp_option_filter_list_r0 = b.add_role(tcp_option_filter_list, "allowedTcpOption", positive_integer, fir::Multiplicity::OneOrMore);
 
     auto tcp_option_filter_set_r0 = b.add_role(tcp_option_filter_set, "tcpOptionFilterList", tcp_option_filter_list, fir::Multiplicity::Many);
 
@@ -22864,7 +21332,7 @@ AutosarSchema build_autosar_r23_11() {
     auto tcp_tp_r4 = b.add_role(tcp_tp, "naglesAlgorithm", boolean, fir::Multiplicity::Optional);
     auto tcp_tp_r5 = b.add_role(tcp_tp, "receiveWindowMin", positive_integer, fir::Multiplicity::Optional);
     auto tcp_tp_r6 = b.add_role(tcp_tp, "tcpRetransmissionTimeout", time_value, fir::Multiplicity::Optional);
-    auto tcp_tp_r7 = b.add_role(tcp_tp, "tcpTpPort", tp_port, fir::Multiplicity::Optional);
+    auto tcp_tp_r7 = b.add_role(tcp_tp, "tcpTpPort", tp_port, fir::Multiplicity::One);
 
     auto td_cp_software_cluster_mapping_r0 = b.add_role(td_cp_software_cluster_mapping, "provider", cp_software_cluster, fir::Multiplicity::Optional);
     auto td_cp_software_cluster_mapping_r1 = b.add_role(td_cp_software_cluster_mapping, "requestor", cp_software_cluster, fir::Multiplicity::Many);
@@ -22878,7 +21346,7 @@ AutosarSchema build_autosar_r23_11() {
     auto td_cp_software_cluster_resource_mapping_r1 = b.add_role(td_cp_software_cluster_resource_mapping, "timingDescription", td_event_bsw, fir::Multiplicity::Optional);
     auto td_cp_software_cluster_resource_mapping_r2 = b.add_role(td_cp_software_cluster_resource_mapping, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto td_event_bsw_r0 = b.add_role(td_event_bsw, "bswModuleDescription", bsw_module_description, fir::Multiplicity::Optional);
+    auto td_event_bsw_r0 = b.add_role(td_event_bsw, "bswModuleDescription", bsw_module_description, fir::Multiplicity::One);
 
     auto td_event_bsw_internal_behavior_r0 = b.add_role(td_event_bsw_internal_behavior, "bswModuleEntity", bsw_called_entity, fir::Multiplicity::Optional);
     auto td_event_bsw_internal_behavior_r1 = b.add_role(td_event_bsw_internal_behavior, "tdEventBswInternalBehaviorType", td_event_bsw_internal_behavior_type_enum, fir::Multiplicity::Optional);
@@ -23009,10 +21477,10 @@ AutosarSchema build_autosar_r23_11() {
     auto time_base_resource_ref_conditional_r1 = b.add_role(time_base_resource_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto time_range_type_r0 = b.add_role(time_range_type, "tolerance", absolute_tolerance, fir::Multiplicity::Optional);
-    auto time_range_type_r1 = b.add_role(time_range_type, "value", time_value, fir::Multiplicity::Optional);
+    auto time_range_type_r1 = b.add_role(time_range_type, "value", time_value, fir::Multiplicity::One);
 
     auto time_sync_client_configuration_r0 = b.add_role(time_sync_client_configuration, "orderedMaster", ordered_master, fir::Multiplicity::Many);
-    auto time_sync_client_configuration_r1 = b.add_role(time_sync_client_configuration, "timeSyncTechnology", time_sync_technology_enum, fir::Multiplicity::Optional);
+    auto time_sync_client_configuration_r1 = b.add_role(time_sync_client_configuration, "timeSyncTechnology", time_sync_technology_enum, fir::Multiplicity::One);
 
     auto time_sync_correction_r0 = b.add_role(time_sync_correction, "allowProviderRateCorrection", boolean, fir::Multiplicity::Optional);
     auto time_sync_correction_r1 = b.add_role(time_sync_correction, "offsetCorrectionAdaptionInterval", time_value, fir::Multiplicity::Optional);
@@ -23028,9 +21496,9 @@ AutosarSchema build_autosar_r23_11() {
     auto time_sync_port_prototype_to_time_base_mapping_r3 = b.add_role(time_sync_port_prototype_to_time_base_mapping, "timeSyncRPortPrototype", r_port_prototype_in_executable_instance_ref, fir::Multiplicity::Optional);
 
     auto time_sync_server_configuration_r0 = b.add_role(time_sync_server_configuration, "priority", positive_integer, fir::Multiplicity::Optional);
-    auto time_sync_server_configuration_r1 = b.add_role(time_sync_server_configuration, "syncInterval", time_value, fir::Multiplicity::Optional);
+    auto time_sync_server_configuration_r1 = b.add_role(time_sync_server_configuration, "syncInterval", time_value, fir::Multiplicity::One);
     auto time_sync_server_configuration_r2 = b.add_role(time_sync_server_configuration, "timeSyncServerIdentifier", string, fir::Multiplicity::Optional);
-    auto time_sync_server_configuration_r3 = b.add_role(time_sync_server_configuration, "timeSyncTechnology", time_sync_technology_enum, fir::Multiplicity::Optional);
+    auto time_sync_server_configuration_r3 = b.add_role(time_sync_server_configuration, "timeSyncTechnology", time_sync_technology_enum, fir::Multiplicity::One);
 
     auto time_synchronization_r0 = b.add_role(time_synchronization, "timeSyncClient", time_sync_client_configuration, fir::Multiplicity::Optional);
     auto time_synchronization_r1 = b.add_role(time_synchronization, "timeSyncServer", time_sync_server_configuration, fir::Multiplicity::Optional);
@@ -23100,7 +21568,7 @@ AutosarSchema build_autosar_r23_11() {
     auto tls_crypto_cipher_suite_r11 = b.add_role(tls_crypto_cipher_suite, "pskIdentity", tls_psk_identity, fir::Multiplicity::Optional);
     auto tls_crypto_cipher_suite_r12 = b.add_role(tls_crypto_cipher_suite, "remoteCertificate", crypto_service_certificate, fir::Multiplicity::Optional);
     auto tls_crypto_cipher_suite_r13 = b.add_role(tls_crypto_cipher_suite, "signatureScheme", crypto_signature_scheme, fir::Multiplicity::Many);
-    auto tls_crypto_cipher_suite_r14 = b.add_role(tls_crypto_cipher_suite, "version", tls_version_enum, fir::Multiplicity::Optional);
+    auto tls_crypto_cipher_suite_r14 = b.add_role(tls_crypto_cipher_suite, "version", tls_version_enum, fir::Multiplicity::One);
 
     auto tls_crypto_cipher_suite_props_r0 = b.add_role(tls_crypto_cipher_suite_props, "tcpIpTlsUseSecurityExtensionForceEncryptThenMac", boolean, fir::Multiplicity::Optional);
 
@@ -23118,14 +21586,14 @@ AutosarSchema build_autosar_r23_11() {
     auto tls_iam_remote_subject_r3 = b.add_role(tls_iam_remote_subject, "derivedCertificateAccepted", boolean, fir::Multiplicity::Optional);
     auto tls_iam_remote_subject_r4 = b.add_role(tls_iam_remote_subject, "iamRelevantTlsSecureComProps", tls_secure_com_props, fir::Multiplicity::Many);
 
-    auto tls_psk_identity_r0 = b.add_role(tls_psk_identity, "preSharedKey", crypto_service_key, fir::Multiplicity::Optional);
-    auto tls_psk_identity_r1 = b.add_role(tls_psk_identity, "pskIdentity", string, fir::Multiplicity::Optional);
+    auto tls_psk_identity_r0 = b.add_role(tls_psk_identity, "preSharedKey", crypto_service_key, fir::Multiplicity::One);
+    auto tls_psk_identity_r1 = b.add_role(tls_psk_identity, "pskIdentity", string, fir::Multiplicity::One);
     auto tls_psk_identity_r2 = b.add_role(tls_psk_identity, "pskIdentityHint", string, fir::Multiplicity::Optional);
 
     auto tls_secure_com_props_r0 = b.add_role(tls_secure_com_props, "keyExchange", crypto_service_primitive, fir::Multiplicity::Many);
     auto tls_secure_com_props_r1 = b.add_role(tls_secure_com_props, "tlsCipherSuite", tls_crypto_cipher_suite, fir::Multiplicity::Many);
 
-    auto tlv_data_id_definition_r0 = b.add_role(tlv_data_id_definition, "id", positive_integer, fir::Multiplicity::Optional);
+    auto tlv_data_id_definition_r0 = b.add_role(tlv_data_id_definition, "id", positive_integer, fir::Multiplicity::One);
     auto tlv_data_id_definition_r1 = b.add_role(tlv_data_id_definition, "tlvArgument", argument_data_prototype, fir::Multiplicity::Optional);
     auto tlv_data_id_definition_r2 = b.add_role(tlv_data_id_definition, "tlvImplementationDataTypeElement", abstract_implementation_data_type_element, fir::Multiplicity::Optional);
     auto tlv_data_id_definition_r3 = b.add_role(tlv_data_id_definition, "tlvRecordElement", application_record_element, fir::Multiplicity::Optional);
@@ -23146,18 +21614,15 @@ AutosarSchema build_autosar_r23_11() {
     b.add_role(topic_or_msr_query, "topic1", topic1, fir::Multiplicity::Many);
     b.add_role(topic_or_msr_query, "msrQueryTopic1", msr_query_topic1, fir::Multiplicity::Many);
 
-    auto tp_address_r0 = b.add_role(tp_address, "tpAddress", integer, fir::Multiplicity::Optional);
+    auto tp_address_r0 = b.add_role(tp_address, "tpAddress", integer, fir::Multiplicity::One);
     auto tp_address_r1 = b.add_role(tp_address, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto tp_config_r0 = b.add_role(tp_config, "communicationCluster", abstract_can_cluster, fir::Multiplicity::Optional);
+    auto tp_config_r0 = b.add_role(tp_config, "communicationCluster", abstract_can_cluster, fir::Multiplicity::One);
 
     auto tp_connection_r0 = b.add_role(tp_connection, "ident", tp_connection_ident, fir::Multiplicity::Optional);
 
     auto tp_port_r0 = b.add_role(tp_port, "dynamicallyAssigned", boolean, fir::Multiplicity::Optional);
     auto tp_port_r1 = b.add_role(tp_port, "portNumber", positive_integer, fir::Multiplicity::Optional);
-
-    auto trace_switch_configuration_r0 = b.add_role(trace_switch_configuration, "traceMessage", dlt_message, fir::Multiplicity::Optional);
-    auto trace_switch_configuration_r1 = b.add_role(trace_switch_configuration, "traceSwitch", trace_switch_enum, fir::Multiplicity::Optional);
 
     auto traceable_r0 = b.add_role(traceable, "trace", age_constraint, fir::Multiplicity::Many);
 
@@ -23173,26 +21638,24 @@ AutosarSchema build_autosar_r23_11() {
 
     auto transformation_i_signal_props_content_r0 = b.add_role(transformation_i_signal_props_content, "csErrorReaction", cs_transformer_error_reaction_enum, fir::Multiplicity::Optional);
     auto transformation_i_signal_props_content_r1 = b.add_role(transformation_i_signal_props_content, "dataPrototypeTransformationProps", data_prototype_transformation_props, fir::Multiplicity::Many);
-    auto transformation_i_signal_props_content_r2 = b.add_role(transformation_i_signal_props_content, "transformer", transformation_technology, fir::Multiplicity::Optional);
+    auto transformation_i_signal_props_content_r2 = b.add_role(transformation_i_signal_props_content, "transformer", transformation_technology, fir::Multiplicity::One);
 
     auto transformation_props_set_r0 = b.add_role(transformation_props_set, "transformationProps", ap_someip_transformation_props, fir::Multiplicity::Many);
 
     auto transformation_props_to_service_interface_element_mapping_r0 = b.add_role(transformation_props_to_service_interface_element_mapping, "event", variable_data_prototype, fir::Multiplicity::Many);
     auto transformation_props_to_service_interface_element_mapping_r1 = b.add_role(transformation_props_to_service_interface_element_mapping, "field", field, fir::Multiplicity::Many);
-    auto transformation_props_to_service_interface_element_mapping_r2 = b.add_role(transformation_props_to_service_interface_element_mapping, "methodCall", client_server_operation, fir::Multiplicity::Many);
-    auto transformation_props_to_service_interface_element_mapping_r3 = b.add_role(transformation_props_to_service_interface_element_mapping, "method", client_server_operation, fir::Multiplicity::Many);
-    auto transformation_props_to_service_interface_element_mapping_r4 = b.add_role(transformation_props_to_service_interface_element_mapping, "methodReturn", client_server_operation, fir::Multiplicity::Many);
-    auto transformation_props_to_service_interface_element_mapping_r5 = b.add_role(transformation_props_to_service_interface_element_mapping, "tlvDataIdDefinition", tlv_data_id_definition_set, fir::Multiplicity::Many);
-    auto transformation_props_to_service_interface_element_mapping_r6 = b.add_role(transformation_props_to_service_interface_element_mapping, "transformationProps", ap_someip_transformation_props, fir::Multiplicity::Optional);
-    auto transformation_props_to_service_interface_element_mapping_r7 = b.add_role(transformation_props_to_service_interface_element_mapping, "trigger", trigger, fir::Multiplicity::Many);
+    auto transformation_props_to_service_interface_element_mapping_r2 = b.add_role(transformation_props_to_service_interface_element_mapping, "method", client_server_operation, fir::Multiplicity::Many);
+    auto transformation_props_to_service_interface_element_mapping_r3 = b.add_role(transformation_props_to_service_interface_element_mapping, "tlvDataIdDefinition", tlv_data_id_definition_set, fir::Multiplicity::Many);
+    auto transformation_props_to_service_interface_element_mapping_r4 = b.add_role(transformation_props_to_service_interface_element_mapping, "transformationProps", ap_someip_transformation_props, fir::Multiplicity::Optional);
+    auto transformation_props_to_service_interface_element_mapping_r5 = b.add_role(transformation_props_to_service_interface_element_mapping, "trigger", trigger, fir::Multiplicity::Many);
 
-    auto transformation_technology_r0 = b.add_role(transformation_technology, "bufferProperties", buffer_properties, fir::Multiplicity::Optional);
+    auto transformation_technology_r0 = b.add_role(transformation_technology, "bufferProperties", buffer_properties, fir::Multiplicity::One);
     auto transformation_technology_r1 = b.add_role(transformation_technology, "hasInternalState", boolean, fir::Multiplicity::Optional);
     auto transformation_technology_r2 = b.add_role(transformation_technology, "needsOriginalData", boolean, fir::Multiplicity::Optional);
-    auto transformation_technology_r3 = b.add_role(transformation_technology, "protocol", string, fir::Multiplicity::Optional);
+    auto transformation_technology_r3 = b.add_role(transformation_technology, "protocol", string, fir::Multiplicity::One);
     auto transformation_technology_r4 = b.add_role(transformation_technology, "transformationDescription", end_to_end_transformation_description, fir::Multiplicity::Many);
-    auto transformation_technology_r5 = b.add_role(transformation_technology, "transformerClass", transformer_class_enum, fir::Multiplicity::Optional);
-    auto transformation_technology_r6 = b.add_role(transformation_technology, "version", string, fir::Multiplicity::Optional);
+    auto transformation_technology_r5 = b.add_role(transformation_technology, "transformerClass", transformer_class_enum, fir::Multiplicity::One);
+    auto transformation_technology_r6 = b.add_role(transformation_technology, "version", string, fir::Multiplicity::One);
     auto transformation_technology_r7 = b.add_role(transformation_technology, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
     auto transformer_hard_error_event_r0 = b.add_role(transformer_hard_error_event, "operation", p_operation_in_atomic_swc_instance_ref, fir::Multiplicity::Optional);
@@ -23207,8 +21670,8 @@ AutosarSchema build_autosar_r23_11() {
     auto transmission_com_spec_props_r1 = b.add_role(transmission_com_spec_props, "minimumSendInterval", time_value, fir::Multiplicity::Optional);
     auto transmission_com_spec_props_r2 = b.add_role(transmission_com_spec_props, "transmissionMode", transmission_mode_definition_enum, fir::Multiplicity::Optional);
 
-    auto transmission_mode_condition_r0 = b.add_role(transmission_mode_condition, "dataFilter", data_filter, fir::Multiplicity::Optional);
-    auto transmission_mode_condition_r1 = b.add_role(transmission_mode_condition, "iSignalInIPdu", i_signal_to_i_pdu_mapping, fir::Multiplicity::Optional);
+    auto transmission_mode_condition_r0 = b.add_role(transmission_mode_condition, "dataFilter", data_filter, fir::Multiplicity::One);
+    auto transmission_mode_condition_r1 = b.add_role(transmission_mode_condition, "iSignalInIPdu", i_signal_to_i_pdu_mapping, fir::Multiplicity::One);
 
     auto transmission_mode_declaration_r0 = b.add_role(transmission_mode_declaration, "modeDrivenFalseCondition", mode_driven_transmission_mode_condition, fir::Multiplicity::Many);
     auto transmission_mode_declaration_r1 = b.add_role(transmission_mode_declaration, "modeDrivenTrueCondition", mode_driven_transmission_mode_condition, fir::Multiplicity::Many);
@@ -23229,7 +21692,7 @@ AutosarSchema build_autosar_r23_11() {
     auto trigger_r1 = b.add_role(trigger, "triggerPeriod", multidimensional_time, fir::Multiplicity::Optional);
     auto trigger_r2 = b.add_role(trigger, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto trigger_i_pdu_send_condition_r0 = b.add_role(trigger_i_pdu_send_condition, "modeDeclaration", mode_declaration, fir::Multiplicity::Many);
+    auto trigger_i_pdu_send_condition_r0 = b.add_role(trigger_i_pdu_send_condition, "modeDeclaration", mode_declaration, fir::Multiplicity::OneOrMore);
 
     auto trigger_in_executable_instance_ref_r0 = b.add_role(trigger_in_executable_instance_ref, "contextRootSwComponentPrototype", root_sw_component_prototype, fir::Multiplicity::Optional);
     auto trigger_in_executable_instance_ref_r1 = b.add_role(trigger_in_executable_instance_ref, "contextComponentPrototype", sw_component_prototype, fir::Multiplicity::Many);
@@ -23239,7 +21702,7 @@ AutosarSchema build_autosar_r23_11() {
     auto trigger_in_system_instance_ref_r0 = b.add_role(trigger_in_system_instance_ref, "contextComposition", root_sw_composition_prototype, fir::Multiplicity::Optional);
     auto trigger_in_system_instance_ref_r1 = b.add_role(trigger_in_system_instance_ref, "contextComponent", sw_component_prototype, fir::Multiplicity::Many);
     auto trigger_in_system_instance_ref_r2 = b.add_role(trigger_in_system_instance_ref, "contextPort", abstract_provided_port_prototype, fir::Multiplicity::One);
-    auto trigger_in_system_instance_ref_r3 = b.add_role(trigger_in_system_instance_ref, "targetTrigger", trigger, fir::Multiplicity::Optional);
+    auto trigger_in_system_instance_ref_r3 = b.add_role(trigger_in_system_instance_ref, "targetTrigger", trigger, fir::Multiplicity::One);
 
     auto trigger_interface_r0 = b.add_role(trigger_interface, "trigger", trigger, fir::Multiplicity::Many);
 
@@ -23253,37 +21716,37 @@ AutosarSchema build_autosar_r23_11() {
     auto trigger_ref_conditional_r0 = b.add_role(trigger_ref_conditional, "trigger", trigger, fir::Multiplicity::One);
     auto trigger_ref_conditional_r1 = b.add_role(trigger_ref_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto trigger_to_signal_mapping_r0 = b.add_role(trigger_to_signal_mapping, "trigger", trigger_in_system_instance_ref, fir::Multiplicity::Optional);
-    auto trigger_to_signal_mapping_r1 = b.add_role(trigger_to_signal_mapping, "systemSignal", system_signal, fir::Multiplicity::Optional);
+    auto trigger_to_signal_mapping_r0 = b.add_role(trigger_to_signal_mapping, "trigger", trigger_in_system_instance_ref, fir::Multiplicity::One);
+    auto trigger_to_signal_mapping_r1 = b.add_role(trigger_to_signal_mapping, "systemSignal", system_signal, fir::Multiplicity::One);
 
     b.add_role(tt, "..", string_simple_t, fir::Multiplicity::One);
     auto tt_r1 = b.add_role(tt, "texRender", string_simple_t, fir::Multiplicity::Optional);
     auto tt_r2 = b.add_role(tt, "type", nmtoken_string_simple_t, fir::Multiplicity::One);
 
-    auto ttcan_absolutely_scheduled_timing_r0 = b.add_role(ttcan_absolutely_scheduled_timing, "communicationCycle", cycle_counter, fir::Multiplicity::Optional);
-    auto ttcan_absolutely_scheduled_timing_r1 = b.add_role(ttcan_absolutely_scheduled_timing, "timeMark", integer, fir::Multiplicity::Optional);
-    auto ttcan_absolutely_scheduled_timing_r2 = b.add_role(ttcan_absolutely_scheduled_timing, "trigger", ttcan_trigger_type, fir::Multiplicity::Optional);
+    auto ttcan_absolutely_scheduled_timing_r0 = b.add_role(ttcan_absolutely_scheduled_timing, "communicationCycle", cycle_counter, fir::Multiplicity::One);
+    auto ttcan_absolutely_scheduled_timing_r1 = b.add_role(ttcan_absolutely_scheduled_timing, "timeMark", integer, fir::Multiplicity::One);
+    auto ttcan_absolutely_scheduled_timing_r2 = b.add_role(ttcan_absolutely_scheduled_timing, "trigger", ttcan_trigger_type, fir::Multiplicity::One);
 
     auto ttcan_cluster_r0 = b.add_role(ttcan_cluster, "ttcanClusterVariant", ttcan_cluster_conditional, fir::Multiplicity::OneOrMore);
 
     auto ttcan_cluster_conditional_r0 = b.add_role(ttcan_cluster_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto ttcan_cluster_content_r0 = b.add_role(ttcan_cluster_content, "basicCycleLength", integer, fir::Multiplicity::Optional);
-    auto ttcan_cluster_content_r1 = b.add_role(ttcan_cluster_content, "ntu", time_value, fir::Multiplicity::Optional);
-    auto ttcan_cluster_content_r2 = b.add_role(ttcan_cluster_content, "operationMode", boolean, fir::Multiplicity::Optional);
+    auto ttcan_cluster_content_r0 = b.add_role(ttcan_cluster_content, "basicCycleLength", integer, fir::Multiplicity::One);
+    auto ttcan_cluster_content_r1 = b.add_role(ttcan_cluster_content, "ntu", time_value, fir::Multiplicity::One);
+    auto ttcan_cluster_content_r2 = b.add_role(ttcan_cluster_content, "operationMode", boolean, fir::Multiplicity::One);
 
     auto ttcan_communication_controller_r0 = b.add_role(ttcan_communication_controller, "ttcanCommunicationControllerVariant", ttcan_communication_controller_conditional, fir::Multiplicity::OneOrMore);
 
     auto ttcan_communication_controller_conditional_r0 = b.add_role(ttcan_communication_controller_conditional, "variationPoint", variation_point, fir::Multiplicity::Optional);
 
-    auto ttcan_communication_controller_content_r0 = b.add_role(ttcan_communication_controller_content, "applWatchdogLimit", integer, fir::Multiplicity::Optional);
-    auto ttcan_communication_controller_content_r1 = b.add_role(ttcan_communication_controller_content, "expectedTxTrigger", integer, fir::Multiplicity::Optional);
-    auto ttcan_communication_controller_content_r2 = b.add_role(ttcan_communication_controller_content, "externalClockSynchronisation", boolean, fir::Multiplicity::Optional);
-    auto ttcan_communication_controller_content_r3 = b.add_role(ttcan_communication_controller_content, "initialRefOffset", integer, fir::Multiplicity::Optional);
-    auto ttcan_communication_controller_content_r4 = b.add_role(ttcan_communication_controller_content, "master", boolean, fir::Multiplicity::Optional);
-    auto ttcan_communication_controller_content_r5 = b.add_role(ttcan_communication_controller_content, "timeMasterPriority", integer, fir::Multiplicity::Optional);
-    auto ttcan_communication_controller_content_r6 = b.add_role(ttcan_communication_controller_content, "timeTriggeredCanLevel", integer, fir::Multiplicity::Optional);
-    auto ttcan_communication_controller_content_r7 = b.add_role(ttcan_communication_controller_content, "txEnableWindowLength", integer, fir::Multiplicity::Optional);
+    auto ttcan_communication_controller_content_r0 = b.add_role(ttcan_communication_controller_content, "applWatchdogLimit", integer, fir::Multiplicity::One);
+    auto ttcan_communication_controller_content_r1 = b.add_role(ttcan_communication_controller_content, "expectedTxTrigger", integer, fir::Multiplicity::One);
+    auto ttcan_communication_controller_content_r2 = b.add_role(ttcan_communication_controller_content, "externalClockSynchronisation", boolean, fir::Multiplicity::One);
+    auto ttcan_communication_controller_content_r3 = b.add_role(ttcan_communication_controller_content, "initialRefOffset", integer, fir::Multiplicity::One);
+    auto ttcan_communication_controller_content_r4 = b.add_role(ttcan_communication_controller_content, "master", boolean, fir::Multiplicity::One);
+    auto ttcan_communication_controller_content_r5 = b.add_role(ttcan_communication_controller_content, "timeMasterPriority", integer, fir::Multiplicity::One);
+    auto ttcan_communication_controller_content_r6 = b.add_role(ttcan_communication_controller_content, "timeTriggeredCanLevel", integer, fir::Multiplicity::One);
+    auto ttcan_communication_controller_content_r7 = b.add_role(ttcan_communication_controller_content, "txEnableWindowLength", integer, fir::Multiplicity::One);
 
     auto ucm_description_r0 = b.add_role(ucm_description, "identifier", string, fir::Multiplicity::Optional);
     auto ucm_description_r1 = b.add_role(ucm_description, "ucmModuleInstantiation", ucm_master_module_instantiation, fir::Multiplicity::Optional);
@@ -23302,10 +21765,9 @@ AutosarSchema build_autosar_r23_11() {
     auto ucm_step_r0 = b.add_role(ucm_step, "softwarePackageStep", software_package_step, fir::Multiplicity::Many);
     auto ucm_step_r1 = b.add_role(ucm_step, "ucm", ucm_description, fir::Multiplicity::Optional);
 
-    auto ucm_subordinate_module_instantiation_r0 = b.add_role(ucm_subordinate_module_instantiation, "maxAvailablePersistencyStorageSpace", positive_integer, fir::Multiplicity::Optional);
-    auto ucm_subordinate_module_instantiation_r1 = b.add_role(ucm_subordinate_module_instantiation, "prepareRollback", ucm_retry_strategy, fir::Multiplicity::Optional);
-    auto ucm_subordinate_module_instantiation_r2 = b.add_role(ucm_subordinate_module_instantiation, "prepareUpdate", ucm_retry_strategy, fir::Multiplicity::Optional);
-    auto ucm_subordinate_module_instantiation_r3 = b.add_role(ucm_subordinate_module_instantiation, "verifyUpdate", ucm_retry_strategy, fir::Multiplicity::Optional);
+    auto ucm_subordinate_module_instantiation_r0 = b.add_role(ucm_subordinate_module_instantiation, "prepareRollback", ucm_retry_strategy, fir::Multiplicity::Optional);
+    auto ucm_subordinate_module_instantiation_r1 = b.add_role(ucm_subordinate_module_instantiation, "prepareUpdate", ucm_retry_strategy, fir::Multiplicity::Optional);
+    auto ucm_subordinate_module_instantiation_r2 = b.add_role(ucm_subordinate_module_instantiation, "verifyUpdate", ucm_retry_strategy, fir::Multiplicity::Optional);
 
     auto ucm_to_time_base_resource_mapping_r0 = b.add_role(ucm_to_time_base_resource_mapping, "timeBaseResource", synchronized_time_base_consumer, fir::Multiplicity::Optional);
     auto ucm_to_time_base_resource_mapping_r1 = b.add_role(ucm_to_time_base_resource_mapping, "ucm", ucm_master_module_instantiation, fir::Multiplicity::Optional);
@@ -23345,10 +21807,10 @@ AutosarSchema build_autosar_r23_11() {
 
     auto udp_props_r0 = b.add_role(udp_props, "udpTtl", positive_integer, fir::Multiplicity::Optional);
 
-    auto udp_tp_r0 = b.add_role(udp_tp, "udpTpPort", tp_port, fir::Multiplicity::Optional);
+    auto udp_tp_r0 = b.add_role(udp_tp, "udpTpPort", tp_port, fir::Multiplicity::One);
 
     auto unassign_frame_id_r0 = b.add_role(unassign_frame_id, "messageId", positive_integer, fir::Multiplicity::Optional);
-    auto unassign_frame_id_r1 = b.add_role(unassign_frame_id, "unassignedFrameTriggering", lin_frame_triggering, fir::Multiplicity::Optional);
+    auto unassign_frame_id_r1 = b.add_role(unassign_frame_id, "unassignedFrameTriggering", lin_frame_triggering, fir::Multiplicity::One);
 
     auto unit_r0 = b.add_role(unit, "displayName", single_language_unit_names, fir::Multiplicity::Optional);
     auto unit_r1 = b.add_role(unit, "factorSiToUnit", float_, fir::Multiplicity::Optional);
@@ -23443,18 +21905,16 @@ AutosarSchema build_autosar_r23_11() {
 
     auto vehicle_package_r0 = b.add_role(vehicle_package, "driverNotification", vehicle_driver_notification, fir::Multiplicity::Many);
     auto vehicle_package_r1 = b.add_role(vehicle_package, "estimatedDurationOfCampaign", time_value, fir::Multiplicity::Optional);
-    auto vehicle_package_r2 = b.add_role(vehicle_package, "maximumDurationOfCampaign", time_value, fir::Multiplicity::Optional);
-    auto vehicle_package_r3 = b.add_role(vehicle_package, "minimumSupportedUcmMasterVersion", revision_label_string, fir::Multiplicity::Optional);
-    auto vehicle_package_r4 = b.add_role(vehicle_package, "packagerSignature", crypto_service_certificate, fir::Multiplicity::Optional);
-    auto vehicle_package_r5 = b.add_role(vehicle_package, "repository", uri_string, fir::Multiplicity::Optional);
-    auto vehicle_package_r6 = b.add_role(vehicle_package, "rolloutQualification", vehicle_rollout_step, fir::Multiplicity::Many);
-    auto vehicle_package_r7 = b.add_role(vehicle_package, "ucm", ucm_description, fir::Multiplicity::Many);
-    auto vehicle_package_r8 = b.add_role(vehicle_package, "ucmMasterFallback", ucm_description, fir::Multiplicity::Many);
-    auto vehicle_package_r9 = b.add_role(vehicle_package, "vehicleDescription", documentation, fir::Multiplicity::Optional);
+    auto vehicle_package_r2 = b.add_role(vehicle_package, "minimumSupportedUcmMasterVersion", revision_label_string, fir::Multiplicity::Optional);
+    auto vehicle_package_r3 = b.add_role(vehicle_package, "packagerSignature", crypto_service_certificate, fir::Multiplicity::Optional);
+    auto vehicle_package_r4 = b.add_role(vehicle_package, "repository", uri_string, fir::Multiplicity::Optional);
+    auto vehicle_package_r5 = b.add_role(vehicle_package, "rolloutQualification", vehicle_rollout_step, fir::Multiplicity::Many);
+    auto vehicle_package_r6 = b.add_role(vehicle_package, "ucm", ucm_description, fir::Multiplicity::Many);
+    auto vehicle_package_r7 = b.add_role(vehicle_package, "ucmMasterFallback", ucm_description, fir::Multiplicity::Many);
+    auto vehicle_package_r8 = b.add_role(vehicle_package, "vehicleDescription", documentation, fir::Multiplicity::Optional);
 
     auto vehicle_rollout_step_r0 = b.add_role(vehicle_rollout_step, "safetyCondition", string, fir::Multiplicity::Many);
     auto vehicle_rollout_step_r1 = b.add_role(vehicle_rollout_step, "ucmProcessing", ucm_step, fir::Multiplicity::Many);
-    auto vehicle_rollout_step_r2 = b.add_role(vehicle_rollout_step, "violatedSafetyConditionBehavior", violated_safety_condition_behavior_enum, fir::Multiplicity::Optional);
 
     b.add_role(verbatim_string, "..", verbatim_string_simple_t, fir::Multiplicity::One);
     auto verbatim_string_r1 = b.add_role(verbatim_string, "blueprintValue", string_simple_t, fir::Multiplicity::Optional);
@@ -23470,12 +21930,12 @@ AutosarSchema build_autosar_r23_11() {
 
     auto view_map_set_r0 = b.add_role(view_map_set, "viewMap", view_map, fir::Multiplicity::Many);
 
-    auto vlan_config_r0 = b.add_role(vlan_config, "vlanIdentifier", positive_integer, fir::Multiplicity::Optional);
+    auto vlan_config_r0 = b.add_role(vlan_config, "vlanIdentifier", positive_integer, fir::Multiplicity::One);
 
-    auto vlan_membership_r0 = b.add_role(vlan_membership, "defaultPriority", positive_integer, fir::Multiplicity::Optional);
+    auto vlan_membership_r0 = b.add_role(vlan_membership, "defaultPriority", positive_integer, fir::Multiplicity::One);
     auto vlan_membership_r1 = b.add_role(vlan_membership, "dhcpAddressAssignment", dhcp_server_configuration, fir::Multiplicity::Optional);
     auto vlan_membership_r2 = b.add_role(vlan_membership, "sendActivity", ethernet_switch_vlan_egress_tagging_enum, fir::Multiplicity::Optional);
-    auto vlan_membership_r3 = b.add_role(vlan_membership, "vlan", ethernet_physical_channel, fir::Multiplicity::Optional);
+    auto vlan_membership_r3 = b.add_role(vlan_membership, "vlan", ethernet_physical_channel, fir::Multiplicity::One);
 
     auto wait_point_r0 = b.add_role(wait_point, "timeout", time_value, fir::Multiplicity::Optional);
     auto wait_point_r1 = b.add_role(wait_point, "trigger", asynchronous_server_call_returns_event, fir::Multiplicity::Optional);
@@ -23638,21 +22098,7 @@ AutosarSchema build_autosar_r23_11() {
 
     b.add_role(date_time, "..", date_simple_t, fir::Multiplicity::One);
 
-    b.add_role(dds_destination_order_kind_enum, "..", dds_destination_order_kind_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(dds_durability_kind_enum, "..", dds_durability_kind_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(dds_durability_service_history_kind_enum, "..", dds_durability_service_history_kind_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(dds_history_kind_enum, "..", dds_history_kind_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(dds_liveness_kind_enum, "..", dds_liveness_kind_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(dds_ownership_kind_enum, "..", dds_ownership_kind_enum_simple, fir::Multiplicity::One);
-
     b.add_role(dds_protection_kind_enum, "..", dds_protection_kind_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(dds_reliability_kind_enum, "..", dds_reliability_kind_enum_simple, fir::Multiplicity::One);
 
     b.add_role(dds_service_instance_discovery_type_enum, "..", dds_service_instance_discovery_type_enum_simple, fir::Multiplicity::One);
 
@@ -23836,8 +22282,6 @@ AutosarSchema build_autosar_r23_11() {
 
     b.add_role(float_enum, "..", float_enum_simple, fir::Multiplicity::One);
 
-    b.add_role(flow_metering_color_mode_enum, "..", flow_metering_color_mode_enum_simple, fir::Multiplicity::One);
-
     b.add_role(fm_feature_selection_state, "..", fm_feature_selection_state_simple, fir::Multiplicity::One);
 
     b.add_role(fr_ar_tp_ack_type, "..", fr_ar_tp_ack_type_simple, fir::Multiplicity::One);
@@ -23855,8 +22299,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_role(global_time_icv_support_enum, "..", global_time_icv_support_enum_simple, fir::Multiplicity::One);
 
     b.add_role(global_time_icv_verification_enum, "..", global_time_icv_verification_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(global_time_port_role_enum, "..", global_time_port_role_enum_simple, fir::Multiplicity::One);
 
     b.add_role(graphic_fit_enum, "..", graphic_fit_enum_simple, fir::Multiplicity::One);
 
@@ -23886,26 +22328,6 @@ AutosarSchema build_autosar_r23_11() {
 
     b.add_role(i_signal_type_enum, "..", i_signal_type_enum_simple, fir::Multiplicity::One);
 
-    b.add_role(iee_e1722_tp_aaf_aes3_data_type_enum, "..", ieee1722_tp_aaf_aes3_data_type_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(iee_e1722_tp_aaf_format_enum, "..", ieee1722_tp_aaf_format_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(iee_e1722_tp_aaf_nominal_rate_enum, "..", ieee1722_tp_aaf_nominal_rate_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(iee_e1722_tp_acf_can_message_type_enum, "..", ieee1722_tp_acf_can_message_type_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(iee_e1722_tp_crf_pull_enum, "..", ieee1722_tp_crf_pull_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(iee_e1722_tp_crf_type_enum, "..", ieee1722_tp_crf_type_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(iee_e1722_tp_rvf_color_space_enum, "..", ieee1722_tp_rvf_color_space_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(iee_e1722_tp_rvf_frame_rate_enum, "..", ieee1722_tp_rvf_frame_rate_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(iee_e1722_tp_rvf_pixel_depth_enum, "..", ieee1722_tp_rvf_pixel_depth_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(iee_e1722_tp_rvf_pixel_format_enum, "..", ieee1722_tp_rvf_pixel_format_enum_simple, fir::Multiplicity::One);
-
     b.add_role(ike_authentication_method_enum, "..", ike_authentication_method_enum_simple, fir::Multiplicity::One);
 
     b.add_role(integer, "..", integer_simple_t, fir::Multiplicity::One);
@@ -23926,8 +22348,6 @@ AutosarSchema build_autosar_r23_11() {
 
     b.add_role(item_label_pos_enum, "..", item_label_pos_enum_simple, fir::Multiplicity::One);
 
-    b.add_role(j1939_nm_address_configuration_capability_enum, "..", j1939_nm_address_configuration_capability_enum_simple, fir::Multiplicity::One);
-
     b.add_role(keep_with_previous_enum, "..", keep_with_previous_enum_simple, fir::Multiplicity::One);
 
     b.add_role(key_usage_restriction_enum, "..", key_usage_restriction_enum_simple, fir::Multiplicity::One);
@@ -23935,8 +22355,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_role(l_enum, "..", l_enum_simple, fir::Multiplicity::One);
 
     b.add_role(latency_constraint_type_enum, "..", latency_constraint_type_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(let_data_exchange_paradigm_enum, "..", let_data_exchange_paradigm_enum_simple, fir::Multiplicity::One);
 
     b.add_role(lin_checksum_type, "..", lin_checksum_type_simple, fir::Multiplicity::One);
 
@@ -23972,8 +22390,6 @@ AutosarSchema build_autosar_r23_11() {
 
     b.add_role(mime_type_string, "..", mime_type_string_simple_t, fir::Multiplicity::One);
 
-    b.add_role(mirroring_protocol_enum, "..", mirroring_protocol_enum_simple, fir::Multiplicity::One);
-
     b.add_role(mode_activation_kind, "..", mode_activation_kind_simple, fir::Multiplicity::One);
 
     b.add_role(mode_error_reaction_policy_enum, "..", mode_error_reaction_policy_enum_simple, fir::Multiplicity::One);
@@ -23989,8 +22405,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_role(nm_coordinator_role_enum, "..", nm_coordinator_role_enum_simple, fir::Multiplicity::One);
 
     b.add_role(nm_handle_mapping_direction_enum, "..", nm_handle_mapping_direction_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(nm_state_request_enum, "..", nm_state_request_enum_simple, fir::Multiplicity::One);
 
     b.add_role(name_token, "..", nmtoken_string_simple_t, fir::Multiplicity::One);
 
@@ -24011,8 +22425,6 @@ AutosarSchema build_autosar_r23_11() {
     b.add_role(operation_cycle_type_enum, "..", operation_cycle_type_enum_simple, fir::Multiplicity::One);
 
     b.add_role(orient_enum, "..", orient_enum_simple, fir::Multiplicity::One);
-
-    b.add_role(os_arti_adapter_launch_behavior_enum, "..", os_arti_adapter_launch_behavior_enum_simple, fir::Multiplicity::One);
 
     b.add_role(os_task_preemptability_enum, "..", os_task_preemptability_enum_simple, fir::Multiplicity::One);
 
@@ -24190,8 +22602,6 @@ AutosarSchema build_autosar_r23_11() {
 
     b.add_role(swc_to_swc_operation_arguments_direction_enum, "..", swc_to_swc_operation_arguments_direction_enum_simple, fir::Multiplicity::One);
 
-    b.add_role(switch_stream_filter_action_port_modification_enum, "..", switch_stream_filter_action_port_modification_enum_simple, fir::Multiplicity::One);
-
     b.add_role(synchronization_type_enum, "..", synchronization_type_enum_simple, fir::Multiplicity::One);
 
     b.add_role(table_separator_string, "..", table_separator_string_simple_t, fir::Multiplicity::One);
@@ -24242,8 +22652,6 @@ AutosarSchema build_autosar_r23_11() {
 
     b.add_role(tp_ack_type, "..", tp_ack_type_simple, fir::Multiplicity::One);
 
-    b.add_role(trace_switch_enum, "..", trace_switch_enum_simple, fir::Multiplicity::One);
-
     b.add_role(transfer_property_enum, "..", transfer_property_enum_simple, fir::Multiplicity::One);
 
     b.add_role(transformer_class_enum, "..", transformer_class_enum_simple, fir::Multiplicity::One);
@@ -24280,12 +22688,10 @@ AutosarSchema build_autosar_r23_11() {
 
     b.add_role(view_tokens, "..", view_tokens_simple_t, fir::Multiplicity::One);
 
-    b.add_role(violated_safety_condition_behavior_enum, "..", violated_safety_condition_behavior_enum_simple, fir::Multiplicity::One);
-
     b.add_role(xml_space_enum, "..", xml_space_enum_simple, fir::Multiplicity::One);
 
     // ── Lookup Tables ──
-    kore::FrozenMap<std::string_view, TypeInfo> tag_to_type(2710);
+    kore::FrozenMap<std::string_view, TypeInfo> tag_to_type(2573);
 
     {
         TypeInfo info{{absolute_tolerance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
@@ -24564,9 +22970,8 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("ADAPTIVE-APPLICATION-SW-COMPONENT-TYPE", std::move(info));
     }
     {
-        TypeInfo info{{adaptive_firewall_module_instantiation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("STATE-DEP-FIREWALL-REFS", rupa::domain::RoleHandle{adaptive_firewall_module_instantiation_r0.id});
-        info.roles.add("STATE-DEPENDENT-FIREWALL-REF", rupa::domain::RoleHandle{adaptive_firewall_module_instantiation_r1.id});
+        TypeInfo info{{adaptive_firewall_module_instantiation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
+        info.roles.add("STATE-DEPENDENT-FIREWALL-REF", rupa::domain::RoleHandle{adaptive_firewall_module_instantiation_r0.id});
         info.roles.freeze();
         tag_to_type.add("ADAPTIVE-FIREWALL-MODULE-INSTANTIATION", std::move(info));
     }
@@ -24733,23 +23138,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("OFFSET", rupa::domain::RoleHandle{app_os_task_proxy_to_ecu_task_proxy_mapping_r2.id});
         info.roles.freeze();
         tag_to_type.add("APP-OS-TASK-PROXY-TO-ECU-TASK-PROXY-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{applicability_info.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
-        info.roles.add("IT-REF", rupa::domain::RoleHandle{applicability_info_r0.id});
-        info.roles.add("REMARK", rupa::domain::RoleHandle{applicability_info_r1.id});
-        info.roles.add("STD-REFS", rupa::domain::RoleHandle{applicability_info_r2.id});
-        info.roles.add("TRACE-REF", rupa::domain::RoleHandle{applicability_info_r3.id});
-        info.roles.freeze();
-        tag_to_type.add("APPLICABILITY-INFO", std::move(info));
-    }
-    {
-        TypeInfo info{{applicability_info_set.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("APPLICABILITY-INFOS", rupa::domain::RoleHandle{applicability_info_set_r0.id});
-        info.roles.add("APPLIED-STANDARDS", rupa::domain::RoleHandle{applicability_info_set_r1.id});
-        info.roles.add("USED-IMPOSITION-TIME-DEFINITION-GROUP-REF", rupa::domain::RoleHandle{applicability_info_set_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("APPLICABILITY-INFO-SET", std::move(info));
     }
     {
         TypeInfo info{{application_array_data_type.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
@@ -24937,12 +23325,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("SW-VALUE-CONT", rupa::domain::RoleHandle{application_value_specification_r2.id});
         info.roles.freeze();
         tag_to_type.add("APPLICATION-VALUE-SPECIFICATION", std::move(info));
-    }
-    {
-        TypeInfo info{{applied_standard.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("APPLIES-TO", rupa::domain::RoleHandle{applied_standard_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("APPLIED-STANDARD", std::move(info));
     }
     {
         TypeInfo info{{ar_element.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -25631,11 +24013,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("BSW-INTERRUPT-ENTITY", std::move(info));
     }
     {
-        TypeInfo info{{bsw_interrupt_event.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("BSW-INTERRUPT-EVENT", std::move(info));
-    }
-    {
         TypeInfo info{{bsw_mgr_needs.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("BSW-MGR-NEEDS", std::move(info));
@@ -26006,11 +24383,10 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("BUS-MIRROR-CHANNEL", std::move(info));
     }
     {
-        TypeInfo info{{bus_mirror_channel_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
-        info.roles.add("MIRRORING-PROTOCOL", rupa::domain::RoleHandle{bus_mirror_channel_mapping_r0.id});
-        info.roles.add("SOURCE-CHANNEL", rupa::domain::RoleHandle{bus_mirror_channel_mapping_r1.id});
-        info.roles.add("TARGET-CHANNEL", rupa::domain::RoleHandle{bus_mirror_channel_mapping_r2.id});
-        info.roles.add("TARGET-PDU-TRIGGERINGS", rupa::domain::RoleHandle{bus_mirror_channel_mapping_r3.id});
+        TypeInfo info{{bus_mirror_channel_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        info.roles.add("SOURCE-CHANNEL", rupa::domain::RoleHandle{bus_mirror_channel_mapping_r0.id});
+        info.roles.add("TARGET-CHANNEL", rupa::domain::RoleHandle{bus_mirror_channel_mapping_r1.id});
+        info.roles.add("TARGET-PDU-TRIGGERINGS", rupa::domain::RoleHandle{bus_mirror_channel_mapping_r2.id});
         info.roles.freeze();
         tag_to_type.add("BUS-MIRROR-CHANNEL-MAPPING", std::move(info));
     }
@@ -26782,13 +25158,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("COM-SEC-OC-TO-CRYPTO-KEY-SLOT-MAPPING", std::move(info));
     }
     {
-        TypeInfo info{{com_trigger_grant.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("DESIGN-REF", rupa::domain::RoleHandle{com_trigger_grant_r0.id});
-        info.roles.add("SERVICE-DEPLOYMENT-REF", rupa::domain::RoleHandle{com_trigger_grant_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("COM-TRIGGER-GRANT", std::move(info));
-    }
-    {
         TypeInfo info{{com_trigger_grant_design.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
         info.roles.add("TRIGGER-IREF", rupa::domain::RoleHandle{com_trigger_grant_design_r0.id});
         info.roles.freeze();
@@ -26963,13 +25332,12 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("COMPOSITION-R-PORT-TO-EXECUTABLE-R-PORT-MAPPING", std::move(info));
     }
     {
-        TypeInfo info{{composition_sw_component_type.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
+        TypeInfo info{{composition_sw_component_type.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
         info.roles.add("COMPONENTS", rupa::domain::RoleHandle{composition_sw_component_type_r0.id});
         info.roles.add("CONNECTORS", rupa::domain::RoleHandle{composition_sw_component_type_r1.id});
         info.roles.add("CONSTANT-VALUE-MAPPING-REFS", rupa::domain::RoleHandle{composition_sw_component_type_r2.id});
         info.roles.add("DATA-TYPE-MAPPING-REFS", rupa::domain::RoleHandle{composition_sw_component_type_r3.id});
         info.roles.add("INSTANTIATION-RTE-EVENT-PROPSS", rupa::domain::RoleHandle{composition_sw_component_type_r4.id});
-        info.roles.add("PHYSICAL-DIMENSION-MAPPING-REF", rupa::domain::RoleHandle{composition_sw_component_type_r5.id});
         info.roles.freeze();
         tag_to_type.add("COMPOSITION-SW-COMPONENT-TYPE", std::move(info));
     }
@@ -27048,16 +25416,15 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("COMPU-RATIONAL-COEFFS", std::move(info));
     }
     {
-        TypeInfo info{{compu_scale.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(9)};
-        info.roles.add("A-2-L-DISPLAY-TEXT", rupa::domain::RoleHandle{compu_scale_r0.id});
-        info.roles.add("SHORT-LABEL", rupa::domain::RoleHandle{compu_scale_r1.id});
-        info.roles.add("SYMBOL", rupa::domain::RoleHandle{compu_scale_r2.id});
-        info.roles.add("DESC", rupa::domain::RoleHandle{compu_scale_r3.id});
-        info.roles.add("MASK", rupa::domain::RoleHandle{compu_scale_r4.id});
-        info.roles.add("LOWER-LIMIT", rupa::domain::RoleHandle{compu_scale_r5.id});
-        info.roles.add("UPPER-LIMIT", rupa::domain::RoleHandle{compu_scale_r6.id});
-        info.roles.add("COMPU-INVERSE-VALUE", rupa::domain::RoleHandle{compu_scale_r7.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{compu_scale_r9.id});
+        TypeInfo info{{compu_scale.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(8)};
+        info.roles.add("SHORT-LABEL", rupa::domain::RoleHandle{compu_scale_r0.id});
+        info.roles.add("SYMBOL", rupa::domain::RoleHandle{compu_scale_r1.id});
+        info.roles.add("DESC", rupa::domain::RoleHandle{compu_scale_r2.id});
+        info.roles.add("MASK", rupa::domain::RoleHandle{compu_scale_r3.id});
+        info.roles.add("LOWER-LIMIT", rupa::domain::RoleHandle{compu_scale_r4.id});
+        info.roles.add("UPPER-LIMIT", rupa::domain::RoleHandle{compu_scale_r5.id});
+        info.roles.add("COMPU-INVERSE-VALUE", rupa::domain::RoleHandle{compu_scale_r6.id});
+        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{compu_scale_r8.id});
         info.roles.freeze();
         tag_to_type.add("COMPU-SCALE", std::move(info));
     }
@@ -27201,22 +25568,21 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("CONSUMED-PROVIDED-SERVICE-INSTANCE-GROUP-REF-CONDITIONAL", std::move(info));
     }
     {
-        TypeInfo info{{consumed_service_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(15)};
-        info.roles.add("ALLOWED-SERVICE-PROVIDERS", rupa::domain::RoleHandle{consumed_service_instance_r0.id});
-        info.roles.add("AUTO-REQUIRE", rupa::domain::RoleHandle{consumed_service_instance_r1.id});
-        info.roles.add("BLACKLISTED-VERSIONS", rupa::domain::RoleHandle{consumed_service_instance_r2.id});
-        info.roles.add("BLOCKLISTED-VERSIONS", rupa::domain::RoleHandle{consumed_service_instance_r3.id});
-        info.roles.add("CONSUMED-EVENT-GROUPS", rupa::domain::RoleHandle{consumed_service_instance_r4.id});
-        info.roles.add("EVENT-MULTICAST-SUBSCRIPTION-ADDRESSS", rupa::domain::RoleHandle{consumed_service_instance_r5.id});
-        info.roles.add("INSTANCE-IDENTIFIER", rupa::domain::RoleHandle{consumed_service_instance_r6.id});
-        info.roles.add("LOCAL-UNICAST-ADDRESSS", rupa::domain::RoleHandle{consumed_service_instance_r7.id});
-        info.roles.add("MINOR-VERSION", rupa::domain::RoleHandle{consumed_service_instance_r8.id});
-        info.roles.add("PROVIDED-SERVICE-INSTANCE-REF", rupa::domain::RoleHandle{consumed_service_instance_r9.id});
-        info.roles.add("REMOTE-UNICAST-ADDRESSS", rupa::domain::RoleHandle{consumed_service_instance_r10.id});
-        info.roles.add("SD-CLIENT-CONFIG", rupa::domain::RoleHandle{consumed_service_instance_r11.id});
-        info.roles.add("SD-CLIENT-TIMER-CONFIGS", rupa::domain::RoleHandle{consumed_service_instance_r12.id});
-        info.roles.add("SERVICE-IDENTIFIER", rupa::domain::RoleHandle{consumed_service_instance_r13.id});
-        info.roles.add("VERSION-DRIVEN-FIND-BEHAVIOR", rupa::domain::RoleHandle{consumed_service_instance_r14.id});
+        TypeInfo info{{consumed_service_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(14)};
+        info.roles.add("AUTO-REQUIRE", rupa::domain::RoleHandle{consumed_service_instance_r0.id});
+        info.roles.add("BLACKLISTED-VERSIONS", rupa::domain::RoleHandle{consumed_service_instance_r1.id});
+        info.roles.add("BLOCKLISTED-VERSIONS", rupa::domain::RoleHandle{consumed_service_instance_r2.id});
+        info.roles.add("CONSUMED-EVENT-GROUPS", rupa::domain::RoleHandle{consumed_service_instance_r3.id});
+        info.roles.add("EVENT-MULTICAST-SUBSCRIPTION-ADDRESSS", rupa::domain::RoleHandle{consumed_service_instance_r4.id});
+        info.roles.add("INSTANCE-IDENTIFIER", rupa::domain::RoleHandle{consumed_service_instance_r5.id});
+        info.roles.add("LOCAL-UNICAST-ADDRESSS", rupa::domain::RoleHandle{consumed_service_instance_r6.id});
+        info.roles.add("MINOR-VERSION", rupa::domain::RoleHandle{consumed_service_instance_r7.id});
+        info.roles.add("PROVIDED-SERVICE-INSTANCE-REF", rupa::domain::RoleHandle{consumed_service_instance_r8.id});
+        info.roles.add("REMOTE-UNICAST-ADDRESSS", rupa::domain::RoleHandle{consumed_service_instance_r9.id});
+        info.roles.add("SD-CLIENT-CONFIG", rupa::domain::RoleHandle{consumed_service_instance_r10.id});
+        info.roles.add("SD-CLIENT-TIMER-CONFIGS", rupa::domain::RoleHandle{consumed_service_instance_r11.id});
+        info.roles.add("SERVICE-IDENTIFIER", rupa::domain::RoleHandle{consumed_service_instance_r12.id});
+        info.roles.add("VERSION-DRIVEN-FIND-BEHAVIOR", rupa::domain::RoleHandle{consumed_service_instance_r13.id});
         info.roles.freeze();
         tag_to_type.add("CONSUMED-SERVICE-INSTANCE", std::move(info));
     }
@@ -27257,31 +25623,14 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("CONTAINER-I-PDU", std::move(info));
     }
     {
-        TypeInfo info{{coupling_element.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
+        TypeInfo info{{coupling_element.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
         info.roles.add("COMMUNICATION-CLUSTER-REF", rupa::domain::RoleHandle{coupling_element_r0.id});
-        info.roles.add("COUPLING-ELEMENT-DETAILS", rupa::domain::RoleHandle{coupling_element_r1.id});
-        info.roles.add("COUPLING-PORTS", rupa::domain::RoleHandle{coupling_element_r2.id});
-        info.roles.add("COUPLING-TYPE", rupa::domain::RoleHandle{coupling_element_r3.id});
-        info.roles.add("ECU-INSTANCE-REF", rupa::domain::RoleHandle{coupling_element_r4.id});
-        info.roles.add("FIREWALL-RULE-REFS", rupa::domain::RoleHandle{coupling_element_r5.id});
+        info.roles.add("COUPLING-PORTS", rupa::domain::RoleHandle{coupling_element_r1.id});
+        info.roles.add("COUPLING-TYPE", rupa::domain::RoleHandle{coupling_element_r2.id});
+        info.roles.add("ECU-INSTANCE-REF", rupa::domain::RoleHandle{coupling_element_r3.id});
+        info.roles.add("FIREWALL-RULE-REFS", rupa::domain::RoleHandle{coupling_element_r4.id});
         info.roles.freeze();
         tag_to_type.add("COUPLING-ELEMENT", std::move(info));
-    }
-    {
-        TypeInfo info{{coupling_element_abstract_details.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{coupling_element_abstract_details_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("COUPLING-ELEMENT-ABSTRACT-DETAILS", std::move(info));
-    }
-    {
-        TypeInfo info{{coupling_element_switch_details.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
-        info.roles.add("FLOW-METERINGS", rupa::domain::RoleHandle{coupling_element_switch_details_r0.id});
-        info.roles.add("STREAM-FILTERS", rupa::domain::RoleHandle{coupling_element_switch_details_r1.id});
-        info.roles.add("STREAM-GATES", rupa::domain::RoleHandle{coupling_element_switch_details_r2.id});
-        info.roles.add("SWITCH-STREAM-IDENTIFICATIONS", rupa::domain::RoleHandle{coupling_element_switch_details_r3.id});
-        info.roles.add("TRAFFIC-SHAPER-GROUPS", rupa::domain::RoleHandle{coupling_element_switch_details_r4.id});
-        info.roles.freeze();
-        tag_to_type.add("COUPLING-ELEMENT-SWITCH-DETAILS", std::move(info));
     }
     {
         TypeInfo info{{coupling_port.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(16)};
@@ -27305,19 +25654,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("COUPLING-PORT", std::move(info));
     }
     {
-        TypeInfo info{{coupling_port_abstract_shaper.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("COUPLING-PORT-ABSTRACT-SHAPER", std::move(info));
-    }
-    {
-        TypeInfo info{{coupling_port_asynchronous_traffic_shaper.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("COMMITTED-BURST-SIZE", rupa::domain::RoleHandle{coupling_port_asynchronous_traffic_shaper_r0.id});
-        info.roles.add("COMMITTED-INFORMATION-RATE", rupa::domain::RoleHandle{coupling_port_asynchronous_traffic_shaper_r1.id});
-        info.roles.add("TRAFFIC-SHAPER-GROUP-REF", rupa::domain::RoleHandle{coupling_port_asynchronous_traffic_shaper_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("COUPLING-PORT-ASYNCHRONOUS-TRAFFIC-SHAPER", std::move(info));
-    }
-    {
         TypeInfo info{{coupling_port_connection.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
         info.roles.add("FIRST-PORT-REF", rupa::domain::RoleHandle{coupling_port_connection_r0.id});
         info.roles.add("NODE-PORTS", rupa::domain::RoleHandle{coupling_port_connection_r1.id});
@@ -27327,14 +25663,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{coupling_port_connection_r5.id});
         info.roles.freeze();
         tag_to_type.add("COUPLING-PORT-CONNECTION", std::move(info));
-    }
-    {
-        TypeInfo info{{coupling_port_credit_based_shaper.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("IDLE-SLOPE", rupa::domain::RoleHandle{coupling_port_credit_based_shaper_r0.id});
-        info.roles.add("LOWER-BOUNDARY", rupa::domain::RoleHandle{coupling_port_credit_based_shaper_r1.id});
-        info.roles.add("UPPER-BOUNDARY", rupa::domain::RoleHandle{coupling_port_credit_based_shaper_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("COUPLING-PORT-CREDIT-BASED-SHAPER", std::move(info));
     }
     {
         TypeInfo info{{coupling_port_details.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
@@ -27348,10 +25676,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("COUPLING-PORT-DETAILS", std::move(info));
     }
     {
-        TypeInfo info{{coupling_port_fifo.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        TypeInfo info{{coupling_port_fifo.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
         info.roles.add("ASSIGNED-TRAFFIC-CLASSS", rupa::domain::RoleHandle{coupling_port_fifo_r0.id});
         info.roles.add("MINIMUM-FIFO-LENGTH", rupa::domain::RoleHandle{coupling_port_fifo_r1.id});
-        info.roles.add("SHAPER", rupa::domain::RoleHandle{coupling_port_fifo_r2.id});
         info.roles.freeze();
         tag_to_type.add("COUPLING-PORT-FIFO", std::move(info));
     }
@@ -27430,12 +25757,11 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("CP-SOFTWARE-CLUSTER-COMMUNICATION-RESOURCE-PROPS", std::move(info));
     }
     {
-        TypeInfo info{{cp_software_cluster_mapping_set.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
+        TypeInfo info{{cp_software_cluster_mapping_set.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
         info.roles.add("PORT-ELEMENT-TO-COM-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{cp_software_cluster_mapping_set_r0.id});
         info.roles.add("RESOURCE-TO-APPLICATION-PARTITION-MAPPINGS", rupa::domain::RoleHandle{cp_software_cluster_mapping_set_r1.id});
-        info.roles.add("SOFTWARE-CLUSTER-TO-APPLICATION-PARTITION-MAPPING", rupa::domain::RoleHandle{cp_software_cluster_mapping_set_r2.id});
-        info.roles.add("SOFTWARE-CLUSTER-TO-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{cp_software_cluster_mapping_set_r3.id});
-        info.roles.add("SWC-TO-APPLICATION-PARTITION-MAPPINGS", rupa::domain::RoleHandle{cp_software_cluster_mapping_set_r4.id});
+        info.roles.add("SOFTWARE-CLUSTER-TO-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{cp_software_cluster_mapping_set_r2.id});
+        info.roles.add("SWC-TO-APPLICATION-PARTITION-MAPPINGS", rupa::domain::RoleHandle{cp_software_cluster_mapping_set_r3.id});
         info.roles.freeze();
         tag_to_type.add("CP-SOFTWARE-CLUSTER-MAPPING-SET", std::move(info));
     }
@@ -27474,14 +25800,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("RESOURCE-NEEDS-REFS", rupa::domain::RoleHandle{cp_software_cluster_service_resource_r0.id});
         info.roles.freeze();
         tag_to_type.add("CP-SOFTWARE-CLUSTER-SERVICE-RESOURCE", std::move(info));
-    }
-    {
-        TypeInfo info{{cp_software_cluster_to_application_partition_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("APPLICATION-PARTITION-REFS", rupa::domain::RoleHandle{cp_software_cluster_to_application_partition_mapping_r0.id});
-        info.roles.add("SOFTWARE-CLUSTER-REF", rupa::domain::RoleHandle{cp_software_cluster_to_application_partition_mapping_r1.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{cp_software_cluster_to_application_partition_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("CP-SOFTWARE-CLUSTER-TO-APPLICATION-PARTITION-MAPPING", std::move(info));
     }
     {
         TypeInfo info{{cp_software_cluster_to_ecu_instance_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
@@ -28059,146 +26377,11 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DCM-I-PDU", std::move(info));
     }
     {
-        TypeInfo info{{dds_cp_config.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("DDS-DOMAINS", rupa::domain::RoleHandle{dds_cp_config_r0.id});
-        info.roles.add("DDS-QOS-PROFILES", rupa::domain::RoleHandle{dds_cp_config_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-CONFIG", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_cp_consumed_service_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
-        info.roles.add("CONSUMED-DDS-OPERATIONS", rupa::domain::RoleHandle{dds_cp_consumed_service_instance_r0.id});
-        info.roles.add("CONSUMED-DDS-SERVICE-EVENTS", rupa::domain::RoleHandle{dds_cp_consumed_service_instance_r1.id});
-        info.roles.add("LOCAL-UNICAST-ADDRESSES", rupa::domain::RoleHandle{dds_cp_consumed_service_instance_r2.id});
-        info.roles.add("MINOR-VERSION", rupa::domain::RoleHandle{dds_cp_consumed_service_instance_r3.id});
-        info.roles.add("STATIC-REMOTE-MULTICAST-ADDRESSES", rupa::domain::RoleHandle{dds_cp_consumed_service_instance_r4.id});
-        info.roles.add("STATIC-REMOTE-UNICAST-ADDRESSES", rupa::domain::RoleHandle{dds_cp_consumed_service_instance_r5.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-CONSUMED-SERVICE-INSTANCE", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_cp_domain.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("DDS-PARTITIONS", rupa::domain::RoleHandle{dds_cp_domain_r0.id});
-        info.roles.add("DDS-TOPICS", rupa::domain::RoleHandle{dds_cp_domain_r1.id});
-        info.roles.add("DOMAIN-ID", rupa::domain::RoleHandle{dds_cp_domain_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-DOMAIN", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_cp_i_signal_to_dds_topic_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("DDS-TOPIC-REF", rupa::domain::RoleHandle{dds_cp_i_signal_to_dds_topic_mapping_r0.id});
-        info.roles.add("I-SIGNAL-REF", rupa::domain::RoleHandle{dds_cp_i_signal_to_dds_topic_mapping_r1.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{dds_cp_i_signal_to_dds_topic_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-I-SIGNAL-TO-DDS-TOPIC-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_cp_partition.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("PARTITION-NAME", rupa::domain::RoleHandle{dds_cp_partition_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-PARTITION", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_cp_provided_service_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
-        info.roles.add("LOCAL-UNICAST-ADDRESSES", rupa::domain::RoleHandle{dds_cp_provided_service_instance_r0.id});
-        info.roles.add("MINOR-VERSION", rupa::domain::RoleHandle{dds_cp_provided_service_instance_r1.id});
-        info.roles.add("PROVIDED-DDS-OPERATIONS", rupa::domain::RoleHandle{dds_cp_provided_service_instance_r2.id});
-        info.roles.add("PROVIDED-DDS-SERVICE-INSTANCE-EVENTS", rupa::domain::RoleHandle{dds_cp_provided_service_instance_r3.id});
-        info.roles.add("STATIC-REMOTE-MULTICAST-ADDRESSES", rupa::domain::RoleHandle{dds_cp_provided_service_instance_r4.id});
-        info.roles.add("STATIC-REMOTE-UNICAST-ADDRESSES", rupa::domain::RoleHandle{dds_cp_provided_service_instance_r5.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-PROVIDED-SERVICE-INSTANCE", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_cp_qos_profile.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(14)};
-        info.roles.add("DEADLINE", rupa::domain::RoleHandle{dds_cp_qos_profile_r0.id});
-        info.roles.add("DESTINATION-ORDER", rupa::domain::RoleHandle{dds_cp_qos_profile_r1.id});
-        info.roles.add("DURABILITY", rupa::domain::RoleHandle{dds_cp_qos_profile_r2.id});
-        info.roles.add("DURABILITY-SERVICE", rupa::domain::RoleHandle{dds_cp_qos_profile_r3.id});
-        info.roles.add("HISTORY", rupa::domain::RoleHandle{dds_cp_qos_profile_r4.id});
-        info.roles.add("LATENCY-BUDGET", rupa::domain::RoleHandle{dds_cp_qos_profile_r5.id});
-        info.roles.add("LIFESPAN", rupa::domain::RoleHandle{dds_cp_qos_profile_r6.id});
-        info.roles.add("LIVELINESS", rupa::domain::RoleHandle{dds_cp_qos_profile_r7.id});
-        info.roles.add("OWNERSHIP", rupa::domain::RoleHandle{dds_cp_qos_profile_r8.id});
-        info.roles.add("OWNERSHIP-STRENGTH", rupa::domain::RoleHandle{dds_cp_qos_profile_r9.id});
-        info.roles.add("RELIABILITY", rupa::domain::RoleHandle{dds_cp_qos_profile_r10.id});
-        info.roles.add("RESOURCE-LIMITS", rupa::domain::RoleHandle{dds_cp_qos_profile_r11.id});
-        info.roles.add("TOPIC-DATA", rupa::domain::RoleHandle{dds_cp_qos_profile_r12.id});
-        info.roles.add("TRANSPORT-PRIORITY", rupa::domain::RoleHandle{dds_cp_qos_profile_r13.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-QOS-PROFILE", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_cp_service_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
-        info.roles.add("DDS-FIELD-REPLY-TOPIC-REF", rupa::domain::RoleHandle{dds_cp_service_instance_r0.id});
-        info.roles.add("DDS-FIELD-REQUEST-TOPIC-REF", rupa::domain::RoleHandle{dds_cp_service_instance_r1.id});
-        info.roles.add("DDS-METHOD-REPLY-TOPIC-REF", rupa::domain::RoleHandle{dds_cp_service_instance_r2.id});
-        info.roles.add("DDS-METHOD-REQUEST-TOPIC-REF", rupa::domain::RoleHandle{dds_cp_service_instance_r3.id});
-        info.roles.add("DDS-SERVICE-QOS-PROFILE-REF", rupa::domain::RoleHandle{dds_cp_service_instance_r4.id});
-        info.roles.add("SERVICE-INSTANCE-ID", rupa::domain::RoleHandle{dds_cp_service_instance_r5.id});
-        info.roles.add("SERVICE-INTERFACE-ID", rupa::domain::RoleHandle{dds_cp_service_instance_r6.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-SERVICE-INSTANCE", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_cp_service_instance_event.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
-        info.roles.add("DDS-EVENT-QOS-PROFILE-REF", rupa::domain::RoleHandle{dds_cp_service_instance_event_r0.id});
-        info.roles.add("DDS-EVENT-REF", rupa::domain::RoleHandle{dds_cp_service_instance_event_r1.id});
-        info.roles.add("DDS-EVENT-TOPIC-REF", rupa::domain::RoleHandle{dds_cp_service_instance_event_r2.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{dds_cp_service_instance_event_r3.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-SERVICE-INSTANCE-EVENT", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_cp_service_instance_operation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("DDS-OPERATION-REQUEST-TRIGGERING-REF", rupa::domain::RoleHandle{dds_cp_service_instance_operation_r0.id});
-        info.roles.add("DDS-OPERATION-RESPONSE-TRIGGERING-REF", rupa::domain::RoleHandle{dds_cp_service_instance_operation_r1.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{dds_cp_service_instance_operation_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-SERVICE-INSTANCE-OPERATION", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_cp_topic.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("DDS-PARTITION-REF", rupa::domain::RoleHandle{dds_cp_topic_r0.id});
-        info.roles.add("TOPIC-NAME", rupa::domain::RoleHandle{dds_cp_topic_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-CP-TOPIC", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_deadline.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("DEADLINE-PERIOD", rupa::domain::RoleHandle{dds_deadline_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-DEADLINE", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_destination_order.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("DESTINATION-ORDER-KIND", rupa::domain::RoleHandle{dds_destination_order_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-DESTINATION-ORDER", std::move(info));
-    }
-    {
         TypeInfo info{{dds_domain_range.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
         info.roles.add("MAX", rupa::domain::RoleHandle{dds_domain_range_r0.id});
         info.roles.add("MIN", rupa::domain::RoleHandle{dds_domain_range_r1.id});
         info.roles.freeze();
         tag_to_type.add("DDS-DOMAIN-RANGE", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_durability.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("DURABILITY-KIND", rupa::domain::RoleHandle{dds_durability_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-DURABILITY", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_durability_service.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
-        info.roles.add("DURABILITY-SERVICE-CLEANUP-DELAY", rupa::domain::RoleHandle{dds_durability_service_r0.id});
-        info.roles.add("DURABILITY-SERVICE-HISTORY-DEPTH", rupa::domain::RoleHandle{dds_durability_service_r1.id});
-        info.roles.add("DURABILITY-SERVICE-HISTORY-KIND", rupa::domain::RoleHandle{dds_durability_service_r2.id});
-        info.roles.add("DURABILITY-SERVICE-MAX-INSTANCES", rupa::domain::RoleHandle{dds_durability_service_r3.id});
-        info.roles.add("DURABILITY-SERVICE-MAX-SAMPLES", rupa::domain::RoleHandle{dds_durability_service_r4.id});
-        info.roles.add("DURABILITY-SERVICE-MAX-SAMPLES-PER-INSTANCE", rupa::domain::RoleHandle{dds_durability_service_r5.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-DURABILITY-SERVICE", std::move(info));
     }
     {
         TypeInfo info{{dds_event_deployment.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
@@ -28227,44 +26410,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DDS-FIELD-QOS-PROPS", std::move(info));
     }
     {
-        TypeInfo info{{dds_history.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("HISTORY-KIND", rupa::domain::RoleHandle{dds_history_r0.id});
-        info.roles.add("HISTORY-ORDER-DEPTH", rupa::domain::RoleHandle{dds_history_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-HISTORY", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_latency_budget.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("LATENCY-BUDGET-DURATION", rupa::domain::RoleHandle{dds_latency_budget_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-LATENCY-BUDGET", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_lifespan.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("LIFESPAN-DURATION", rupa::domain::RoleHandle{dds_lifespan_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-LIFESPAN", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_liveliness.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("LIVELINESS-LEASE-DURATION", rupa::domain::RoleHandle{dds_liveliness_r0.id});
-        info.roles.add("LIVENESS-KIND", rupa::domain::RoleHandle{dds_liveliness_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-LIVELINESS", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_ownership.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("OWNERSHIP-KIND", rupa::domain::RoleHandle{dds_ownership_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-OWNERSHIP", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_ownership_strength.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("OWNERSHIP-STRENGTH", rupa::domain::RoleHandle{dds_ownership_strength_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-OWNERSHIP-STRENGTH", std::move(info));
-    }
-    {
         TypeInfo info{{dds_provided_service_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
         info.roles.add("DISCOVERY-TYPE", rupa::domain::RoleHandle{dds_provided_service_instance_r0.id});
         info.roles.add("EVENT-QOS-PROPSS", rupa::domain::RoleHandle{dds_provided_service_instance_r1.id});
@@ -28281,13 +26426,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DDS-QOS-PROPS", std::move(info));
     }
     {
-        TypeInfo info{{dds_reliability.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("RELIABILITY-KIND", rupa::domain::RoleHandle{dds_reliability_r0.id});
-        info.roles.add("RELIABILITY-MAX-BLOCKING-TIME", rupa::domain::RoleHandle{dds_reliability_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-RELIABILITY", std::move(info));
-    }
-    {
         TypeInfo info{{dds_required_service_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
         info.roles.add("BLOCKLISTED-VERSIONS", rupa::domain::RoleHandle{dds_required_service_instance_r0.id});
         info.roles.add("DISCOVERY-TYPE", rupa::domain::RoleHandle{dds_required_service_instance_r1.id});
@@ -28296,14 +26434,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("REQUIRED-SERVICE-INSTANCE-ID", rupa::domain::RoleHandle{dds_required_service_instance_r4.id});
         info.roles.freeze();
         tag_to_type.add("DDS-REQUIRED-SERVICE-INSTANCE", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_resource_limits.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("MAX-INSTANCES", rupa::domain::RoleHandle{dds_resource_limits_r0.id});
-        info.roles.add("MAX-SAMPLES", rupa::domain::RoleHandle{dds_resource_limits_r1.id});
-        info.roles.add("MAX-SAMPLES-PER-INSTANCE", rupa::domain::RoleHandle{dds_resource_limits_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-RESOURCE-LIMITS", std::move(info));
     }
     {
         TypeInfo info{{dds_rule.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(10)};
@@ -28384,18 +26514,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DDS-TOPIC-ACCESS-RULE", std::move(info));
     }
     {
-        TypeInfo info{{dds_topic_data.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("TOPIC-DATA", rupa::domain::RoleHandle{dds_topic_data_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-TOPIC-DATA", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_transport_priority.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("TRANSPORT-PRIORITY", rupa::domain::RoleHandle{dds_transport_priority_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DDS-TRANSPORT-PRIORITY", std::move(info));
-    }
-    {
         TypeInfo info{{deadline_supervision.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
         info.roles.add("MAX-DEADLINE", rupa::domain::RoleHandle{deadline_supervision_r0.id});
         info.roles.add("MIN-DEADLINE", rupa::domain::RoleHandle{deadline_supervision_r1.id});
@@ -28454,6 +26572,62 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("ADMIN-DATA", rupa::domain::RoleHandle{describable_r3.id});
         info.roles.freeze();
         tag_to_type.add("DESCRIBABLE", std::move(info));
+    }
+    {
+        TypeInfo info{{deterministic_client.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        info.roles.add("CYCLE-TIME-VALUE", rupa::domain::RoleHandle{deterministic_client_r0.id});
+        info.roles.add("DETERMINISTIC-SYNC-MASTER-REF", rupa::domain::RoleHandle{deterministic_client_r1.id});
+        info.roles.add("NUMBER-OF-WORKERS", rupa::domain::RoleHandle{deterministic_client_r2.id});
+        info.roles.freeze();
+        tag_to_type.add("DETERMINISTIC-CLIENT", std::move(info));
+    }
+    {
+        TypeInfo info{{deterministic_client_resource.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
+        info.roles.add("NUMBER-OF-INSTRUCTIONS", rupa::domain::RoleHandle{deterministic_client_resource_r0.id});
+        info.roles.add("SEQUENTIAL-INSTRUCTIONS-BEGIN", rupa::domain::RoleHandle{deterministic_client_resource_r1.id});
+        info.roles.add("SEQUENTIAL-INSTRUCTIONS-END", rupa::domain::RoleHandle{deterministic_client_resource_r2.id});
+        info.roles.add("SPEEDUP", rupa::domain::RoleHandle{deterministic_client_resource_r3.id});
+        info.roles.freeze();
+        tag_to_type.add("DETERMINISTIC-CLIENT-RESOURCE", std::move(info));
+    }
+    {
+        TypeInfo info{{deterministic_client_resource_needs.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        info.roles.add("HARDWARE-PLATFORM", rupa::domain::RoleHandle{deterministic_client_resource_needs_r0.id});
+        info.roles.add("INIT-RESOURCE", rupa::domain::RoleHandle{deterministic_client_resource_needs_r1.id});
+        info.roles.add("RUN-RESOURCE", rupa::domain::RoleHandle{deterministic_client_resource_needs_r2.id});
+        info.roles.freeze();
+        tag_to_type.add("DETERMINISTIC-CLIENT-RESOURCE-NEEDS", std::move(info));
+    }
+    {
+        TypeInfo info{{deterministic_sync_instantiation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
+        info.roles.freeze();
+        tag_to_type.add("DETERMINISTIC-SYNC-INSTANTIATION", std::move(info));
+    }
+    {
+        TypeInfo info{{deterministic_sync_m_out_of_n.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        info.roles.add("MINIMUM-NUMBER-OF-REQUESTS", rupa::domain::RoleHandle{deterministic_sync_m_out_of_n_r0.id});
+        info.roles.add("NUMBER-OF-CONNECTED-CLIENTS", rupa::domain::RoleHandle{deterministic_sync_m_out_of_n_r1.id});
+        info.roles.freeze();
+        tag_to_type.add("DETERMINISTIC-SYNC-M-OUT-OF-N", std::move(info));
+    }
+    {
+        TypeInfo info{{deterministic_sync_master.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        info.roles.add("MAX-RUN-CYCLE-LOOP", rupa::domain::RoleHandle{deterministic_sync_master_r0.id});
+        info.roles.add("VERIFICATION-METHOD", rupa::domain::RoleHandle{deterministic_sync_master_r1.id});
+        info.roles.freeze();
+        tag_to_type.add("DETERMINISTIC-SYNC-MASTER", std::move(info));
+    }
+    {
+        TypeInfo info{{deterministic_sync_master_to_time_base_consumer_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        info.roles.add("DETERMINISTIC-SYNC-MASTER-REF", rupa::domain::RoleHandle{deterministic_sync_master_to_time_base_consumer_mapping_r0.id});
+        info.roles.add("TIME-BASE-CONSUMER-REF", rupa::domain::RoleHandle{deterministic_sync_master_to_time_base_consumer_mapping_r1.id});
+        info.roles.freeze();
+        tag_to_type.add("DETERMINISTIC-SYNC-MASTER-TO-TIME-BASE-CONSUMER-MAPPING", std::move(info));
+    }
+    {
+        TypeInfo info{{deterministic_sync_verification_policy.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
+        info.roles.freeze();
+        tag_to_type.add("DETERMINISTIC-SYNC-VERIFICATION-POLICY", std::move(info));
     }
     {
         TypeInfo info{{development_error.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -28540,13 +26714,12 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DIAGNOSTIC-ABSTRACT-ROUTINE-INTERFACE", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_access_permission.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
-        info.roles.add("AUTHENTICATION-ENABLED", rupa::domain::RoleHandle{diagnostic_access_permission_r0.id});
-        info.roles.add("AUTHENTICATION-ROLE-REFS", rupa::domain::RoleHandle{diagnostic_access_permission_r1.id});
-        info.roles.add("DIAGNOSTIC-SESSION-REFS", rupa::domain::RoleHandle{diagnostic_access_permission_r2.id});
-        info.roles.add("ENVIRONMENTAL-CONDITION-REF", rupa::domain::RoleHandle{diagnostic_access_permission_r3.id});
-        info.roles.add("SECURITY-LEVEL-REFS", rupa::domain::RoleHandle{diagnostic_access_permission_r4.id});
-        info.roles.add("SOVD-LOCK-REF", rupa::domain::RoleHandle{diagnostic_access_permission_r5.id});
+        TypeInfo info{{diagnostic_access_permission.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
+        info.roles.add("AUTHENTICATION-ROLE-REFS", rupa::domain::RoleHandle{diagnostic_access_permission_r0.id});
+        info.roles.add("DIAGNOSTIC-SESSION-REFS", rupa::domain::RoleHandle{diagnostic_access_permission_r1.id});
+        info.roles.add("ENVIRONMENTAL-CONDITION-REF", rupa::domain::RoleHandle{diagnostic_access_permission_r2.id});
+        info.roles.add("SECURITY-LEVEL-REFS", rupa::domain::RoleHandle{diagnostic_access_permission_r3.id});
+        info.roles.add("SOVD-LOCK-REF", rupa::domain::RoleHandle{diagnostic_access_permission_r4.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-ACCESS-PERMISSION", std::move(info));
     }
@@ -28563,32 +26736,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("IS-DEFAULT", rupa::domain::RoleHandle{diagnostic_auth_role_r1.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-AUTH-ROLE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_auth_role_proxy.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("AUTHENTICATION-ROLE-REFS", rupa::domain::RoleHandle{diagnostic_auth_role_proxy_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-AUTH-ROLE-PROXY", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_auth_transmit_certificate.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("CERTIFICATE-EVALUATIONS", rupa::domain::RoleHandle{diagnostic_auth_transmit_certificate_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_auth_transmit_certificate_evaluation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("EVALUATION-ID", rupa::domain::RoleHandle{diagnostic_auth_transmit_certificate_evaluation_r0.id});
-        info.roles.add("FUNCTION", rupa::domain::RoleHandle{diagnostic_auth_transmit_certificate_evaluation_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE-EVALUATION", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_auth_transmit_certificate_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("CRYPTO-SERVICE-CERTIFICATE-REFS", rupa::domain::RoleHandle{diagnostic_auth_transmit_certificate_mapping_r0.id});
-        info.roles.add("SERVICE-INSTANCE-REF", rupa::domain::RoleHandle{diagnostic_auth_transmit_certificate_mapping_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-AUTH-TRANSMIT-CERTIFICATE-MAPPING", std::move(info));
     }
     {
         TypeInfo info{{diagnostic_authentication.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
@@ -28682,11 +26829,10 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DIAGNOSTIC-COM-CONTROL", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_com_control_class.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
+        TypeInfo info{{diagnostic_com_control_class.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
         info.roles.add("ALL-CHANNELS-REFS", rupa::domain::RoleHandle{diagnostic_com_control_class_r0.id});
-        info.roles.add("ALL-PHYSICAL-CHANNELS", rupa::domain::RoleHandle{diagnostic_com_control_class_r1.id});
-        info.roles.add("SPECIFIC-CHANNELS", rupa::domain::RoleHandle{diagnostic_com_control_class_r2.id});
-        info.roles.add("SUB-NODE-CHANNELS", rupa::domain::RoleHandle{diagnostic_com_control_class_r3.id});
+        info.roles.add("SPECIFIC-CHANNELS", rupa::domain::RoleHandle{diagnostic_com_control_class_r1.id});
+        info.roles.add("SUB-NODE-CHANNELS", rupa::domain::RoleHandle{diagnostic_com_control_class_r2.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-COM-CONTROL-CLASS", std::move(info));
     }
@@ -28696,18 +26842,16 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DIAGNOSTIC-COM-CONTROL-INTERFACE", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_com_control_specific_channel.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        TypeInfo info{{diagnostic_com_control_specific_channel.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
         info.roles.add("SPECIFIC-CHANNEL-REF", rupa::domain::RoleHandle{diagnostic_com_control_specific_channel_r0.id});
-        info.roles.add("SPECIFIC-PHYSICAL-CHANNEL-REF", rupa::domain::RoleHandle{diagnostic_com_control_specific_channel_r1.id});
-        info.roles.add("SUBNET-NUMBER", rupa::domain::RoleHandle{diagnostic_com_control_specific_channel_r2.id});
+        info.roles.add("SUBNET-NUMBER", rupa::domain::RoleHandle{diagnostic_com_control_specific_channel_r1.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-COM-CONTROL-SPECIFIC-CHANNEL", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_com_control_sub_node_channel.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        TypeInfo info{{diagnostic_com_control_sub_node_channel.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
         info.roles.add("SUB-NODE-CHANNEL-REF", rupa::domain::RoleHandle{diagnostic_com_control_sub_node_channel_r0.id});
         info.roles.add("SUB-NODE-NUMBER", rupa::domain::RoleHandle{diagnostic_com_control_sub_node_channel_r1.id});
-        info.roles.add("SUB-NODE-PHYSICAL-CHANNEL-REF", rupa::domain::RoleHandle{diagnostic_com_control_sub_node_channel_r2.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-COM-CONTROL-SUB-NODE-CHANNEL", std::move(info));
     }
@@ -28736,32 +26880,28 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DIAGNOSTIC-COMMON-PROPS-CONDITIONAL", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_common_props_content.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(25)};
+        TypeInfo info{{diagnostic_common_props_content.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(21)};
         info.roles.add("AGING-REQUIRES-TESTED-CYCLE", rupa::domain::RoleHandle{diagnostic_common_props_content_r0.id});
-        info.roles.add("AUTHENTICATION-TIMEOUT", rupa::domain::RoleHandle{diagnostic_common_props_content_r1.id});
-        info.roles.add("CLEAR-DTC-LIMITATION", rupa::domain::RoleHandle{diagnostic_common_props_content_r2.id});
-        info.roles.add("DEBOUNCE-ALGORITHM-PROPSS", rupa::domain::RoleHandle{diagnostic_common_props_content_r3.id});
-        info.roles.add("DEFAULT-ENDIANNESS", rupa::domain::RoleHandle{diagnostic_common_props_content_r4.id});
-        info.roles.add("DIAGNOSTIC-ADDRESSES", rupa::domain::RoleHandle{diagnostic_common_props_content_r5.id});
-        info.roles.add("DTC-STATUS-AVAILABILITY-MASK", rupa::domain::RoleHandle{diagnostic_common_props_content_r6.id});
-        info.roles.add("ENVIRONMENT-DATA-CAPTURE", rupa::domain::RoleHandle{diagnostic_common_props_content_r7.id});
-        info.roles.add("EVENT-COMBINATION-REPORTING-BEHAVIOR", rupa::domain::RoleHandle{diagnostic_common_props_content_r8.id});
-        info.roles.add("EVENT-DISPLACEMENT-STRATEGY", rupa::domain::RoleHandle{diagnostic_common_props_content_r9.id});
-        info.roles.add("EXTERNAL-AUTHENTICATIONS", rupa::domain::RoleHandle{diagnostic_common_props_content_r10.id});
-        info.roles.add("MAX-NUMBER-OF-EVENT-ENTRIES", rupa::domain::RoleHandle{diagnostic_common_props_content_r11.id});
-        info.roles.add("MAX-NUMBER-OF-REQUEST-CORRECTLY-RECEIVED-RESPONSE-PENDING", rupa::domain::RoleHandle{diagnostic_common_props_content_r12.id});
-        info.roles.add("MEMORY-ENTRY-STORAGE-TRIGGER", rupa::domain::RoleHandle{diagnostic_common_props_content_r13.id});
-        info.roles.add("OCCURRENCE-COUNTER-PROCESSING", rupa::domain::RoleHandle{diagnostic_common_props_content_r14.id});
-        info.roles.add("RESET-CONFIRMED-BIT-ON-OVERFLOW", rupa::domain::RoleHandle{diagnostic_common_props_content_r15.id});
-        info.roles.add("RESET-PENDING-BIT-ON-OVERFLOW", rupa::domain::RoleHandle{diagnostic_common_props_content_r16.id});
-        info.roles.add("RESPONSE-ON-ALL-REQUEST-SIDS", rupa::domain::RoleHandle{diagnostic_common_props_content_r17.id});
-        info.roles.add("RESPONSE-ON-SECOND-DECLINED-REQUEST", rupa::domain::RoleHandle{diagnostic_common_props_content_r18.id});
-        info.roles.add("SECURITY-DELAY-TIME-ON-BOOT", rupa::domain::RoleHandle{diagnostic_common_props_content_r19.id});
-        info.roles.add("STATUS-BIT-HANDLING-TEST-FAILED-SINCE-LAST-CLEAR", rupa::domain::RoleHandle{diagnostic_common_props_content_r20.id});
-        info.roles.add("STATUS-BIT-STORAGE-TEST-FAILED", rupa::domain::RoleHandle{diagnostic_common_props_content_r21.id});
-        info.roles.add("TYPE-OF-DTC-SUPPORTED", rupa::domain::RoleHandle{diagnostic_common_props_content_r22.id});
-        info.roles.add("TYPE-OF-EVENT-COMBINATION-SUPPORTED", rupa::domain::RoleHandle{diagnostic_common_props_content_r23.id});
-        info.roles.add("TYPE-OF-FREEZE-FRAME-RECORD-NUMERATION", rupa::domain::RoleHandle{diagnostic_common_props_content_r24.id});
+        info.roles.add("CLEAR-DTC-LIMITATION", rupa::domain::RoleHandle{diagnostic_common_props_content_r1.id});
+        info.roles.add("DEBOUNCE-ALGORITHM-PROPSS", rupa::domain::RoleHandle{diagnostic_common_props_content_r2.id});
+        info.roles.add("DEFAULT-ENDIANNESS", rupa::domain::RoleHandle{diagnostic_common_props_content_r3.id});
+        info.roles.add("DTC-STATUS-AVAILABILITY-MASK", rupa::domain::RoleHandle{diagnostic_common_props_content_r4.id});
+        info.roles.add("ENVIRONMENT-DATA-CAPTURE", rupa::domain::RoleHandle{diagnostic_common_props_content_r5.id});
+        info.roles.add("EVENT-COMBINATION-REPORTING-BEHAVIOR", rupa::domain::RoleHandle{diagnostic_common_props_content_r6.id});
+        info.roles.add("EVENT-DISPLACEMENT-STRATEGY", rupa::domain::RoleHandle{diagnostic_common_props_content_r7.id});
+        info.roles.add("MAX-NUMBER-OF-EVENT-ENTRIES", rupa::domain::RoleHandle{diagnostic_common_props_content_r8.id});
+        info.roles.add("MAX-NUMBER-OF-REQUEST-CORRECTLY-RECEIVED-RESPONSE-PENDING", rupa::domain::RoleHandle{diagnostic_common_props_content_r9.id});
+        info.roles.add("MEMORY-ENTRY-STORAGE-TRIGGER", rupa::domain::RoleHandle{diagnostic_common_props_content_r10.id});
+        info.roles.add("OCCURRENCE-COUNTER-PROCESSING", rupa::domain::RoleHandle{diagnostic_common_props_content_r11.id});
+        info.roles.add("RESET-CONFIRMED-BIT-ON-OVERFLOW", rupa::domain::RoleHandle{diagnostic_common_props_content_r12.id});
+        info.roles.add("RESPONSE-ON-ALL-REQUEST-SIDS", rupa::domain::RoleHandle{diagnostic_common_props_content_r13.id});
+        info.roles.add("RESPONSE-ON-SECOND-DECLINED-REQUEST", rupa::domain::RoleHandle{diagnostic_common_props_content_r14.id});
+        info.roles.add("SECURITY-DELAY-TIME-ON-BOOT", rupa::domain::RoleHandle{diagnostic_common_props_content_r15.id});
+        info.roles.add("STATUS-BIT-HANDLING-TEST-FAILED-SINCE-LAST-CLEAR", rupa::domain::RoleHandle{diagnostic_common_props_content_r16.id});
+        info.roles.add("STATUS-BIT-STORAGE-TEST-FAILED", rupa::domain::RoleHandle{diagnostic_common_props_content_r17.id});
+        info.roles.add("TYPE-OF-DTC-SUPPORTED", rupa::domain::RoleHandle{diagnostic_common_props_content_r18.id});
+        info.roles.add("TYPE-OF-EVENT-COMBINATION-SUPPORTED", rupa::domain::RoleHandle{diagnostic_common_props_content_r19.id});
+        info.roles.add("TYPE-OF-FREEZE-FRAME-RECORD-NUMERATION", rupa::domain::RoleHandle{diagnostic_common_props_content_r20.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-COMMON-PROPS-CONTENT", std::move(info));
     }
@@ -29640,10 +27780,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DIAGNOSTIC-MEMORY-DESTINATION-PRIMARY", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_memory_destination_user_defined.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("AUTH-ROLE-REFS", rupa::domain::RoleHandle{diagnostic_memory_destination_user_defined_r0.id});
-        info.roles.add("AUTHENTICATION-ROLE-REF", rupa::domain::RoleHandle{diagnostic_memory_destination_user_defined_r1.id});
-        info.roles.add("MEMORY-ID", rupa::domain::RoleHandle{diagnostic_memory_destination_user_defined_r2.id});
+        TypeInfo info{{diagnostic_memory_destination_user_defined.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        info.roles.add("AUTHENTICATION-ROLE-REF", rupa::domain::RoleHandle{diagnostic_memory_destination_user_defined_r0.id});
+        info.roles.add("MEMORY-ID", rupa::domain::RoleHandle{diagnostic_memory_destination_user_defined_r1.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-MEMORY-DESTINATION-USER-DEFINED", std::move(info));
     }
@@ -29670,56 +27809,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("R-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{diagnostic_monitor_port_mapping_r2.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-MONITOR-PORT-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_multiple_condition_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-MULTIPLE-CONDITION-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_multiple_condition_port_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("DIAGNOSTIC-CONDITION-REF", rupa::domain::RoleHandle{diagnostic_multiple_condition_port_mapping_r0.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{diagnostic_multiple_condition_port_mapping_r1.id});
-        info.roles.add("R-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{diagnostic_multiple_condition_port_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-MULTIPLE-CONDITION-PORT-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_multiple_event_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-MULTIPLE-EVENT-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_multiple_event_port_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("DIAGNOSTIC-EVENT-REF", rupa::domain::RoleHandle{diagnostic_multiple_event_port_mapping_r0.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{diagnostic_multiple_event_port_mapping_r1.id});
-        info.roles.add("R-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{diagnostic_multiple_event_port_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-MULTIPLE-EVENT-PORT-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_multiple_monitor_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-MULTIPLE-MONITOR-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_multiple_monitor_port_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("DIAGNOSTIC-EVENT-REF", rupa::domain::RoleHandle{diagnostic_multiple_monitor_port_mapping_r0.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{diagnostic_multiple_monitor_port_mapping_r1.id});
-        info.roles.add("R-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{diagnostic_multiple_monitor_port_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-MULTIPLE-MONITOR-PORT-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_multiple_resource_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-MULTIPLE-RESOURCE-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_multiple_resource_port_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("OVERRIDE-ID", rupa::domain::RoleHandle{diagnostic_multiple_resource_port_mapping_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-MULTIPLE-RESOURCE-PORT-MAPPING", std::move(info));
     }
     {
         TypeInfo info{{diagnostic_operation_cycle.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
@@ -30120,13 +28209,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DIAGNOSTIC-ROUTINE-SUBFUNCTION", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_secure_coding_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("DATA-IDENTIFIER-REFS", rupa::domain::RoleHandle{diagnostic_secure_coding_mapping_r0.id});
-        info.roles.add("VALIDATION-REF", rupa::domain::RoleHandle{diagnostic_secure_coding_mapping_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SECURE-CODING-MAPPING", std::move(info));
-    }
-    {
         TypeInfo info{{diagnostic_security_access.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
         info.roles.add("REQUEST-SEED-ID", rupa::domain::RoleHandle{diagnostic_security_access_r0.id});
         info.roles.add("SECURITY-ACCESS-CLASS-REF", rupa::domain::RoleHandle{diagnostic_security_access_r1.id});
@@ -30237,10 +28319,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DIAGNOSTIC-SERVICE-TABLE-REF-CONDITIONAL", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_service_validation_configuration.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        TypeInfo info{{diagnostic_service_validation_configuration.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
         info.roles.add("MANUFACTURER-VALIDATION-ORDER-REFS", rupa::domain::RoleHandle{diagnostic_service_validation_configuration_r0.id});
-        info.roles.add("SOVD-VALIDATION-ORDER-REFS", rupa::domain::RoleHandle{diagnostic_service_validation_configuration_r1.id});
-        info.roles.add("SUPPLIER-VALIDATION-ORDER-REFS", rupa::domain::RoleHandle{diagnostic_service_validation_configuration_r2.id});
+        info.roles.add("SUPPLIER-VALIDATION-ORDER-REFS", rupa::domain::RoleHandle{diagnostic_service_validation_configuration_r1.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-SERVICE-VALIDATION-CONFIGURATION", std::move(info));
     }
@@ -30273,8 +28354,7 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DIAGNOSTIC-SESSION-CONTROL", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_session_control_class.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("S-3-SERVER-TIMEOUT", rupa::domain::RoleHandle{diagnostic_session_control_class_r0.id});
+        TypeInfo info{{diagnostic_session_control_class.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-SESSION-CONTROL-CLASS", std::move(info));
     }
@@ -30291,85 +28371,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DIAGNOSTIC-SOVD-AUTHORIZATION-PORT-MAPPING", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_sovd_bulk_data.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("BULK-DATA-CATEGORY", rupa::domain::RoleHandle{diagnostic_sovd_bulk_data_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-BULK-DATA", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_bulk_data_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-BULK-DATA-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_bulk_data_port_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("P-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{diagnostic_sovd_bulk_data_port_mapping_r0.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{diagnostic_sovd_bulk_data_port_mapping_r1.id});
-        info.roles.add("SERVICE-INSTANCE-REF", rupa::domain::RoleHandle{diagnostic_sovd_bulk_data_port_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-BULK-DATA-PORT-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_configuration.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-CONFIGURATION", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_configuration_bulk_data.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("CONTENT-TYPE", rupa::domain::RoleHandle{diagnostic_sovd_configuration_bulk_data_r0.id});
-        info.roles.add("VERSION", rupa::domain::RoleHandle{diagnostic_sovd_configuration_bulk_data_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-CONFIGURATION-BULK-DATA", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_configuration_data_identifier_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("DATA-IDENTIFIER-REF", rupa::domain::RoleHandle{diagnostic_sovd_configuration_data_identifier_mapping_r0.id});
-        info.roles.add("SERVICE-INSTANCE-REF", rupa::domain::RoleHandle{diagnostic_sovd_configuration_data_identifier_mapping_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-CONFIGURATION-DATA-IDENTIFIER-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_configuration_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-CONFIGURATION-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_configuration_parameter.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-CONFIGURATION-PARAMETER", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_configuration_port_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("P-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{diagnostic_sovd_configuration_port_mapping_r0.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{diagnostic_sovd_configuration_port_mapping_r1.id});
-        info.roles.add("SERVICE-INSTANCE-REF", rupa::domain::RoleHandle{diagnostic_sovd_configuration_port_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-CONFIGURATION-PORT-MAPPING", std::move(info));
-    }
-    {
         TypeInfo info{{diagnostic_sovd_lock.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-SOVD-LOCK", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_log.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-LOG", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_method.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
-        info.roles.add("DELETES", rupa::domain::RoleHandle{diagnostic_sovd_method_r0.id});
-        info.roles.add("GETS", rupa::domain::RoleHandle{diagnostic_sovd_method_r1.id});
-        info.roles.add("POSTS", rupa::domain::RoleHandle{diagnostic_sovd_method_r2.id});
-        info.roles.add("PUTS", rupa::domain::RoleHandle{diagnostic_sovd_method_r3.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-METHOD", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_method_primitive.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("ACCESS-PERMISSION-REF", rupa::domain::RoleHandle{diagnostic_sovd_method_primitive_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-METHOD-PRIMITIVE", std::move(info));
     }
     {
         TypeInfo info{{diagnostic_sovd_port_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -30387,42 +28391,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{diagnostic_sovd_proximity_challenge_port_mapping_r1.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-SOVD-PROXIMITY-CHALLENGE-PORT-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_service_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("METHOD-REF", rupa::domain::RoleHandle{diagnostic_sovd_service_instance_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-SERVICE-INSTANCE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_service_validation_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-SERVICE-VALIDATION-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_service_validation_port_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("P-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{diagnostic_sovd_service_validation_port_mapping_r0.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{diagnostic_sovd_service_validation_port_mapping_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-SERVICE-VALIDATION-PORT-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_update.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-UPDATE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_update_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-UPDATE-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_sovd_update_port_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("P-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{diagnostic_sovd_update_port_mapping_r0.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{diagnostic_sovd_update_port_mapping_r1.id});
-        info.roles.add("SERVICE-INSTANCE-REF", rupa::domain::RoleHandle{diagnostic_sovd_update_port_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-SOVD-UPDATE-PORT-MAPPING", std::move(info));
     }
     {
         TypeInfo info{{diagnostic_start_routine.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
@@ -30588,16 +28556,14 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DIAGNOSTIC-TROUBLE-CODE-REF-CONDITIONAL", std::move(info));
     }
     {
-        TypeInfo info{{diagnostic_trouble_code_uds.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(9)};
+        TypeInfo info{{diagnostic_trouble_code_uds.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
         info.roles.add("CONSIDER-PTO-STATUS", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r0.id});
         info.roles.add("DTC-PROPS-REF", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r1.id});
         info.roles.add("EVENT-OBD-READINESS-GROUP", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r2.id});
-        info.roles.add("EVENT-READINESS-GROUPS", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r3.id});
-        info.roles.add("FUNCTIONAL-UNIT", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r4.id});
-        info.roles.add("OBD-DTC-VALUE-3-BYTE", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r5.id});
-        info.roles.add("SEVERITY", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r6.id});
-        info.roles.add("UDS-DTC-VALUE", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r7.id});
-        info.roles.add("WWH-OBD-DTC-CLASS", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r8.id});
+        info.roles.add("FUNCTIONAL-UNIT", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r3.id});
+        info.roles.add("SEVERITY", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r4.id});
+        info.roles.add("UDS-DTC-VALUE", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r5.id});
+        info.roles.add("WWH-OBD-DTC-CLASS", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_r6.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-TROUBLE-CODE-UDS", std::move(info));
     }
@@ -30614,11 +28580,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("TROUBLE-CODE-UDS-REF", rupa::domain::RoleHandle{diagnostic_trouble_code_uds_to_trouble_code_obd_mapping_r1.id});
         info.roles.freeze();
         tag_to_type.add("DIAGNOSTIC-TROUBLE-CODE-UDS-TO-TROUBLE-CODE-OBD-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{diagnostic_uds_severity_enum_value_variation_point.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DIAGNOSTIC-UDS-SEVERITY-ENUM-VALUE-VARIATION-POINT", std::move(info));
     }
     {
         TypeInfo info{{diagnostic_upload_download_needs.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -31092,38 +29053,36 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("ECU-ABSTRACTION-SW-COMPONENT-TYPE", std::move(info));
     }
     {
-        TypeInfo info{{ecu_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(31)};
+        TypeInfo info{{ecu_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(29)};
         info.roles.add("ASSOCIATED-COM-I-PDU-GROUP-REFS", rupa::domain::RoleHandle{ecu_instance_r0.id});
         info.roles.add("ASSOCIATED-CONSUMED-PROVIDED-SERVICE-INSTANCE-GROUPS", rupa::domain::RoleHandle{ecu_instance_r1.id});
         info.roles.add("ASSOCIATED-PDUR-I-PDU-GROUP-REFS", rupa::domain::RoleHandle{ecu_instance_r2.id});
         info.roles.add("CAN-TP-ADDRESS-REFS", rupa::domain::RoleHandle{ecu_instance_r3.id});
-        info.roles.add("CHANNEL-SYNCHRONOUS-WAKEUP", rupa::domain::RoleHandle{ecu_instance_r4.id});
-        info.roles.add("CLIENT-ID-RANGE", rupa::domain::RoleHandle{ecu_instance_r5.id});
-        info.roles.add("COM-CONFIGURATION-GW-TIME-BASE", rupa::domain::RoleHandle{ecu_instance_r6.id});
-        info.roles.add("COM-CONFIGURATION-RX-TIME-BASE", rupa::domain::RoleHandle{ecu_instance_r7.id});
-        info.roles.add("COM-CONFIGURATION-TX-TIME-BASE", rupa::domain::RoleHandle{ecu_instance_r8.id});
-        info.roles.add("COM-ENABLE-MDT-FOR-CYCLIC-TRANSMISSION", rupa::domain::RoleHandle{ecu_instance_r9.id});
-        info.roles.add("COMM-CONTROLLERS", rupa::domain::RoleHandle{ecu_instance_r10.id});
-        info.roles.add("CONNECTORS", rupa::domain::RoleHandle{ecu_instance_r11.id});
-        info.roles.add("DIAGNOSTIC-ADDRESS", rupa::domain::RoleHandle{ecu_instance_r12.id});
-        info.roles.add("DIAGNOSTIC-PROPS", rupa::domain::RoleHandle{ecu_instance_r13.id});
-        info.roles.add("DLT-CONFIG", rupa::domain::RoleHandle{ecu_instance_r14.id});
-        info.roles.add("DO-IP-CONFIG", rupa::domain::RoleHandle{ecu_instance_r15.id});
-        info.roles.add("ECU-INSTANCE-PROPSS", rupa::domain::RoleHandle{ecu_instance_r16.id});
-        info.roles.add("ECU-TASK-PROXY-REFS", rupa::domain::RoleHandle{ecu_instance_r17.id});
-        info.roles.add("ETH-SWITCH-PORT-GROUP-DERIVATION", rupa::domain::RoleHandle{ecu_instance_r18.id});
-        info.roles.add("FIREWALL-RULE-REFS", rupa::domain::RoleHandle{ecu_instance_r19.id});
-        info.roles.add("PARTITIONS", rupa::domain::RoleHandle{ecu_instance_r20.id});
-        info.roles.add("PN-RESET-TIME", rupa::domain::RoleHandle{ecu_instance_r21.id});
-        info.roles.add("PNC-NM-REQUEST", rupa::domain::RoleHandle{ecu_instance_r22.id});
-        info.roles.add("PNC-PREPARE-SLEEP-TIMER", rupa::domain::RoleHandle{ecu_instance_r23.id});
-        info.roles.add("PNC-SYNCHRONOUS-WAKEUP", rupa::domain::RoleHandle{ecu_instance_r24.id});
-        info.roles.add("SLEEP-MODE-SUPPORTED", rupa::domain::RoleHandle{ecu_instance_r25.id});
-        info.roles.add("TCP-IP-ICMP-PROPS-REF", rupa::domain::RoleHandle{ecu_instance_r26.id});
-        info.roles.add("TCP-IP-PROPS-REF", rupa::domain::RoleHandle{ecu_instance_r27.id});
-        info.roles.add("TP-ADDRESS-REFS", rupa::domain::RoleHandle{ecu_instance_r28.id});
-        info.roles.add("V-2-X-SUPPORTED", rupa::domain::RoleHandle{ecu_instance_r29.id});
-        info.roles.add("WAKE-UP-OVER-BUS-SUPPORTED", rupa::domain::RoleHandle{ecu_instance_r30.id});
+        info.roles.add("CLIENT-ID-RANGE", rupa::domain::RoleHandle{ecu_instance_r4.id});
+        info.roles.add("COM-CONFIGURATION-GW-TIME-BASE", rupa::domain::RoleHandle{ecu_instance_r5.id});
+        info.roles.add("COM-CONFIGURATION-RX-TIME-BASE", rupa::domain::RoleHandle{ecu_instance_r6.id});
+        info.roles.add("COM-CONFIGURATION-TX-TIME-BASE", rupa::domain::RoleHandle{ecu_instance_r7.id});
+        info.roles.add("COM-ENABLE-MDT-FOR-CYCLIC-TRANSMISSION", rupa::domain::RoleHandle{ecu_instance_r8.id});
+        info.roles.add("COMM-CONTROLLERS", rupa::domain::RoleHandle{ecu_instance_r9.id});
+        info.roles.add("CONNECTORS", rupa::domain::RoleHandle{ecu_instance_r10.id});
+        info.roles.add("DIAGNOSTIC-ADDRESS", rupa::domain::RoleHandle{ecu_instance_r11.id});
+        info.roles.add("DIAGNOSTIC-PROPS", rupa::domain::RoleHandle{ecu_instance_r12.id});
+        info.roles.add("DLT-CONFIG", rupa::domain::RoleHandle{ecu_instance_r13.id});
+        info.roles.add("DO-IP-CONFIG", rupa::domain::RoleHandle{ecu_instance_r14.id});
+        info.roles.add("ECU-INSTANCE-PROPSS", rupa::domain::RoleHandle{ecu_instance_r15.id});
+        info.roles.add("ECU-TASK-PROXY-REFS", rupa::domain::RoleHandle{ecu_instance_r16.id});
+        info.roles.add("ETH-SWITCH-PORT-GROUP-DERIVATION", rupa::domain::RoleHandle{ecu_instance_r17.id});
+        info.roles.add("PARTITIONS", rupa::domain::RoleHandle{ecu_instance_r18.id});
+        info.roles.add("PN-RESET-TIME", rupa::domain::RoleHandle{ecu_instance_r19.id});
+        info.roles.add("PNC-NM-REQUEST", rupa::domain::RoleHandle{ecu_instance_r20.id});
+        info.roles.add("PNC-PREPARE-SLEEP-TIMER", rupa::domain::RoleHandle{ecu_instance_r21.id});
+        info.roles.add("PNC-SYNCHRONOUS-WAKEUP", rupa::domain::RoleHandle{ecu_instance_r22.id});
+        info.roles.add("SLEEP-MODE-SUPPORTED", rupa::domain::RoleHandle{ecu_instance_r23.id});
+        info.roles.add("TCP-IP-ICMP-PROPS-REF", rupa::domain::RoleHandle{ecu_instance_r24.id});
+        info.roles.add("TCP-IP-PROPS-REF", rupa::domain::RoleHandle{ecu_instance_r25.id});
+        info.roles.add("TP-ADDRESS-REFS", rupa::domain::RoleHandle{ecu_instance_r26.id});
+        info.roles.add("V-2-X-SUPPORTED", rupa::domain::RoleHandle{ecu_instance_r27.id});
+        info.roles.add("WAKE-UP-OVER-BUS-SUPPORTED", rupa::domain::RoleHandle{ecu_instance_r28.id});
         info.roles.freeze();
         tag_to_type.add("ECU-INSTANCE", std::move(info));
     }
@@ -31852,16 +29811,13 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("EOC-EXECUTABLE-ENTITY-REF-ABSTRACT", std::move(info));
     }
     {
-        TypeInfo info{{eoc_executable_entity_ref_group.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(9)};
-        info.roles.add("LET-DATA-EXCHANGE-PARADIGM", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r0.id});
-        info.roles.add("LET-INTERVAL-REFS", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r1.id});
-        info.roles.add("MAX-CYCLE-REPETITIONS", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r2.id});
-        info.roles.add("MAX-CYCLES", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r3.id});
-        info.roles.add("MAX-SLOTS", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r4.id});
-        info.roles.add("MAX-SLOTS-PER-CYCLE", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r5.id});
-        info.roles.add("NESTED-ELEMENT-REFS", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r6.id});
-        info.roles.add("SUCCESSOR-REFS", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r7.id});
-        info.roles.add("TRIGGERING-EVENT-REF", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r8.id});
+        TypeInfo info{{eoc_executable_entity_ref_group.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
+        info.roles.add("LET-INTERVAL-REFS", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r0.id});
+        info.roles.add("MAX-CYCLES", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r1.id});
+        info.roles.add("MAX-SLOTS", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r2.id});
+        info.roles.add("NESTED-ELEMENT-REFS", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r3.id});
+        info.roles.add("SUCCESSOR-REFS", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r4.id});
+        info.roles.add("TRIGGERING-EVENT-REF", rupa::domain::RoleHandle{eoc_executable_entity_ref_group_r5.id});
         info.roles.freeze();
         tag_to_type.add("EOC-EXECUTABLE-ENTITY-REF-GROUP", std::move(info));
     }
@@ -31883,14 +29839,12 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("ETH-GLOBAL-TIME-DOMAIN-PROPS", std::move(info));
     }
     {
-        TypeInfo info{{eth_global_time_managed_coupling_port.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
+        TypeInfo info{{eth_global_time_managed_coupling_port.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
         info.roles.add("COUPLING-PORT-REF", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r0.id});
-        info.roles.add("GLOBAL-TIME-PORT-ROLE", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r1.id});
-        info.roles.add("GLOBAL-TIME-TX-PERIOD", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r2.id});
-        info.roles.add("PDELAY-LATENCY-THRESHOLD", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r3.id});
-        info.roles.add("PDELAY-REQUEST-PERIOD", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r4.id});
-        info.roles.add("PDELAY-RESP-AND-RESP-FOLLOW-UP-TIMEOUT", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r5.id});
-        info.roles.add("PDELAY-RESPONSE-ENABLED", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r6.id});
+        info.roles.add("PDELAY-LATENCY-THRESHOLD", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r1.id});
+        info.roles.add("PDELAY-REQUEST-PERIOD", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r2.id});
+        info.roles.add("PDELAY-RESP-AND-RESP-FOLLOW-UP-TIMEOUT", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r3.id});
+        info.roles.add("PDELAY-RESPONSE-ENABLED", rupa::domain::RoleHandle{eth_global_time_managed_coupling_port_r4.id});
         info.roles.freeze();
         tag_to_type.add("ETH-GLOBAL-TIME-MANAGED-COUPLING-PORT", std::move(info));
     }
@@ -32186,14 +30140,13 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("EXCLUSIVE-AREA-REF-CONDITIONAL", std::move(info));
     }
     {
-        TypeInfo info{{executable.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
+        TypeInfo info{{executable.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
         info.roles.add("BUILD-TYPE", rupa::domain::RoleHandle{executable_r0.id});
         info.roles.add("IMPLEMENTATION-PROPSS", rupa::domain::RoleHandle{executable_r1.id});
         info.roles.add("MINIMUM-TIMER-GRANULARITY", rupa::domain::RoleHandle{executable_r2.id});
         info.roles.add("REPORTING-BEHAVIOR", rupa::domain::RoleHandle{executable_r3.id});
         info.roles.add("ROOT-SW-COMPONENT-PROTOTYPE", rupa::domain::RoleHandle{executable_r4.id});
-        info.roles.add("TRACE-SWITCH-CONFIGURATIONS", rupa::domain::RoleHandle{executable_r5.id});
-        info.roles.add("VERSION", rupa::domain::RoleHandle{executable_r6.id});
+        info.roles.add("VERSION", rupa::domain::RoleHandle{executable_r5.id});
         info.roles.freeze();
         tag_to_type.add("EXECUTABLE", std::move(info));
     }
@@ -32368,11 +30321,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("FIREWALL-RULE", std::move(info));
     }
     {
-        TypeInfo info{{firewall_rule_props.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
+        TypeInfo info{{firewall_rule_props.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
         info.roles.add("ACTION", rupa::domain::RoleHandle{firewall_rule_props_r0.id});
-        info.roles.add("MATCHING-EGRESS-RULE-REFS", rupa::domain::RoleHandle{firewall_rule_props_r1.id});
-        info.roles.add("MATCHING-INGRESS-RULE-REFS", rupa::domain::RoleHandle{firewall_rule_props_r2.id});
-        info.roles.add("MATCHING-RULE-REFS", rupa::domain::RoleHandle{firewall_rule_props_r3.id});
+        info.roles.add("MATCHING-RULE-REFS", rupa::domain::RoleHandle{firewall_rule_props_r1.id});
         info.roles.freeze();
         tag_to_type.add("FIREWALL-RULE-PROPS", std::move(info));
     }
@@ -32984,22 +30935,14 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("FUNCTIONAL-CLUSTER-INTERACTS-WITH-FUNCTIONAL-CLUSTER-MAPPING", std::move(info));
     }
     {
-        TypeInfo info{{functional_cluster_interacts_with_persistency_deployment_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
-        info.roles.add("CONTRACT-VERSION", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r0.id});
-        info.roles.add("FUNCTIONAL-CLUSTER-REF", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r1.id});
-        info.roles.add("MAX-NUMBER-OF-FILES", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r2.id});
-        info.roles.add("PERSISTENCY-ACCESS", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r3.id});
-        info.roles.add("PERSISTENCY-DEPLOYMENT-REF", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r4.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r5.id});
+        TypeInfo info{{functional_cluster_interacts_with_persistency_deployment_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
+        info.roles.add("FUNCTIONAL-CLUSTER-REF", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r0.id});
+        info.roles.add("MAX-NUMBER-OF-FILES", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r1.id});
+        info.roles.add("PERSISTENCY-ACCESS", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r2.id});
+        info.roles.add("PERSISTENCY-DEPLOYMENT-REF", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r3.id});
+        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{functional_cluster_interacts_with_persistency_deployment_mapping_r4.id});
         info.roles.freeze();
         tag_to_type.add("FUNCTIONAL-CLUSTER-INTERACTS-WITH-PERSISTENCY-DEPLOYMENT-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{functional_cluster_to_security_event_definition_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("MODULE-INSTANTIATION-REF", rupa::domain::RoleHandle{functional_cluster_to_security_event_definition_mapping_r0.id});
-        info.roles.add("SECURITY-EVENT-REF", rupa::domain::RoleHandle{functional_cluster_to_security_event_definition_mapping_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("FUNCTIONAL-CLUSTER-TO-SECURITY-EVENT-DEFINITION-MAPPING", std::move(info));
     }
     {
         TypeInfo info{{further_action_byte_needs.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -33150,10 +31093,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("GLOBAL-TIME-DOMAIN-REF-CONDITIONAL", std::move(info));
     }
     {
-        TypeInfo info{{global_time_eth_master.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        TypeInfo info{{global_time_eth_master.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
         info.roles.add("CRC-SECURED", rupa::domain::RoleHandle{global_time_eth_master_r0.id});
-        info.roles.add("HOLD-OVER-TIME", rupa::domain::RoleHandle{global_time_eth_master_r1.id});
-        info.roles.add("SUB-TLV-CONFIG", rupa::domain::RoleHandle{global_time_eth_master_r2.id});
+        info.roles.add("SUB-TLV-CONFIG", rupa::domain::RoleHandle{global_time_eth_master_r1.id});
         info.roles.freeze();
         tag_to_type.add("GLOBAL-TIME-ETH-MASTER", std::move(info));
     }
@@ -33361,11 +31303,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("HW-ELEMENT-REF-CONDITIONAL", std::move(info));
     }
     {
-        TypeInfo info{{hw_pin.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
-        info.roles.add("FUNCTION-NAMES", rupa::domain::RoleHandle{hw_pin_r0.id});
-        info.roles.add("PACKAGING-PIN-NAME", rupa::domain::RoleHandle{hw_pin_r1.id});
-        info.roles.add("PIN-NUMBER", rupa::domain::RoleHandle{hw_pin_r2.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{hw_pin_r3.id});
+        TypeInfo info{{hw_pin.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        info.roles.add("PIN-NUMBER", rupa::domain::RoleHandle{hw_pin_r0.id});
+        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{hw_pin_r1.id});
         info.roles.freeze();
         tag_to_type.add("HW-PIN", std::move(info));
     }
@@ -33516,12 +31456,11 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("I-SIGNAL-MAPPING", std::move(info));
     }
     {
-        TypeInfo info{{i_signal_port.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
+        TypeInfo info{{i_signal_port.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
         info.roles.add("DATA-FILTER", rupa::domain::RoleHandle{i_signal_port_r0.id});
-        info.roles.add("DDS-QOS-PROFILE-REF", rupa::domain::RoleHandle{i_signal_port_r1.id});
-        info.roles.add("FIRST-TIMEOUT", rupa::domain::RoleHandle{i_signal_port_r2.id});
-        info.roles.add("HANDLE-INVALID", rupa::domain::RoleHandle{i_signal_port_r3.id});
-        info.roles.add("TIMEOUT", rupa::domain::RoleHandle{i_signal_port_r4.id});
+        info.roles.add("FIRST-TIMEOUT", rupa::domain::RoleHandle{i_signal_port_r1.id});
+        info.roles.add("HANDLE-INVALID", rupa::domain::RoleHandle{i_signal_port_r2.id});
+        info.roles.add("TIMEOUT", rupa::domain::RoleHandle{i_signal_port_r3.id});
         info.roles.freeze();
         tag_to_type.add("I-SIGNAL-PORT", std::move(info));
     }
@@ -33640,24 +31579,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("IDS-PLATFORM-INSTANTIATION", std::move(info));
     }
     {
-        TypeInfo info{{idsm_abstract_port_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IDSM-ABSTRACT-PORT-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{idsm_context_provider_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IDSM-CONTEXT-PROVIDER-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{idsm_context_provider_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("IDS-PLATFORM-INSTANTIATION-REF", rupa::domain::RoleHandle{idsm_context_provider_mapping_r0.id});
-        info.roles.add("P-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{idsm_context_provider_mapping_r1.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{idsm_context_provider_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("IDSM-CONTEXT-PROVIDER-MAPPING", std::move(info));
-    }
-    {
         TypeInfo info{{idsm_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(9)};
         info.roles.add("BLOCK-STATES", rupa::domain::RoleHandle{idsm_instance_r0.id});
         info.roles.add("ECU-INSTANCES", rupa::domain::RoleHandle{idsm_instance_r1.id});
@@ -33720,19 +31641,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("IDSM-SIGNATURE-SUPPORT-CP", std::move(info));
     }
     {
-        TypeInfo info{{idsm_timestamp_provider_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IDSM-TIMESTAMP-PROVIDER-INTERFACE", std::move(info));
-    }
-    {
-        TypeInfo info{{idsm_timestamp_provider_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("IDS-PLATFORM-INSTANTIATION-REF", rupa::domain::RoleHandle{idsm_timestamp_provider_mapping_r0.id});
-        info.roles.add("P-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{idsm_timestamp_provider_mapping_r1.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{idsm_timestamp_provider_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("IDSM-TIMESTAMP-PROVIDER-MAPPING", std::move(info));
-    }
-    {
         TypeInfo info{{idsm_traffic_limitation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
         info.roles.add("MAX-BYTES-IN-INTERVAL", rupa::domain::RoleHandle{idsm_traffic_limitation_r0.id});
         info.roles.add("TIME-INTERVAL", rupa::domain::RoleHandle{idsm_traffic_limitation_r1.id});
@@ -33756,120 +31664,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("IEEE-1722-TP", std::move(info));
     }
     {
-        TypeInfo info{{iee_e1722_tp_aaf_connection.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(10)};
-        info.roles.add("AAF-AES-3-DATA-TYPE", rupa::domain::RoleHandle{iee_e1722_tp_aaf_connection_r0.id});
-        info.roles.add("AAF-FORMAT", rupa::domain::RoleHandle{iee_e1722_tp_aaf_connection_r1.id});
-        info.roles.add("AAF-NOMINAL-RATE", rupa::domain::RoleHandle{iee_e1722_tp_aaf_connection_r2.id});
-        info.roles.add("AES-3-DATA-TYPE-H", rupa::domain::RoleHandle{iee_e1722_tp_aaf_connection_r3.id});
-        info.roles.add("AES-3-DATA-TYPE-L", rupa::domain::RoleHandle{iee_e1722_tp_aaf_connection_r4.id});
-        info.roles.add("CHANNELS-PER-FRAME", rupa::domain::RoleHandle{iee_e1722_tp_aaf_connection_r5.id});
-        info.roles.add("EVENT-DEFAULT-VALUE", rupa::domain::RoleHandle{iee_e1722_tp_aaf_connection_r6.id});
-        info.roles.add("PCM-BIT-DEPTH", rupa::domain::RoleHandle{iee_e1722_tp_aaf_connection_r7.id});
-        info.roles.add("SPARSE-TIMESTAMP-ENABLED", rupa::domain::RoleHandle{iee_e1722_tp_aaf_connection_r8.id});
-        info.roles.add("STREAMS-PER-FRAME", rupa::domain::RoleHandle{iee_e1722_tp_aaf_connection_r9.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-AAF-CONNECTION", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_acf_bus.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("ACF-PARTS", rupa::domain::RoleHandle{iee_e1722_tp_acf_bus_r0.id});
-        info.roles.add("BUS-ID", rupa::domain::RoleHandle{iee_e1722_tp_acf_bus_r1.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{iee_e1722_tp_acf_bus_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-ACF-BUS", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_acf_bus_part.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("COLLECTION-TRIGGER", rupa::domain::RoleHandle{iee_e1722_tp_acf_bus_part_r0.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{iee_e1722_tp_acf_bus_part_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-ACF-BUS-PART", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_acf_can.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("MESSAGE-TYPE", rupa::domain::RoleHandle{iee_e1722_tp_acf_can_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-ACF-CAN", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_acf_can_part.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
-        info.roles.add("CAN-ADDRESSING-MODE", rupa::domain::RoleHandle{iee_e1722_tp_acf_can_part_r0.id});
-        info.roles.add("CAN-BIT-RATE-SWITCH", rupa::domain::RoleHandle{iee_e1722_tp_acf_can_part_r1.id});
-        info.roles.add("CAN-FRAME-TX-BEHAVIOR", rupa::domain::RoleHandle{iee_e1722_tp_acf_can_part_r2.id});
-        info.roles.add("CAN-IDENTIFIER", rupa::domain::RoleHandle{iee_e1722_tp_acf_can_part_r3.id});
-        info.roles.add("CAN-IDENTIFIER-MASK", rupa::domain::RoleHandle{iee_e1722_tp_acf_can_part_r4.id});
-        info.roles.add("CAN-IDENTIFIER-RANGE", rupa::domain::RoleHandle{iee_e1722_tp_acf_can_part_r5.id});
-        info.roles.add("SDU-REF", rupa::domain::RoleHandle{iee_e1722_tp_acf_can_part_r6.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-ACF-CAN-PART", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_acf_connection.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
-        info.roles.add("ACF-TRANSPORTED-BUSS", rupa::domain::RoleHandle{iee_e1722_tp_acf_connection_r0.id});
-        info.roles.add("COLLECTION-THRESHOLD", rupa::domain::RoleHandle{iee_e1722_tp_acf_connection_r1.id});
-        info.roles.add("COLLECTION-TIMEOUT", rupa::domain::RoleHandle{iee_e1722_tp_acf_connection_r2.id});
-        info.roles.add("MIXED-BUS-TYPE-COLLECTION", rupa::domain::RoleHandle{iee_e1722_tp_acf_connection_r3.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-ACF-CONNECTION", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_acf_lin.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("BASE-FREQUENCY", rupa::domain::RoleHandle{iee_e1722_tp_acf_lin_r0.id});
-        info.roles.add("FRAME-SYNC-ENABLED", rupa::domain::RoleHandle{iee_e1722_tp_acf_lin_r1.id});
-        info.roles.add("TIMESTAMP-INTERVAL", rupa::domain::RoleHandle{iee_e1722_tp_acf_lin_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-ACF-LIN", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_acf_lin_part.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("LIN-IDENTIFIER", rupa::domain::RoleHandle{iee_e1722_tp_acf_lin_part_r0.id});
-        info.roles.add("SDU-REF", rupa::domain::RoleHandle{iee_e1722_tp_acf_lin_part_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-ACF-LIN-PART", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_av_connection.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("MAX-TRANSIT-TIME", rupa::domain::RoleHandle{iee_e1722_tp_av_connection_r0.id});
-        info.roles.add("SDU-REFS", rupa::domain::RoleHandle{iee_e1722_tp_av_connection_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-AV-CONNECTION", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_config.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("TP-CONNECTIONS", rupa::domain::RoleHandle{iee_e1722_tp_config_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-CONFIG", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_connection.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
-        info.roles.add("COMMUNICATION-DIRECTION", rupa::domain::RoleHandle{iee_e1722_tp_connection_r0.id});
-        info.roles.add("DESTINATION-MAC-ADDRESS", rupa::domain::RoleHandle{iee_e1722_tp_connection_r1.id});
-        info.roles.add("MAC-ADDRESS-STREAM-ID", rupa::domain::RoleHandle{iee_e1722_tp_connection_r2.id});
-        info.roles.add("PDU-REF", rupa::domain::RoleHandle{iee_e1722_tp_connection_r3.id});
-        info.roles.add("UNIQUE-STREAM-ID", rupa::domain::RoleHandle{iee_e1722_tp_connection_r4.id});
-        info.roles.add("VERSION", rupa::domain::RoleHandle{iee_e1722_tp_connection_r5.id});
-        info.roles.add("VLAN-PRIORITY", rupa::domain::RoleHandle{iee_e1722_tp_connection_r6.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-CONNECTION", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_connection_ref_conditional.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("IEE-E-1722-TP-CONNECTION-REF", rupa::domain::RoleHandle{iee_e1722_tp_connection_ref_conditional_r0.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{iee_e1722_tp_connection_ref_conditional_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-CONNECTION-REF-CONDITIONAL", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_crf_connection.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
-        info.roles.add("BASE-FREQUENCY", rupa::domain::RoleHandle{iee_e1722_tp_crf_connection_r0.id});
-        info.roles.add("CRF-PULL", rupa::domain::RoleHandle{iee_e1722_tp_crf_connection_r1.id});
-        info.roles.add("CRF-TYPE", rupa::domain::RoleHandle{iee_e1722_tp_crf_connection_r2.id});
-        info.roles.add("FRAME-SYNC-ENABLED", rupa::domain::RoleHandle{iee_e1722_tp_crf_connection_r3.id});
-        info.roles.add("TIMESTAMP-INTERVAL", rupa::domain::RoleHandle{iee_e1722_tp_crf_connection_r4.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-CRF-CONNECTION", std::move(info));
-    }
-    {
         TypeInfo info{{ieee1722_tp_ethernet_frame.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
         info.roles.add("RELATIVE-REPRESENTATION-TIME", rupa::domain::RoleHandle{ieee1722_tp_ethernet_frame_r0.id});
         info.roles.add("STREAM-IDENTIFIER", rupa::domain::RoleHandle{ieee1722_tp_ethernet_frame_r1.id});
@@ -33877,32 +31671,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("VERSION", rupa::domain::RoleHandle{ieee1722_tp_ethernet_frame_r3.id});
         info.roles.freeze();
         tag_to_type.add("IEEE-1722-TP-ETHERNET-FRAME", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_iidc_connection.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(8)};
-        info.roles.add("IIDC-CHANNEL", rupa::domain::RoleHandle{iee_e1722_tp_iidc_connection_r0.id});
-        info.roles.add("IIDC-DATA-BLOCK-SIZE", rupa::domain::RoleHandle{iee_e1722_tp_iidc_connection_r1.id});
-        info.roles.add("IIDC-FRACTION-NUMBER", rupa::domain::RoleHandle{iee_e1722_tp_iidc_connection_r2.id});
-        info.roles.add("IIDC-SOURCE-PACKET-HEADER", rupa::domain::RoleHandle{iee_e1722_tp_iidc_connection_r3.id});
-        info.roles.add("IIDC-STREAM-FORMAT", rupa::domain::RoleHandle{iee_e1722_tp_iidc_connection_r4.id});
-        info.roles.add("IIDC-SY", rupa::domain::RoleHandle{iee_e1722_tp_iidc_connection_r5.id});
-        info.roles.add("IIDC-T-CODE", rupa::domain::RoleHandle{iee_e1722_tp_iidc_connection_r6.id});
-        info.roles.add("IIDC-TAG", rupa::domain::RoleHandle{iee_e1722_tp_iidc_connection_r7.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-IIDC-CONNECTION", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_rvf_connection.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(8)};
-        info.roles.add("RVF-ACTIVE-PIXELS", rupa::domain::RoleHandle{iee_e1722_tp_rvf_connection_r0.id});
-        info.roles.add("RVF-COLOR-SPACE", rupa::domain::RoleHandle{iee_e1722_tp_rvf_connection_r1.id});
-        info.roles.add("RVF-EVENT-DEFAULT", rupa::domain::RoleHandle{iee_e1722_tp_rvf_connection_r2.id});
-        info.roles.add("RVF-FRAME-RATE", rupa::domain::RoleHandle{iee_e1722_tp_rvf_connection_r3.id});
-        info.roles.add("RVF-INTERLACED", rupa::domain::RoleHandle{iee_e1722_tp_rvf_connection_r4.id});
-        info.roles.add("RVF-PIXEL-DEPTH", rupa::domain::RoleHandle{iee_e1722_tp_rvf_connection_r5.id});
-        info.roles.add("RVF-PIXEL-FORMAT", rupa::domain::RoleHandle{iee_e1722_tp_rvf_connection_r6.id});
-        info.roles.add("RVF-TOTAL-LINES", rupa::domain::RoleHandle{iee_e1722_tp_rvf_connection_r7.id});
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-RVF-CONNECTION", std::move(info));
     }
     {
         TypeInfo info{{implementation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(15)};
@@ -33985,17 +31753,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("SYMBOL", rupa::domain::RoleHandle{implementation_props_r0.id});
         info.roles.freeze();
         tag_to_type.add("IMPLEMENTATION-PROPS", std::move(info));
-    }
-    {
-        TypeInfo info{{imposition_time.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IMPOSITION-TIME", std::move(info));
-    }
-    {
-        TypeInfo info{{imposition_time_definition_group.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("IMPOSITION-TIMES", rupa::domain::RoleHandle{imposition_time_definition_group_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("IMPOSITION-TIME-DEFINITION-GROUP", std::move(info));
     }
     {
         TypeInfo info{{included_data_type_set.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
@@ -34390,34 +32147,33 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("IPV-6-FRAGMENTATION-PROPS", std::move(info));
     }
     {
-        TypeInfo info{{ipv6_ndp_props.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(27)};
+        TypeInfo info{{ipv6_ndp_props.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(26)};
         info.roles.add("TCP-IP-NDP-DEFAULT-REACHABLE-TIME", rupa::domain::RoleHandle{ipv6_ndp_props_r0.id});
         info.roles.add("TCP-IP-NDP-DEFAULT-RETRANS-TIMER", rupa::domain::RoleHandle{ipv6_ndp_props_r1.id});
         info.roles.add("TCP-IP-NDP-DEFAULT-ROUTER-LIST-SIZE", rupa::domain::RoleHandle{ipv6_ndp_props_r2.id});
         info.roles.add("TCP-IP-NDP-DEFENSIVE-PROCESSING", rupa::domain::RoleHandle{ipv6_ndp_props_r3.id});
         info.roles.add("TCP-IP-NDP-DELAY-FIRST-PROBE-TIME", rupa::domain::RoleHandle{ipv6_ndp_props_r4.id});
-        info.roles.add("TCP-IP-NDP-DELAY-FIRST-PROBE-TIME-VALUE", rupa::domain::RoleHandle{ipv6_ndp_props_r5.id});
-        info.roles.add("TCP-IP-NDP-DESTINATION-CACHE-SIZE", rupa::domain::RoleHandle{ipv6_ndp_props_r6.id});
-        info.roles.add("TCP-IP-NDP-DYNAMIC-HOP-LIMIT-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r7.id});
-        info.roles.add("TCP-IP-NDP-DYNAMIC-MTU-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r8.id});
-        info.roles.add("TCP-IP-NDP-DYNAMIC-REACHABLE-TIME-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r9.id});
-        info.roles.add("TCP-IP-NDP-DYNAMIC-RETRANS-TIME-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r10.id});
-        info.roles.add("TCP-IP-NDP-MAX-RANDOM-FACTOR", rupa::domain::RoleHandle{ipv6_ndp_props_r11.id});
-        info.roles.add("TCP-IP-NDP-MAX-RTR-SOLICITATION-DELAY", rupa::domain::RoleHandle{ipv6_ndp_props_r12.id});
-        info.roles.add("TCP-IP-NDP-MAX-RTR-SOLICITATIONS", rupa::domain::RoleHandle{ipv6_ndp_props_r13.id});
-        info.roles.add("TCP-IP-NDP-MIN-RANDOM-FACTOR", rupa::domain::RoleHandle{ipv6_ndp_props_r14.id});
-        info.roles.add("TCP-IP-NDP-NEIGHBOR-UNREACHABILITY-DETECTION-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r15.id});
-        info.roles.add("TCP-IP-NDP-NUM-MULTICAST-SOLICITATIONS", rupa::domain::RoleHandle{ipv6_ndp_props_r16.id});
-        info.roles.add("TCP-IP-NDP-NUM-UNICAST-SOLICITATIONS", rupa::domain::RoleHandle{ipv6_ndp_props_r17.id});
-        info.roles.add("TCP-IP-NDP-PACKET-QUEUE-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r18.id});
-        info.roles.add("TCP-IP-NDP-PREFIX-LIST-SIZE", rupa::domain::RoleHandle{ipv6_ndp_props_r19.id});
-        info.roles.add("TCP-IP-NDP-RANDOM-REACHABLE-TIME-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r20.id});
-        info.roles.add("TCP-IP-NDP-RND-RTR-SOLICITATION-DELAY-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r21.id});
-        info.roles.add("TCP-IP-NDP-RTR-SOLICITATION-INTERVAL", rupa::domain::RoleHandle{ipv6_ndp_props_r22.id});
-        info.roles.add("TCP-IP-NDP-SLAAC-DAD-NUMBER-OF-TRANSMISSIONS", rupa::domain::RoleHandle{ipv6_ndp_props_r23.id});
-        info.roles.add("TCP-IP-NDP-SLAAC-DAD-RETRANSMISSION-DELAY", rupa::domain::RoleHandle{ipv6_ndp_props_r24.id});
-        info.roles.add("TCP-IP-NDP-SLAAC-DELAY-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r25.id});
-        info.roles.add("TCP-IP-NDP-SLAAC-OPTIMISTIC-DAD-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r26.id});
+        info.roles.add("TCP-IP-NDP-DESTINATION-CACHE-SIZE", rupa::domain::RoleHandle{ipv6_ndp_props_r5.id});
+        info.roles.add("TCP-IP-NDP-DYNAMIC-HOP-LIMIT-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r6.id});
+        info.roles.add("TCP-IP-NDP-DYNAMIC-MTU-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r7.id});
+        info.roles.add("TCP-IP-NDP-DYNAMIC-REACHABLE-TIME-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r8.id});
+        info.roles.add("TCP-IP-NDP-DYNAMIC-RETRANS-TIME-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r9.id});
+        info.roles.add("TCP-IP-NDP-MAX-RANDOM-FACTOR", rupa::domain::RoleHandle{ipv6_ndp_props_r10.id});
+        info.roles.add("TCP-IP-NDP-MAX-RTR-SOLICITATION-DELAY", rupa::domain::RoleHandle{ipv6_ndp_props_r11.id});
+        info.roles.add("TCP-IP-NDP-MAX-RTR-SOLICITATIONS", rupa::domain::RoleHandle{ipv6_ndp_props_r12.id});
+        info.roles.add("TCP-IP-NDP-MIN-RANDOM-FACTOR", rupa::domain::RoleHandle{ipv6_ndp_props_r13.id});
+        info.roles.add("TCP-IP-NDP-NEIGHBOR-UNREACHABILITY-DETECTION-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r14.id});
+        info.roles.add("TCP-IP-NDP-NUM-MULTICAST-SOLICITATIONS", rupa::domain::RoleHandle{ipv6_ndp_props_r15.id});
+        info.roles.add("TCP-IP-NDP-NUM-UNICAST-SOLICITATIONS", rupa::domain::RoleHandle{ipv6_ndp_props_r16.id});
+        info.roles.add("TCP-IP-NDP-PACKET-QUEUE-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r17.id});
+        info.roles.add("TCP-IP-NDP-PREFIX-LIST-SIZE", rupa::domain::RoleHandle{ipv6_ndp_props_r18.id});
+        info.roles.add("TCP-IP-NDP-RANDOM-REACHABLE-TIME-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r19.id});
+        info.roles.add("TCP-IP-NDP-RND-RTR-SOLICITATION-DELAY-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r20.id});
+        info.roles.add("TCP-IP-NDP-RTR-SOLICITATION-INTERVAL", rupa::domain::RoleHandle{ipv6_ndp_props_r21.id});
+        info.roles.add("TCP-IP-NDP-SLAAC-DAD-NUMBER-OF-TRANSMISSIONS", rupa::domain::RoleHandle{ipv6_ndp_props_r22.id});
+        info.roles.add("TCP-IP-NDP-SLAAC-DAD-RETRANSMISSION-DELAY", rupa::domain::RoleHandle{ipv6_ndp_props_r23.id});
+        info.roles.add("TCP-IP-NDP-SLAAC-DELAY-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r24.id});
+        info.roles.add("TCP-IP-NDP-SLAAC-OPTIMISTIC-DAD-ENABLED", rupa::domain::RoleHandle{ipv6_ndp_props_r25.id});
         info.roles.freeze();
         tag_to_type.add("IPV-6-NDP-PROPS", std::move(info));
     }
@@ -34495,9 +32251,8 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("J-1939-DCM-I-PDU", std::move(info));
     }
     {
-        TypeInfo info{{j1939_nm_cluster.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        TypeInfo info{{j1939_nm_cluster.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
         info.roles.add("ADDRESS-CLAIM-ENABLED", rupa::domain::RoleHandle{j1939_nm_cluster_r0.id});
-        info.roles.add("USES-DYNAMIC-ADDRESSING", rupa::domain::RoleHandle{j1939_nm_cluster_r1.id});
         info.roles.freeze();
         tag_to_type.add("J-1939-NM-CLUSTER", std::move(info));
     }
@@ -34507,9 +32262,8 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("J-1939-NM-ECU", std::move(info));
     }
     {
-        TypeInfo info{{j1939_nm_node.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("ADDRESS-CONFIGURATION-CAPABILITY", rupa::domain::RoleHandle{j1939_nm_node_r0.id});
-        info.roles.add("NODE-NAME", rupa::domain::RoleHandle{j1939_nm_node_r1.id});
+        TypeInfo info{{j1939_nm_node.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
+        info.roles.add("NODE-NAME", rupa::domain::RoleHandle{j1939_nm_node_r0.id});
         info.roles.freeze();
         tag_to_type.add("J-1939-NM-NODE", std::move(info));
     }
@@ -35756,29 +33510,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("NETWORK-ENDPOINT-ADDRESS", std::move(info));
     }
     {
-        TypeInfo info{{network_endpoint_ref_conditional.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("NETWORK-ENDPOINT-REF", rupa::domain::RoleHandle{network_endpoint_ref_conditional_r0.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{network_endpoint_ref_conditional_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("NETWORK-ENDPOINT-REF-CONDITIONAL", std::move(info));
-    }
-    {
-        TypeInfo info{{network_handle_port_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("NETWORK-HANDLE-REF", rupa::domain::RoleHandle{network_handle_port_mapping_r0.id});
-        info.roles.add("P-PORT-PROTOTYPE-IN-EXECUTABLE-IREF", rupa::domain::RoleHandle{network_handle_port_mapping_r1.id});
-        info.roles.add("PROCESS-REF", rupa::domain::RoleHandle{network_handle_port_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("NETWORK-HANDLE-PORT-MAPPING", std::move(info));
-    }
-    {
         TypeInfo info{{network_layer_rule.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("NETWORK-LAYER-RULE", std::move(info));
-    }
-    {
-        TypeInfo info{{network_management_port_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("NETWORK-MANAGEMENT-PORT-INTERFACE", std::move(info));
     }
     {
         TypeInfo info{{network_segment_identification.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
@@ -35862,13 +33596,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("NETWORK-HANDLES", rupa::domain::RoleHandle{nm_instantiation_r0.id});
         info.roles.freeze();
         tag_to_type.add("NM-INSTANTIATION", std::move(info));
-    }
-    {
-        TypeInfo info{{nm_interacts_with_sm_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("NM-NETWORK-HANDLE-REF", rupa::domain::RoleHandle{nm_interacts_with_sm_mapping_r0.id});
-        info.roles.add("STATE-REQUEST-REF", rupa::domain::RoleHandle{nm_interacts_with_sm_mapping_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("NM-INTERACTS-WITH-SM-MAPPING", std::move(info));
     }
     {
         TypeInfo info{{nm_network_handle.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
@@ -36175,10 +33902,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("ORDERED-MASTER", std::move(info));
     }
     {
-        TypeInfo info{{os_module_instantiation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("OS-ARTI-ADAPTER-LAUNCH-BEHAVIOR", rupa::domain::RoleHandle{os_module_instantiation_r0.id});
-        info.roles.add("RESOURCE-GROUPS", rupa::domain::RoleHandle{os_module_instantiation_r1.id});
-        info.roles.add("SUPPORTED-TIMER-GRANULARITY", rupa::domain::RoleHandle{os_module_instantiation_r2.id});
+        TypeInfo info{{os_module_instantiation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        info.roles.add("RESOURCE-GROUPS", rupa::domain::RoleHandle{os_module_instantiation_r0.id});
+        info.roles.add("SUPPORTED-TIMER-GRANULARITY", rupa::domain::RoleHandle{os_module_instantiation_r1.id});
         info.roles.freeze();
         tag_to_type.add("OS-MODULE-INSTANTIATION", std::move(info));
     }
@@ -36545,12 +34271,11 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("PERSISTENCY-FILE-STORAGE-INTERFACE", std::move(info));
     }
     {
-        TypeInfo info{{persistency_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
-        info.roles.add("CONTRACT-VERSION", rupa::domain::RoleHandle{persistency_interface_r0.id});
-        info.roles.add("MINIMUM-SUSTAINED-SIZE", rupa::domain::RoleHandle{persistency_interface_r1.id});
-        info.roles.add("REDUNDANCY", rupa::domain::RoleHandle{persistency_interface_r2.id});
-        info.roles.add("REDUNDANCY-HANDLINGS", rupa::domain::RoleHandle{persistency_interface_r3.id});
-        info.roles.add("UPDATE-STRATEGY", rupa::domain::RoleHandle{persistency_interface_r4.id});
+        TypeInfo info{{persistency_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
+        info.roles.add("MINIMUM-SUSTAINED-SIZE", rupa::domain::RoleHandle{persistency_interface_r0.id});
+        info.roles.add("REDUNDANCY", rupa::domain::RoleHandle{persistency_interface_r1.id});
+        info.roles.add("REDUNDANCY-HANDLINGS", rupa::domain::RoleHandle{persistency_interface_r2.id});
+        info.roles.add("UPDATE-STRATEGY", rupa::domain::RoleHandle{persistency_interface_r3.id});
         info.roles.freeze();
         tag_to_type.add("PERSISTENCY-INTERFACE", std::move(info));
     }
@@ -36561,11 +34286,10 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("PERSISTENCY-INTERFACE-ELEMENT", std::move(info));
     }
     {
-        TypeInfo info{{persistency_key_value_data_type_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
+        TypeInfo info{{persistency_key_value_data_type_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
         info.roles.add("CURRENT-DATA-TYPE-REF", rupa::domain::RoleHandle{persistency_key_value_data_type_mapping_r0.id});
-        info.roles.add("PREVIOUS-CONTRACT-VERSION", rupa::domain::RoleHandle{persistency_key_value_data_type_mapping_r1.id});
-        info.roles.add("PREVIOUS-DATA-TYPE-REF", rupa::domain::RoleHandle{persistency_key_value_data_type_mapping_r2.id});
-        info.roles.add("PREVIOUS-EXECUTABLE-VERSION", rupa::domain::RoleHandle{persistency_key_value_data_type_mapping_r3.id});
+        info.roles.add("PREVIOUS-DATA-TYPE-REF", rupa::domain::RoleHandle{persistency_key_value_data_type_mapping_r1.id});
+        info.roles.add("PREVIOUS-EXECUTABLE-VERSION", rupa::domain::RoleHandle{persistency_key_value_data_type_mapping_r2.id});
         info.roles.freeze();
         tag_to_type.add("PERSISTENCY-KEY-VALUE-DATA-TYPE-MAPPING", std::move(info));
     }
@@ -36787,14 +34511,12 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("PLATFORM-MODULE-ENDPOINT-CONFIGURATION", std::move(info));
     }
     {
-        TypeInfo info{{platform_module_ethernet_endpoint_configuration.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
+        TypeInfo info{{platform_module_ethernet_endpoint_configuration.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
         info.roles.add("COMMUNICATION-CONNECTOR-REF", rupa::domain::RoleHandle{platform_module_ethernet_endpoint_configuration_r0.id});
         info.roles.add("IPV-4-MULTICAST-IP-ADDRESS", rupa::domain::RoleHandle{platform_module_ethernet_endpoint_configuration_r1.id});
         info.roles.add("IPV-6-MULTICAST-IP-ADDRESS", rupa::domain::RoleHandle{platform_module_ethernet_endpoint_configuration_r2.id});
-        info.roles.add("SECURE-COM-PROPS-FOR-TCP-REF", rupa::domain::RoleHandle{platform_module_ethernet_endpoint_configuration_r3.id});
-        info.roles.add("SECURE-COM-PROPS-FOR-UDP-REF", rupa::domain::RoleHandle{platform_module_ethernet_endpoint_configuration_r4.id});
-        info.roles.add("TCP-PORT-REF", rupa::domain::RoleHandle{platform_module_ethernet_endpoint_configuration_r5.id});
-        info.roles.add("UDP-PORT-REF", rupa::domain::RoleHandle{platform_module_ethernet_endpoint_configuration_r6.id});
+        info.roles.add("TCP-PORT-REF", rupa::domain::RoleHandle{platform_module_ethernet_endpoint_configuration_r3.id});
+        info.roles.add("UDP-PORT-REF", rupa::domain::RoleHandle{platform_module_ethernet_endpoint_configuration_r4.id});
         info.roles.freeze();
         tag_to_type.add("PLATFORM-MODULE-ETHERNET-ENDPOINT-CONFIGURATION", std::move(info));
     }
@@ -36973,10 +34695,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("PORT-PROTOTYPE-BLUEPRINT-MAPPING", std::move(info));
     }
     {
-        TypeInfo info{{port_prototype_in_executable_instance_ref.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("CONTEXT-ROOT-SW-COMPONENT-PROTOTYPE-REF", rupa::domain::RoleHandle{port_prototype_in_executable_instance_ref_r0.id});
-        info.roles.add("CONTEXT-COMPONENT-PROTOTYPE-REF", rupa::domain::RoleHandle{port_prototype_in_executable_instance_ref_r1.id});
-        info.roles.add("TARGET-PORT-PROTOTYPE-REF", rupa::domain::RoleHandle{port_prototype_in_executable_instance_ref_r2.id});
+        TypeInfo info{{port_prototype_in_executable_instance_ref.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        info.roles.add("CONTEXT-COMPONENT-PROTOTYPE-REF", rupa::domain::RoleHandle{port_prototype_in_executable_instance_ref_r0.id});
+        info.roles.add("TARGET-PORT-PROTOTYPE-REF", rupa::domain::RoleHandle{port_prototype_in_executable_instance_ref_r1.id});
         info.roles.freeze();
         tag_to_type.add("PORT-PROTOTYPE-IN-EXECUTABLE-INSTANCE-REF", std::move(info));
     }
@@ -37141,8 +34862,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("PROCESS-ARGUMENT", std::move(info));
     }
     {
-        TypeInfo info{{process_design.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("EXECUTABLE-REFS", rupa::domain::RoleHandle{process_design_r0.id});
+        TypeInfo info{{process_design.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        info.roles.add("DETERMINISTIC-CLIENT-RESOURCE-NEEDSS", rupa::domain::RoleHandle{process_design_r0.id});
+        info.roles.add("EXECUTABLE-REFS", rupa::domain::RoleHandle{process_design_r1.id});
         info.roles.freeze();
         tag_to_type.add("PROCESS-DESIGN", std::move(info));
     }
@@ -37195,21 +34917,20 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("PROVIDED-AP-SERVICE-INSTANCE", std::move(info));
     }
     {
-        TypeInfo info{{provided_service_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(14)};
-        info.roles.add("ALLOWED-SERVICE-CONSUMERS", rupa::domain::RoleHandle{provided_service_instance_r0.id});
-        info.roles.add("AUTO-AVAILABLE", rupa::domain::RoleHandle{provided_service_instance_r1.id});
-        info.roles.add("EVENT-HANDLERS", rupa::domain::RoleHandle{provided_service_instance_r2.id});
-        info.roles.add("INSTANCE-IDENTIFIER", rupa::domain::RoleHandle{provided_service_instance_r3.id});
-        info.roles.add("LOAD-BALANCING-PRIORITY", rupa::domain::RoleHandle{provided_service_instance_r4.id});
-        info.roles.add("LOAD-BALANCING-WEIGHT", rupa::domain::RoleHandle{provided_service_instance_r5.id});
-        info.roles.add("LOCAL-UNICAST-ADDRESSS", rupa::domain::RoleHandle{provided_service_instance_r6.id});
-        info.roles.add("MINOR-VERSION", rupa::domain::RoleHandle{provided_service_instance_r7.id});
-        info.roles.add("PRIORITY", rupa::domain::RoleHandle{provided_service_instance_r8.id});
-        info.roles.add("REMOTE-MULTICAST-SUBSCRIPTION-ADDRESSS", rupa::domain::RoleHandle{provided_service_instance_r9.id});
-        info.roles.add("REMOTE-UNICAST-ADDRESSS", rupa::domain::RoleHandle{provided_service_instance_r10.id});
-        info.roles.add("SD-SERVER-CONFIG", rupa::domain::RoleHandle{provided_service_instance_r11.id});
-        info.roles.add("SD-SERVER-TIMER-CONFIGS", rupa::domain::RoleHandle{provided_service_instance_r12.id});
-        info.roles.add("SERVICE-IDENTIFIER", rupa::domain::RoleHandle{provided_service_instance_r13.id});
+        TypeInfo info{{provided_service_instance.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(13)};
+        info.roles.add("AUTO-AVAILABLE", rupa::domain::RoleHandle{provided_service_instance_r0.id});
+        info.roles.add("EVENT-HANDLERS", rupa::domain::RoleHandle{provided_service_instance_r1.id});
+        info.roles.add("INSTANCE-IDENTIFIER", rupa::domain::RoleHandle{provided_service_instance_r2.id});
+        info.roles.add("LOAD-BALANCING-PRIORITY", rupa::domain::RoleHandle{provided_service_instance_r3.id});
+        info.roles.add("LOAD-BALANCING-WEIGHT", rupa::domain::RoleHandle{provided_service_instance_r4.id});
+        info.roles.add("LOCAL-UNICAST-ADDRESSS", rupa::domain::RoleHandle{provided_service_instance_r5.id});
+        info.roles.add("MINOR-VERSION", rupa::domain::RoleHandle{provided_service_instance_r6.id});
+        info.roles.add("PRIORITY", rupa::domain::RoleHandle{provided_service_instance_r7.id});
+        info.roles.add("REMOTE-MULTICAST-SUBSCRIPTION-ADDRESSS", rupa::domain::RoleHandle{provided_service_instance_r8.id});
+        info.roles.add("REMOTE-UNICAST-ADDRESSS", rupa::domain::RoleHandle{provided_service_instance_r9.id});
+        info.roles.add("SD-SERVER-CONFIG", rupa::domain::RoleHandle{provided_service_instance_r10.id});
+        info.roles.add("SD-SERVER-TIMER-CONFIGS", rupa::domain::RoleHandle{provided_service_instance_r11.id});
+        info.roles.add("SERVICE-IDENTIFIER", rupa::domain::RoleHandle{provided_service_instance_r12.id});
         info.roles.freeze();
         tag_to_type.add("PROVIDED-SERVICE-INSTANCE", std::move(info));
     }
@@ -38522,17 +36243,15 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("SERVICE-DISCOVERY-CONFIGURATION", std::move(info));
     }
     {
-        TypeInfo info{{service_event_deployment.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        TypeInfo info{{service_event_deployment.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
         info.roles.add("EVENT-REF", rupa::domain::RoleHandle{service_event_deployment_r0.id});
         info.roles.add("TRIGGER-REF", rupa::domain::RoleHandle{service_event_deployment_r1.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{service_event_deployment_r2.id});
         info.roles.freeze();
         tag_to_type.add("SERVICE-EVENT-DEPLOYMENT", std::move(info));
     }
     {
-        TypeInfo info{{service_field_deployment.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        TypeInfo info{{service_field_deployment.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
         info.roles.add("FIELD-REF", rupa::domain::RoleHandle{service_field_deployment_r0.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{service_field_deployment_r1.id});
         info.roles.freeze();
         tag_to_type.add("SERVICE-FIELD-DEPLOYMENT", std::move(info));
     }
@@ -38660,9 +36379,8 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("SERVICE-INTERFACE-TRIGGER-MAPPING", std::move(info));
     }
     {
-        TypeInfo info{{service_method_deployment.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        TypeInfo info{{service_method_deployment.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
         info.roles.add("METHOD-REF", rupa::domain::RoleHandle{service_method_deployment_r0.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{service_method_deployment_r1.id});
         info.roles.freeze();
         tag_to_type.add("SERVICE-METHOD-DEPLOYMENT", std::move(info));
     }
@@ -38833,13 +36551,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("SL-PARAGRAPH", std::move(info));
     }
     {
-        TypeInfo info{{sm_interacts_with_nm_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("ACTION-ITEM-REF", rupa::domain::RoleHandle{sm_interacts_with_nm_mapping_r0.id});
-        info.roles.add("NM-NETWORK-HANDLE-REF", rupa::domain::RoleHandle{sm_interacts_with_nm_mapping_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("SM-INTERACTS-WITH-NM-MAPPING", std::move(info));
-    }
-    {
         TypeInfo info{{so_ad_config.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
         info.roles.add("CONNECTIONS", rupa::domain::RoleHandle{so_ad_config_r0.id});
         info.roles.add("CONNECTION-BUNDLES", rupa::domain::RoleHandle{so_ad_config_r1.id});
@@ -39001,15 +36712,14 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("SOFTWARE-CLUSTER-DEPENDENCY-FORMULA-PART", std::move(info));
     }
     {
-        TypeInfo info{{software_cluster_design.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(8)};
+        TypeInfo info{{software_cluster_design.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
         info.roles.add("CONTAINED-PROCESS-REFS", rupa::domain::RoleHandle{software_cluster_design_r0.id});
         info.roles.add("DIAGNOSTIC-CONTRIBUTION-REFS", rupa::domain::RoleHandle{software_cluster_design_r1.id});
         info.roles.add("INTENDED-TARGET-MACHINE-REFS", rupa::domain::RoleHandle{software_cluster_design_r2.id});
         info.roles.add("REQUIRED-AR-ELEMENT-REFS", rupa::domain::RoleHandle{software_cluster_design_r3.id});
-        info.roles.add("REQUIRED-DESIGN-ELEMENT-REFS", rupa::domain::RoleHandle{software_cluster_design_r4.id});
-        info.roles.add("REQUIRED-FIBEX-ELEMENT-REFS", rupa::domain::RoleHandle{software_cluster_design_r5.id});
-        info.roles.add("REQUIRED-PACKAGE-ELEMENT-REFS", rupa::domain::RoleHandle{software_cluster_design_r6.id});
-        info.roles.add("ROOT-COMPOSITION", rupa::domain::RoleHandle{software_cluster_design_r7.id});
+        info.roles.add("REQUIRED-FIBEX-ELEMENT-REFS", rupa::domain::RoleHandle{software_cluster_design_r4.id});
+        info.roles.add("REQUIRED-PACKAGE-ELEMENT-REFS", rupa::domain::RoleHandle{software_cluster_design_r5.id});
+        info.roles.add("ROOT-COMPOSITION", rupa::domain::RoleHandle{software_cluster_design_r6.id});
         info.roles.freeze();
         tag_to_type.add("SOFTWARE-CLUSTER-DESIGN", std::move(info));
     }
@@ -39040,12 +36750,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("COMPONENT-QUALIFIER", rupa::domain::RoleHandle{software_cluster_sovd_address_r0.id});
         info.roles.freeze();
         tag_to_type.add("SOFTWARE-CLUSTER-SOVD-ADDRESS", std::move(info));
-    }
-    {
-        TypeInfo info{{software_cluster_uds_diagnostic_address.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("DIAGNOSTIC-ADDRESS", rupa::domain::RoleHandle{software_cluster_uds_diagnostic_address_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("SOFTWARE-CLUSTER-UDS-DIAGNOSTIC-ADDRESS", std::move(info));
     }
     {
         TypeInfo info{{software_context.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
@@ -39100,14 +36804,13 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("SOMEIP-DATA-PROTOTYPE-TRANSFORMATION-PROPS", std::move(info));
     }
     {
-        TypeInfo info{{someip_event_deployment.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
+        TypeInfo info{{someip_event_deployment.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
         info.roles.add("BURST-SIZE", rupa::domain::RoleHandle{someip_event_deployment_r0.id});
         info.roles.add("EVENT-ID", rupa::domain::RoleHandle{someip_event_deployment_r1.id});
-        info.roles.add("EVENT-RECEPTION-DEFAULT-VALUE", rupa::domain::RoleHandle{someip_event_deployment_r2.id});
-        info.roles.add("MAXIMUM-SEGMENT-LENGTH", rupa::domain::RoleHandle{someip_event_deployment_r3.id});
-        info.roles.add("SEPARATION-TIME", rupa::domain::RoleHandle{someip_event_deployment_r4.id});
-        info.roles.add("SERIALIZER", rupa::domain::RoleHandle{someip_event_deployment_r5.id});
-        info.roles.add("TRANSPORT-PROTOCOL", rupa::domain::RoleHandle{someip_event_deployment_r6.id});
+        info.roles.add("MAXIMUM-SEGMENT-LENGTH", rupa::domain::RoleHandle{someip_event_deployment_r2.id});
+        info.roles.add("SEPARATION-TIME", rupa::domain::RoleHandle{someip_event_deployment_r3.id});
+        info.roles.add("SERIALIZER", rupa::domain::RoleHandle{someip_event_deployment_r4.id});
+        info.roles.add("TRANSPORT-PROTOCOL", rupa::domain::RoleHandle{someip_event_deployment_r5.id});
         info.roles.freeze();
         tag_to_type.add("SOMEIP-EVENT-DEPLOYMENT", std::move(info));
     }
@@ -39464,24 +37167,22 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("STACK-USAGE", std::move(info));
     }
     {
-        TypeInfo info{{startup_config.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(8)};
+        TypeInfo info{{startup_config.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
         info.roles.add("ENVIRONMENT-VARIABLES", rupa::domain::RoleHandle{startup_config_r0.id});
         info.roles.add("EXECUTION-ERROR-REF", rupa::domain::RoleHandle{startup_config_r1.id});
-        info.roles.add("PERMISSION-TO-CREATE-CHILD-PROCESS", rupa::domain::RoleHandle{startup_config_r2.id});
-        info.roles.add("PROCESS-ARGUMENTS", rupa::domain::RoleHandle{startup_config_r3.id});
-        info.roles.add("SCHEDULING-POLICY", rupa::domain::RoleHandle{startup_config_r4.id});
-        info.roles.add("SCHEDULING-PRIORITY", rupa::domain::RoleHandle{startup_config_r5.id});
-        info.roles.add("TERMINATION-BEHAVIOR", rupa::domain::RoleHandle{startup_config_r6.id});
-        info.roles.add("TIMEOUT", rupa::domain::RoleHandle{startup_config_r7.id});
+        info.roles.add("PROCESS-ARGUMENTS", rupa::domain::RoleHandle{startup_config_r2.id});
+        info.roles.add("SCHEDULING-POLICY", rupa::domain::RoleHandle{startup_config_r3.id});
+        info.roles.add("SCHEDULING-PRIORITY", rupa::domain::RoleHandle{startup_config_r4.id});
+        info.roles.add("TERMINATION-BEHAVIOR", rupa::domain::RoleHandle{startup_config_r5.id});
+        info.roles.add("TIMEOUT", rupa::domain::RoleHandle{startup_config_r6.id});
         info.roles.freeze();
         tag_to_type.add("STARTUP-CONFIG", std::move(info));
     }
     {
-        TypeInfo info{{state_dependent_firewall.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
+        TypeInfo info{{state_dependent_firewall.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
         info.roles.add("DEFAULT-ACTION", rupa::domain::RoleHandle{state_dependent_firewall_r0.id});
         info.roles.add("FIREWALL-RULE-PROPSS", rupa::domain::RoleHandle{state_dependent_firewall_r1.id});
         info.roles.add("FIREWALL-STATE-IREFS", rupa::domain::RoleHandle{state_dependent_firewall_r2.id});
-        info.roles.add("FIREWALL-STATE-MODE-DECLARATION-REFS", rupa::domain::RoleHandle{state_dependent_firewall_r3.id});
         info.roles.freeze();
         tag_to_type.add("STATE-DEPENDENT-FIREWALL", std::move(info));
     }
@@ -39565,12 +37266,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("STATE-MANAGEMENT-MODULE-INSTANTIATION", std::move(info));
     }
     {
-        TypeInfo info{{state_management_nm_action_item.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("NM-STATE-REQUEST", rupa::domain::RoleHandle{state_management_nm_action_item_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("STATE-MANAGEMENT-NM-ACTION-ITEM", std::move(info));
-    }
-    {
         TypeInfo info{{state_management_notification_interface.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("STATE-MANAGEMENT-NOTIFICATION-INTERFACE", std::move(info));
@@ -39612,16 +37307,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("STATE-MANAGEMENT-SET-FUNCTION-GROUP-STATE-ACTION-ITEM", std::move(info));
     }
     {
-        TypeInfo info{{state_management_sleep_action_item.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("SLEEP-TIME", rupa::domain::RoleHandle{state_management_sleep_action_item_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("STATE-MANAGEMENT-SLEEP-ACTION-ITEM", std::move(info));
-    }
-    {
-        TypeInfo info{{state_management_state_machine_action_item.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("OVERRIDE-INITIAL-STATE-IREF", rupa::domain::RoleHandle{state_management_state_machine_action_item_r0.id});
-        info.roles.add("START-STATE-MACHINE-REF", rupa::domain::RoleHandle{state_management_state_machine_action_item_r1.id});
-        info.roles.add("STOP-STATE-MACHINE-REF", rupa::domain::RoleHandle{state_management_state_machine_action_item_r2.id});
+        TypeInfo info{{state_management_state_machine_action_item.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
+        info.roles.add("START-IREF", rupa::domain::RoleHandle{state_management_state_machine_action_item_r0.id});
+        info.roles.add("STOP-IREF", rupa::domain::RoleHandle{state_management_state_machine_action_item_r1.id});
         info.roles.freeze();
         tag_to_type.add("STATE-MANAGEMENT-STATE-MACHINE-ACTION-ITEM", std::move(info));
     }
@@ -39685,61 +37373,6 @@ AutosarSchema build_autosar_r23_11() {
         TypeInfo info{{std_cpp_implementation_data_type.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("STD-CPP-IMPLEMENTATION-DATA-TYPE", std::move(info));
-    }
-    {
-        TypeInfo info{{stream_filter_iee_e1722_tp.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("STREAM-ID", rupa::domain::RoleHandle{stream_filter_iee_e1722_tp_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("STREAM-FILTER-IEEE-1722-TP", std::move(info));
-    }
-    {
-        TypeInfo info{{stream_filter_ipv4_address.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("IPV-4-ADDRESS", rupa::domain::RoleHandle{stream_filter_ipv4_address_r0.id});
-        info.roles.add("IPV-4-ADDRESS-MASK", rupa::domain::RoleHandle{stream_filter_ipv4_address_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("STREAM-FILTER-IPV-4-ADDRESS", std::move(info));
-    }
-    {
-        TypeInfo info{{stream_filter_ipv6_address.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("IPV-6-ADDRESS", rupa::domain::RoleHandle{stream_filter_ipv6_address_r0.id});
-        info.roles.add("IPV-6-ADDRESS-MASK", rupa::domain::RoleHandle{stream_filter_ipv6_address_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("STREAM-FILTER-IPV-6-ADDRESS", std::move(info));
-    }
-    {
-        TypeInfo info{{stream_filter_mac_address.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("MAC-ADDRESS", rupa::domain::RoleHandle{stream_filter_mac_address_r0.id});
-        info.roles.add("MAC-ADDRESS-MASK", rupa::domain::RoleHandle{stream_filter_mac_address_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("STREAM-FILTER-MAC-ADDRESS", std::move(info));
-    }
-    {
-        TypeInfo info{{stream_filter_port_range.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("MAX", rupa::domain::RoleHandle{stream_filter_port_range_r0.id});
-        info.roles.add("MIN", rupa::domain::RoleHandle{stream_filter_port_range_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("STREAM-FILTER-PORT-RANGE", std::move(info));
-    }
-    {
-        TypeInfo info{{stream_filter_rule_data_link_layer.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(5)};
-        info.roles.add("DESTINATION-MAC-ADDRESS", rupa::domain::RoleHandle{stream_filter_rule_data_link_layer_r0.id});
-        info.roles.add("ETHER-TYPE", rupa::domain::RoleHandle{stream_filter_rule_data_link_layer_r1.id});
-        info.roles.add("SOURCE-MAC-ADDRESS", rupa::domain::RoleHandle{stream_filter_rule_data_link_layer_r2.id});
-        info.roles.add("VLAN-ID", rupa::domain::RoleHandle{stream_filter_rule_data_link_layer_r3.id});
-        info.roles.add("VLAN-PRIORITY", rupa::domain::RoleHandle{stream_filter_rule_data_link_layer_r4.id});
-        info.roles.freeze();
-        tag_to_type.add("STREAM-FILTER-RULE-DATA-LINK-LAYER", std::move(info));
-    }
-    {
-        TypeInfo info{{stream_filter_rule_ip_tp.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
-        info.roles.add("DESTINATION-IPV-4-ADDRESS", rupa::domain::RoleHandle{stream_filter_rule_ip_tp_r0.id});
-        info.roles.add("DESTINATION-IPV-6-ADDRESS", rupa::domain::RoleHandle{stream_filter_rule_ip_tp_r1.id});
-        info.roles.add("DESTINATION-PORTS", rupa::domain::RoleHandle{stream_filter_rule_ip_tp_r2.id});
-        info.roles.add("SOURCE-IPV-4-ADDRESS", rupa::domain::RoleHandle{stream_filter_rule_ip_tp_r3.id});
-        info.roles.add("SOURCE-IPV-6-ADDRESS", rupa::domain::RoleHandle{stream_filter_rule_ip_tp_r4.id});
-        info.roles.add("SOURCE-PORTS", rupa::domain::RoleHandle{stream_filter_rule_ip_tp_r5.id});
-        info.roles.freeze();
-        tag_to_type.add("STREAM-FILTER-RULE-IP-TP", std::move(info));
     }
     {
         TypeInfo info{{structured_req.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(14)};
@@ -40334,68 +37967,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("SWC-TO-SWC-SIGNAL", std::move(info));
     }
     {
-        TypeInfo info{{switch_asynchronous_traffic_shaper_group_entry.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("MAXIMUM-RESIDENCE-TIME", rupa::domain::RoleHandle{switch_asynchronous_traffic_shaper_group_entry_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("SWITCH-ASYNCHRONOUS-TRAFFIC-SHAPER-GROUP-ENTRY", std::move(info));
-    }
-    {
-        TypeInfo info{{switch_flow_metering_entry.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
-        info.roles.add("COLOR-MODE", rupa::domain::RoleHandle{switch_flow_metering_entry_r0.id});
-        info.roles.add("COMMITTED-BURST-SIZE", rupa::domain::RoleHandle{switch_flow_metering_entry_r1.id});
-        info.roles.add("COMMITTED-INFORMATION-RATE", rupa::domain::RoleHandle{switch_flow_metering_entry_r2.id});
-        info.roles.add("COUPLING-FLAG", rupa::domain::RoleHandle{switch_flow_metering_entry_r3.id});
-        info.roles.add("EXCESS-BURST-SIZE", rupa::domain::RoleHandle{switch_flow_metering_entry_r4.id});
-        info.roles.add("EXCESS-INFORMATION-RATE", rupa::domain::RoleHandle{switch_flow_metering_entry_r5.id});
-        info.roles.freeze();
-        tag_to_type.add("SWITCH-FLOW-METERING-ENTRY", std::move(info));
-    }
-    {
-        TypeInfo info{{switch_stream_filter_action_dest_port_modification.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("EGRESS-PORT-REFS", rupa::domain::RoleHandle{switch_stream_filter_action_dest_port_modification_r0.id});
-        info.roles.add("MODIFICATION", rupa::domain::RoleHandle{switch_stream_filter_action_dest_port_modification_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("SWITCH-STREAM-FILTER-ACTION-DEST-PORT-MODIFICATION", std::move(info));
-    }
-    {
-        TypeInfo info{{switch_stream_filter_entry.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
-        info.roles.add("ASYNCHRONOUS-TRAFFIC-SHAPER-REF", rupa::domain::RoleHandle{switch_stream_filter_entry_r0.id});
-        info.roles.add("FILTER-PRIORITY", rupa::domain::RoleHandle{switch_stream_filter_entry_r1.id});
-        info.roles.add("FLOW-METERING-REF", rupa::domain::RoleHandle{switch_stream_filter_entry_r2.id});
-        info.roles.add("MAX-SDU-SIZE", rupa::domain::RoleHandle{switch_stream_filter_entry_r3.id});
-        info.roles.add("STREAM-GATE-REF", rupa::domain::RoleHandle{switch_stream_filter_entry_r4.id});
-        info.roles.add("STREAM-IDENTIFICATION-HANDLE-REFS", rupa::domain::RoleHandle{switch_stream_filter_entry_r5.id});
-        info.roles.add("STREAM-IDENTIFICATION-WILDCARD", rupa::domain::RoleHandle{switch_stream_filter_entry_r6.id});
-        info.roles.freeze();
-        tag_to_type.add("SWITCH-STREAM-FILTER-ENTRY", std::move(info));
-    }
-    {
-        TypeInfo info{{switch_stream_filter_rule.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("DATA-LINK-LAYER-RULE", rupa::domain::RoleHandle{switch_stream_filter_rule_r0.id});
-        info.roles.add("IEEE-1722-TP-RULE", rupa::domain::RoleHandle{switch_stream_filter_rule_r1.id});
-        info.roles.add("IP-TP-RULE", rupa::domain::RoleHandle{switch_stream_filter_rule_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("SWITCH-STREAM-FILTER-RULE", std::move(info));
-    }
-    {
-        TypeInfo info{{switch_stream_gate_entry.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
-        info.roles.add("INTERNAL-PRIORITY-VALUE", rupa::domain::RoleHandle{switch_stream_gate_entry_r0.id});
-        info.roles.freeze();
-        tag_to_type.add("SWITCH-STREAM-GATE-ENTRY", std::move(info));
-    }
-    {
-        TypeInfo info{{switch_stream_identification.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(7)};
-        info.roles.add("EGRESS-PORT-REFS", rupa::domain::RoleHandle{switch_stream_identification_r0.id});
-        info.roles.add("FILTER-ACTION-BLOCK-SOURCE", rupa::domain::RoleHandle{switch_stream_identification_r1.id});
-        info.roles.add("FILTER-ACTION-DEST-PORT-MODIFICATION", rupa::domain::RoleHandle{switch_stream_identification_r2.id});
-        info.roles.add("FILTER-ACTION-DROP-FRAME", rupa::domain::RoleHandle{switch_stream_identification_r3.id});
-        info.roles.add("FILTER-ACTION-VLAN-MODIFICATION", rupa::domain::RoleHandle{switch_stream_identification_r4.id});
-        info.roles.add("INGRESS-PORT-REFS", rupa::domain::RoleHandle{switch_stream_identification_r5.id});
-        info.roles.add("STREAM-FILTER-RULE", rupa::domain::RoleHandle{switch_stream_identification_r6.id});
-        info.roles.freeze();
-        tag_to_type.add("SWITCH-STREAM-IDENTIFICATION", std::move(info));
-    }
-    {
         TypeInfo info{{symbol_props.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("SYMBOL-PROPS", std::move(info));
@@ -40484,32 +38055,28 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("SYSTEM", std::move(info));
     }
     {
-        TypeInfo info{{system_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(25)};
+        TypeInfo info{{system_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(21)};
         info.roles.add("APP-OS-TASK-PROXY-TO-ECU-TASK-PROXY-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r0.id});
         info.roles.add("APPLICATION-PARTITION-TO-ECU-PARTITION-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r1.id});
         info.roles.add("COM-MANAGEMENT-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r2.id});
         info.roles.add("CRYPTO-SERVICE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r3.id});
         info.roles.add("DATA-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r4.id});
-        info.roles.add("DDS-I-SIGNAL-TO-TOPIC-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r5.id});
-        info.roles.add("ECU-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r6.id});
-        info.roles.add("J-1939-CONTROLLER-APPLICATION-TO-J-1939-NM-NODE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r7.id});
-        info.roles.add("MAPPING-CONSTRAINTS", rupa::domain::RoleHandle{system_mapping_r8.id});
-        info.roles.add("PNC-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r9.id});
-        info.roles.add("PORT-ELEMENT-TO-COM-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r10.id});
-        info.roles.add("RESOURCE-ESTIMATIONS", rupa::domain::RoleHandle{system_mapping_r11.id});
-        info.roles.add("RESOURCE-TO-APPLICATION-PARTITION-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r12.id});
-        info.roles.add("RTE-EVENT-SEPARATIONS", rupa::domain::RoleHandle{system_mapping_r13.id});
-        info.roles.add("RTE-EVENT-TO-OS-TASK-PROXY-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r14.id});
-        info.roles.add("SIGNAL-PATH-CONSTRAINTS", rupa::domain::RoleHandle{system_mapping_r15.id});
-        info.roles.add("SOFTWARE-CLUSTER-TO-APPLICATION-PARTITION-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r16.id});
-        info.roles.add("SOFTWARE-CLUSTER-TO-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r17.id});
-        info.roles.add("SW-CLUSTER-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r18.id});
-        info.roles.add("SW-IMPL-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r19.id});
-        info.roles.add("SW-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r20.id});
-        info.roles.add("SWC-TO-APPLICATION-PARTITION-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r21.id});
-        info.roles.add("SYSTEM-SIGNAL-GROUP-TO-COM-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r22.id});
-        info.roles.add("SYSTEM-SIGNAL-TO-COM-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r23.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{system_mapping_r24.id});
+        info.roles.add("ECU-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r5.id});
+        info.roles.add("J-1939-CONTROLLER-APPLICATION-TO-J-1939-NM-NODE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r6.id});
+        info.roles.add("MAPPING-CONSTRAINTS", rupa::domain::RoleHandle{system_mapping_r7.id});
+        info.roles.add("PNC-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r8.id});
+        info.roles.add("PORT-ELEMENT-TO-COM-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r9.id});
+        info.roles.add("RESOURCE-ESTIMATIONS", rupa::domain::RoleHandle{system_mapping_r10.id});
+        info.roles.add("RESOURCE-TO-APPLICATION-PARTITION-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r11.id});
+        info.roles.add("RTE-EVENT-SEPARATIONS", rupa::domain::RoleHandle{system_mapping_r12.id});
+        info.roles.add("RTE-EVENT-TO-OS-TASK-PROXY-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r13.id});
+        info.roles.add("SIGNAL-PATH-CONSTRAINTS", rupa::domain::RoleHandle{system_mapping_r14.id});
+        info.roles.add("SOFTWARE-CLUSTER-TO-RESOURCE-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r15.id});
+        info.roles.add("SW-CLUSTER-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r16.id});
+        info.roles.add("SW-IMPL-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r17.id});
+        info.roles.add("SW-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r18.id});
+        info.roles.add("SWC-TO-APPLICATION-PARTITION-MAPPINGS", rupa::domain::RoleHandle{system_mapping_r19.id});
+        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{system_mapping_r20.id});
         info.roles.freeze();
         tag_to_type.add("SYSTEM-MAPPING", std::move(info));
     }
@@ -40526,22 +38093,6 @@ AutosarSchema build_autosar_r23_11() {
         info.roles.add("TRANSFORMING-SYSTEM-SIGNAL-REF", rupa::domain::RoleHandle{system_signal_group_r1.id});
         info.roles.freeze();
         tag_to_type.add("SYSTEM-SIGNAL-GROUP", std::move(info));
-    }
-    {
-        TypeInfo info{{system_signal_group_to_communication_resource_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("SOFTWARE-CLUSTER-COM-RESOURCE-REF", rupa::domain::RoleHandle{system_signal_group_to_communication_resource_mapping_r0.id});
-        info.roles.add("SYSTEM-SIGNAL-GROUP-REF", rupa::domain::RoleHandle{system_signal_group_to_communication_resource_mapping_r1.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{system_signal_group_to_communication_resource_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("SYSTEM-SIGNAL-GROUP-TO-COMMUNICATION-RESOURCE-MAPPING", std::move(info));
-    }
-    {
-        TypeInfo info{{system_signal_to_communication_resource_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
-        info.roles.add("SOFTWARE-CLUSTER-COM-RESOURCE-REF", rupa::domain::RoleHandle{system_signal_to_communication_resource_mapping_r0.id});
-        info.roles.add("SYSTEM-SIGNAL-REF", rupa::domain::RoleHandle{system_signal_to_communication_resource_mapping_r1.id});
-        info.roles.add("VARIATION-POINT", rupa::domain::RoleHandle{system_signal_to_communication_resource_mapping_r2.id});
-        info.roles.freeze();
-        tag_to_type.add("SYSTEM-SIGNAL-TO-COMMUNICATION-RESOURCE-MAPPING", std::move(info));
     }
     {
         TypeInfo info{{system_timing.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
@@ -41303,13 +38854,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("TRACE-REFERRABLE", std::move(info));
     }
     {
-        TypeInfo info{{trace_switch_configuration.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
-        info.roles.add("TRACE-MESSAGE-REF", rupa::domain::RoleHandle{trace_switch_configuration_r0.id});
-        info.roles.add("TRACE-SWITCH", rupa::domain::RoleHandle{trace_switch_configuration_r1.id});
-        info.roles.freeze();
-        tag_to_type.add("TRACE-SWITCH-CONFIGURATION", std::move(info));
-    }
-    {
         TypeInfo info{{traceable.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(1)};
         info.roles.add("TRACE-REFS", rupa::domain::RoleHandle{traceable_r0.id});
         info.roles.freeze();
@@ -41370,15 +38914,13 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("TRANSFORMATION-PROPS-SET", std::move(info));
     }
     {
-        TypeInfo info{{transformation_props_to_service_interface_element_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(8)};
+        TypeInfo info{{transformation_props_to_service_interface_element_mapping.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(6)};
         info.roles.add("EVENT-REFS", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r0.id});
         info.roles.add("FIELD-REFS", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r1.id});
-        info.roles.add("METHOD-CALL-REFS", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r2.id});
-        info.roles.add("METHOD-REFS", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r3.id});
-        info.roles.add("METHOD-RETURN-REFS", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r4.id});
-        info.roles.add("TLV-DATA-ID-DEFINITION-REFS", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r5.id});
-        info.roles.add("TRANSFORMATION-PROPS-REF", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r6.id});
-        info.roles.add("TRIGGER-REFS", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r7.id});
+        info.roles.add("METHOD-REFS", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r2.id});
+        info.roles.add("TLV-DATA-ID-DEFINITION-REFS", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r3.id});
+        info.roles.add("TRANSFORMATION-PROPS-REF", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r4.id});
+        info.roles.add("TRIGGER-REFS", rupa::domain::RoleHandle{transformation_props_to_service_interface_element_mapping_r5.id});
         info.roles.freeze();
         tag_to_type.add("TRANSFORMATION-PROPS-TO-SERVICE-INTERFACE-ELEMENT-MAPPING", std::move(info));
     }
@@ -41646,11 +39188,10 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("UCM-STEP", std::move(info));
     }
     {
-        TypeInfo info{{ucm_subordinate_module_instantiation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(4)};
-        info.roles.add("MAX-AVAILABLE-PERSISTENCY-STORAGE-SPACE", rupa::domain::RoleHandle{ucm_subordinate_module_instantiation_r0.id});
-        info.roles.add("PREPARE-ROLLBACK", rupa::domain::RoleHandle{ucm_subordinate_module_instantiation_r1.id});
-        info.roles.add("PREPARE-UPDATE", rupa::domain::RoleHandle{ucm_subordinate_module_instantiation_r2.id});
-        info.roles.add("VERIFY-UPDATE", rupa::domain::RoleHandle{ucm_subordinate_module_instantiation_r3.id});
+        TypeInfo info{{ucm_subordinate_module_instantiation.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        info.roles.add("PREPARE-ROLLBACK", rupa::domain::RoleHandle{ucm_subordinate_module_instantiation_r0.id});
+        info.roles.add("PREPARE-UPDATE", rupa::domain::RoleHandle{ucm_subordinate_module_instantiation_r1.id});
+        info.roles.add("VERIFY-UPDATE", rupa::domain::RoleHandle{ucm_subordinate_module_instantiation_r2.id});
         info.roles.freeze();
         tag_to_type.add("UCM-SUBORDINATE-MODULE-INSTANTIATION", std::move(info));
     }
@@ -41762,16 +39303,6 @@ AutosarSchema build_autosar_r23_11() {
         TypeInfo info{{unresolved_reference_restriction_with_severity.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("UNRESOLVED-REFERENCE-RESTRICTION-WITH-SEVERITY", std::move(info));
-    }
-    {
-        TypeInfo info{{uploadable_deployment_element.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("UPLOADABLE-DEPLOYMENT-ELEMENT", std::move(info));
-    }
-    {
-        TypeInfo info{{uploadable_design_element.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("UPLOADABLE-DESIGN-ELEMENT", std::move(info));
     }
     {
         TypeInfo info{{uploadable_exclusive_package_element.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -42065,25 +39596,23 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("VEHICLE-DRIVER-NOTIFICATION", std::move(info));
     }
     {
-        TypeInfo info{{vehicle_package.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(10)};
+        TypeInfo info{{vehicle_package.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(9)};
         info.roles.add("DRIVER-NOTIFICATIONS", rupa::domain::RoleHandle{vehicle_package_r0.id});
         info.roles.add("ESTIMATED-DURATION-OF-CAMPAIGN", rupa::domain::RoleHandle{vehicle_package_r1.id});
-        info.roles.add("MAXIMUM-DURATION-OF-CAMPAIGN", rupa::domain::RoleHandle{vehicle_package_r2.id});
-        info.roles.add("MINIMUM-SUPPORTED-UCM-MASTER-VERSION", rupa::domain::RoleHandle{vehicle_package_r3.id});
-        info.roles.add("PACKAGER-SIGNATURE-REF", rupa::domain::RoleHandle{vehicle_package_r4.id});
-        info.roles.add("REPOSITORY", rupa::domain::RoleHandle{vehicle_package_r5.id});
-        info.roles.add("ROLLOUT-QUALIFICATIONS", rupa::domain::RoleHandle{vehicle_package_r6.id});
-        info.roles.add("UCMS", rupa::domain::RoleHandle{vehicle_package_r7.id});
-        info.roles.add("UCM-MASTER-FALLBACK-REFS", rupa::domain::RoleHandle{vehicle_package_r8.id});
-        info.roles.add("VEHICLE-DESCRIPTION-REF", rupa::domain::RoleHandle{vehicle_package_r9.id});
+        info.roles.add("MINIMUM-SUPPORTED-UCM-MASTER-VERSION", rupa::domain::RoleHandle{vehicle_package_r2.id});
+        info.roles.add("PACKAGER-SIGNATURE-REF", rupa::domain::RoleHandle{vehicle_package_r3.id});
+        info.roles.add("REPOSITORY", rupa::domain::RoleHandle{vehicle_package_r4.id});
+        info.roles.add("ROLLOUT-QUALIFICATIONS", rupa::domain::RoleHandle{vehicle_package_r5.id});
+        info.roles.add("UCMS", rupa::domain::RoleHandle{vehicle_package_r6.id});
+        info.roles.add("UCM-MASTER-FALLBACK-REFS", rupa::domain::RoleHandle{vehicle_package_r7.id});
+        info.roles.add("VEHICLE-DESCRIPTION-REF", rupa::domain::RoleHandle{vehicle_package_r8.id});
         info.roles.freeze();
         tag_to_type.add("VEHICLE-PACKAGE", std::move(info));
     }
     {
-        TypeInfo info{{vehicle_rollout_step.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(3)};
+        TypeInfo info{{vehicle_rollout_step.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(2)};
         info.roles.add("SAFETY-CONDITIONS", rupa::domain::RoleHandle{vehicle_rollout_step_r0.id});
         info.roles.add("UCM-PROCESSINGS", rupa::domain::RoleHandle{vehicle_rollout_step_r1.id});
-        info.roles.add("VIOLATED-SAFETY-CONDITION-BEHAVIOR", rupa::domain::RoleHandle{vehicle_rollout_step_r2.id});
         info.roles.freeze();
         tag_to_type.add("VEHICLE-ROLLOUT-STEP", std::move(info));
     }
@@ -42531,44 +40060,9 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("DATE", std::move(info));
     }
     {
-        TypeInfo info{{dds_destination_order_kind_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DDS-DESTINATION-ORDER-KIND-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_durability_kind_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DDS-DURABILITY-KIND-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_durability_service_history_kind_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DDS-DURABILITY-SERVICE-HISTORY-KIND-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_history_kind_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DDS-HISTORY-KIND-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_liveness_kind_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DDS-LIVENESS-KIND-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_ownership_kind_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DDS-OWNERSHIP-KIND-ENUM", std::move(info));
-    }
-    {
         TypeInfo info{{dds_protection_kind_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("DDS-PROTECTION-KIND-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{dds_reliability_kind_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("DDS-RELIABILITY-KIND-ENUM", std::move(info));
     }
     {
         TypeInfo info{{dds_service_instance_discovery_type_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -43026,11 +40520,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("FLOAT-ENUM", std::move(info));
     }
     {
-        TypeInfo info{{flow_metering_color_mode_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("FLOW-METERING-COLOR-MODE-ENUM", std::move(info));
-    }
-    {
         TypeInfo info{{fm_feature_selection_state.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("FM-FEATURE-SELECTION-STATE", std::move(info));
@@ -43074,11 +40563,6 @@ AutosarSchema build_autosar_r23_11() {
         TypeInfo info{{global_time_icv_verification_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("GLOBAL-TIME-ICV-VERIFICATION-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{global_time_port_role_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("GLOBAL-TIME-PORT-ROLE-ENUM", std::move(info));
     }
     {
         TypeInfo info{{graphic_fit_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -43151,56 +40635,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("I-SIGNAL-TYPE-ENUM", std::move(info));
     }
     {
-        TypeInfo info{{iee_e1722_tp_aaf_aes3_data_type_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-AAF-AES-3-DATA-TYPE-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_aaf_format_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-AAF-FORMAT-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_aaf_nominal_rate_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-AAF-NOMINAL-RATE-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_acf_can_message_type_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-ACF-CAN-MESSAGE-TYPE-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_crf_pull_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-CRF-PULL-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_crf_type_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-CRF-TYPE-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_rvf_color_space_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-RVF-COLOR-SPACE-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_rvf_frame_rate_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-RVF-FRAME-RATE-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_rvf_pixel_depth_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-RVF-PIXEL-DEPTH-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{iee_e1722_tp_rvf_pixel_format_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("IEEE-1722-TP-RVF-PIXEL-FORMAT-ENUM", std::move(info));
-    }
-    {
         TypeInfo info{{ike_authentication_method_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("IKE-AUTHENTICATION-METHOD-ENUM", std::move(info));
@@ -43251,11 +40685,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("ITEM-LABEL-POS-ENUM", std::move(info));
     }
     {
-        TypeInfo info{{j1939_nm_address_configuration_capability_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("J-1939-NM-ADDRESS-CONFIGURATION-CAPABILITY-ENUM", std::move(info));
-    }
-    {
         TypeInfo info{{keep_with_previous_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("KEEP-WITH-PREVIOUS-ENUM", std::move(info));
@@ -43274,11 +40703,6 @@ AutosarSchema build_autosar_r23_11() {
         TypeInfo info{{latency_constraint_type_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("LATENCY-CONSTRAINT-TYPE-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{let_data_exchange_paradigm_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("LET-DATA-EXCHANGE-PARADIGM-ENUM", std::move(info));
     }
     {
         TypeInfo info{{lin_checksum_type.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -43366,11 +40790,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("MIME-TYPE-STRING", std::move(info));
     }
     {
-        TypeInfo info{{mirroring_protocol_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("MIRRORING-PROTOCOL-ENUM", std::move(info));
-    }
-    {
         TypeInfo info{{mode_activation_kind.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("MODE-ACTIVATION-KIND", std::move(info));
@@ -43409,11 +40828,6 @@ AutosarSchema build_autosar_r23_11() {
         TypeInfo info{{nm_handle_mapping_direction_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("NM-HANDLE-MAPPING-DIRECTION-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{nm_state_request_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("NM-STATE-REQUEST-ENUM", std::move(info));
     }
     {
         TypeInfo info{{name_token.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -43464,11 +40878,6 @@ AutosarSchema build_autosar_r23_11() {
         TypeInfo info{{orient_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("ORIENT-ENUM", std::move(info));
-    }
-    {
-        TypeInfo info{{os_arti_adapter_launch_behavior_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("OS-ARTI-ADAPTER-LAUNCH-BEHAVIOR-ENUM", std::move(info));
     }
     {
         TypeInfo info{{os_task_preemptability_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
@@ -43911,11 +41320,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("SWC-TO-SWC-OPERATION-ARGUMENTS-DIRECTION-ENUM", std::move(info));
     }
     {
-        TypeInfo info{{switch_stream_filter_action_port_modification_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("SWITCH-STREAM-FILTER-ACTION-PORT-MODIFICATION-ENUM", std::move(info));
-    }
-    {
         TypeInfo info{{synchronization_type_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("SYNCHRONIZATION-TYPE-ENUM", std::move(info));
@@ -44041,11 +41445,6 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("TP-ACK-TYPE", std::move(info));
     }
     {
-        TypeInfo info{{trace_switch_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("TRACE-SWITCH-ENUM", std::move(info));
-    }
-    {
         TypeInfo info{{transfer_property_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("TRANSFER-PROPERTY-ENUM", std::move(info));
@@ -44136,17 +41535,12 @@ AutosarSchema build_autosar_r23_11() {
         tag_to_type.add("VIEW-TOKENS", std::move(info));
     }
     {
-        TypeInfo info{{violated_safety_condition_behavior_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
-        info.roles.freeze();
-        tag_to_type.add("VIOLATED-SAFETY-CONDITION-BEHAVIOR-ENUM", std::move(info));
-    }
-    {
         TypeInfo info{{xml_space_enum.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(0)};
         info.roles.freeze();
         tag_to_type.add("XML-SPACE-ENUM", std::move(info));
     }
     tag_to_type.freeze();
 
-    return AutosarSchema{rupa::domain::Domain("autosar-r23-11", std::move(type_fir)), std::move(tag_to_type), "AUTOSAR_00052.xsd"};
+    return AutosarSchema{rupa::domain::Domain("autosar-r22-11", std::move(type_fir)), std::move(tag_to_type), "AUTOSAR_00051.xsd"};
 }
 }  // namespace senda::domains

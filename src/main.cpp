@@ -9,6 +9,11 @@ import rupa.driver;
 import rupa.fir;
 import rupa.sema;
 import senda.compiler.arxml;
+import senda.domains;
+import senda.domains.r19_11;
+import senda.domains.r20_11;
+import senda.domains.r21_11;
+import senda.domains.r22_11;
 import senda.domains.r23_11;
 
 namespace fs = std::filesystem;
@@ -38,31 +43,55 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    // Build AUTOSAR schema (domain + lookup tables)
-    auto schema = senda::domains::build_autosar_r23_11();
-
-    // Build XSD → domain registry
+    // Register all AUTOSAR schemas (lazy — only built when needed)
     senda::SchemaRegistry schema_registry;
-    schema_registry.add(schema.xsd_filename, schema.domain.name());
+    schema_registry.add("AUTOSAR_00048.xsd", "autosar-r19-11",
+                        senda::domains::build_autosar_r19_11);
+    schema_registry.add("AUTOSAR_00049.xsd", "autosar-r20-11",
+                        senda::domains::build_autosar_r20_11);
+    schema_registry.add("AUTOSAR_00050.xsd", "autosar-r21-11",
+                        senda::domains::build_autosar_r21_11);
+    schema_registry.add("AUTOSAR_00051.xsd", "autosar-r22-11",
+                        senda::domains::build_autosar_r22_11);
+    schema_registry.add("AUTOSAR_00052.xsd", "autosar-r23-11",
+                        senda::domains::build_autosar_r23_11);
 
     // Create compilers
     rupa::sema::RupaCompiler rupa_compiler;
-    senda::ArxmlCompiler arxml_compiler(schema, schema_registry, max_warnings);
+    senda::ArxmlCompiler arxml_compiler(schema_registry, domain_override,
+                                        max_warnings);
 
     // Register compilers
     rupa::compiler::CompilerRegistry registry;
     registry.register_compiler(rupa_compiler);
     registry.register_compiler(arxml_compiler);
 
-    // Create driver
+    // Create driver with lazy domain builders
     rupa::driver::CompilationDriver driver(registry);
+    driver.register_domain_builder("autosar-r19-11", [&schema_registry] {
+        return std::move(schema_registry.resolve_by_domain("autosar-r19-11")
+                             ->domain);
+    });
+    driver.register_domain_builder("autosar-r20-11", [&schema_registry] {
+        return std::move(schema_registry.resolve_by_domain("autosar-r20-11")
+                             ->domain);
+    });
+    driver.register_domain_builder("autosar-r21-11", [&schema_registry] {
+        return std::move(schema_registry.resolve_by_domain("autosar-r21-11")
+                             ->domain);
+    });
+    driver.register_domain_builder("autosar-r22-11", [&schema_registry] {
+        return std::move(schema_registry.resolve_by_domain("autosar-r22-11")
+                             ->domain);
+    });
+    driver.register_domain_builder("autosar-r23-11", [&schema_registry] {
+        return std::move(schema_registry.resolve_by_domain("autosar-r23-11")
+                             ->domain);
+    });
 
-    // Load domain from schema
-    driver.add_domain(std::move(schema.domain));
-
-    // Set domain override if specified
+    // Validate domain override if specified
     if (!domain_override.empty()) {
-        if (!driver.find_domain(domain_override)) {
+        if (!schema_registry.has_domain(domain_override)) {
             std::fprintf(stderr, "error: domain '%s' is not available\n",
                          domain_override.c_str());
             return 1;

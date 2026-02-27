@@ -9,6 +9,7 @@ import rupa.domain;
 import rupa.fir;
 import rupa.fir.builder;
 import senda.compiler.arxml;
+import senda.domains;
 import senda.domains.r23_11;
 
 namespace fs = std::filesystem;
@@ -59,28 +60,28 @@ static fs::path fixture_path(const char* name) {
     return fs::path(SENDA_TEST_FIXTURES_DIR) / name;
 }
 
-static senda::SchemaRegistry make_registry(const senda::domains::AutosarSchema& schema) {
+static senda::SchemaRegistry make_registry() {
     senda::SchemaRegistry reg;
-    reg.add(schema.xsd_filename, schema.domain.name());
+    reg.add("AUTOSAR_00052.xsd", "autosar-r23-11",
+            senda::domains::build_autosar_r23_11);
     return reg;
 }
 
 // --- Tests ---
 
 TEST(ArxmlCompilerTest, ImplementsCompilerInterface) {
-    auto schema = senda::domains::build_autosar_r23_11();
-    auto reg = make_registry(schema);
-    senda::ArxmlCompiler compiler(schema, reg);
+    auto reg = make_registry();
+    senda::ArxmlCompiler compiler(reg);
     auto exts = compiler.extensions();
     ASSERT_EQ(exts.size(), 1u);
     EXPECT_EQ(exts[0], ".arxml");
 }
 
 TEST(ArxmlCompilerTest, CompileSimpleSignal) {
-    auto schema = senda::domains::build_autosar_r23_11();
-    MockArxmlContext ctx(schema.domain);
-    auto reg = make_registry(schema);
-    senda::ArxmlCompiler compiler(schema, reg);
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
 
     auto result = compiler.compile(fixture_path("simple-signal.arxml"), ctx);
     EXPECT_FALSE(result.has_errors()) << "Unexpected errors in compilation";
@@ -94,10 +95,10 @@ TEST(ArxmlCompilerTest, CompileSimpleSignal) {
 }
 
 TEST(ArxmlCompilerTest, CompileMultipleElements) {
-    auto schema = senda::domains::build_autosar_r23_11();
-    MockArxmlContext ctx(schema.domain);
-    auto reg = make_registry(schema);
-    senda::ArxmlCompiler compiler(schema, reg);
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
 
     auto result = compiler.compile(fixture_path("multi-element.arxml"), ctx);
     EXPECT_FALSE(result.has_errors());
@@ -111,20 +112,20 @@ TEST(ArxmlCompilerTest, CompileMultipleElements) {
 }
 
 TEST(ArxmlCompilerTest, NestedPackages) {
-    auto schema = senda::domains::build_autosar_r23_11();
-    MockArxmlContext ctx(schema.domain);
-    auto reg = make_registry(schema);
-    senda::ArxmlCompiler compiler(schema, reg);
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
 
     auto result = compiler.compile(fixture_path("nested-packages.arxml"), ctx);
     EXPECT_FALSE(result.has_errors());
 }
 
 TEST(ArxmlCompilerTest, InvalidXmlProducesError) {
-    auto schema = senda::domains::build_autosar_r23_11();
-    MockArxmlContext ctx(schema.domain);
-    auto reg = make_registry(schema);
-    senda::ArxmlCompiler compiler(schema, reg);
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
 
     // Non-existent file
     auto result = compiler.compile("/tmp/nonexistent.arxml", ctx);
@@ -132,21 +133,21 @@ TEST(ArxmlCompilerTest, InvalidXmlProducesError) {
 }
 
 TEST(ArxmlCompilerTest, UnsupportedSchemaProducesError) {
-    auto schema = senda::domains::build_autosar_r23_11();
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
     // No override — request_default_domain() returns nullptr
-    MockArxmlContext ctx(schema.domain, /*override_default=*/false);
-    auto reg = make_registry(schema);
-    senda::ArxmlCompiler compiler(schema, reg);
+    MockArxmlContext ctx(schema->domain, /*override_default=*/false);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
 
     auto result = compiler.compile(fixture_path("r4-3-1-signal.arxml"), ctx);
     EXPECT_TRUE(result.has_errors());
 }
 
 TEST(ArxmlCompilerTest, OverriddenDomainEmitsSkipWarnings) {
-    auto schema = senda::domains::build_autosar_r23_11();
-    MockArxmlContext ctx(schema.domain, /*override_default=*/true);
-    auto reg = make_registry(schema);
-    senda::ArxmlCompiler compiler(schema, reg);
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain, /*override_default=*/true);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
 
     auto result = compiler.compile(fixture_path("r4-3-1-signal.arxml"), ctx);
     // Should succeed (override allows it) but may have warnings

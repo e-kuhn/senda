@@ -13,7 +13,7 @@ export module senda.emitter.arxml;
 
 import rupa.domain;
 import rupa.fir;
-import senda.domains.r23_11;
+import senda.domains;
 import kore.containers.frozen_map;
 
 export namespace senda
