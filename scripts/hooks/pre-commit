@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Pre-commit hook: reject non-anonymized ARXML files in test/data/arxml/
+
+PROTECTED_DIR="test/data/arxml"
+WATERMARK="ANONYMIZED: This file has been anonymized by senda-arxml-anonymizer"
+
+# Get staged .arxml files in the protected directory
+staged_files=$(git diff --cached --name-only --diff-filter=ACM | grep "^${PROTECTED_DIR}/.*\.arxml$")
+
+if [ -z "$staged_files" ]; then
+    exit 0
+fi
+
+failed=0
+for file in $staged_files; do
+    # Read only first 5 lines to check for watermark
+    if ! head -n 5 "$file" | grep -q "$WATERMARK"; then
+        echo "ERROR: $file is not anonymized."
+        echo "       Run the anonymizer first: python tools/arxml-anonymizer/cli.py <input> <output>"
+        failed=1
+    fi
+done
+
+if [ "$failed" -eq 1 ]; then
+    echo ""
+    echo "Commit rejected: all ARXML files in $PROTECTED_DIR must be anonymized."
+    exit 1
+fi
