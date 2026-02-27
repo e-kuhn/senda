@@ -6,6 +6,7 @@ module;
 #include <span>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 #include <expat.h>
@@ -21,11 +22,30 @@ import senda.domains.r23_11;
 export namespace senda
 {
 
+class SchemaRegistry {
+public:
+    void add(std::string_view xsd_filename, std::string_view domain_name) {
+        entries_.emplace_back(xsd_filename, domain_name);
+    }
+
+    std::string_view find(std::string_view xsd_filename) const {
+        for (auto& [xsd, domain] : entries_) {
+            if (xsd == xsd_filename) return domain;
+        }
+        return {};
+    }
+
+private:
+    std::vector<std::pair<std::string_view, std::string_view>> entries_;
+};
+
 class ArxmlCompiler : public rupa::compiler::Compiler {
 public:
-    explicit ArxmlCompiler(const senda::domains::AutosarSchema& schema,
-                           int max_skip_warnings = 10)
-        : schema_(schema), max_skip_warnings_(max_skip_warnings) {}
+    ArxmlCompiler(const senda::domains::AutosarSchema& schema,
+                  const SchemaRegistry& registry,
+                  int max_skip_warnings = 10)
+        : schema_(schema), registry_(registry),
+          max_skip_warnings_(max_skip_warnings) {}
 
     std::span<const std::string_view> extensions() const override {
         return exts_;
@@ -67,6 +87,7 @@ public:
 
         ParseState state{
             .schema = schema_,
+            .registry = registry_,
             .builder = builder,
             .diags = diags,
             .file_path = path.string(),
@@ -111,6 +132,7 @@ private:
     static constexpr std::string_view exts_arr_[] = {".arxml"};
     std::span<const std::string_view> exts_{exts_arr_};
     const senda::domains::AutosarSchema& schema_;
+    const SchemaRegistry& registry_;
     int max_skip_warnings_ = 10;
 
     // --- SAX state machine ---
@@ -133,6 +155,7 @@ private:
 
     struct ParseState {
         const senda::domains::AutosarSchema& schema;
+        const SchemaRegistry& registry;
         rupa::fir_builder::FirBuilder& builder;
         rupa::compiler::Diagnostics& diags;
         std::string file_path;
@@ -182,11 +205,21 @@ private:
 
             if (!schema_location.empty()) {
                 auto xsd = extract_xsd_filename(schema_location);
+                auto domain_name = state.registry.find(xsd);
 
-                if (xsd == state.schema.xsd_filename) {
-                    // Matches loaded schema — proceed normally
+                if (!domain_name.empty()) {
+                    // Known XSD — request the corresponding domain by name
+                    auto* view = state.context->request_domain(domain_name);
+                    if (!view) {
+                        state.diags.add({rupa::compiler::Severity::Error,
+                            "domain '" + std::string(domain_name)
+                                + "' is not available",
+                            {state.file_path, 1, 0}});
+                        state.abort_parse = true;
+                        return;
+                    }
                 } else {
-                    // Different schema — try default domain (override)
+                    // Unknown XSD — try default domain (CLI override)
                     auto* view = state.context->request_default_domain();
                     if (!view) {
                         state.diags.add({rupa::compiler::Severity::Error,
