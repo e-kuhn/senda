@@ -66,6 +66,7 @@ add_subdirectory(external/rupa)
 
 add_subdirectory(src/domains)
 add_subdirectory(src/compiler-arxml)
+add_subdirectory(src/emitter-arxml)
 
 #-------------------------------------------------------------------------------
 # Senda CLI

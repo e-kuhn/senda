@@ -30,6 +30,10 @@ def main():
         "--cpp", action="store_true", default=False,
         help="Generate C++ domain builder and ARXML parser instead of Rupa files",
     )
+    parser.add_argument(
+        "--emitter", action="store_true", default=False,
+        help="Also generate ARXML emitter module",
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.schema):
@@ -51,6 +55,12 @@ def main():
         print(f"Generating Rupa files in {args.output_dir}/...")
         os.makedirs(args.output_dir, exist_ok=True)
         generate_rupa_files(schema, args.output_dir, show_alternatives=args.alternatives)
+
+    if args.emitter:
+        from cpp_emitter_generator import generate_emitter_module
+
+        generate_emitter_module(schema, args.output_dir)
+        print(f"Generated ARXML emitter module in {args.output_dir}/emitter-arxml/")
 
     print(f"Done. {len(schema.primitives)} primitives, "
           f"{len(schema.enums)} enums, "

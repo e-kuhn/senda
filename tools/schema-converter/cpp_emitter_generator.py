@@ -56,13 +56,15 @@ def _generate_reverse_lookup_builder(schema: ExportSchema) -> str:
           % (xml_name, len(roles_info)))
         for rvar, xml_elem, is_identity in roles_info:
             identity_str = "true" if is_identity else "false"
-            w('            auto* role = ti->roles.find("%s");' % xml_elem)
-            w("            if (role) {")
-            w('                info.role_to_xml.add(role->id, EmitRoleInfo{"%s", %s});'
+            w("            {")
+            w('                auto* role = ti->roles.find("%s");' % xml_elem)
+            w("                if (role) {")
+            w('                    info.role_to_xml.add(static_cast<uint32_t>(role->id), EmitRoleInfo{"%s", %s});'
               % (xml_elem, identity_str))
+            w("                }")
             w("            }")
         w("            info.role_to_xml.freeze();")
-        w("            type_to_tag.add(ti->handle.id, std::move(info));")
+        w("            type_to_tag.add(static_cast<uint32_t>(ti->handle.id), std::move(info));")
         w("        }")
         w("    }")
 
