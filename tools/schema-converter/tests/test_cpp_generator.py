@@ -291,6 +291,161 @@ class TestDomainBuilderComposites(unittest.TestCase):
         self.assertIn("fir::Multiplicity::OneOrMore", code)
 
 
+class TestLookupTableInheritedRoles(unittest.TestCase):
+    @staticmethod
+    def _extract_lookup_block(code, xml_tag):
+        """Extract the lookup table block for a given XML tag name."""
+        lines = code.split("\n")
+        block_lines = []
+        capturing = False
+        brace_depth = 0
+        for line in lines:
+            if not capturing and line.strip() == "{":
+                capturing = True
+                brace_depth = 1
+                block_lines = [line]
+                continue
+            if capturing:
+                block_lines.append(line)
+                brace_depth += line.count("{") - line.count("}")
+                if brace_depth == 0:
+                    block = "\n".join(block_lines)
+                    if ('tag_to_type.add("%s"' % xml_tag) in block:
+                        return block
+                    capturing = False
+                    block_lines = []
+        return ""
+
+    def test_child_lookup_includes_parent_roles(self):
+        """Roles from parent groups must appear in child lookup tables."""
+        from cpp_generator import generate_domain_builder
+        from schema_model import (
+            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
+            PrimitiveSupertype,
+        )
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+            composites=[
+                ExportComposite("MultilanguageReferrable", is_abstract=True,
+                                xml_name=None,
+                                members=[
+                                    ExportMember("longName", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="LONG-NAME"),
+                                ]),
+                ExportComposite("ISignal",
+                                inherits_from=["MultilanguageReferrable"],
+                                xml_name="I-SIGNAL",
+                                members=[
+                                    ExportMember("length", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="LENGTH"),
+                                ]),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+        block = self._extract_lookup_block(code, "I-SIGNAL")
+
+        self.assertIn('"LONG-NAME"', block,
+                      "I-SIGNAL lookup must include inherited LONG-NAME role")
+        self.assertIn('"LENGTH"', block,
+                      "I-SIGNAL lookup must include own LENGTH role")
+
+    def test_child_role_overrides_parent_role(self):
+        """When child defines same xml_element_name as parent, child wins."""
+        from cpp_generator import generate_domain_builder
+        from schema_model import (
+            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
+            PrimitiveSupertype,
+        )
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+            composites=[
+                ExportComposite("BaseGroup", is_abstract=True, xml_name=None,
+                                members=[
+                                    ExportMember("name", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="NAME"),
+                                ]),
+                ExportComposite("Child",
+                                inherits_from=["BaseGroup"],
+                                xml_name="CHILD",
+                                members=[
+                                    ExportMember("name", ["string"],
+                                                 min_occurs=1, max_occurs=1,
+                                                 xml_element_name="NAME"),
+                                ]),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+        block = self._extract_lookup_block(code, "CHILD")
+
+        name_count = block.count('"NAME"')
+        self.assertEqual(name_count, 1,
+                         "Child should have exactly one NAME role (child overrides parent)")
+        # Verify it uses the child's role handle, not the parent's
+        self.assertIn("child_r0", block)
+        self.assertNotIn("base_group_r0", block)
+
+    def test_deep_inheritance_chain(self):
+        """Roles propagate through multi-level inheritance."""
+        from cpp_generator import generate_domain_builder
+        from schema_model import (
+            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
+            PrimitiveSupertype,
+        )
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            primitives=[
+                ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
+            ],
+            composites=[
+                ExportComposite("GrandParent", is_abstract=True, xml_name=None,
+                                members=[
+                                    ExportMember("gp", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="GP-FIELD"),
+                                ]),
+                ExportComposite("Parent", is_abstract=True, xml_name=None,
+                                inherits_from=["GrandParent"],
+                                members=[
+                                    ExportMember("p", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="P-FIELD"),
+                                ]),
+                ExportComposite("Leaf",
+                                inherits_from=["Parent"],
+                                xml_name="LEAF",
+                                members=[
+                                    ExportMember("own", ["string"],
+                                                 min_occurs=0, max_occurs=1,
+                                                 xml_element_name="OWN-FIELD"),
+                                ]),
+            ],
+        )
+
+        code = generate_domain_builder(schema)
+        block = self._extract_lookup_block(code, "LEAF")
+
+        self.assertIn('"GP-FIELD"', block,
+                      "LEAF lookup must include grandparent's GP-FIELD")
+        self.assertIn('"P-FIELD"', block,
+                      "LEAF lookup must include parent's P-FIELD")
+        self.assertIn('"OWN-FIELD"', block,
+                      "LEAF lookup must include own OWN-FIELD")
+
+
 class TestDomainModuleGeneration(unittest.TestCase):
     def test_generates_domain_module_file(self):
         import tempfile

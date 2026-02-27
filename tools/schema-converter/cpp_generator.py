@@ -139,6 +139,26 @@ def generate_domain_builder(schema: ExportSchema) -> str:
             if c.members:
                 w("")
 
+    # --- Collect inherited roles ---
+    composite_by_name: dict[str, ExportComposite] = {c.name: c for c in composites}
+
+    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str]]:
+        """Collect roles from a type and all ancestors (own roles first)."""
+        if visited is None:
+            visited = set()
+        if cname in visited:
+            return []
+        visited.add(cname)
+        result = list(role_handles.get(cname, []))
+        comp = composite_by_name.get(cname)
+        if comp:
+            for parent in comp.inherits_from:
+                for role in _all_roles(parent, visited):
+                    # Child roles override parent roles with the same xml element
+                    if role[1] not in {r[1] for r in result}:
+                        result.append(role)
+        return result
+
     # --- Lookup tables ---
     w("    // ── Lookup Tables ──")
     w("    kore::FrozenMap<std::string_view, TypeInfo> tag_to_type(%d);"
@@ -149,7 +169,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         if not c.xml_name:
             continue
         cvar = type_vars[c.name]
-        roles = role_handles.get(c.name, [])
+        roles = _all_roles(c.name)
 
         w("    {")
         w("        TypeInfo info{{%s.id}, kore::FrozenMap<std::string_view, rupa::domain::RoleHandle>(%d)};"
@@ -452,20 +472,10 @@ import kore.containers.frozen_map;
 import rupa.fir;
 import rupa.fir.builder;
 import rupa.domain;
+import senda.domains;
 
 export namespace senda::domains
 {
-
-struct TypeInfo {
-    rupa::domain::TypeHandle handle;
-    kore::FrozenMap<std::string_view, rupa::domain::RoleHandle> roles;
-};
-
-struct AutosarSchema {
-    rupa::domain::Domain domain;
-    kore::FrozenMap<std::string_view, TypeInfo> tag_to_type;
-    std::string_view xsd_filename;
-};
 
 ''' % module_version
 
