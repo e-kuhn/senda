@@ -31,6 +31,10 @@ public:
         return nullptr;
     }
 
+    const rupa::domain::DomainView* request_default_domain() override {
+        return &view_;
+    }
+
     rupa::domain::DomainTransaction& domain_transaction() override {
         return transaction_;
     }
