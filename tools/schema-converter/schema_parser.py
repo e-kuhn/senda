@@ -9,6 +9,7 @@ to use the dataclass models from schema_model.py.
 
 from __future__ import annotations
 
+import os
 import re
 from xml.etree import ElementTree
 
@@ -1261,6 +1262,7 @@ def parse_schema(filepath: str) -> InternalSchema:
     """Parse an XSD schema file and return the internal model."""
     tree = ElementTree.parse(filepath)
     schema = InternalSchema()
+    schema.xsd_filename = os.path.basename(filepath)
     warnings: list[str] = []
 
     _read_version_info(filepath, schema)
@@ -1448,6 +1450,7 @@ def export_schema(internal: InternalSchema) -> ExportSchema:
     result = ExportSchema(
         release_version=internal.release_version,
         autosar_version=internal.autosar_version,
+        xsd_filename=internal.xsd_filename,
     )
 
     aliases_map: dict[str, str] = {}

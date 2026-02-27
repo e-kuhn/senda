@@ -146,12 +146,6 @@ private:
         int max_skip_warnings = 10;
     };
 
-    // Map XSD filename to domain name
-    static const char* map_schema_to_domain(std::string_view xsd_filename) {
-        if (xsd_filename == "AUTOSAR_00052.xsd") return "autosar-r23-11";
-        return nullptr;
-    }
-
     // Extract XSD filename from xsi:schemaLocation value
     static std::string_view extract_xsd_filename(std::string_view schema_location) {
         auto space = schema_location.rfind(' ');
@@ -188,20 +182,11 @@ private:
 
             if (!schema_location.empty()) {
                 auto xsd = extract_xsd_filename(schema_location);
-                auto* domain_name = map_schema_to_domain(xsd);
 
-                if (domain_name) {
-                    // Known schema — request the named domain
-                    auto* view = state.context->request_domain(domain_name);
-                    if (!view) {
-                        state.diags.add({rupa::compiler::Severity::Error,
-                            std::string("domain '") + domain_name + "' is not available",
-                            {state.file_path, 1, 0}});
-                        state.abort_parse = true;
-                        return;
-                    }
+                if (xsd == state.schema.xsd_filename) {
+                    // Matches loaded schema — proceed normally
                 } else {
-                    // Unknown schema — try default domain (override)
+                    // Different schema — try default domain (override)
                     auto* view = state.context->request_default_domain();
                     if (!view) {
                         state.diags.add({rupa::compiler::Severity::Error,

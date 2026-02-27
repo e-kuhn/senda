@@ -68,6 +68,7 @@ class ExportComposite:
 class ExportSchema:
     release_version: str = "R00-00"
     autosar_version: str = "0.0.0"
+    xsd_filename: str = ""
     primitives: list[ExportPrimitive] = field(default_factory=list)
     enums: list[ExportEnum] = field(default_factory=list)
     composites: list[ExportComposite] = field(default_factory=list)
@@ -136,6 +137,7 @@ class InternalSubTypesEnum(InternalType):
 class InternalSchema:
     autosar_version: str = "0.0.0"
     release_version: str = "R00-00"
+    xsd_filename: str = ""
     types: dict[str, InternalType] = field(default_factory=dict)
     sub_types: dict[str, InternalSubTypesEnum] = field(default_factory=dict)
     root: InternalMember | None = None
