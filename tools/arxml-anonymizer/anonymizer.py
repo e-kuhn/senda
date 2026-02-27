@@ -1,13 +1,15 @@
-"""SAX-based ARXML anonymizer.
+"""ARXML anonymizer using splice-based replacement.
 
-Two-pass approach:
-  1. Collect all SHORT-NAME values, build replacement mapping.
-  2. Rewrite the ARXML, replacing SHORT-NAME text and reference paths.
+Three-pass approach:
+  1. SAX-collect all SHORT-NAME values, build replacement mapping.
+  2. Scan the raw bytes for every occurrence of a mapped name, record
+     (offset, length, replacement) tuples — the "replacement list".
+  3. Serialize by copying original bytes between replacements and
+     inserting the watermark.
 """
 
 from __future__ import annotations
 
-import re
 import xml.sax
 import xml.sax.handler
 from dataclasses import dataclass, field
@@ -52,84 +54,133 @@ class ShortNameCollector(xml.sax.handler.ContentHandler):
                 self.short_names.add(text)
 
 
-class AnonymizingRewriter(xml.sax.handler.ContentHandler):
-    """Second pass: rewrite SHORT-NAME values and reference paths."""
+def _build_aho_corasick(mapping: dict[str, str]) -> tuple[dict, list[str]]:
+    """Build an Aho-Corasick automaton from the mapping keys.
 
-    def __init__(self, mapping: dict[str, str], output_file):
-        super().__init__()
-        self._mapping = mapping
-        self._out = output_file
-        self._in_short_name = False
-        self._in_element = False
-        self._current_text = ""
-        self._element_name = ""
-        self._wrote_watermark = False
+    Returns (goto_table, keywords) where goto_table maps
+    (state, char) -> next_state, with output and failure links.
+    """
+    # Use a simple trie + failure links for multi-pattern matching
+    goto: list[dict[str, int]] = [{}]  # state 0 = root
+    output: list[list[str]] = [[]]      # output[state] = list of matched keywords
+    fail: list[int] = [0]
 
-    def _write(self, text: str):
-        self._out.write(text)
+    # Build trie
+    for keyword in mapping:
+        state = 0
+        for ch in keyword:
+            if ch not in goto[state]:
+                goto[state][ch] = len(goto)
+                goto.append({})
+                output.append([])
+                fail.append(0)
+            state = goto[state][ch]
+        output[state].append(keyword)
 
-    def _escape(self, text: str) -> str:
-        return (text
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace('"', "&quot;"))
+    # Build failure links (BFS)
+    from collections import deque
+    queue: deque[int] = deque()
+    for ch, s in goto[0].items():
+        fail[s] = 0
+        queue.append(s)
 
-    def _replace_path_segments(self, text: str) -> str:
-        """Replace SHORT-NAME segments inside /-delimited reference paths."""
-        if "/" not in text:
-            return text
-        parts = text.split("/")
-        replaced = [self._mapping.get(p, p) for p in parts]
-        return "/".join(replaced)
+    while queue:
+        r = queue.popleft()
+        for ch, s in goto[r].items():
+            queue.append(s)
+            state = fail[r]
+            while state != 0 and ch not in goto[state]:
+                state = fail[state]
+            fail[s] = goto[state].get(ch, 0)
+            if fail[s] == s:
+                fail[s] = 0
+            output[s] = output[s] + output[fail[s]]
 
-    def startDocument(self):
-        self._write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        self._write(f"<!-- {WATERMARK_COMMENT} -->\n")
-        self._wrote_watermark = True
+    return goto, fail, output
 
-    def startElement(self, name, attrs):
-        self._flush_text()
-        attr_str = ""
-        for aname in attrs.getNames():
-            attr_str += f' {aname}="{self._escape(attrs[aname])}"'
-        self._write(f"<{name}{attr_str}>")
 
-        if name == "SHORT-NAME":
-            self._in_short_name = True
-            self._current_text = ""
-        else:
-            self._in_element = True
-            self._element_name = name
-            self._current_text = ""
+def _find_replacements(
+    content: str,
+    mapping: dict[str, str],
+) -> list[tuple[int, int, str]]:
+    """Scan content for all occurrences of mapped names using Aho-Corasick.
 
-    def characters(self, content):
-        self._current_text += content
+    Returns a sorted, non-overlapping list of (offset, length, replacement).
+    Longer matches take priority; on ties, earlier position wins.
+    """
+    if not mapping:
+        return []
 
-    def endElement(self, name):
-        if name == "SHORT-NAME" and self._in_short_name:
-            self._in_short_name = False
-            text = self._current_text.strip()
-            replaced = self._mapping.get(text, text)
-            self._write(self._escape(replaced))
-            self._current_text = ""
-        else:
-            self._flush_text()
-        self._in_element = False
-        self._write(f"</{name}>")
+    goto, fail, output = _build_aho_corasick(mapping)
 
-    def _flush_text(self):
-        if self._current_text:
-            text = self._current_text
-            text = self._replace_path_segments(text)
-            self._write(self._escape(text))
-            self._current_text = ""
+    # Scan
+    raw_matches: list[tuple[int, int, str]] = []  # (start, length, replacement)
+    state = 0
+    for i, ch in enumerate(content):
+        while state != 0 and ch not in goto[state]:
+            state = fail[state]
+        state = goto[state].get(ch, 0)
+        for keyword in output[state]:
+            start = i - len(keyword) + 1
+            raw_matches.append((start, len(keyword), mapping[keyword]))
 
-    def ignorableWhitespace(self, content):
-        self._write(content)
+    if not raw_matches:
+        return []
 
-    def processingInstruction(self, target, data):
-        pass  # We emit our own XML declaration in startDocument
+    # Sort by start position, then longest match first
+    raw_matches.sort(key=lambda m: (m[0], -m[1]))
+
+    # Remove overlaps: greedy left-to-right, prefer longer matches
+    result: list[tuple[int, int, str]] = []
+    end = 0
+    for start, length, replacement in raw_matches:
+        if start >= end:
+            result.append((start, length, replacement))
+            end = start + length
+
+    return result
+
+
+def _serialize(
+    content: str,
+    replacements: list[tuple[int, int, str]],
+    output_file,
+) -> None:
+    """Write content with replacements spliced in and watermark inserted."""
+    # Find where to insert watermark (after XML declaration)
+    watermark = f"<!-- {WATERMARK_COMMENT} -->\n"
+    watermark_offset = -1
+    xml_decl_end = content.find("?>")
+    if xml_decl_end >= 0:
+        # Skip past ?> and any following newline
+        watermark_offset = xml_decl_end + 2
+        if watermark_offset < len(content) and content[watermark_offset] == '\n':
+            watermark_offset += 1
+
+    pos = 0
+    watermark_written = False
+    for start, length, replacement in replacements:
+        # Write watermark if we've passed the insertion point
+        if not watermark_written and watermark_offset >= 0 and start >= watermark_offset:
+            output_file.write(content[pos:watermark_offset])
+            output_file.write(watermark)
+            pos = watermark_offset
+            watermark_written = True
+
+        # Copy bytes before this replacement
+        output_file.write(content[pos:start])
+        # Write replacement
+        output_file.write(replacement)
+        pos = start + length
+
+    # Write watermark if not yet written (no replacements after XML decl)
+    if not watermark_written and watermark_offset >= 0:
+        output_file.write(content[pos:watermark_offset])
+        output_file.write(watermark)
+        pos = watermark_offset
+
+    # Write remaining content
+    output_file.write(content[pos:])
 
 
 def _build_mapping(short_names: set[str], seed: int | None) -> dict[str, str]:
@@ -161,17 +212,23 @@ def anonymize_arxml(
     seed: int | None = None,
 ) -> AnonymizeResult:
     """Anonymize an ARXML file."""
-    # Pass 1: collect SHORT-NAMEs
+    # Pass 1: SAX-collect SHORT-NAMEs
     collector = ShortNameCollector()
     xml.sax.parse(input_path, collector)
 
     # Build mapping
     mapping = _build_mapping(collector.short_names, seed)
 
-    # Pass 2: rewrite
+    # Read entire file
+    with open(input_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Pass 2: find all replacement locations (Aho-Corasick scan)
+    replacements = _find_replacements(content, mapping)
+
+    # Pass 3: serialize with replacements spliced in
     with open(output_path, "w", encoding="utf-8") as out_file:
-        rewriter = AnonymizingRewriter(mapping, out_file)
-        xml.sax.parse(input_path, rewriter)
+        _serialize(content, replacements, out_file)
 
     # Verify
     passed, leaked = _verify(output_path, collector.short_names)
