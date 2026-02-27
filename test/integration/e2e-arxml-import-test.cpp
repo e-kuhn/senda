@@ -8,6 +8,7 @@ import rupa.driver;
 import rupa.fir;
 import rupa.sema;
 import senda.compiler.arxml;
+import senda.domains;
 import senda.domains.r23_11;
 
 namespace fs = std::filesystem;
@@ -60,19 +61,26 @@ TEST_F(E2EArxmlImportTest, ArxmlCompilationThroughDriver) {
 </AUTOSAR>
 )");
 
-    // Build schema and compilers
-    auto schema = senda::domains::build_autosar_r23_11();
-    rupa::sema::RupaCompiler rupa_compiler;
+    // Build schema registry and compilers
     senda::SchemaRegistry schema_registry;
-    schema_registry.add(schema.xsd_filename, schema.domain.name());
-    senda::ArxmlCompiler arxml_compiler(schema, schema_registry);
+    schema_registry.add("AUTOSAR_00052.xsd", "autosar-r23-11",
+                        senda::domains::build_autosar_r23_11);
+
+    rupa::sema::RupaCompiler rupa_compiler;
+    senda::ArxmlCompiler arxml_compiler(schema_registry);
 
     rupa::compiler::CompilerRegistry registry;
     registry.register_compiler(rupa_compiler);
     registry.register_compiler(arxml_compiler);
 
     rupa::driver::CompilationDriver driver(registry);
-    driver.add_domain(std::move(schema.domain));
+    driver.register_domain_builder("autosar-r23-11", [&schema_registry] {
+        return std::move(
+            schema_registry.resolve_by_domain("autosar-r23-11")->domain);
+    });
+
+    // No xsi:schemaLocation on test fixture — use domain override
+    driver.set_domain_override("autosar-r23-11");
 
     // Compile ARXML through the driver
     auto result = driver.compile(file_path("signals.arxml"));
@@ -82,11 +90,12 @@ TEST_F(E2EArxmlImportTest, ArxmlCompilationThroughDriver) {
 
 TEST_F(E2EArxmlImportTest, MultiCompilerRegistration) {
     // Verify both compilers are registered and discoverable
-    auto schema = senda::domains::build_autosar_r23_11();
-    rupa::sema::RupaCompiler rupa_compiler;
     senda::SchemaRegistry schema_registry;
-    schema_registry.add(schema.xsd_filename, schema.domain.name());
-    senda::ArxmlCompiler arxml_compiler(schema, schema_registry);
+    schema_registry.add("AUTOSAR_00052.xsd", "autosar-r23-11",
+                        senda::domains::build_autosar_r23_11);
+
+    rupa::sema::RupaCompiler rupa_compiler;
+    senda::ArxmlCompiler arxml_compiler(schema_registry);
 
     rupa::compiler::CompilerRegistry registry;
     registry.register_compiler(rupa_compiler);
@@ -100,11 +109,12 @@ TEST_F(E2EArxmlImportTest, MultiCompilerRegistration) {
 TEST_F(E2EArxmlImportTest, UnknownExtensionReportsError) {
     write_file("test.xyz", "some content");
 
-    auto schema = senda::domains::build_autosar_r23_11();
-    rupa::sema::RupaCompiler rupa_compiler;
     senda::SchemaRegistry schema_registry;
-    schema_registry.add(schema.xsd_filename, schema.domain.name());
-    senda::ArxmlCompiler arxml_compiler(schema, schema_registry);
+    schema_registry.add("AUTOSAR_00052.xsd", "autosar-r23-11",
+                        senda::domains::build_autosar_r23_11);
+
+    rupa::sema::RupaCompiler rupa_compiler;
+    senda::ArxmlCompiler arxml_compiler(schema_registry);
 
     rupa::compiler::CompilerRegistry registry;
     registry.register_compiler(rupa_compiler);
@@ -132,18 +142,25 @@ TEST_F(E2EArxmlImportTest, DomainAvailableToArxmlCompiler) {
 </AUTOSAR>
 )");
 
-    auto schema = senda::domains::build_autosar_r23_11();
-    rupa::sema::RupaCompiler rupa_compiler;
     senda::SchemaRegistry schema_registry;
-    schema_registry.add(schema.xsd_filename, schema.domain.name());
-    senda::ArxmlCompiler arxml_compiler(schema, schema_registry);
+    schema_registry.add("AUTOSAR_00052.xsd", "autosar-r23-11",
+                        senda::domains::build_autosar_r23_11);
+
+    rupa::sema::RupaCompiler rupa_compiler;
+    senda::ArxmlCompiler arxml_compiler(schema_registry, "autosar-r23-11");
 
     rupa::compiler::CompilerRegistry registry;
     registry.register_compiler(rupa_compiler);
     registry.register_compiler(arxml_compiler);
 
     rupa::driver::CompilationDriver driver(registry);
-    driver.add_domain(std::move(schema.domain));
+    driver.register_domain_builder("autosar-r23-11", [&schema_registry] {
+        return std::move(
+            schema_registry.resolve_by_domain("autosar-r23-11")->domain);
+    });
+
+    // No xsi:schemaLocation on test fixture — use domain override
+    driver.set_domain_override("autosar-r23-11");
 
     auto result = driver.compile(file_path("ecu.arxml"));
     EXPECT_FALSE(result.has_errors());

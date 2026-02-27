@@ -1,6 +1,11 @@
 add_library(senda.domains)
 target_sources(senda.domains
     PUBLIC FILE_SET CXX_MODULES FILES
+        senda.domains.cppm
+        senda.domains.r19-11.cppm
+        senda.domains.r20-11.cppm
+        senda.domains.r21-11.cppm
+        senda.domains.r22-11.cppm
         senda.domains.r23-11.cppm
 )
 target_link_libraries(senda.domains

@@ -31,6 +31,15 @@ def generate_domain_builder(schema: ExportSchema) -> str:
     release = schema.release_version
     domain = _domain_name(release)
 
+    # --- Deduplicate composites (some schemas have duplicate complexTypes) ---
+    seen_composites: set[str] = set()
+    unique_composites: list[ExportComposite] = []
+    for c in schema.composites:
+        if c.name not in seen_composites:
+            seen_composites.add(c.name)
+            unique_composites.append(c)
+    composites = unique_composites
+
     # --- Build name->variable mappings ---
     type_vars: dict[str, str] = {}  # PascalCase name -> C++ variable name
 
@@ -42,7 +51,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         var = _type_var(e.name)
         type_vars[e.name] = var
 
-    for c in schema.composites:
+    for c in composites:
         var = _type_var(c.name)
         type_vars[c.name] = var
 
@@ -72,15 +81,15 @@ def generate_domain_builder(schema: ExportSchema) -> str:
             w("")
 
     # --- Composites Phase 1: Declare all types ---
-    if schema.composites:
-        w("    // ── Composites Phase 1: Declare types (%d) ──" % len(schema.composites))
-        for c in schema.composites:
+    if composites:
+        w("    // ── Composites Phase 1: Declare types (%d) ──" % len(composites))
+        for c in composites:
             var = type_vars[c.name]
             w('    auto %s = b.begin_type("%s", fir::M3Kind::Composite);' % (var, c.name))
         w("")
 
         # --- Phase 2: Set supertypes ---
-        supertypes = [(c, parent) for c in schema.composites
+        supertypes = [(c, parent) for c in composites
                       for parent in c.inherits_from if parent in type_vars]
         if supertypes:
             w("    // ── Composites Phase 2: Supertypes ──")
@@ -89,7 +98,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
             w("")
 
         # --- Phase 3: Abstract flags ---
-        abstracts = [c for c in schema.composites if c.is_abstract]
+        abstracts = [c for c in composites if c.is_abstract]
         if abstracts:
             w("    // ── Composites Phase 3: Abstract flags ──")
             for c in abstracts:
@@ -103,7 +112,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         role_handles: dict[str, list[tuple[str, str, str]]] = {}
         # type_name -> [(role_var, member_xml_element_name, role_name)]
 
-        for c in schema.composites:
+        for c in composites:
             cvar = type_vars[c.name]
             role_handles[c.name] = []
             for i, m in enumerate(c.members):
@@ -133,10 +142,10 @@ def generate_domain_builder(schema: ExportSchema) -> str:
     # --- Lookup tables ---
     w("    // ── Lookup Tables ──")
     w("    kore::FrozenMap<std::string_view, TypeInfo> tag_to_type(%d);"
-      % len(schema.composites))
+      % len(composites))
     w("")
 
-    for c in schema.composites:
+    for c in composites:
         if not c.xml_name:
             continue
         cvar = type_vars[c.name]

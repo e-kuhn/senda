@@ -10,6 +10,7 @@ import rupa.fir;
 import rupa.fir.builder;
 import senda.compiler.arxml;
 import senda.emitter.arxml;
+import senda.domains;
 import senda.domains.r23_11;
 
 namespace fs = std::filesystem;
@@ -67,16 +68,24 @@ TEST(ArxmlEmitter, EmitsXmlHeader) {
 }
 
 TEST(ArxmlEmitter, RoundTripSimpleSignal) {
-    auto schema = senda::domains::build_autosar_r23_11();
-    MockEmitterContext ctx(schema.domain);
     senda::SchemaRegistry reg;
-    reg.add(schema.xsd_filename, schema.domain.name());
-    senda::ArxmlCompiler compiler(schema, reg);
-    senda::ArxmlEmitter emitter(schema);
+    reg.add("AUTOSAR_00052.xsd", "autosar-r23-11",
+            senda::domains::build_autosar_r23_11);
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockEmitterContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
+    senda::ArxmlEmitter emitter(*schema);
 
     // Compile ARXML -> FIR
     auto compile_result = compiler.compile(fixture_path("simple-signal.arxml"), ctx);
     ASSERT_FALSE(compile_result.has_errors()) << "Compilation failed";
+
+    // Verify objects were produced
+    size_t obj_count = 0;
+    compile_result.fir().forEachNode([&](fir::Id, const fir::Node& node) {
+        if (node.kind == fir::NodeKind::ObjectDef) ++obj_count;
+    });
+    ASSERT_GE(obj_count, 1u) << "Should have at least one ObjectDef";
 
     // Emit FIR -> ARXML
     std::ostringstream out;
@@ -91,6 +100,5 @@ TEST(ArxmlEmitter, RoundTripSimpleSignal) {
     EXPECT_NE(result.find("</AUTOSAR>"), std::string::npos);
 
     // Should contain the objects that were compiled
-    // The emitter should produce SHORT-NAME elements for identities
     EXPECT_NE(result.find("<SHORT-NAME>"), std::string::npos);
 }

@@ -3,10 +3,10 @@ module;
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <memory>
 #include <span>
 #include <string>
 #include <string_view>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 #include <expat.h>
@@ -17,34 +17,84 @@ import rupa.compiler;
 import rupa.domain;
 import rupa.fir;
 import rupa.fir.builder;
-import senda.domains.r23_11;
+import senda.domains;
 
 export namespace senda
 {
 
 class SchemaRegistry {
 public:
-    void add(std::string_view xsd_filename, std::string_view domain_name) {
-        entries_.emplace_back(xsd_filename, domain_name);
+    using BuilderFn = senda::domains::AutosarSchema(*)();
+
+    void add(std::string_view xsd_filename, std::string_view domain_name,
+             BuilderFn builder) {
+        entries_.push_back({std::string(xsd_filename),
+                           std::string(domain_name), builder, nullptr});
     }
 
-    std::string_view find(std::string_view xsd_filename) const {
-        for (auto& [xsd, domain] : entries_) {
-            if (xsd == xsd_filename) return domain;
+    // Cheap lookup: XSD → domain name (no build)
+    std::string_view find_domain_name(std::string_view xsd_filename) const {
+        for (auto& e : entries_) {
+            if (e.xsd_filename == xsd_filename) return e.domain_name;
         }
         return {};
     }
 
+    // Check if a domain name is registered
+    bool has_domain(std::string_view domain_name) const {
+        for (auto& e : entries_) {
+            if (e.domain_name == domain_name) return true;
+        }
+        return false;
+    }
+
+    // Lazy resolve: build schema on first access, cache it.
+    // Returns non-const because the driver may move the domain out after caching.
+    senda::domains::AutosarSchema* resolve(std::string_view xsd_filename) {
+        for (auto& e : entries_) {
+            if (e.xsd_filename == xsd_filename) {
+                if (!e.cached) {
+                    e.cached = std::make_unique<senda::domains::AutosarSchema>(
+                        e.builder());
+                }
+                return e.cached.get();
+            }
+        }
+        return nullptr;
+    }
+
+    // Lazy resolve by domain name
+    senda::domains::AutosarSchema* resolve_by_domain(
+        std::string_view domain_name) {
+        for (auto& e : entries_) {
+            if (e.domain_name == domain_name) {
+                if (!e.cached) {
+                    e.cached = std::make_unique<senda::domains::AutosarSchema>(
+                        e.builder());
+                }
+                return e.cached.get();
+            }
+        }
+        return nullptr;
+    }
+
 private:
-    std::vector<std::pair<std::string_view, std::string_view>> entries_;
+    struct Entry {
+        std::string xsd_filename;
+        std::string domain_name;
+        BuilderFn builder;
+        std::unique_ptr<senda::domains::AutosarSchema> cached;
+    };
+    std::vector<Entry> entries_;
 };
 
 class ArxmlCompiler : public rupa::compiler::Compiler {
 public:
-    ArxmlCompiler(const senda::domains::AutosarSchema& schema,
-                  const SchemaRegistry& registry,
+    ArxmlCompiler(SchemaRegistry& registry,
+                  std::string_view default_domain = {},
                   int max_skip_warnings = 10)
-        : schema_(schema), registry_(registry),
+        : registry_(registry),
+          default_domain_(default_domain),
           max_skip_warnings_(max_skip_warnings) {}
 
     std::span<const std::string_view> extensions() const override {
@@ -86,8 +136,8 @@ public:
         rupa::fir_builder::FirBuilder builder(fir);
 
         ParseState state{
-            .schema = schema_,
             .registry = registry_,
+            .default_domain = default_domain_,
             .builder = builder,
             .diags = diags,
             .file_path = path.string(),
@@ -131,8 +181,8 @@ public:
 private:
     static constexpr std::string_view exts_arr_[] = {".arxml"};
     std::span<const std::string_view> exts_{exts_arr_};
-    const senda::domains::AutosarSchema& schema_;
-    const SchemaRegistry& registry_;
+    SchemaRegistry& registry_;
+    std::string default_domain_;
     int max_skip_warnings_ = 10;
 
     // --- SAX state machine ---
@@ -154,13 +204,14 @@ private:
     };
 
     struct ParseState {
-        const senda::domains::AutosarSchema& schema;
-        const SchemaRegistry& registry;
+        SchemaRegistry& registry;
+        std::string_view default_domain;
         rupa::fir_builder::FirBuilder& builder;
         rupa::compiler::Diagnostics& diags;
         std::string file_path;
         std::vector<Frame> stack;
         rupa::compiler::CompileContext* context = nullptr;
+        const senda::domains::AutosarSchema* schema = nullptr;
         bool domain_resolved = false;
         bool domain_is_override = false;
         bool abort_parse = false;
@@ -205,10 +256,11 @@ private:
 
             if (!schema_location.empty()) {
                 auto xsd = extract_xsd_filename(schema_location);
-                auto domain_name = state.registry.find(xsd);
+                auto domain_name = state.registry.find_domain_name(xsd);
 
                 if (!domain_name.empty()) {
-                    // Known XSD — request the corresponding domain by name
+                    // Known XSD — resolve schema lazily and request domain
+                    state.schema = state.registry.resolve(xsd);
                     auto* view = state.context->request_domain(domain_name);
                     if (!view) {
                         state.diags.add({rupa::compiler::Severity::Error,
@@ -229,16 +281,23 @@ private:
                         state.abort_parse = true;
                         return;
                     }
+                    // Resolve schema for the override domain
+                    if (!state.default_domain.empty()) {
+                        state.schema = state.registry.resolve_by_domain(
+                            state.default_domain);
+                    }
                     state.domain_is_override = true;
                 }
             } else {
                 // No schema annotation — try default domain
                 auto* view = state.context->request_default_domain();
                 if (view) {
+                    if (!state.default_domain.empty()) {
+                        state.schema = state.registry.resolve_by_domain(
+                            state.default_domain);
+                    }
                     state.domain_is_override = true;
                 }
-                // If no default available, continue without domain validation
-                // (backwards-compatible with bare <AUTOSAR> elements)
             }
             // Continue — AUTOSAR is handled as a normal type lookup below
         }
@@ -249,8 +308,11 @@ private:
             return;
         }
 
-        // Try type lookup
-        auto* type_info = state.schema.tag_to_type.find(tag);
+        // Try type lookup (schema resolved lazily during AUTOSAR root handling)
+        const senda::domains::TypeInfo* type_info = nullptr;
+        if (state.schema) {
+            type_info = state.schema->tag_to_type.find(tag);
+        }
         if (type_info) {
             // Known type element — create object
             Frame frame{};
@@ -290,7 +352,10 @@ private:
 
         // If we're inside a Property frame, try type lookup (contained object)
         if (!state.stack.empty() && state.stack.back().kind == FrameKind::Property) {
-            auto* nested_type_info = state.schema.tag_to_type.find(tag);
+            const senda::domains::TypeInfo* nested_type_info = nullptr;
+            if (state.schema) {
+                nested_type_info = state.schema->tag_to_type.find(tag);
+            }
             if (nested_type_info) {
                 Frame frame{};
                 frame.kind = FrameKind::Object;
