@@ -641,6 +641,11 @@ def _get_sequence_variant_wrapped_element(
     if member is None:
         return False
 
+    # Use the outer wrapper's XML name (e.g. DATA-IDS) rather than the inner
+    # element's name (e.g. DATA-ID). The wrapper is what appears in ARXML.
+    if "name" in elem.attrib:
+        member.xml_element_name = elem.attrib["name"]
+
     member.xml_types.append(drop_ar_prefix(inner.attrib["type"]))
     ct.members.append(member)
     return True
@@ -1141,11 +1146,21 @@ def _merge_attribute_groups_into_groups(schema: InternalSchema) -> None:
     # In AUTOSAR XSD, the complex type's sequence lists ALL ancestor groups
     # in order: base-first, most-derived-last. Each consecutive pair defines
     # a parent-child relationship between groups.
+    # Process longest chains first so that the most detailed (and correct)
+    # parent relationships take precedence. Short chains (e.g. BSW-SERVICE-
+    # DEPENDENCY: [AR-OBJECT, SERVICE-DEPENDENCY, BSW-...]) would otherwise
+    # set SERVICE-DEPENDENCY's parent to AR-OBJECT, skipping intermediate
+    # groups like IDENTIFIABLE.
     group_parent: dict[str, str] = {}  # group_key -> direct parent group_key
+    complex_chains: list[list[str]] = []
     for t in schema.types.values():
         if not isinstance(t, InternalComplexType) or t.namespace != _COMPLEX_NS:
             continue
         group_refs = [ref for ref in t.inherits_from if ref.startswith(_GROUP_NS + ":")]
+        if group_refs:
+            complex_chains.append(group_refs)
+    complex_chains.sort(key=len, reverse=True)
+    for group_refs in complex_chains:
         for i in range(1, len(group_refs)):
             child_key = group_refs[i]
             parent_key = group_refs[i - 1]
