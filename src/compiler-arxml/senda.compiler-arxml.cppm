@@ -403,6 +403,18 @@ private:
                 state.stack.push_back(std::move(frame));
                 return;
             }
+
+            // Fall back to the property's target type when the element name
+            // differs from the registered type tag (e.g. VFC-IREF is really
+            // PORT-GROUP-IN-SYSTEM-INSTANCE-REF).
+            if (prop.target_type_info) {
+                Frame frame{};
+                frame.kind = FrameKind::Object;
+                frame.type_info = prop.target_type_info;
+                frame.obj = {};
+                state.stack.push_back(std::move(frame));
+                return;
+            }
         }
 
         // Unknown element — skip

@@ -255,6 +255,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         cvar = type_vars[c.name]
         roles = _all_roles(c.name)
 
+
         w("    {")
         w("        TypeInfo info{{%s.id}, kore::FrozenMap<std::string_view, RoleInfo>(%d)};"
           % (cvar, len(roles)))
