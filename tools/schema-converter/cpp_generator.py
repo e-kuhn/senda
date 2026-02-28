@@ -108,8 +108,8 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         w("    // ── Composites Phase 4: Roles ──")
 
         # Track role handles per type for lookup table generation
-        role_handles: dict[str, list[tuple[str, str, str, str]]] = {}
-        # type_name -> [(role_var, member_xml_element_name, role_name, target_type_var)]
+        role_handles: dict[str, list[tuple[str, str, str, str, bool]]] = {}
+        # type_name -> [(role_var, member_xml_element_name, role_name, target_type_var, is_reference)]
 
         for c in composites:
             cvar = type_vars[c.name]
@@ -131,7 +131,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                 if xml_elem:
                     w('    auto %s = b.add_role(%s, "%s", %s, %s);'
                       % (rvar, cvar, role_name, target_type, mult))
-                    role_handles[c.name].append((rvar, xml_elem, role_name, target_type))
+                    role_handles[c.name].append((rvar, xml_elem, role_name, target_type, m.is_reference))
                 else:
                     w('    b.add_role(%s, "%s", %s, %s);'
                       % (cvar, role_name, target_type, mult))
@@ -144,7 +144,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
     # Build a map from type name to its members (for composition detection)
     members_by_type: dict[str, list[ExportMember]] = {c.name: c.members for c in composites}
 
-    def _inlined_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str]]:
+    def _inlined_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str, bool]]:
         """Collect roles hoisted from composition members without xml_element_name.
 
         When a type has a composition member (no xml_element_name) pointing to
@@ -158,7 +158,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         if cname in visited:
             return []
         visited.add(cname)
-        result: list[tuple[str, str, str, str]] = []
+        result: list[tuple[str, str, str, str, bool]] = []
         for m in members_by_type.get(cname, []):
             if m.xml_element_name is not None:
                 continue  # Has its own XML tag — not a composition-inline
@@ -181,7 +181,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                         result.append(role)
         return result
 
-    def _all_roles_no_inline(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str]]:
+    def _all_roles_no_inline(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str, bool]]:
         """Collect roles from a type and all ancestors (no composition inlining)."""
         if visited is None:
             visited = set()
@@ -197,7 +197,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                         result.append(role)
         return result
 
-    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str]]:
+    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str, bool]]:
         """Collect roles from a type, all ancestors, and inlined compositions (own roles first)."""
         if visited is None:
             visited = set()
@@ -235,9 +235,10 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         w("    {")
         w("        TypeInfo info{{%s.id}, kore::FrozenMap<std::string_view, RoleInfo>(%d)};"
           % (cvar, len(roles)))
-        for rvar, xml_elem, _role_name, target_type_var in roles:
-            w('        info.roles.add("%s", RoleInfo{rupa::domain::RoleHandle{%s.id}, static_cast<uint32_t>(%s.id)});'
-              % (xml_elem, rvar, target_type_var))
+        for rvar, xml_elem, _role_name, target_type_var, is_ref in roles:
+            ref_str = "true" if is_ref else "false"
+            w('        info.roles.add("%s", RoleInfo{rupa::domain::RoleHandle{%s.id}, static_cast<uint32_t>(%s.id), %s});'
+              % (xml_elem, rvar, target_type_var, ref_str))
         w("        info.roles.freeze();")
         w('        tag_to_type.add("%s", std::move(info));' % c.xml_name)
         w("    }")

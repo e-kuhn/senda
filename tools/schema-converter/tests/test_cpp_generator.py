@@ -745,5 +745,45 @@ class TestCLIIntegration(unittest.TestCase):
         self.assertIn("--cpp", result.stdout)
 
 
+class TestRoleInfoIsReference(unittest.TestCase):
+    """Test that is_reference flag is emitted in RoleInfo."""
+
+    def test_non_reference_role_emits_false(self):
+        from cpp_generator import generate_domain_builder
+        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            composites=[ExportComposite(
+                name="MyType", xml_name="MY-TYPE",
+                members=[ExportMember(
+                    name="child", types=["ChildType"],
+                    xml_element_name="CHILD", is_reference=False,
+                )],
+            )],
+            primitives=[ExportPrimitive(name="ChildType", xml_name="CHILD-TYPE")],
+        )
+        code = generate_domain_builder(schema)
+        self.assertIn(", false}", code)
+
+    def test_reference_role_emits_true(self):
+        from cpp_generator import generate_domain_builder
+        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            composites=[ExportComposite(
+                name="MyType", xml_name="MY-TYPE",
+                members=[ExportMember(
+                    name="targetRef", types=["TargetType"],
+                    xml_element_name="TARGET-REF", is_reference=True,
+                )],
+            )],
+            primitives=[ExportPrimitive(name="TargetType", xml_name="TARGET-TYPE")],
+        )
+        code = generate_domain_builder(schema)
+        self.assertIn(", true}", code)
+
+
 if __name__ == "__main__":
     unittest.main()
