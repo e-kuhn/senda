@@ -545,6 +545,11 @@ def _get_ref_member(elem: ElementTree.Element) -> InternalMember | None:
 
     member.is_reference = True
 
+    # Pattern B: extract inner REF element name from xsd:choice → xsd:element
+    inner_elem = _get_path(elem, ["xsd:complexType", "xsd:choice", "xsd:element"])
+    if inner_elem is not None and "name" in inner_elem.attrib:
+        member.inner_ref_tag = inner_elem.attrib["name"]
+
     attr = _get_path(ext, ["xsd:attribute"])
     if attr is not None and "type" in attr.attrib:
         member.xml_sub_types = drop_ar_prefix(attr.attrib["type"])
@@ -1312,6 +1317,7 @@ def _export_member(mem: InternalMember, schema: InternalSchema) -> ExportMember:
         is_identity=is_identity,
         doc=mem.doc,
         xml_element_name=mem.xml_element_name,
+        inner_ref_tag=mem.inner_ref_tag,
     )
 
 

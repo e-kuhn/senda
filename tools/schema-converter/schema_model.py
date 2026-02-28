@@ -28,6 +28,7 @@ class ExportMember:
     doc: str | None = None
     instance_ref_role: str | None = None  # "context", "target", or None
     xml_element_name: str | None = None
+    inner_ref_tag: str | None = None  # Pattern B: inner REF element XML tag name
 
 
 @dataclass
@@ -90,6 +91,7 @@ class InternalMember:
     xml_sub_types: str | None = None
     is_ordered: bool = False
     is_reference: bool = False
+    inner_ref_tag: str | None = None
     stereotypes: list[str] = field(default_factory=list)
     min_occurs: int | None = None
     max_occurs: int | None = None
