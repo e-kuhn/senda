@@ -2,12 +2,11 @@ module;
 
 #include <cstring>
 #include <filesystem>
-#include <fstream>
 #include <memory>
 #include <span>
 #include <string>
 #include <string_view>
-#include <unordered_map>
+#include <absl/container/flat_hash_map.h>
 #include <utility>
 #include <vector>
 #include <expat.h>
@@ -18,6 +17,7 @@ import rupa.compiler;
 import rupa.domain;
 import rupa.fir;
 import rupa.fir.builder;
+import rupa.diagnostics;
 import senda.domains;
 
 export namespace senda
@@ -89,6 +89,25 @@ private:
     std::vector<Entry> entries_;
 };
 
+// Composite hash key for interned path: hash of StringId sequence.
+// Incrementally computed as segments are pushed/popped.
+struct PathKey {
+    size_t hash = 0xcbf29ce484222325ULL;  // FNV-1a offset basis
+
+    void push(fir::StringId id) {
+        auto val = static_cast<uint64_t>(id);
+        hash ^= val;
+        hash *= 0x100000001b3ULL;  // FNV-1a prime
+    }
+
+    void pop(fir::StringId id) {
+        auto val = static_cast<uint64_t>(id);
+        // Reverse FNV-1a: multiply by modular inverse, then XOR
+        hash *= 0xce965057aff6957bULL;  // modular inverse of FNV prime mod 2^64
+        hash ^= val;
+    }
+};
+
 class ArxmlCompiler : public rupa::compiler::Compiler {
 public:
     ArxmlCompiler(SchemaRegistry& registry,
@@ -108,19 +127,16 @@ public:
     {
         rupa::compiler::Diagnostics diags;
 
-        // Read file content
-        std::ifstream file(path, std::ios::binary | std::ios::ate);
-        if (!file) {
+        // Memory-map the file
+        if (!std::filesystem::exists(path)) {
             diags.add({rupa::compiler::Severity::Error,
                        "cannot open file: " + path.string(),
                        {path.string(), 0, 0}});
             return rupa::compiler::CompileResult(
                 fir::Fir{}, rupa::compiler::DomainExtensions{}, std::move(diags));
         }
-        auto size = file.tellg();
-        file.seekg(0);
-        std::string content(static_cast<size_t>(size), '\0');
-        file.read(content.data(), size);
+        rupa::diagnostics::SourceFile source(path);
+        auto content = source.view();
 
         // Create expat parser
         XML_Parser parser = XML_ParserCreate(nullptr);
@@ -145,8 +161,10 @@ public:
             .stack = {},
             .context = &context,
             .max_skip_warnings = max_skip_warnings_,
-            .current_path = {},
+            .current_path_key = {},
+            .current_path_ids = {},
             .path_index = {},
+            .text_buf = {},
         };
 
         XML_SetUserData(parser, &state);
@@ -204,7 +222,8 @@ private:
         rupa::domain::RoleHandle role{};
         rupa::fir_builder::ObjectHandle parent_obj{};
         const senda::domains::TypeInfo* target_type_info = nullptr;
-        std::string text;
+        uint32_t text_start = 0;
+        uint32_t text_len = 0;
         bool is_identity = false;  // true for SHORT-NAME capture
         bool is_reference = false;  // true for *-REF property frames
         // Skip frame
@@ -227,8 +246,11 @@ private:
         int skip_total_count = 0;
         int max_skip_warnings = 10;
         // Path tracking for reference resolution
-        std::vector<std::string> current_path;
-        std::unordered_map<std::string, fir::Id> path_index;
+        PathKey current_path_key;
+        std::vector<fir::StringId> current_path_ids;
+        absl::flat_hash_map<size_t, fir::Id> path_index;
+        // Shared text buffer: Property frames record offsets into this
+        std::string text_buf;
     };
 
     // Extract XSD filename from xsi:schemaLocation value
@@ -446,42 +468,49 @@ private:
             if (--frame.skip_depth > 0) return;
             break;
 
-        case FrameKind::Property:
-            if (frame.is_identity && !frame.text.empty()) {
+        case FrameKind::Property: {
+            std::string_view frame_text;
+            if (frame.text_len > 0) {
+                frame_text = std::string_view(
+                    state.text_buf.data() + frame.text_start, frame.text_len);
+            }
+            if (frame.is_identity && !frame_text.empty()) {
                 // SHORT-NAME captured — create the parent object
                 if (state.stack.size() >= 2) {
                     auto& parent = state.stack[state.stack.size() - 2];
                     if (parent.kind == FrameKind::Object && parent.type_info
                         && !parent.obj.valid()) {
                         parent.obj = state.builder.begin_object(
-                            std::string_view(frame.text),
+                            frame_text,
                             rupa::fir_builder::TypeHandle{parent.type_info->handle.id});
                         // Register in path index for reference resolution
-                        state.current_path.push_back(frame.text);
-                        std::string full_path = "/";
-                        for (size_t i = 0; i < state.current_path.size(); i++) {
-                            if (i > 0) full_path += '/';
-                            full_path += state.current_path[i];
-                        }
-                        state.path_index[full_path] = parent.obj.id;
+                        auto identity_sid = state.builder.target().as<fir::ObjectDef>(
+                            parent.obj.id).identity;
+                        state.current_path_ids.push_back(identity_sid);
+                        state.current_path_key.push(identity_sid);
+                        state.path_index[state.current_path_key.hash] = parent.obj.id;
                     }
                 }
-            } else if (!frame.text.empty() && frame.parent_obj.valid()) {
+            } else if (!frame_text.empty() && frame.parent_obj.valid()) {
                 if (frame.is_reference) {
                     state.builder.add_reference(
                         frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
-                        std::string_view(frame.text));
+                        frame_text);
                 } else {
                     state.builder.add_property(
                         frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
-                        std::string_view(frame.text));
+                        frame_text);
                 }
             }
+            // Reclaim buffer space
+            state.text_buf.resize(frame.text_start);
             break;
+        }
 
         case FrameKind::Object:
-            if (frame.obj.valid() && !state.current_path.empty()) {
-                state.current_path.pop_back();
+            if (frame.obj.valid() && !state.current_path_ids.empty()) {
+                state.current_path_key.pop(state.current_path_ids.back());
+                state.current_path_ids.pop_back();
             }
             break;
         }
@@ -501,17 +530,15 @@ private:
             if (val.value_kind != fir::ValueKind::Reference) return;
             if (val.ref_target != fir::Id{UINT32_MAX}) return;
 
-            // Reconstruct path from segments
+            // Compute path hash from interned segments — no string allocation
             auto segs = fir.pathSegments(val.segment_start, val.segment_count);
-            std::string path = "/";
-            for (uint16_t i = 0; i < segs.size(); i++) {
-                auto& seg_val = fir.as<fir::ValueDef>(segs[i].value);
-                auto seg_str = fir.getString(seg_val.string_val);
-                if (i > 0) path += '/';
-                path += seg_str;
+            PathKey key;
+            for (auto& seg : segs) {
+                auto& seg_val = fir.as<fir::ValueDef>(seg.value);
+                key.push(seg_val.string_val);
             }
 
-            auto it = state.path_index.find(path);
+            auto it = state.path_index.find(key.hash);
             if (it != state.path_index.end()) {
                 val.ref_target = it->second;
                 resolved++;
@@ -536,7 +563,11 @@ private:
 
         auto& frame = state.stack.back();
         if (frame.kind == FrameKind::Property) {
-            frame.text.append(s, static_cast<size_t>(len));
+            if (frame.text_len == 0) {
+                frame.text_start = static_cast<uint32_t>(state.text_buf.size());
+            }
+            state.text_buf.append(s, static_cast<size_t>(len));
+            frame.text_len += static_cast<uint32_t>(len);
         }
     }
 };

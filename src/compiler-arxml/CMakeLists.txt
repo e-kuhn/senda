@@ -4,7 +4,7 @@ target_sources(senda.compiler.arxml
         senda.compiler-arxml.cppm
 )
 target_link_libraries(senda.compiler.arxml
-    PUBLIC rupa.compiler rupa.fir.builder rupa.domain rupa.fir kore senda.domains
+    PUBLIC rupa.compiler rupa.fir.builder rupa.domain rupa.fir kore senda.domains rupa.diagnostics
     PRIVATE expat
 )
 target_compile_features(senda.compiler.arxml PUBLIC cxx_std_26)
