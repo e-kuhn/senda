@@ -200,6 +200,7 @@ private:
         const senda::domains::TypeInfo* target_type_info = nullptr;
         std::string text;
         bool is_identity = false;  // true for SHORT-NAME capture
+        bool is_reference = false;  // true for *-REF property frames
         // Skip frame
         int skip_depth = 0;
     };
@@ -345,6 +346,7 @@ private:
                     frame.kind = FrameKind::Property;
                     frame.role = role_info->role;
                     frame.parent_obj = parent.obj;
+                    frame.is_reference = role_info->is_reference;
                     if (state.schema) {
                         auto* ti = state.schema->handle_to_type.find(
                             role_info->target_type_id);
@@ -368,6 +370,7 @@ private:
                     frame.kind = FrameKind::Property;
                     frame.role = role_info->role;
                     frame.parent_obj = prop.parent_obj;
+                    frame.is_reference = role_info->is_reference;
                     if (state.schema) {
                         auto* ti = state.schema->handle_to_type.find(
                             role_info->target_type_id);
@@ -435,10 +438,15 @@ private:
                     }
                 }
             } else if (!frame.text.empty() && frame.parent_obj.valid()) {
-                // Regular property — add to parent object
-                state.builder.add_property(
-                    frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
-                    std::string_view(frame.text));
+                if (frame.is_reference) {
+                    state.builder.add_reference(
+                        frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
+                        std::string_view(frame.text));
+                } else {
+                    state.builder.add_property(
+                        frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
+                        std::string_view(frame.text));
+                }
             }
             break;
 
