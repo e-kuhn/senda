@@ -7,6 +7,7 @@ module;
 #include <span>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 #include <expat.h>
@@ -144,6 +145,8 @@ public:
             .stack = {},
             .context = &context,
             .max_skip_warnings = max_skip_warnings_,
+            .current_path = {},
+            .path_index = {},
         };
 
         XML_SetUserData(parser, &state);
@@ -163,6 +166,9 @@ public:
                        {path.string(),
                          static_cast<uint32_t>(XML_GetCurrentLineNumber(parser)), 0}});
         }
+
+        // Resolve cross-references using path index built during parse
+        resolve_references(state, fir);
 
         // Emit summary if skip warnings were capped
         if (state.skip_total_count > state.skip_warning_emitted) {
@@ -220,6 +226,9 @@ private:
         int skip_warning_emitted = 0;
         int skip_total_count = 0;
         int max_skip_warnings = 10;
+        // Path tracking for reference resolution
+        std::vector<std::string> current_path;
+        std::unordered_map<std::string, fir::Id> path_index;
     };
 
     // Extract XSD filename from xsi:schemaLocation value
@@ -435,6 +444,14 @@ private:
                         parent.obj = state.builder.begin_object(
                             std::string_view(frame.text),
                             rupa::fir_builder::TypeHandle{parent.type_info->handle.id});
+                        // Register in path index for reference resolution
+                        state.current_path.push_back(frame.text);
+                        std::string full_path = "/";
+                        for (size_t i = 0; i < state.current_path.size(); i++) {
+                            if (i > 0) full_path += '/';
+                            full_path += state.current_path[i];
+                        }
+                        state.path_index[full_path] = parent.obj.id;
                     }
                 }
             } else if (!frame.text.empty() && frame.parent_obj.valid()) {
@@ -451,11 +468,52 @@ private:
             break;
 
         case FrameKind::Object:
-            // Object finalization is implicit (FirBuilder tracks current object)
+            if (frame.obj.valid() && !state.current_path.empty()) {
+                state.current_path.pop_back();
+            }
             break;
         }
 
         state.stack.pop_back();
+    }
+
+    static void resolve_references(ParseState& state, fir::Fir& fir) {
+        if (state.path_index.empty()) return;
+
+        int resolved = 0;
+        int unresolved = 0;
+
+        fir.forEachNode([&](fir::Id /*id*/, fir::Node& node) {
+            if (node.kind != fir::NodeKind::ValueDef) return;
+            auto& val = static_cast<fir::ValueDef&>(node);
+            if (val.value_kind != fir::ValueKind::Reference) return;
+            if (val.ref_target != fir::Id{UINT32_MAX}) return;
+
+            // Reconstruct path from segments
+            auto segs = fir.pathSegments(val.segment_start, val.segment_count);
+            std::string path = "/";
+            for (uint16_t i = 0; i < segs.size(); i++) {
+                auto& seg_val = fir.as<fir::ValueDef>(segs[i].value);
+                auto seg_str = fir.getString(seg_val.string_val);
+                if (i > 0) path += '/';
+                path += seg_str;
+            }
+
+            auto it = state.path_index.find(path);
+            if (it != state.path_index.end()) {
+                val.ref_target = it->second;
+                resolved++;
+            } else {
+                unresolved++;
+            }
+        });
+
+        if (resolved > 0 || unresolved > 0) {
+            state.diags.add({rupa::compiler::Severity::Note,
+                std::to_string(resolved) + " references resolved, "
+                    + std::to_string(unresolved) + " unresolved",
+                {state.file_path, 0, 0}});
+        }
     }
 
     static void XMLCALL on_characters(void* user_data, const XML_Char* s, int len) {
