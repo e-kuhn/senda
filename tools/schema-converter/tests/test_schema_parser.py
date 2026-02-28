@@ -850,5 +850,79 @@ class TestMultiGroupChoice(unittest.TestCase):
         self.assertEqual(len(t.members), 3)
 
 
+class TestRefMemberInnerTag(unittest.TestCase):
+    """Test that Pattern B wrapper REFs extract inner_ref_tag."""
+
+    def test_direct_ref_has_no_inner_ref_tag(self):
+        """Direct *-REF elements (Pattern A) should have inner_ref_tag = None."""
+        xsd = '''<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                             xmlns:AR="http://autosar.org/schema/r4.0">
+          <xsd:simpleType name="REF">
+            <xsd:restriction base="xsd:string"/>
+          </xsd:simpleType>
+          <xsd:group name="I-SIGNAL">
+            <xsd:annotation>
+              <xsd:appinfo source="tags">mmt.qualifiedName="ISignal"</xsd:appinfo>
+            </xsd:annotation>
+            <xsd:sequence>
+              <xsd:element maxOccurs="1" minOccurs="0" name="SYSTEM-SIGNAL-REF">
+                <xsd:annotation><xsd:appinfo source="tags">
+                  mmt.qualifiedName="ISignal.systemSignal";pureMM.minOccurs="0";pureMM.maxOccurs="1"
+                </xsd:appinfo></xsd:annotation>
+                <xsd:complexType><xsd:simpleContent>
+                  <xsd:extension base="AR:REF">
+                    <xsd:attribute name="DEST" type="xsd:string" use="required"/>
+                  </xsd:extension>
+                </xsd:simpleContent></xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:group>
+        </xsd:schema>'''
+        from schema_parser import parse_schema_from_string, export_schema
+        schema = parse_schema_from_string(xsd)
+        exported = export_schema(schema)
+        isignal = next(c for c in exported.composites if c.name == "ISignal")
+        ref_member = next(m for m in isignal.members if m.is_reference)
+        self.assertIsNone(ref_member.inner_ref_tag)
+
+    def test_wrapped_ref_has_inner_ref_tag(self):
+        """Pattern B wrapper REFs should extract inner_ref_tag from inner element."""
+        xsd = '''<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                             xmlns:AR="http://autosar.org/schema/r4.0">
+          <xsd:simpleType name="REF">
+            <xsd:restriction base="xsd:string"/>
+          </xsd:simpleType>
+          <xsd:group name="I-SIGNAL-TRIGGERING">
+            <xsd:annotation>
+              <xsd:appinfo source="tags">mmt.qualifiedName="ISignalTriggering"</xsd:appinfo>
+            </xsd:annotation>
+            <xsd:sequence>
+              <xsd:element maxOccurs="1" minOccurs="0" name="I-SIGNAL-PORT-REFS">
+                <xsd:annotation><xsd:appinfo source="tags">
+                  mmt.qualifiedName="ISignalTriggering.iSignalPort";pureMM.minOccurs="0";pureMM.maxOccurs="-1"
+                </xsd:appinfo></xsd:annotation>
+                <xsd:complexType>
+                  <xsd:choice maxOccurs="unbounded" minOccurs="0">
+                    <xsd:element name="I-SIGNAL-PORT-REF">
+                      <xsd:complexType><xsd:simpleContent>
+                        <xsd:extension base="AR:REF">
+                          <xsd:attribute name="DEST" type="xsd:string" use="required"/>
+                        </xsd:extension>
+                      </xsd:simpleContent></xsd:complexType>
+                    </xsd:element>
+                  </xsd:choice>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:group>
+        </xsd:schema>'''
+        from schema_parser import parse_schema_from_string, export_schema
+        schema = parse_schema_from_string(xsd)
+        exported = export_schema(schema)
+        triggering = next(c for c in exported.composites if c.name == "ISignalTriggering")
+        ref_member = next(m for m in triggering.members if m.is_reference)
+        self.assertEqual(ref_member.inner_ref_tag, "I-SIGNAL-PORT-REF")
+
+
 if __name__ == "__main__":
     unittest.main()

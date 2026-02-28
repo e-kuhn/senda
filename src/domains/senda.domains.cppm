@@ -14,6 +14,7 @@ export namespace senda::domains
 struct RoleInfo {
     rupa::domain::RoleHandle role;
     uint32_t target_type_id;  // fir::Id of the target type (for handle_to_type lookup)
+    bool is_reference = false;
 };
 
 struct TypeInfo {

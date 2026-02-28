@@ -108,8 +108,8 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         w("    // ── Composites Phase 4: Roles ──")
 
         # Track role handles per type for lookup table generation
-        role_handles: dict[str, list[tuple[str, str, str, str]]] = {}
-        # type_name -> [(role_var, member_xml_element_name, role_name, target_type_var)]
+        role_handles: dict[str, list[tuple[str, str, str, str, bool]]] = {}
+        # type_name -> [(role_var, member_xml_element_name, role_name, target_type_var, is_reference)]
 
         for c in composites:
             cvar = type_vars[c.name]
@@ -131,12 +131,31 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                 if xml_elem:
                     w('    auto %s = b.add_role(%s, "%s", %s, %s);'
                       % (rvar, cvar, role_name, target_type, mult))
-                    role_handles[c.name].append((rvar, xml_elem, role_name, target_type))
+                    role_handles[c.name].append((rvar, xml_elem, role_name, target_type, m.is_reference))
                 else:
                     w('    b.add_role(%s, "%s", %s, %s);'
                       % (cvar, role_name, target_type, mult))
             if c.members:
                 w("")
+
+    # --- Build inner REF role injection map ---
+    # When a wrapper member (e.g. I-SIGNAL-PORT-REFS) has inner_ref_tag (e.g. I-SIGNAL-PORT-REF),
+    # inject that inner tag as a role entry on the wrapper's target type (e.g. ISignalPort).
+    inner_ref_injections: dict[str, list[tuple[str, str, str, str, bool]]] = {}
+    # target_type_name -> [(rvar, inner_ref_tag, role_name, target_type_var, is_reference=True)]
+    if composites:
+        for c in composites:
+            for i, m in enumerate(c.members):
+                if not m.inner_ref_tag or not m.types:
+                    continue
+                target_name = m.types[0]
+                cvar = type_vars[c.name]
+                rvar = _role_var(cvar, i)
+                target_var = type_vars.get(target_name, "string_t")
+                if target_name not in inner_ref_injections:
+                    inner_ref_injections[target_name] = []
+                inner_ref_injections[target_name].append(
+                    (rvar, m.inner_ref_tag, m.name, target_var, True))
 
     # --- Collect inherited + inlined (composition-hoisted) roles ---
     composite_by_name: dict[str, ExportComposite] = {c.name: c for c in composites}
@@ -144,7 +163,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
     # Build a map from type name to its members (for composition detection)
     members_by_type: dict[str, list[ExportMember]] = {c.name: c.members for c in composites}
 
-    def _inlined_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str]]:
+    def _inlined_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str, bool]]:
         """Collect roles hoisted from composition members without xml_element_name.
 
         When a type has a composition member (no xml_element_name) pointing to
@@ -158,7 +177,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         if cname in visited:
             return []
         visited.add(cname)
-        result: list[tuple[str, str, str, str]] = []
+        result: list[tuple[str, str, str, str, bool]] = []
         for m in members_by_type.get(cname, []):
             if m.xml_element_name is not None:
                 continue  # Has its own XML tag — not a composition-inline
@@ -181,7 +200,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                         result.append(role)
         return result
 
-    def _all_roles_no_inline(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str]]:
+    def _all_roles_no_inline(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str, bool]]:
         """Collect roles from a type and all ancestors (no composition inlining)."""
         if visited is None:
             visited = set()
@@ -197,8 +216,8 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                         result.append(role)
         return result
 
-    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str]]:
-        """Collect roles from a type, all ancestors, and inlined compositions (own roles first)."""
+    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str, bool]]:
+        """Collect roles from a type, all ancestors, inlined compositions, and injected inner REF roles."""
         if visited is None:
             visited = set()
         if cname in visited:
@@ -218,6 +237,10 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                     # Child roles override parent roles with the same xml element
                     if role[1] not in {r[1] for r in result}:
                         result.append(role)
+        # Append injected inner REF roles (Pattern B wrappers)
+        for role in inner_ref_injections.get(cname, []):
+            if role[1] not in {r[1] for r in result}:
+                result.append(role)
         return result
 
     # --- Lookup tables ---
@@ -235,9 +258,10 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         w("    {")
         w("        TypeInfo info{{%s.id}, kore::FrozenMap<std::string_view, RoleInfo>(%d)};"
           % (cvar, len(roles)))
-        for rvar, xml_elem, _role_name, target_type_var in roles:
-            w('        info.roles.add("%s", RoleInfo{rupa::domain::RoleHandle{%s.id}, static_cast<uint32_t>(%s.id)});'
-              % (xml_elem, rvar, target_type_var))
+        for rvar, xml_elem, _role_name, target_type_var, is_ref in roles:
+            ref_str = "true" if is_ref else "false"
+            w('        info.roles.add("%s", RoleInfo{rupa::domain::RoleHandle{%s.id}, static_cast<uint32_t>(%s.id), %s});'
+              % (xml_elem, rvar, target_type_var, ref_str))
         w("        info.roles.freeze();")
         w('        tag_to_type.add("%s", std::move(info));' % c.xml_name)
         w("    }")
