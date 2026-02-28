@@ -6,7 +6,7 @@ module;
 #include <span>
 #include <string>
 #include <string_view>
-#include <unordered_map>
+#include <absl/container/flat_hash_map.h>
 #include <utility>
 #include <vector>
 #include <expat.h>
@@ -89,6 +89,25 @@ private:
     std::vector<Entry> entries_;
 };
 
+// Composite hash key for interned path: hash of StringId sequence.
+// Incrementally computed as segments are pushed/popped.
+struct PathKey {
+    size_t hash = 0xcbf29ce484222325ULL;  // FNV-1a offset basis
+
+    void push(fir::StringId id) {
+        auto val = static_cast<uint64_t>(id);
+        hash ^= val;
+        hash *= 0x100000001b3ULL;  // FNV-1a prime
+    }
+
+    void pop(fir::StringId id) {
+        auto val = static_cast<uint64_t>(id);
+        // Reverse FNV-1a: multiply by modular inverse, then XOR
+        hash *= 0xce965057aff6957bULL;  // modular inverse of FNV prime mod 2^64
+        hash ^= val;
+    }
+};
+
 class ArxmlCompiler : public rupa::compiler::Compiler {
 public:
     ArxmlCompiler(SchemaRegistry& registry,
@@ -142,7 +161,8 @@ public:
             .stack = {},
             .context = &context,
             .max_skip_warnings = max_skip_warnings_,
-            .current_path = {},
+            .current_path_key = {},
+            .current_path_ids = {},
             .path_index = {},
         };
 
@@ -224,8 +244,9 @@ private:
         int skip_total_count = 0;
         int max_skip_warnings = 10;
         // Path tracking for reference resolution
-        std::vector<std::string> current_path;
-        std::unordered_map<std::string, fir::Id> path_index;
+        PathKey current_path_key;
+        std::vector<fir::StringId> current_path_ids;
+        absl::flat_hash_map<size_t, fir::Id> path_index;
     };
 
     // Extract XSD filename from xsi:schemaLocation value
@@ -454,13 +475,11 @@ private:
                             std::string_view(frame.text),
                             rupa::fir_builder::TypeHandle{parent.type_info->handle.id});
                         // Register in path index for reference resolution
-                        state.current_path.push_back(frame.text);
-                        std::string full_path = "/";
-                        for (size_t i = 0; i < state.current_path.size(); i++) {
-                            if (i > 0) full_path += '/';
-                            full_path += state.current_path[i];
-                        }
-                        state.path_index[full_path] = parent.obj.id;
+                        auto identity_sid = state.builder.target().as<fir::ObjectDef>(
+                            parent.obj.id).identity;
+                        state.current_path_ids.push_back(identity_sid);
+                        state.current_path_key.push(identity_sid);
+                        state.path_index[state.current_path_key.hash] = parent.obj.id;
                     }
                 }
             } else if (!frame.text.empty() && frame.parent_obj.valid()) {
@@ -477,8 +496,9 @@ private:
             break;
 
         case FrameKind::Object:
-            if (frame.obj.valid() && !state.current_path.empty()) {
-                state.current_path.pop_back();
+            if (frame.obj.valid() && !state.current_path_ids.empty()) {
+                state.current_path_key.pop(state.current_path_ids.back());
+                state.current_path_ids.pop_back();
             }
             break;
         }
@@ -498,17 +518,15 @@ private:
             if (val.value_kind != fir::ValueKind::Reference) return;
             if (val.ref_target != fir::Id{UINT32_MAX}) return;
 
-            // Reconstruct path from segments
+            // Compute path hash from interned segments — no string allocation
             auto segs = fir.pathSegments(val.segment_start, val.segment_count);
-            std::string path = "/";
-            for (uint16_t i = 0; i < segs.size(); i++) {
-                auto& seg_val = fir.as<fir::ValueDef>(segs[i].value);
-                auto seg_str = fir.getString(seg_val.string_val);
-                if (i > 0) path += '/';
-                path += seg_str;
+            PathKey key;
+            for (auto& seg : segs) {
+                auto& seg_val = fir.as<fir::ValueDef>(seg.value);
+                key.push(seg_val.string_val);
             }
 
-            auto it = state.path_index.find(path);
+            auto it = state.path_index.find(key.hash);
             if (it != state.path_index.end()) {
                 val.ref_target = it->second;
                 resolved++;
