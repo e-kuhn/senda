@@ -164,6 +164,7 @@ public:
             .current_path_key = {},
             .current_path_ids = {},
             .path_index = {},
+            .text_buf = {},
         };
 
         XML_SetUserData(parser, &state);
@@ -221,7 +222,8 @@ private:
         rupa::domain::RoleHandle role{};
         rupa::fir_builder::ObjectHandle parent_obj{};
         const senda::domains::TypeInfo* target_type_info = nullptr;
-        std::string text;
+        uint32_t text_start = 0;
+        uint32_t text_len = 0;
         bool is_identity = false;  // true for SHORT-NAME capture
         bool is_reference = false;  // true for *-REF property frames
         // Skip frame
@@ -247,6 +249,8 @@ private:
         PathKey current_path_key;
         std::vector<fir::StringId> current_path_ids;
         absl::flat_hash_map<size_t, fir::Id> path_index;
+        // Shared text buffer: Property frames record offsets into this
+        std::string text_buf;
     };
 
     // Extract XSD filename from xsi:schemaLocation value
@@ -464,15 +468,20 @@ private:
             if (--frame.skip_depth > 0) return;
             break;
 
-        case FrameKind::Property:
-            if (frame.is_identity && !frame.text.empty()) {
+        case FrameKind::Property: {
+            std::string_view frame_text;
+            if (frame.text_len > 0) {
+                frame_text = std::string_view(
+                    state.text_buf.data() + frame.text_start, frame.text_len);
+            }
+            if (frame.is_identity && !frame_text.empty()) {
                 // SHORT-NAME captured — create the parent object
                 if (state.stack.size() >= 2) {
                     auto& parent = state.stack[state.stack.size() - 2];
                     if (parent.kind == FrameKind::Object && parent.type_info
                         && !parent.obj.valid()) {
                         parent.obj = state.builder.begin_object(
-                            std::string_view(frame.text),
+                            frame_text,
                             rupa::fir_builder::TypeHandle{parent.type_info->handle.id});
                         // Register in path index for reference resolution
                         auto identity_sid = state.builder.target().as<fir::ObjectDef>(
@@ -482,18 +491,21 @@ private:
                         state.path_index[state.current_path_key.hash] = parent.obj.id;
                     }
                 }
-            } else if (!frame.text.empty() && frame.parent_obj.valid()) {
+            } else if (!frame_text.empty() && frame.parent_obj.valid()) {
                 if (frame.is_reference) {
                     state.builder.add_reference(
                         frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
-                        std::string_view(frame.text));
+                        frame_text);
                 } else {
                     state.builder.add_property(
                         frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
-                        std::string_view(frame.text));
+                        frame_text);
                 }
             }
+            // Reclaim buffer space
+            state.text_buf.resize(frame.text_start);
             break;
+        }
 
         case FrameKind::Object:
             if (frame.obj.valid() && !state.current_path_ids.empty()) {
@@ -551,7 +563,11 @@ private:
 
         auto& frame = state.stack.back();
         if (frame.kind == FrameKind::Property) {
-            frame.text.append(s, static_cast<size_t>(len));
+            if (frame.text_len == 0) {
+                frame.text_start = static_cast<uint32_t>(state.text_buf.size());
+            }
+            state.text_buf.append(s, static_cast<size_t>(len));
+            frame.text_len += static_cast<uint32_t>(len);
         }
     }
 };
