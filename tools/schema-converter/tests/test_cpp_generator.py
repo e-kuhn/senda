@@ -745,6 +745,66 @@ class TestCLIIntegration(unittest.TestCase):
         self.assertIn("--cpp", result.stdout)
 
 
+class TestInnerRefRoleInjection(unittest.TestCase):
+    """Test that Pattern B wrappers inject inner REF roles into target types."""
+
+    @staticmethod
+    def _extract_lookup_block(code, xml_tag):
+        """Extract the lookup table block for a given XML tag name."""
+        lines = code.split("\n")
+        block_lines = []
+        capturing = False
+        brace_depth = 0
+        for line in lines:
+            if not capturing and line.strip() == "{":
+                capturing = True
+                brace_depth = 1
+                block_lines = [line]
+                continue
+            if capturing:
+                block_lines.append(line)
+                brace_depth += line.count("{") - line.count("}")
+                if brace_depth == 0:
+                    block = "\n".join(block_lines)
+                    if ('tag_to_type.add("%s"' % xml_tag) in block:
+                        return block
+                    capturing = False
+                    block_lines = []
+        return ""
+
+    def test_inner_ref_tag_injected_into_target_type(self):
+        from cpp_generator import generate_domain_builder
+        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+
+        schema = ExportSchema(
+            release_version="R23-11",
+            composites=[
+                ExportComposite(
+                    name="ISignalTriggering", xml_name="I-SIGNAL-TRIGGERING",
+                    members=[ExportMember(
+                        name="iSignalPort", types=["ISignalPort"],
+                        xml_element_name="I-SIGNAL-PORT-REFS",
+                        is_reference=True,
+                        inner_ref_tag="I-SIGNAL-PORT-REF",
+                    )],
+                ),
+                ExportComposite(
+                    name="ISignalPort", xml_name="I-SIGNAL-PORT",
+                    members=[],
+                ),
+            ],
+            primitives=[], enums=[],
+        )
+        code = generate_domain_builder(schema)
+        # The wrapper role should appear on ISignalTriggering
+        triggering_block = self._extract_lookup_block(code, "I-SIGNAL-TRIGGERING")
+        self.assertIn('"I-SIGNAL-PORT-REFS"', triggering_block)
+        # The inner REF role should be injected into ISignalPort's TypeInfo
+        port_block = self._extract_lookup_block(code, "I-SIGNAL-PORT")
+        self.assertIn('"I-SIGNAL-PORT-REF"', port_block,
+                      "Inner REF tag must be injected into target type's lookup")
+
+
 class TestRoleInfoIsReference(unittest.TestCase):
     """Test that is_reference flag is emitted in RoleInfo."""
 

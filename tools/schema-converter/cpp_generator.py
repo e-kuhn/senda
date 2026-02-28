@@ -138,6 +138,25 @@ def generate_domain_builder(schema: ExportSchema) -> str:
             if c.members:
                 w("")
 
+    # --- Build inner REF role injection map ---
+    # When a wrapper member (e.g. I-SIGNAL-PORT-REFS) has inner_ref_tag (e.g. I-SIGNAL-PORT-REF),
+    # inject that inner tag as a role entry on the wrapper's target type (e.g. ISignalPort).
+    inner_ref_injections: dict[str, list[tuple[str, str, str, str, bool]]] = {}
+    # target_type_name -> [(rvar, inner_ref_tag, role_name, target_type_var, is_reference=True)]
+    if composites:
+        for c in composites:
+            for i, m in enumerate(c.members):
+                if not m.inner_ref_tag or not m.types:
+                    continue
+                target_name = m.types[0]
+                cvar = type_vars[c.name]
+                rvar = _role_var(cvar, i)
+                target_var = type_vars.get(target_name, "string_t")
+                if target_name not in inner_ref_injections:
+                    inner_ref_injections[target_name] = []
+                inner_ref_injections[target_name].append(
+                    (rvar, m.inner_ref_tag, m.name, target_var, True))
+
     # --- Collect inherited + inlined (composition-hoisted) roles ---
     composite_by_name: dict[str, ExportComposite] = {c.name: c for c in composites}
 
@@ -198,7 +217,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         return result
 
     def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str, bool]]:
-        """Collect roles from a type, all ancestors, and inlined compositions (own roles first)."""
+        """Collect roles from a type, all ancestors, inlined compositions, and injected inner REF roles."""
         if visited is None:
             visited = set()
         if cname in visited:
@@ -218,6 +237,10 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                     # Child roles override parent roles with the same xml element
                     if role[1] not in {r[1] for r in result}:
                         result.append(role)
+        # Append injected inner REF roles (Pattern B wrappers)
+        for role in inner_ref_injections.get(cname, []):
+            if role[1] not in {r[1] for r in result}:
+                result.append(role)
         return result
 
     # --- Lookup tables ---
