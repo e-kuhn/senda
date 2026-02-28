@@ -2,7 +2,6 @@ module;
 
 #include <cstring>
 #include <filesystem>
-#include <fstream>
 #include <memory>
 #include <span>
 #include <string>
@@ -18,6 +17,7 @@ import rupa.compiler;
 import rupa.domain;
 import rupa.fir;
 import rupa.fir.builder;
+import rupa.diagnostics;
 import senda.domains;
 
 export namespace senda
@@ -108,19 +108,16 @@ public:
     {
         rupa::compiler::Diagnostics diags;
 
-        // Read file content
-        std::ifstream file(path, std::ios::binary | std::ios::ate);
-        if (!file) {
+        // Memory-map the file
+        if (!std::filesystem::exists(path)) {
             diags.add({rupa::compiler::Severity::Error,
                        "cannot open file: " + path.string(),
                        {path.string(), 0, 0}});
             return rupa::compiler::CompileResult(
                 fir::Fir{}, rupa::compiler::DomainExtensions{}, std::move(diags));
         }
-        auto size = file.tellg();
-        file.seekg(0);
-        std::string content(static_cast<size_t>(size), '\0');
-        file.read(content.data(), size);
+        rupa::diagnostics::SourceFile source(path);
+        auto content = source.view();
 
         // Create expat parser
         XML_Parser parser = XML_ParserCreate(nullptr);
