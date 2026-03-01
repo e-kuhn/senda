@@ -44,5 +44,31 @@ class TestNaming(unittest.TestCase):
         self.assertEqual(domain_name("R23-11"), "autosar-r23-11")
 
 
+class TestMultiplicityIndex(unittest.TestCase):
+    def test_one(self):
+        from cpp_helpers import multiplicity_index
+        self.assertEqual(multiplicity_index(1, 1), 0)
+
+    def test_optional(self):
+        from cpp_helpers import multiplicity_index
+        self.assertEqual(multiplicity_index(0, 1), 1)
+
+    def test_many(self):
+        from cpp_helpers import multiplicity_index
+        self.assertEqual(multiplicity_index(0, None), 2)
+
+    def test_one_or_more(self):
+        from cpp_helpers import multiplicity_index
+        self.assertEqual(multiplicity_index(1, None), 3)
+
+    def test_explicit_range_zero_min(self):
+        from cpp_helpers import multiplicity_index
+        self.assertEqual(multiplicity_index(0, 5), 2)
+
+    def test_explicit_range_nonzero_min(self):
+        from cpp_helpers import multiplicity_index
+        self.assertEqual(multiplicity_index(2, None), 3)
+
+
 if __name__ == "__main__":
     unittest.main()

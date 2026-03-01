@@ -19,18 +19,19 @@ from cpp_helpers import (
     prim_var as _prim_var,
     role_var as _role_var,
     domain_name as _domain_name,
+    multiplicity_index as _mult_idx,
 )
 
 
 def generate_domain_builder(schema: ExportSchema) -> str:
-    """Generate the C++ domain builder function body."""
+    """Generate the C++ domain builder function body with static data arrays."""
     lines: list[str] = []
     w = lines.append
 
     release = schema.release_version
     domain = _domain_name(release)
 
-    # --- Deduplicate composites (some schemas have duplicate complexTypes) ---
+    # --- Deduplicate composites ---
     seen_composites: set[str] = set()
     unique_composites: list[ExportComposite] = []
     for c in schema.composites:
@@ -39,160 +40,134 @@ def generate_domain_builder(schema: ExportSchema) -> str:
             unique_composites.append(c)
     composites = unique_composites
 
-    # --- Build name->variable mappings ---
-    type_vars: dict[str, str] = {}  # PascalCase name -> C++ variable name
+    # --- Assign sequential type indices ---
+    # Order: primitives, enums, composites
+    type_index: dict[str, int] = {}
+    all_types: list = []  # (name, kind_int, supertype_idx, is_abstract, members, is_enum, enum_values)
 
     for p in schema.primitives:
-        var = _prim_var(p.name)
-        type_vars[p.name] = var
+        type_index[p.name] = len(all_types)
+        all_types.append((p.name, 1, None, False, [], False, []))  # M3Kind::Primitive = 1
 
     for e in schema.enums:
-        var = _type_var(e.name)
-        type_vars[e.name] = var
+        type_index[e.name] = len(all_types)
+        all_types.append((e.name, 4, None, False, [], True, e.values))  # M3Kind::Enum = 4
 
     for c in composites:
-        var = _type_var(c.name)
-        type_vars[c.name] = var
+        type_index[c.name] = len(all_types)
+        all_types.append((c.name, 0, None, c.is_abstract, c.members, False, []))  # M3Kind::Composite = 0
 
-    # --- Emit function ---
-    func_name = "build_" + pascal_to_snake(_domain_name(release).replace("-", "_"))
-    w("AutosarSchema %s() {" % func_name)
-    w("    fir::Fir type_fir;")
-    w("    rupa::fir_builder::FirBuilder b(type_fir);")
-    w("")
+    # --- Build flat role list ---
+    role_list: list[tuple[str, int, int]] = []  # (name, target_type_idx, mult_idx)
+    role_starts: list[int] = []
+    role_counts: list[int] = []
+    # Also track (type_index, member_index) -> role_index for lookup table generation
+    role_index_map: dict[tuple[int, int], int] = {}
 
-    # --- Primitives ---
-    if schema.primitives:
-        w("    // ── Primitives (%d) ──" % len(schema.primitives))
-        for p in schema.primitives:
-            var = type_vars[p.name]
-            w('    auto %s = b.begin_type("%s", fir::M3Kind::Primitive);' % (var, p.name))
-        w("")
+    for ti, (tname, kind, _, _, members, is_enum, _) in enumerate(all_types):
+        start = len(role_list)
+        count = 0
+        for mi, m in enumerate(members):
+            role_name = ".." if m.name is None else m.name
+            target_idx = 0  # fallback
+            if m.types:
+                first_type = m.types[0]
+                if first_type in type_index:
+                    target_idx = type_index[first_type]
+            mult = _mult_idx(m.min_occurs, m.max_occurs)
+            if m.xml_element_name:
+                role_index_map[(ti, mi)] = len(role_list)
+            role_list.append((role_name, target_idx, mult))
+            count += 1
+        role_starts.append(start)
+        role_counts.append(count)
 
-    # --- Enums ---
-    if schema.enums:
-        w("    // ── Enums (%d) ──" % len(schema.enums))
-        for e in schema.enums:
-            var = type_vars[e.name]
-            w('    auto %s = b.begin_type("%s", fir::M3Kind::Enum);' % (var, e.name))
-            for val in e.values:
-                w('    b.add_enum_value(%s, "%s");' % (var, val))
-            w("")
+    # --- Build flat enum value list ---
+    enum_list: list[str] = []
+    enum_starts: list[int] = []
+    enum_counts: list[int] = []
 
-    # --- Composites Phase 1: Declare all types ---
-    if composites:
-        w("    // ── Composites Phase 1: Declare types (%d) ──" % len(composites))
-        for c in composites:
-            var = type_vars[c.name]
-            w('    auto %s = b.begin_type("%s", fir::M3Kind::Composite);' % (var, c.name))
-        w("")
+    for ti, (tname, kind, _, _, _, is_enum, values) in enumerate(all_types):
+        start = len(enum_list)
+        count = 0
+        if is_enum:
+            for v in values:
+                enum_list.append(v)
+                count += 1
+        enum_starts.append(start)
+        enum_counts.append(count)
 
-        # --- Phase 2: Set supertypes ---
-        supertypes = [(c, parent) for c in composites
-                      for parent in c.inherits_from if parent in type_vars]
-        if supertypes:
-            w("    // ── Composites Phase 2: Supertypes ──")
-            for c, parent in supertypes:
-                w("    b.set_supertype(%s, %s);" % (type_vars[c.name], type_vars[parent]))
-            w("")
+    # --- Resolve supertypes ---
+    supertype_indices: list[int] = []
+    for ti, (tname, kind, _, _, _, _, _) in enumerate(all_types):
+        sup = 0xFFFF
+        if kind == 0:  # Composite
+            # Find the ExportComposite
+            ci = ti - len(schema.primitives) - len(schema.enums)
+            if 0 <= ci < len(composites):
+                c = composites[ci]
+                for parent in c.inherits_from:
+                    if parent in type_index:
+                        sup = type_index[parent]
+                        break  # Only first supertype
+        supertype_indices.append(sup)
 
-        # --- Phase 3: Abstract flags ---
-        abstracts = [c for c in composites if c.is_abstract]
-        if abstracts:
-            w("    // ── Composites Phase 3: Abstract flags ──")
-            for c in abstracts:
-                w("    b.set_abstract(%s, true);" % type_vars[c.name])
-            w("")
-
-        # --- Phase 4: Roles ---
-        w("    // ── Composites Phase 4: Roles ──")
-
-        # Track role handles per type for lookup table generation
-        role_handles: dict[str, list[tuple[str, str, str, str, bool]]] = {}
-        # type_name -> [(role_var, member_xml_element_name, role_name, target_type_var, is_reference)]
-
-        for c in composites:
-            cvar = type_vars[c.name]
-            role_handles[c.name] = []
-            for i, m in enumerate(c.members):
-                rvar = _role_var(cvar, i)
-                role_name = ".." if m.name is None else m.name
-
-                # Resolve target type
-                target_type = "string_t"  # fallback
-                if m.types:
-                    first_type = m.types[0]
-                    if first_type in type_vars:
-                        target_type = type_vars[first_type]
-
-                mult = _multiplicity(m.min_occurs, m.max_occurs)
-
-                xml_elem = m.xml_element_name
-                if xml_elem:
-                    w('    auto %s = b.add_role(%s, "%s", %s, %s);'
-                      % (rvar, cvar, role_name, target_type, mult))
-                    role_handles[c.name].append((rvar, xml_elem, role_name, target_type, m.is_reference))
-                else:
-                    w('    b.add_role(%s, "%s", %s, %s);'
-                      % (cvar, role_name, target_type, mult))
-            if c.members:
-                w("")
-
-    # --- Build inner REF role injection map ---
-    # When a wrapper member (e.g. I-SIGNAL-PORT-REFS) has inner_ref_tag (e.g. I-SIGNAL-PORT-REF),
-    # inject that inner tag as a role entry on the wrapper's target type (e.g. ISignalPort).
-    inner_ref_injections: dict[str, list[tuple[str, str, str, str, bool]]] = {}
-    # target_type_name -> [(rvar, inner_ref_tag, role_name, target_type_var, is_reference=True)]
-    if composites:
-        for c in composites:
-            for i, m in enumerate(c.members):
-                if not m.inner_ref_tag or not m.types:
-                    continue
-                target_name = m.types[0]
-                cvar = type_vars[c.name]
-                rvar = _role_var(cvar, i)
-                target_var = type_vars.get(target_name, "string_t")
-                if target_name not in inner_ref_injections:
-                    inner_ref_injections[target_name] = []
-                inner_ref_injections[target_name].append(
-                    (rvar, m.inner_ref_tag, m.name, target_var, True))
-
-    # --- Collect inherited + inlined (composition-hoisted) roles ---
+    # --- Build role_handles equivalent for lookup tables ---
+    # Map: type_name -> [(role_global_idx, xml_element_name, role_name, target_type_idx, is_reference)]
     composite_by_name: dict[str, ExportComposite] = {c.name: c for c in composites}
-
-    # Build a map from type name to its members (for composition detection)
     members_by_type: dict[str, list[ExportMember]] = {c.name: c.members for c in composites}
 
-    def _inlined_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str, bool]]:
-        """Collect roles hoisted from composition members without xml_element_name.
+    role_handles: dict[str, list[tuple[int, str, str, int, bool]]] = {}
+    for c in composites:
+        ti = type_index[c.name]
+        role_handles[c.name] = []
+        for mi, m in enumerate(c.members):
+            if m.xml_element_name:
+                ri = role_index_map.get((ti, mi))
+                if ri is not None:
+                    target_idx = 0
+                    if m.types and m.types[0] in type_index:
+                        target_idx = type_index[m.types[0]]
+                    role_handles[c.name].append(
+                        (ri, m.xml_element_name, m.name or "..", target_idx, m.is_reference))
 
-        When a type has a composition member (no xml_element_name) pointing to
-        a composite type, that target type's XML children appear directly in
-        the parent's XML.  We hoist those roles into the parent's lookup table.
+    # --- Build inner REF injection map ---
+    inner_ref_injections: dict[str, list[tuple[int, str, str, int, bool]]] = {}
+    for c in composites:
+        ti = type_index[c.name]
+        for mi, m in enumerate(c.members):
+            if not m.inner_ref_tag or not m.types:
+                continue
+            target_name = m.types[0]
+            ri = role_index_map.get((ti, mi))
+            if ri is None:
+                continue
+            target_idx = type_index.get(target_name, 0)
+            if target_name not in inner_ref_injections:
+                inner_ref_injections[target_name] = []
+            inner_ref_injections[target_name].append(
+                (ri, m.inner_ref_tag, m.name or "..", target_idx, True))
 
-        Handles transitive chains and cycles via visited-set tracking.
-        """
+    # --- Collect inherited + inlined roles (same logic as before) ---
+    def _inlined_roles(cname: str, visited: set[str] | None = None) -> list[tuple[int, str, str, int, bool]]:
         if visited is None:
             visited = set()
         if cname in visited:
             return []
         visited.add(cname)
-        result: list[tuple[str, str, str, str, bool]] = []
+        result: list[tuple[int, str, str, int, bool]] = []
         for m in members_by_type.get(cname, []):
             if m.xml_element_name is not None:
-                continue  # Has its own XML tag — not a composition-inline
+                continue
             if not m.types:
                 continue
             target = m.types[0]
             if target not in composite_by_name:
-                continue  # Points to a primitive/enum, not a composite
-            # Hoist direct roles from the target type
+                continue
             for role in role_handles.get(target, []):
                 result.append(role)
-            # Recursively hoist from the target's own composition members
             for role in _inlined_roles(target, visited):
                 result.append(role)
-            # Also hoist inherited roles from the target's ancestors
             target_comp = composite_by_name.get(target)
             if target_comp:
                 for parent in target_comp.inherits_from:
@@ -200,8 +175,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                         result.append(role)
         return result
 
-    def _all_roles_no_inline(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str, bool]]:
-        """Collect roles from a type and all ancestors (no composition inlining)."""
+    def _all_roles_no_inline(cname: str, visited: set[str] | None = None) -> list[tuple[int, str, str, int, bool]]:
         if visited is None:
             visited = set()
         if cname in visited:
@@ -216,72 +190,158 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                         result.append(role)
         return result
 
-    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[str, str, str, str, bool]]:
-        """Collect roles from a type, all ancestors, inlined compositions, and injected inner REF roles."""
+    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[int, str, str, int, bool]]:
         if visited is None:
             visited = set()
         if cname in visited:
             return []
         visited.add(cname)
         result = list(role_handles.get(cname, []))
-        # Hoist roles from composition members (no xml_element_name)
-        # Pass a fresh visited set — _inlined_roles manages its own cycle detection
         for role in _inlined_roles(cname):
             if role[1] not in {r[1] for r in result}:
                 result.append(role)
-        # Inherit roles from parent types
         comp = composite_by_name.get(cname)
         if comp:
             for parent in comp.inherits_from:
                 for role in _all_roles(parent, visited):
-                    # Child roles override parent roles with the same xml element
                     if role[1] not in {r[1] for r in result}:
                         result.append(role)
-        # Append injected inner REF roles (Pattern B wrappers)
         for role in inner_ref_injections.get(cname, []):
             if role[1] not in {r[1] for r in result}:
                 result.append(role)
         return result
 
-    # --- Lookup tables ---
-    w("    // ── Lookup Tables ──")
-    w("    kore::FrozenMap<std::string_view, TypeInfo> tag_to_type(%d);"
-      % len(composites))
-    w("")
+    # --- Build flat tag and tag-role lists ---
+    tag_list: list[tuple[str, int, int, int]] = []  # (xml_tag, type_idx, tag_role_start, tag_role_count)
+    tag_role_list: list[tuple[str, int, int, bool]] = []  # (xml_elem, role_idx, target_type_idx, is_ref)
 
     for c in composites:
         if not c.xml_name:
             continue
-        cvar = type_vars[c.name]
+        ti = type_index[c.name]
         roles = _all_roles(c.name)
+        tr_start = len(tag_role_list)
+        for ri, xml_elem, _rn, target_idx, is_ref in roles:
+            tag_role_list.append((xml_elem, ri, target_idx, is_ref))
+        tag_list.append((c.xml_name, ti, tr_start, len(tag_role_list) - tr_start))
 
+    # --- Emit static arrays ---
+    N = len(all_types)
 
-        w("    {")
-        w("        TypeInfo info{{%s.id}, kore::FrozenMap<std::string_view, RoleInfo>(%d)};"
-          % (cvar, len(roles)))
-        for rvar, xml_elem, _role_name, target_type_var, is_ref in roles:
-            ref_str = "true" if is_ref else "false"
-            w('        info.roles.add("%s", RoleInfo{rupa::domain::RoleHandle{%s.id}, static_cast<uint32_t>(%s.id), %s});'
-              % (xml_elem, rvar, target_type_var, ref_str))
-        w("        info.roles.freeze();")
-        w('        tag_to_type.add("%s", std::move(info));' % c.xml_name)
-        w("    }")
+    w("// ── Static type descriptors (%d) ──" % N)
+    w("constexpr TypeDesc kTypes[] = {")
+    for ti in range(N):
+        name = all_types[ti][0]
+        kind = all_types[ti][1]
+        sup = supertype_indices[ti]
+        abstract = all_types[ti][3]
+        rs = role_starts[ti]
+        rc = role_counts[ti]
+        es = enum_starts[ti]
+        ec = enum_counts[ti]
+        w('    {"%s", %d, %d, %s, %d, %d, %d, %d},'
+          % (name, kind, sup, "true" if abstract else "false", rs, rc, es, ec))
+    w("};")
+    w("")
 
+    if role_list:
+        w("// ── Static role descriptors (%d) ──" % len(role_list))
+        w("constexpr RoleDesc kRoles[] = {")
+        for rname, target_idx, mult in role_list:
+            w('    {"%s", %d, %d},' % (rname, target_idx, mult))
+        w("};")
+    else:
+        w("constexpr RoleDesc kRoles[] = {};")
+    w("")
+
+    if enum_list:
+        w("// ── Static enum value descriptors (%d) ──" % len(enum_list))
+        w("constexpr EnumValDesc kEnumValues[] = {")
+        for v in enum_list:
+            w('    {"%s"},' % v)
+        w("};")
+    else:
+        w("constexpr EnumValDesc kEnumValues[] = {};")
+    w("")
+
+    if tag_role_list:
+        w("// ── Lookup tag-role descriptors (%d) ──" % len(tag_role_list))
+        w("constexpr TagRoleDesc kTagRoles[] = {")
+        for xml_elem, ri, target_idx, is_ref in tag_role_list:
+            w('    {"%s", %d, %d, %s},'
+              % (xml_elem, ri, target_idx, "true" if is_ref else "false"))
+        w("};")
+    else:
+        w("constexpr TagRoleDesc kTagRoles[] = {};")
+    w("")
+
+    if tag_list:
+        w("// ── Lookup tag descriptors (%d) ──" % len(tag_list))
+        w("constexpr TagDesc kTags[] = {")
+        for xml_tag, ti, tr_start, tr_count in tag_list:
+            w('    {"%s", %d, %d, %d},' % (xml_tag, ti, tr_start, tr_count))
+        w("};")
+    else:
+        w("constexpr TagDesc kTags[] = {};")
+    w("")
+
+    # --- Emit driver function ---
+    func_name = "build_" + pascal_to_snake(_domain_name(release).replace("-", "_"))
+    w("AutosarSchema %s() {" % func_name)
+    w("    fir::Fir type_fir;")
+    w("    rupa::fir_builder::FirBuilder b(type_fir);")
+    w("")
+    w("    constexpr size_t N = std::size(kTypes);")
+    w("    std::vector<rupa::fir_builder::TypeHandle> th(N);")
+    w("    for (size_t i = 0; i < N; ++i)")
+    w("        th[i] = b.begin_type(kTypes[i].name, static_cast<fir::M3Kind>(kTypes[i].kind));")
+    w("")
+    w("    for (size_t i = 0; i < N; ++i) {")
+    w("        if (kTypes[i].supertype != UINT16_MAX)")
+    w("            b.set_supertype(th[i], th[kTypes[i].supertype]);")
+    w("        if (kTypes[i].is_abstract)")
+    w("            b.set_abstract(th[i], true);")
+    w("    }")
+    w("")
+    w("    for (size_t i = 0; i < N; ++i)")
+    w("        for (uint16_t j = 0; j < kTypes[i].enum_count; ++j)")
+    w("            b.add_enum_value(th[i], kEnumValues[kTypes[i].enum_start + j].value);")
+    w("")
+    w("    std::vector<rupa::fir_builder::RoleHandle> rh(std::size(kRoles));")
+    w("    for (size_t i = 0; i < N; ++i)")
+    w("        for (uint16_t j = 0; j < kTypes[i].role_count; ++j) {")
+    w("            auto ri = kTypes[i].role_start + j;")
+    w("            rh[ri] = b.add_role(th[i], kRoles[ri].name,")
+    w("                                th[kRoles[ri].target_type],")
+    w("                                static_cast<fir::Multiplicity>(kRoles[ri].mult));")
+    w("        }")
+    w("")
+    w("    kore::FrozenMap<std::string_view, TypeInfo> tag_to_type(std::size(kTags));")
+    w("    for (const auto& tag : kTags) {")
+    w("        TypeInfo info{{th[tag.type_index].id},")
+    w("                      kore::FrozenMap<std::string_view, RoleInfo>(tag.tag_role_count)};")
+    w("        for (uint16_t j = 0; j < tag.tag_role_count; ++j) {")
+    w("            const auto& tr = kTagRoles[tag.tag_role_start + j];")
+    w("            info.roles.add(tr.xml_element_name,")
+    w("                RoleInfo{rupa::domain::RoleHandle{rh[tr.role_index].id},")
+    w("                         static_cast<uint32_t>(th[tr.target_type].id),")
+    w("                         tr.is_reference});")
+    w("        }")
+    w("        info.roles.freeze();")
+    w("        tag_to_type.add(tag.xml_tag, std::move(info));")
+    w("    }")
     w("    tag_to_type.freeze();")
     w("")
-
-    # --- handle_to_type reverse lookup ---
-    w("    kore::FrozenMap<uint32_t, const TypeInfo*> handle_to_type(%d);" % len(composites))
-    for c in composites:
-        if not c.xml_name:
-            continue
-        cvar = type_vars[c.name]
-        w('    handle_to_type.add(static_cast<uint32_t>(%s.id), tag_to_type.find("%s"));'
-          % (cvar, c.xml_name))
+    w("    kore::FrozenMap<uint32_t, const TypeInfo*> handle_to_type(std::size(kTags));")
+    w("    for (const auto& tag : kTags)")
+    w("        handle_to_type.add(static_cast<uint32_t>(th[tag.type_index].id),")
+    w("                          tag_to_type.find(tag.xml_tag));")
     w("    handle_to_type.freeze();")
     w("")
-    w('    return AutosarSchema{rupa::domain::Domain("%s", std::move(type_fir)), std::move(tag_to_type), std::move(handle_to_type), "%s"};'
-      % (domain, schema.xsd_filename))
+    w('    return AutosarSchema{rupa::domain::Domain("%s", std::move(type_fir)),'
+      % domain)
+    w('                         std::move(tag_to_type), std::move(handle_to_type), "%s"};'
+      % schema.xsd_filename)
     w("}")
 
     return "\n".join(lines)
@@ -295,8 +355,10 @@ def generate_domain_module(schema: ExportSchema, output_dir: str) -> None:
 
     header = '''module;
 
+#include <cstdint>
 #include <string_view>
 #include <utility>
+#include <vector>
 
 export module senda.domains.%s;
 
