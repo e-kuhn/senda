@@ -35,6 +35,26 @@ def multiplicity_str(min_occurs: int | None, max_occurs: int | None) -> str:
     return "fir::Multiplicity::OneOrMore"
 
 
+def multiplicity_index(min_occurs: int | None, max_occurs: int | None) -> int:
+    """Map (min, max) to fir::Multiplicity integer value.
+
+    One=0, Optional=1, Many=2, OneOrMore=3.
+    """
+    mn = min_occurs if min_occurs is not None else 0
+    mx = max_occurs
+    if mn == 1 and mx == 1:
+        return 0  # One
+    if mn == 0 and mx == 1:
+        return 1  # Optional
+    if mn == 0 and mx is None:
+        return 2  # Many
+    if mn == 1 and mx is None:
+        return 3  # OneOrMore
+    if mn == 0:
+        return 2  # Many
+    return 3  # OneOrMore
+
+
 def safe_var(name: str) -> str:
     """Append underscore to C++ reserved keywords."""
     return name + "_" if name in CPP_KEYWORDS else name
