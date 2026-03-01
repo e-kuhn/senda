@@ -1,5 +1,6 @@
 module;
 
+#include <cstdint>
 #include <string_view>
 
 export module senda.domains;
@@ -27,6 +28,43 @@ struct AutosarSchema {
     kore::FrozenMap<std::string_view, TypeInfo> tag_to_type;
     kore::FrozenMap<uint32_t, const TypeInfo*> handle_to_type;
     std::string_view xsd_filename;
+};
+
+// ── Data-driven domain descriptor types ──
+
+struct TypeDesc {
+    std::string_view name;
+    uint8_t kind;           // fir::M3Kind as integer (Composite=0, Primitive=1, Enum=4)
+    uint16_t supertype;     // index into types array, UINT16_MAX = none
+    bool is_abstract;
+    uint16_t role_start;    // index into roles array
+    uint16_t role_count;
+    uint16_t enum_start;    // index into enum_values array
+    uint16_t enum_count;
+};
+
+struct RoleDesc {
+    std::string_view name;
+    uint16_t target_type;   // index into types array
+    uint8_t mult;           // fir::Multiplicity as integer (One=0, Optional=1, Many=2, OneOrMore=3)
+};
+
+struct EnumValDesc {
+    std::string_view value;
+};
+
+struct TagRoleDesc {
+    std::string_view xml_element_name;
+    uint16_t role_index;    // index into roles array
+    uint16_t target_type;   // index into types array
+    bool is_reference;
+};
+
+struct TagDesc {
+    std::string_view xml_tag;
+    uint16_t type_index;    // index into types array
+    uint16_t tag_role_start; // index into tag_roles array
+    uint16_t tag_role_count;
 };
 
 }  // namespace senda::domains
