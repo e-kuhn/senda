@@ -2,10 +2,11 @@ import unittest
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from schema_model import ExportComposite, ExportMember, ExportEnum, ExportPrimitive
+from schema_model import ExportComposite, ExportMember, ExportEnum, ExportPrimitive, PrimitiveSupertype
 
 
 class TestExportModelXmlNames(unittest.TestCase):
+    """These tests don't depend on code generation output format."""
     def test_composite_has_xml_name(self):
         c = ExportComposite("ISignal", xml_name="I-SIGNAL")
         self.assertEqual(c.xml_name, "I-SIGNAL")
@@ -95,7 +96,6 @@ class TestExportPopulatesXmlNames(unittest.TestCase):
     def test_enum_xml_name_populated(self):
         from schema_parser import parse_schema_from_string, export_schema
 
-        # Enum must be referenced by a composite to survive truncation
         xsd = '''\
         <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                     targetNamespace="http://autosar.org/schema/r4.0"
@@ -137,10 +137,61 @@ class TestExportPopulatesXmlNames(unittest.TestCase):
                          "ACCESS-CONTROL-ENUM--SIMPLE")
 
 
+# ── Helpers for parsing data-driven output ──
+
+def _extract_array_entries(code, array_name):
+    """Extract entries from a static constexpr array in generated code.
+
+    Returns list of raw entry strings (everything between { and })
+    for each row in the array.
+    """
+    entries = []
+    lines = code.split("\n")
+    in_array = False
+    for line in lines:
+        stripped = line.strip()
+        if not in_array:
+            if stripped.startswith("static constexpr") and array_name in stripped:
+                in_array = True
+            continue
+        if stripped == "};":
+            break
+        if stripped.startswith("{") and stripped.endswith("},"):
+            entries.append(stripped[1:-2])  # strip { and },
+    return entries
+
+
+def _find_tag_roles(code, xml_tag):
+    """Find all TagRoleDesc entries for a given XML tag.
+
+    Returns list of (xml_element_name, role_index, target_type, is_reference) strings.
+    """
+    tags = _extract_array_entries(code, "kTags[]")
+    tag_roles = _extract_array_entries(code, "kTagRoles[]")
+
+    for entry in tags:
+        parts = [p.strip().strip('"') for p in entry.split(",")]
+        if parts[0] == xml_tag:
+            start = int(parts[2])
+            count = int(parts[3])
+            result = []
+            for i in range(start, start + count):
+                tr_parts = [p.strip().strip('"') for p in tag_roles[i].split(",")]
+                result.append(tr_parts)  # [xml_elem, role_idx, target_type, is_ref]
+            return result
+    return []
+
+
+def _tag_role_xml_names(code, xml_tag):
+    """Get the set of XML element names in the tag-role entries for a given tag."""
+    roles = _find_tag_roles(code, xml_tag)
+    return {r[0] for r in roles}
+
+
 class TestDomainBuilderPrimitives(unittest.TestCase):
     def test_generates_primitive_types(self):
         from cpp_generator import generate_domain_builder
-        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -151,12 +202,14 @@ class TestDomainBuilderPrimitives(unittest.TestCase):
         )
 
         code = generate_domain_builder(schema)
-        self.assertIn('b.begin_type("string", fir::M3Kind::Primitive)', code)
-        self.assertIn('b.begin_type("integer", fir::M3Kind::Primitive)', code)
+        entries = _extract_array_entries(code, "kTypes[]")
+        # Primitives have kind=1
+        self.assertTrue(any('"string", 1,' in e for e in entries))
+        self.assertTrue(any('"integer", 1,' in e for e in entries))
 
     def test_generates_enum_types(self):
         from cpp_generator import generate_domain_builder
-        from schema_model import ExportSchema, ExportEnum
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -167,18 +220,20 @@ class TestDomainBuilderPrimitives(unittest.TestCase):
         )
 
         code = generate_domain_builder(schema)
-        self.assertIn('b.begin_type("ISignalTypeEnum", fir::M3Kind::Enum)', code)
-        self.assertIn('b.add_enum_value(i_signal_type_enum, "PRIMITIVE")', code)
-        self.assertIn('b.add_enum_value(i_signal_type_enum, "STRUCTURE")', code)
+        # Enum kind = 4
+        type_entries = _extract_array_entries(code, "kTypes[]")
+        self.assertTrue(any('"ISignalTypeEnum", 4,' in e for e in type_entries))
+        # Enum values present
+        ev_entries = _extract_array_entries(code, "kEnumValues[]")
+        values = [e.strip().strip('"') for e in ev_entries]
+        self.assertIn("PRIMITIVE", values)
+        self.assertIn("STRUCTURE", values)
 
 
 class TestDomainBuilderComposites(unittest.TestCase):
     def test_generates_composite_types(self):
         from cpp_generator import generate_domain_builder
-        from schema_model import (
-            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
-            PrimitiveSupertype,
-        )
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -208,27 +263,28 @@ class TestDomainBuilderComposites(unittest.TestCase):
 
         code = generate_domain_builder(schema)
 
-        # Phase 1: Type declarations
-        self.assertIn('b.begin_type("Identifiable", fir::M3Kind::Composite)', code)
-        self.assertIn('b.begin_type("ISignal", fir::M3Kind::Composite)', code)
+        # Composite kind = 0
+        type_entries = _extract_array_entries(code, "kTypes[]")
+        self.assertTrue(any('"Identifiable", 0,' in e for e in type_entries))
+        self.assertTrue(any('"ISignal", 0,' in e for e in type_entries))
 
-        # Phase 2: Supertypes
-        self.assertIn('b.set_supertype(i_signal, identifiable)', code)
+        # Abstract flag
+        identifiable_entry = next(e for e in type_entries if '"Identifiable"' in e)
+        self.assertIn("true", identifiable_entry)
 
-        # Phase 3: Abstract
-        self.assertIn('b.set_abstract(identifiable, true)', code)
+        # Supertype: ISignal -> Identifiable (index 1 since string is index 0)
+        isignal_entry = next(e for e in type_entries if '"ISignal"' in e)
+        self.assertIn(", 1,", isignal_entry)  # supertype index = 1
 
-        # Phase 4: Roles
-        self.assertIn('b.add_role(identifiable, "shortName", string_t', code)
-        self.assertIn('b.add_role(i_signal, "shortName", string_t', code)
-        self.assertIn('b.add_role(i_signal, "length", string_t', code)
+        # Roles
+        role_entries = _extract_array_entries(code, "kRoles[]")
+        role_names = [e.split(",")[0].strip().strip('"') for e in role_entries]
+        self.assertIn("shortName", role_names)
+        self.assertIn("length", role_names)
 
     def test_generates_lookup_tables(self):
         from cpp_generator import generate_domain_builder
-        from schema_model import (
-            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
-            PrimitiveSupertype,
-        )
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -247,18 +303,15 @@ class TestDomainBuilderComposites(unittest.TestCase):
 
         code = generate_domain_builder(schema)
 
-        # Tag-to-type lookup
-        self.assertIn('tag_to_type.add("I-SIGNAL"', code)
-        # Per-type role lookup
-        self.assertIn('"SHORT-NAME"', code)
-        self.assertIn('tag_to_type.freeze()', code)
+        tag_entries = _extract_array_entries(code, "kTags[]")
+        self.assertTrue(any('"I-SIGNAL"' in e for e in tag_entries))
+
+        xml_names = _tag_role_xml_names(code, "I-SIGNAL")
+        self.assertIn("SHORT-NAME", xml_names)
 
     def test_multiplicity_mapping(self):
         from cpp_generator import generate_domain_builder
-        from schema_model import (
-            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
-            PrimitiveSupertype,
-        )
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -285,44 +338,23 @@ class TestDomainBuilderComposites(unittest.TestCase):
         )
 
         code = generate_domain_builder(schema)
-        self.assertIn("fir::Multiplicity::One", code)
-        self.assertIn("fir::Multiplicity::Optional", code)
-        self.assertIn("fir::Multiplicity::Many", code)
-        self.assertIn("fir::Multiplicity::OneOrMore", code)
+        role_entries = _extract_array_entries(code, "kRoles[]")
+
+        # One=0, Optional=1, Many=2, OneOrMore=3
+        required_role = next(e for e in role_entries if '"required"' in e)
+        self.assertTrue(required_role.strip().endswith("0"))
+        optional_role = next(e for e in role_entries if '"optional"' in e)
+        self.assertTrue(optional_role.strip().endswith("1"))
+        many_role = next(e for e in role_entries if '"many"' in e)
+        self.assertTrue(many_role.strip().endswith("2"))
+        one_or_more_role = next(e for e in role_entries if '"oneOrMore"' in e)
+        self.assertTrue(one_or_more_role.strip().endswith("3"))
 
 
 class TestLookupTableInheritedRoles(unittest.TestCase):
-    @staticmethod
-    def _extract_lookup_block(code, xml_tag):
-        """Extract the lookup table block for a given XML tag name."""
-        lines = code.split("\n")
-        block_lines = []
-        capturing = False
-        brace_depth = 0
-        for line in lines:
-            if not capturing and line.strip() == "{":
-                capturing = True
-                brace_depth = 1
-                block_lines = [line]
-                continue
-            if capturing:
-                block_lines.append(line)
-                brace_depth += line.count("{") - line.count("}")
-                if brace_depth == 0:
-                    block = "\n".join(block_lines)
-                    if ('tag_to_type.add("%s"' % xml_tag) in block:
-                        return block
-                    capturing = False
-                    block_lines = []
-        return ""
-
     def test_child_lookup_includes_parent_roles(self):
-        """Roles from parent groups must appear in child lookup tables."""
         from cpp_generator import generate_domain_builder
-        from schema_model import (
-            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
-            PrimitiveSupertype,
-        )
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -349,20 +381,16 @@ class TestLookupTableInheritedRoles(unittest.TestCase):
         )
 
         code = generate_domain_builder(schema)
-        block = self._extract_lookup_block(code, "I-SIGNAL")
+        xml_names = _tag_role_xml_names(code, "I-SIGNAL")
 
-        self.assertIn('"LONG-NAME"', block,
+        self.assertIn("LONG-NAME", xml_names,
                       "I-SIGNAL lookup must include inherited LONG-NAME role")
-        self.assertIn('"LENGTH"', block,
+        self.assertIn("LENGTH", xml_names,
                       "I-SIGNAL lookup must include own LENGTH role")
 
     def test_child_role_overrides_parent_role(self):
-        """When child defines same xml_element_name as parent, child wins."""
         from cpp_generator import generate_domain_builder
-        from schema_model import (
-            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
-            PrimitiveSupertype,
-        )
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -388,22 +416,15 @@ class TestLookupTableInheritedRoles(unittest.TestCase):
         )
 
         code = generate_domain_builder(schema)
-        block = self._extract_lookup_block(code, "CHILD")
+        roles = _find_tag_roles(code, "CHILD")
 
-        name_count = block.count('"NAME"')
-        self.assertEqual(name_count, 1,
+        name_roles = [r for r in roles if r[0] == "NAME"]
+        self.assertEqual(len(name_roles), 1,
                          "Child should have exactly one NAME role (child overrides parent)")
-        # Verify it uses the child's role handle, not the parent's
-        self.assertIn("child_r0", block)
-        self.assertNotIn("base_group_r0", block)
 
     def test_deep_inheritance_chain(self):
-        """Roles propagate through multi-level inheritance."""
         from cpp_generator import generate_domain_builder
-        from schema_model import (
-            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
-            PrimitiveSupertype,
-        )
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -436,21 +457,18 @@ class TestLookupTableInheritedRoles(unittest.TestCase):
         )
 
         code = generate_domain_builder(schema)
-        block = self._extract_lookup_block(code, "LEAF")
+        xml_names = _tag_role_xml_names(code, "LEAF")
 
-        self.assertIn('"GP-FIELD"', block,
-                      "LEAF lookup must include grandparent's GP-FIELD")
-        self.assertIn('"P-FIELD"', block,
-                      "LEAF lookup must include parent's P-FIELD")
-        self.assertIn('"OWN-FIELD"', block,
-                      "LEAF lookup must include own OWN-FIELD")
+        self.assertIn("GP-FIELD", xml_names)
+        self.assertIn("P-FIELD", xml_names)
+        self.assertIn("OWN-FIELD", xml_names)
 
 
 class TestDomainModuleGeneration(unittest.TestCase):
     def test_generates_domain_module_file(self):
         import tempfile
         from cpp_generator import generate_domain_module
-        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -467,16 +485,13 @@ class TestDomainModuleGeneration(unittest.TestCase):
                 content = f.read()
             self.assertIn("export module senda.domains.r23_11", content)
             self.assertIn("AutosarSchema", content)
-            self.assertIn("TypeInfo", content)
+            self.assertIn("TypeDesc", content)
 
 
 class TestDomainBuilderUnnamedRoles(unittest.TestCase):
     def test_unnamed_role_uses_dotdot(self):
         from cpp_generator import generate_domain_builder
-        from schema_model import (
-            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
-            PrimitiveSupertype,
-        )
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -495,7 +510,8 @@ class TestDomainBuilderUnnamedRoles(unittest.TestCase):
         )
 
         code = generate_domain_builder(schema)
-        self.assertIn('".."', code)
+        role_entries = _extract_array_entries(code, "kRoles[]")
+        self.assertTrue(any('".."' in e for e in role_entries))
 
 
 class TestVersionedDomainModule(unittest.TestCase):
@@ -538,7 +554,7 @@ class TestFileGeneration(unittest.TestCase):
     def test_generate_cpp_files_creates_domain_module(self):
         import tempfile
         from cpp_generator import generate_cpp_files
-        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -558,41 +574,11 @@ class TestFileGeneration(unittest.TestCase):
             self.assertIn("export module senda.domains.r23_11", content)
             self.assertIn("AutosarSchema", content)
 
+
 class TestCompositionRoleHoisting(unittest.TestCase):
-    """RC1: Composition members without xml_element_name should have their
-    target type's roles hoisted into the parent's lookup table."""
-
-    @staticmethod
-    def _extract_lookup_block(code, xml_tag):
-        """Extract the lookup table block for a given XML tag name."""
-        lines = code.split("\n")
-        block_lines = []
-        capturing = False
-        brace_depth = 0
-        for line in lines:
-            if not capturing and line.strip() == "{":
-                capturing = True
-                brace_depth = 1
-                block_lines = [line]
-                continue
-            if capturing:
-                block_lines.append(line)
-                brace_depth += line.count("{") - line.count("}")
-                if brace_depth == 0:
-                    block = "\n".join(block_lines)
-                    if ('tag_to_type.add("%s"' % xml_tag) in block:
-                        return block
-                    capturing = False
-                    block_lines = []
-        return ""
-
     def test_simple_composition_hoisting(self):
-        """A composition member without xml_element_name should hoist target roles."""
         from cpp_generator import generate_domain_builder
-        from schema_model import (
-            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
-            PrimitiveSupertype,
-        )
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -600,7 +586,6 @@ class TestCompositionRoleHoisting(unittest.TestCase):
                 ExportPrimitive("string", PrimitiveSupertype.STRING, xml_name="string"),
             ],
             composites=[
-                # Target type: has roles with xml_element_name
                 ExportComposite("BaseTypeDirectDefinition", is_abstract=True,
                                 xml_name=None,
                                 members=[
@@ -611,13 +596,11 @@ class TestCompositionRoleHoisting(unittest.TestCase):
                                                  min_occurs=0, max_occurs=1,
                                                  xml_element_name="BASE-TYPE-ENCODING"),
                                 ]),
-                # Parent type: has composition member without xml_element_name
                 ExportComposite("SwBaseType", xml_name="SW-BASE-TYPE",
                                 members=[
                                     ExportMember("shortName", ["string"],
                                                  min_occurs=1, max_occurs=1,
                                                  xml_element_name="SHORT-NAME"),
-                                    # Composition member — no xml_element_name
                                     ExportMember("baseTypeDirectDefinition",
                                                  ["BaseTypeDirectDefinition"],
                                                  min_occurs=0, max_occurs=1,
@@ -627,22 +610,15 @@ class TestCompositionRoleHoisting(unittest.TestCase):
         )
 
         code = generate_domain_builder(schema)
-        block = self._extract_lookup_block(code, "SW-BASE-TYPE")
+        xml_names = _tag_role_xml_names(code, "SW-BASE-TYPE")
 
-        self.assertIn('"SHORT-NAME"', block,
-                      "Own role SHORT-NAME must be present")
-        self.assertIn('"BASE-TYPE-SIZE"', block,
-                      "Hoisted role BASE-TYPE-SIZE must be present")
-        self.assertIn('"BASE-TYPE-ENCODING"', block,
-                      "Hoisted role BASE-TYPE-ENCODING must be present")
+        self.assertIn("SHORT-NAME", xml_names)
+        self.assertIn("BASE-TYPE-SIZE", xml_names)
+        self.assertIn("BASE-TYPE-ENCODING", xml_names)
 
     def test_transitive_hoisting(self):
-        """Composition chains should hoist transitively (A -> B -> C)."""
         from cpp_generator import generate_domain_builder
-        from schema_model import (
-            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
-            PrimitiveSupertype,
-        )
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -661,7 +637,6 @@ class TestCompositionRoleHoisting(unittest.TestCase):
                                     ExportMember("midField", ["string"],
                                                  min_occurs=0, max_occurs=1,
                                                  xml_element_name="MID-FIELD"),
-                                    # Composition to Inner
                                     ExportMember("inner", ["Inner"],
                                                  min_occurs=0, max_occurs=1,
                                                  xml_element_name=None),
@@ -671,7 +646,6 @@ class TestCompositionRoleHoisting(unittest.TestCase):
                                     ExportMember("ownField", ["string"],
                                                  min_occurs=0, max_occurs=1,
                                                  xml_element_name="OWN-FIELD"),
-                                    # Composition to Middle
                                     ExportMember("middle", ["Middle"],
                                                  min_occurs=0, max_occurs=1,
                                                  xml_element_name=None),
@@ -680,21 +654,15 @@ class TestCompositionRoleHoisting(unittest.TestCase):
         )
 
         code = generate_domain_builder(schema)
-        block = self._extract_lookup_block(code, "OUTER")
+        xml_names = _tag_role_xml_names(code, "OUTER")
 
-        self.assertIn('"OWN-FIELD"', block)
-        self.assertIn('"MID-FIELD"', block,
-                      "One-level hoisted MID-FIELD must be present")
-        self.assertIn('"DEEP-FIELD"', block,
-                      "Two-level hoisted DEEP-FIELD must be present")
+        self.assertIn("OWN-FIELD", xml_names)
+        self.assertIn("MID-FIELD", xml_names)
+        self.assertIn("DEEP-FIELD", xml_names)
 
     def test_cycle_detection(self):
-        """Circular composition references should not cause infinite recursion."""
         from cpp_generator import generate_domain_builder
-        from schema_model import (
-            ExportSchema, ExportPrimitive, ExportComposite, ExportMember,
-            PrimitiveSupertype,
-        )
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -707,7 +675,6 @@ class TestCompositionRoleHoisting(unittest.TestCase):
                                     ExportMember("title", ["string"],
                                                  min_occurs=0, max_occurs=1,
                                                  xml_element_name="TITLE"),
-                                    # Composition to Note (which references back)
                                     ExportMember("note", ["Note"],
                                                  min_occurs=0, max_occurs=None,
                                                  xml_element_name=None),
@@ -717,7 +684,6 @@ class TestCompositionRoleHoisting(unittest.TestCase):
                                     ExportMember("text", ["string"],
                                                  min_occurs=0, max_occurs=1,
                                                  xml_element_name="TEXT"),
-                                    # Circular: back to DocBlock
                                     ExportMember("docBlock", ["DocBlock"],
                                                  min_occurs=0, max_occurs=1,
                                                  xml_element_name=None),
@@ -725,13 +691,11 @@ class TestCompositionRoleHoisting(unittest.TestCase):
             ],
         )
 
-        # Should not raise RecursionError
         code = generate_domain_builder(schema)
-        block = self._extract_lookup_block(code, "DOCUMENTATION-BLOCK")
+        xml_names = _tag_role_xml_names(code, "DOCUMENTATION-BLOCK")
 
-        self.assertIn('"TITLE"', block, "Own role TITLE must be present")
-        self.assertIn('"TEXT"', block,
-                      "Hoisted role TEXT from Note must be present")
+        self.assertIn("TITLE", xml_names)
+        self.assertIn("TEXT", xml_names)
 
 
 class TestCLIIntegration(unittest.TestCase):
@@ -746,35 +710,9 @@ class TestCLIIntegration(unittest.TestCase):
 
 
 class TestInnerRefRoleInjection(unittest.TestCase):
-    """Test that Pattern B wrappers inject inner REF roles into target types."""
-
-    @staticmethod
-    def _extract_lookup_block(code, xml_tag):
-        """Extract the lookup table block for a given XML tag name."""
-        lines = code.split("\n")
-        block_lines = []
-        capturing = False
-        brace_depth = 0
-        for line in lines:
-            if not capturing and line.strip() == "{":
-                capturing = True
-                brace_depth = 1
-                block_lines = [line]
-                continue
-            if capturing:
-                block_lines.append(line)
-                brace_depth += line.count("{") - line.count("}")
-                if brace_depth == 0:
-                    block = "\n".join(block_lines)
-                    if ('tag_to_type.add("%s"' % xml_tag) in block:
-                        return block
-                    capturing = False
-                    block_lines = []
-        return ""
-
     def test_inner_ref_tag_injected_into_target_type(self):
         from cpp_generator import generate_domain_builder
-        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -796,21 +734,19 @@ class TestInnerRefRoleInjection(unittest.TestCase):
             primitives=[], enums=[],
         )
         code = generate_domain_builder(schema)
-        # The wrapper role should appear on ISignalTriggering
-        triggering_block = self._extract_lookup_block(code, "I-SIGNAL-TRIGGERING")
-        self.assertIn('"I-SIGNAL-PORT-REFS"', triggering_block)
-        # The inner REF role should be injected into ISignalPort's TypeInfo
-        port_block = self._extract_lookup_block(code, "I-SIGNAL-PORT")
-        self.assertIn('"I-SIGNAL-PORT-REF"', port_block,
+
+        triggering_names = _tag_role_xml_names(code, "I-SIGNAL-TRIGGERING")
+        self.assertIn("I-SIGNAL-PORT-REFS", triggering_names)
+
+        port_names = _tag_role_xml_names(code, "I-SIGNAL-PORT")
+        self.assertIn("I-SIGNAL-PORT-REF", port_names,
                       "Inner REF tag must be injected into target type's lookup")
 
 
 class TestRoleInfoIsReference(unittest.TestCase):
-    """Test that is_reference flag is emitted in RoleInfo."""
-
     def test_non_reference_role_emits_false(self):
         from cpp_generator import generate_domain_builder
-        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -824,11 +760,13 @@ class TestRoleInfoIsReference(unittest.TestCase):
             primitives=[ExportPrimitive(name="ChildType", xml_name="CHILD-TYPE")],
         )
         code = generate_domain_builder(schema)
-        self.assertIn(", false}", code)
+        roles = _find_tag_roles(code, "MY-TYPE")
+        child_role = next(r for r in roles if r[0] == "CHILD")
+        self.assertEqual(child_role[3].strip(), "false")
 
     def test_reference_role_emits_true(self):
         from cpp_generator import generate_domain_builder
-        from schema_model import ExportSchema, ExportPrimitive, PrimitiveSupertype
+        from schema_model import ExportSchema
 
         schema = ExportSchema(
             release_version="R23-11",
@@ -842,7 +780,9 @@ class TestRoleInfoIsReference(unittest.TestCase):
             primitives=[ExportPrimitive(name="TargetType", xml_name="TARGET-TYPE")],
         )
         code = generate_domain_builder(schema)
-        self.assertIn(", true}", code)
+        roles = _find_tag_roles(code, "MY-TYPE")
+        ref_role = next(r for r in roles if r[0] == "TARGET-REF")
+        self.assertEqual(ref_role[3].strip(), "true")
 
 
 if __name__ == "__main__":
