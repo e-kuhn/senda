@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AR:AUTOSAR xmlns:AR="http://autosar.org/schema/r4.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00052.xsd">
+  <AR:AR-PACKAGES>
+    <AR:AR-PACKAGE>
+      <AR:SHORT-NAME>Pkg</AR:SHORT-NAME>
+    </AR:AR-PACKAGE>
+  </AR:AR-PACKAGES>
+</AR:AUTOSAR>

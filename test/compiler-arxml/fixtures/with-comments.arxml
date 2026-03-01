@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file has comments -->
+<AUTOSAR>
+  <AR-PACKAGES>
+    <!-- A package -->
+    <AR-PACKAGE>
+      <SHORT-NAME>Pkg</SHORT-NAME>
+    </AR-PACKAGE>
+  </AR-PACKAGES>
+</AUTOSAR>
