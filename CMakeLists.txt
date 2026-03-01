@@ -27,22 +27,6 @@ endfunction()
 include(FetchContent)
 set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
 
-# expat (SAX XML parser for ARXML compiler — replaces pugixml)
-FetchContent_Declare(
-    expat
-    SYSTEM
-    GIT_REPOSITORY https://github.com/libexpat/libexpat.git
-    GIT_TAG R_2_6_4
-    SOURCE_SUBDIR expat
-    EXCLUDE_FROM_ALL
-)
-set(EXPAT_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(EXPAT_BUILD_TOOLS OFF CACHE BOOL "" FORCE)
-set(EXPAT_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(EXPAT_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(EXPAT_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(expat)
-
 # Google Test
 FetchContent_Declare(
     googletest
