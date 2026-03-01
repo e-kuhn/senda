@@ -45,44 +45,6 @@ void XmlPullParser::count_lines(const char* from, const char* to) {
     }
 }
 
-// --- Scalar scanning (replaced by SIMD in Batch 2) ---
-
-uint32_t XmlPullParser::find_tag_or_amp(const char* p, uint32_t len) const {
-    for (uint32_t i = 0; i < len; ++i) {
-        if (p[i] == '<' || p[i] == '&') return i;
-    }
-    return len;
-}
-
-uint32_t XmlPullParser::skip_whitespace(const char* p, uint32_t len) const {
-    uint32_t i = 0;
-    while (i < len && (p[i] == ' ' || p[i] == '\t' || p[i] == '\n' || p[i] == '\r')) ++i;
-    return i;
-}
-
-uint32_t XmlPullParser::scan_name(const char* p, uint32_t len) const {
-    uint32_t i = 0;
-    while (i < len) {
-        auto c = static_cast<unsigned char>(p[i]);
-        // XML NameChar: letters, digits, '.', '-', '_', ':', plus >0x7F for Unicode
-        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-            (c >= '0' && c <= '9') || c == '-' || c == '_' ||
-            c == '.' || c == ':' || c > 0x7F) {
-            ++i;
-        } else {
-            break;
-        }
-    }
-    return i;
-}
-
-uint32_t XmlPullParser::find_quote_end(const char* p, uint32_t len, char quote) const {
-    for (uint32_t i = 0; i < len; ++i) {
-        if (p[i] == quote) return i;
-    }
-    return len;
-}
-
 bool XmlPullParser::expand_entity(const char* p, uint32_t len,
                                    std::string& out, uint32_t& consumed) {
     // p points to character after '&'

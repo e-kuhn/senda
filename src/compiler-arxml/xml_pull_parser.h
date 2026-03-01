@@ -4,6 +4,8 @@
 #include <string>
 #include <string_view>
 
+#include "xml_simd_kernels.h"
+
 namespace senda {
 
 enum class XmlEvent {
@@ -77,12 +79,19 @@ private:
     // Error state
     const char* error_msg_ = nullptr;
 
-    // --- Internal scanning ---
-    // These are scalar for now; Batch 2 replaces them with SIMD.
-    uint32_t find_tag_or_amp(const char* p, uint32_t len) const;
-    uint32_t skip_whitespace(const char* p, uint32_t len) const;
-    uint32_t scan_name(const char* p, uint32_t len) const;
-    uint32_t find_quote_end(const char* p, uint32_t len, char quote) const;
+    // --- SIMD-accelerated scanning (delegates to xml_simd_kernels) ---
+    static uint32_t find_tag_or_amp(const char* p, uint32_t len) {
+        return senda::xml::simd_find_tag_or_amp(p, len);
+    }
+    static uint32_t skip_whitespace(const char* p, uint32_t len) {
+        return senda::xml::simd_skip_whitespace(p, len);
+    }
+    static uint32_t scan_name(const char* p, uint32_t len) {
+        return senda::xml::simd_scan_name(p, len);
+    }
+    static uint32_t find_quote_end(const char* p, uint32_t len, char quote) {
+        return senda::xml::simd_find_quote_or_amp(p, len, quote);
+    }
 
     // Entity expansion
     bool expand_entity(const char* p, uint32_t len, std::string& out, uint32_t& consumed);
