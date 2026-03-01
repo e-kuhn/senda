@@ -187,26 +187,36 @@ XmlEvent XmlPullParser::next() {
             count_lines(pos_, pos_ + offset);
             pos_ += offset;
 
-            // Check if text is whitespace-only
-            bool all_ws = true;
-            for (auto* c = text_start; c < pos_; ++c) {
-                if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') {
-                    all_ws = false;
-                    break;
+            // If next char is '&', coalesce text + entity expansion into one event
+            if (pos_ < end_ && *pos_ == '&') {
+                entity_buf_.clear();
+                entity_buf_.append(text_start, static_cast<size_t>(pos_ - text_start));
+                // Fall through to entity collection below
+            } else {
+                // Check if text is whitespace-only
+                bool all_ws = true;
+                for (auto* c = text_start; c < pos_; ++c) {
+                    if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') {
+                        all_ws = false;
+                        break;
+                    }
                 }
+                if (!all_ws) {
+                    text_ = std::string_view(text_start, static_cast<size_t>(pos_ - text_start));
+                    return XmlEvent::Characters;
+                }
+                continue;
             }
-            if (!all_ws) {
-                text_ = std::string_view(text_start, static_cast<size_t>(pos_ - text_start));
-                return XmlEvent::Characters;
-            }
-            continue;
         }
 
         if (pos_ >= end_) break;
 
         if (*pos_ == '&') {
-            // Entity in text content — need to collect text with expansion
-            entity_buf_.clear();
+            // Entity in text content — collect text with expansion
+            if (entity_buf_.empty()) {
+                // No preceding text was collected above
+                entity_buf_.clear();
+            }
             while (pos_ < end_ && *pos_ != '<') {
                 if (*pos_ == '&') {
                     pos_++;
