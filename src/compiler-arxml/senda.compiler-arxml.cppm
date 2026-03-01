@@ -9,7 +9,7 @@ module;
 #include <absl/container/flat_hash_map.h>
 #include <utility>
 #include <vector>
-#include <expat.h>
+#include "xml_pull_parser.h"
 
 export module senda.compiler.arxml;
 
@@ -138,17 +138,6 @@ public:
         rupa::diagnostics::SourceFile source(path);
         auto content = source.view();
 
-        // Create expat parser
-        XML_Parser parser = XML_ParserCreate(nullptr);
-        if (!parser) {
-            diags.add({rupa::compiler::Severity::Error,
-                       "failed to create XML parser",
-                       {path.string(), 0, 0}});
-            return rupa::compiler::CompileResult(
-                fir::Fir{}, rupa::compiler::DomainExtensions{}, std::move(diags));
-        }
-
-        // Set up parse state
         fir::Fir fir;
         rupa::fir_builder::FirBuilder builder(fir);
 
@@ -167,36 +156,43 @@ public:
             .text_buf = {},
         };
 
-        XML_SetUserData(parser, &state);
-        XML_SetElementHandler(parser, on_start_element, on_end_element);
-        XML_SetCharacterDataHandler(parser, on_characters);
+        XmlPullParser xml(content);
 
-        // Parse
-        auto status = XML_Parse(parser, content.data(),
-                                static_cast<int>(content.size()), XML_TRUE);
-        if (status == XML_STATUS_ERROR
-            && XML_GetErrorCode(parser) != XML_ERROR_ABORTED) {
-            diags.add({rupa::compiler::Severity::Error,
-                       std::string("XML parse error: ")
-                           + XML_ErrorString(XML_GetErrorCode(parser))
-                           + " at line "
-                           + std::to_string(XML_GetCurrentLineNumber(parser)),
-                       {path.string(),
-                         static_cast<uint32_t>(XML_GetCurrentLineNumber(parser)), 0}});
+        while (true) {
+            auto event = xml.next();
+            if (event == XmlEvent::Eof) break;
+            if (event == XmlEvent::Error) {
+                diags.add({rupa::compiler::Severity::Error,
+                           std::string("XML parse error: ") + xml.error_message()
+                               + " at line " + std::to_string(xml.line()),
+                           {path.string(), xml.line(), 0}});
+                break;
+            }
+            if (state.abort_parse) break;
+
+            switch (event) {
+            case XmlEvent::StartElement:
+                handle_start_element(state, xml);
+                break;
+            case XmlEvent::EndElement:
+                handle_end_element(state);
+                break;
+            case XmlEvent::Characters:
+                handle_characters(state, xml.text());
+                break;
+            default:
+                break;
+            }
         }
 
-        // Resolve cross-references using path index built during parse
         resolve_references(state, fir);
 
-        // Emit summary if skip warnings were capped
         if (state.skip_total_count > state.skip_warning_emitted) {
             int remaining = state.skip_total_count - state.skip_warning_emitted;
             diags.add({rupa::compiler::Severity::Warning,
                 std::to_string(remaining) + " additional elements skipped",
                 {path.string(), 0, 0}});
         }
-
-        XML_ParserFree(parser);
 
         return rupa::compiler::CompileResult(
             std::move(fir), rupa::compiler::DomainExtensions{}, std::move(diags));
@@ -260,29 +256,19 @@ private:
         return schema_location.substr(space + 1);
     }
 
-    static void XMLCALL on_start_element(void* user_data, const XML_Char* name,
-                                          const XML_Char** attrs) {
-        auto& state = *static_cast<ParseState*>(user_data);
-        if (state.abort_parse) return;
-
-        std::string_view tag(name);
-
-        // Strip namespace prefix if present (e.g., "AR:AUTOSAR" -> "AUTOSAR")
-        if (auto pos = tag.find(':'); pos != std::string_view::npos) {
-            tag = tag.substr(pos + 1);
-        }
+    static void handle_start_element(ParseState& state, XmlPullParser& xml) {
+        auto tag = xml.tag();
 
         // On AUTOSAR root element, resolve domain from schema
         if (tag == "AUTOSAR" && !state.domain_resolved) {
             state.domain_resolved = true;
 
-            // Extract xsi:schemaLocation from attributes
+            // Lazy attribute scan for xsi:schemaLocation
             std::string_view schema_location;
-            for (int i = 0; attrs[i]; i += 2) {
-                std::string_view attr_name(attrs[i]);
-                if (attr_name == "xsi:schemaLocation" ||
-                    attr_name.ends_with(":schemaLocation")) {
-                    schema_location = std::string_view(attrs[i + 1]);
+            while (xml.next_attr()) {
+                auto attr_name = xml.attr_name();
+                if (attr_name == "schemaLocation") {
+                    schema_location = xml.attr_value();
                     break;
                 }
             }
@@ -455,10 +441,7 @@ private:
         }
     }
 
-    static void XMLCALL on_end_element(void* user_data, const XML_Char* /*name*/) {
-        auto& state = *static_cast<ParseState*>(user_data);
-        if (state.abort_parse) return;
-
+    static void handle_end_element(ParseState& state) {
         if (state.stack.empty()) return;
 
         auto& frame = state.stack.back();
@@ -555,10 +538,7 @@ private:
         }
     }
 
-    static void XMLCALL on_characters(void* user_data, const XML_Char* s, int len) {
-        auto& state = *static_cast<ParseState*>(user_data);
-        if (state.abort_parse) return;
-
+    static void handle_characters(ParseState& state, std::string_view text) {
         if (state.stack.empty()) return;
 
         auto& frame = state.stack.back();
@@ -566,8 +546,8 @@ private:
             if (frame.text_len == 0) {
                 frame.text_start = static_cast<uint32_t>(state.text_buf.size());
             }
-            state.text_buf.append(s, static_cast<size_t>(len));
-            frame.text_len += static_cast<uint32_t>(len);
+            state.text_buf.append(text.data(), text.size());
+            frame.text_len += static_cast<uint32_t>(text.size());
         }
     }
 };
