@@ -476,9 +476,20 @@ private:
                 }
             } else if (!frame_text.empty() && frame.parent_obj.valid()) {
                 if (frame.is_reference) {
-                    state.builder.add_reference(
-                        frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
-                        frame_text);
+                    // Skip whitespace-only text (inter-element indentation
+                    // from *-REF elements containing child elements).
+                    bool all_ws = true;
+                    for (auto c : frame_text) {
+                        if (c != ' ' && c != '\t' && c != '\n' && c != '\r') {
+                            all_ws = false;
+                            break;
+                        }
+                    }
+                    if (!all_ws) {
+                        state.builder.add_reference(
+                            frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
+                            frame_text);
+                    }
                 } else {
                     state.builder.add_property(
                         frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
