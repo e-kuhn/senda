@@ -151,7 +151,7 @@ def _extract_array_entries(code, array_name):
     for line in lines:
         stripped = line.strip()
         if not in_array:
-            if stripped.startswith("static constexpr") and array_name in stripped:
+            if "constexpr" in stripped and array_name in stripped:
                 in_array = True
             continue
         if stripped == "};":

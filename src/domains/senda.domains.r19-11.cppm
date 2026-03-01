@@ -17,7 +17,7 @@ export namespace senda::domains
 {
 
 // ── Static type descriptors (3032) ──
-static constexpr TypeDesc kTypes[] = {
+constexpr TypeDesc kTypes[] = {
     {"CIdentifierSimple", 1, 65535, false, 0, 0, 0, 0},
     {"IdentifierSimple", 1, 65535, false, 0, 0, 0, 0},
     {"LimitValueSimple", 1, 65535, false, 0, 0, 0, 0},
@@ -3053,7 +3053,7 @@ static constexpr TypeDesc kTypes[] = {
 };
 
 // ── Static role descriptors (5569) ──
-static constexpr RoleDesc kRoles[] = {
+constexpr RoleDesc kRoles[] = {
     {"checksum", 42, 1},
     {"timestamp", 18, 1},
     {"referenceBase", 2178, 2},
@@ -8626,7 +8626,7 @@ static constexpr RoleDesc kRoles[] = {
 };
 
 // ── Static enum value descriptors (5732) ──
-static constexpr EnumValDesc kEnumValues[] = {
+constexpr EnumValDesc kEnumValues[] = {
     {"AR-ELEMENT"},
     {"ABSTRACT-EXECUTION-CONTEXT"},
     {"ABSTRACT-IMPLEMENTATION-DATA-TYPE"},
@@ -14362,7 +14362,7 @@ static constexpr EnumValDesc kEnumValues[] = {
 };
 
 // ── Lookup tag-role descriptors (29635) ──
-static constexpr TagRoleDesc kTagRoles[] = {
+constexpr TagRoleDesc kTagRoles[] = {
     {"VARIATION-POINT", 3439, 2675, false},
     {"BLUEPRINT-POLICYS", 208, 904, false},
     {"SHORT-NAME-PATTERN", 209, 2982, false},
@@ -44001,7 +44001,7 @@ static constexpr TagRoleDesc kTagRoles[] = {
 };
 
 // ── Lookup tag descriptors (2259) ──
-static constexpr TagDesc kTags[] = {
+constexpr TagDesc kTags[] = {
     {"AR-ELEMENT", 773, 0, 23},
     {"AR-OBJECT", 774, 23, 2},
     {"AR-PACKAGE", 775, 25, 19},

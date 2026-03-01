@@ -229,7 +229,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
     N = len(all_types)
 
     w("// ── Static type descriptors (%d) ──" % N)
-    w("static constexpr TypeDesc kTypes[] = {")
+    w("constexpr TypeDesc kTypes[] = {")
     for ti in range(N):
         name = all_types[ti][0]
         kind = all_types[ti][1]
@@ -246,43 +246,43 @@ def generate_domain_builder(schema: ExportSchema) -> str:
 
     if role_list:
         w("// ── Static role descriptors (%d) ──" % len(role_list))
-        w("static constexpr RoleDesc kRoles[] = {")
+        w("constexpr RoleDesc kRoles[] = {")
         for rname, target_idx, mult in role_list:
             w('    {"%s", %d, %d},' % (rname, target_idx, mult))
         w("};")
     else:
-        w("static constexpr RoleDesc kRoles[] = {};")
+        w("constexpr RoleDesc kRoles[] = {};")
     w("")
 
     if enum_list:
         w("// ── Static enum value descriptors (%d) ──" % len(enum_list))
-        w("static constexpr EnumValDesc kEnumValues[] = {")
+        w("constexpr EnumValDesc kEnumValues[] = {")
         for v in enum_list:
             w('    {"%s"},' % v)
         w("};")
     else:
-        w("static constexpr EnumValDesc kEnumValues[] = {};")
+        w("constexpr EnumValDesc kEnumValues[] = {};")
     w("")
 
     if tag_role_list:
         w("// ── Lookup tag-role descriptors (%d) ──" % len(tag_role_list))
-        w("static constexpr TagRoleDesc kTagRoles[] = {")
+        w("constexpr TagRoleDesc kTagRoles[] = {")
         for xml_elem, ri, target_idx, is_ref in tag_role_list:
             w('    {"%s", %d, %d, %s},'
               % (xml_elem, ri, target_idx, "true" if is_ref else "false"))
         w("};")
     else:
-        w("static constexpr TagRoleDesc kTagRoles[] = {};")
+        w("constexpr TagRoleDesc kTagRoles[] = {};")
     w("")
 
     if tag_list:
         w("// ── Lookup tag descriptors (%d) ──" % len(tag_list))
-        w("static constexpr TagDesc kTags[] = {")
+        w("constexpr TagDesc kTags[] = {")
         for xml_tag, ti, tr_start, tr_count in tag_list:
             w('    {"%s", %d, %d, %d},' % (xml_tag, ti, tr_start, tr_count))
         w("};")
     else:
-        w("static constexpr TagDesc kTags[] = {};")
+        w("constexpr TagDesc kTags[] = {};")
     w("")
 
     # --- Emit driver function ---

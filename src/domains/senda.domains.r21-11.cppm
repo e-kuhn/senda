@@ -17,7 +17,7 @@ export namespace senda::domains
 {
 
 // ── Static type descriptors (3295) ──
-static constexpr TypeDesc kTypes[] = {
+constexpr TypeDesc kTypes[] = {
     {"CIdentifierSimple", 1, 65535, false, 0, 0, 0, 0},
     {"IdentifierSimple", 1, 65535, false, 0, 0, 0, 0},
     {"LimitValueSimple", 1, 65535, false, 0, 0, 0, 0},
@@ -3316,7 +3316,7 @@ static constexpr TypeDesc kTypes[] = {
 };
 
 // ── Static role descriptors (6167) ──
-static constexpr RoleDesc kRoles[] = {
+constexpr RoleDesc kRoles[] = {
     {"absolute", 3273, 0},
     {"returnValueProvision", 3198, 1},
     {"busOffRecovery", 1082, 1},
@@ -9487,7 +9487,7 @@ static constexpr RoleDesc kRoles[] = {
 };
 
 // ── Static enum value descriptors (6465) ──
-static constexpr EnumValDesc kEnumValues[] = {
+constexpr EnumValDesc kEnumValues[] = {
     {"ABSTRACT-ACCESS-POINT"},
     {"ASYNCHRONOUS-SERVER-CALL-POINT"},
     {"ASYNCHRONOUS-SERVER-CALL-RESULT-POINT"},
@@ -15956,7 +15956,7 @@ static constexpr EnumValDesc kEnumValues[] = {
 };
 
 // ── Lookup tag-role descriptors (28151) ──
-static constexpr TagRoleDesc kTagRoles[] = {
+constexpr TagRoleDesc kTagRoles[] = {
     {"ABSOLUTE", 0, 3273, false},
     {"S", 160, 41, false},
     {"T", 161, 17, false},
@@ -44111,7 +44111,7 @@ static constexpr TagRoleDesc kTagRoles[] = {
 };
 
 // ── Lookup tag descriptors (2456) ──
-static constexpr TagDesc kTags[] = {
+constexpr TagDesc kTags[] = {
     {"ABSOLUTE-TOLERANCE", 839, 0, 3},
     {"ABSTRACT-ACCESS-POINT", 840, 3, 21},
     {"ABSTRACT-CAN-CLUSTER", 841, 24, 19},
