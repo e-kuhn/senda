@@ -245,6 +245,8 @@ private:
         PathKey current_path_key;
         std::vector<fir::StringId> current_path_ids;
         absl::flat_hash_map<size_t, fir::Id> path_index;
+        // Root object tracking
+        bool root_set = false;
         // Shared text buffer: Property frames record offsets into this
         std::string text_buf;
     };
@@ -466,6 +468,11 @@ private:
                         parent.obj = state.builder.begin_object(
                             frame_text,
                             rupa::fir_builder::TypeHandle{parent.type_info->handle.id});
+                        // Set root object (first top-level object)
+                        if (!state.root_set) {
+                            state.builder.set_root_object(parent.obj);
+                            state.root_set = true;
+                        }
                         // Register in path index for reference resolution
                         auto identity_sid = state.builder.target().as<fir::ObjectDef>(
                             parent.obj.id).identity;

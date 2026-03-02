@@ -61,6 +61,7 @@ target_link_libraries(senda PRIVATE
     rupa.driver
     rupa.sema
     rupa.compiler
+    rupa.emitter
     senda.compiler.arxml
     senda.domains
 )
@@ -73,4 +74,5 @@ senda_target_settings(senda)
 enable_testing()
 add_subdirectory(test/compiler-arxml)
 add_subdirectory(test/emitter-arxml)
+add_subdirectory(test/emitter-rupa)
 add_subdirectory(test/integration)
