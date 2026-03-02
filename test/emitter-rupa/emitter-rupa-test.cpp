@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 
 import rupa.compiler;
 import rupa.domain;
@@ -179,4 +180,51 @@ TEST(RupaEmitterPipeline, FullPipelineWithManualTypes) {
     EXPECT_NE(result.find(".elements += SystemSignal BrakePedalPosition {"),
               std::string::npos);
     EXPECT_NE(result.find(".length = 12;"), std::string::npos);
+}
+
+// Test the full ARXML compile -> foreign ID -> emit pipeline with ForeignResolver.
+TEST(RupaEmitterPipeline, ArxmlToRupaWithForeignResolver) {
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    ASSERT_NE(schema, nullptr);
+
+    MockEmitterContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
+
+    auto result = compiler.compile(fixture_path("simple-signal.arxml"), ctx);
+    ASSERT_FALSE(result.has_errors()) << "ARXML compilation failed";
+
+    // Build foreign resolver from the domain
+    struct TestForeignResolver : rupa::emitter::ForeignResolver {
+        std::unordered_map<uint16_t, const fir::Fir*> firs;
+        const fir::Fir* resolve(fir::ModuleId module) const override {
+            auto it = firs.find(static_cast<uint16_t>(module));
+            return it != firs.end() ? it->second : nullptr;
+        }
+    };
+    TestForeignResolver resolver;
+
+    auto& fir = result.fir();
+    for (uint16_t i = 0; i < fir.moduleCount(); ++i) {
+        auto mod_id = fir::ModuleId{i};
+        auto name_id = fir.moduleName(mod_id);
+        if (static_cast<uint32_t>(name_id) == UINT32_MAX) continue;
+        auto name = fir.getString(name_id);
+        auto* s = reg.resolve_by_domain(name);
+        if (s) resolver.firs[i] = s->domain.view().fir();
+    }
+
+    // Emit with resolver
+    rupa::emitter::RupaEmitter emitter;
+    std::ostringstream out;
+    ASSERT_TRUE(emitter.emit(fir, out, &resolver));
+
+    auto rupa_output = out.str();
+    ASSERT_FALSE(rupa_output.empty());
+
+    // Should have domain declaration and type-resolved instance names
+    EXPECT_NE(rupa_output.find("using domain"), std::string::npos);
+    // Should NOT have unresolved "?" for type names
+    EXPECT_EQ(rupa_output.find("? "), std::string::npos)
+        << "Found unresolved '?' in output:\n" << rupa_output.substr(0, 500);
 }

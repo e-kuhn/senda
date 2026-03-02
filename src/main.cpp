@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 
 import rupa.compiler;
 import rupa.driver;
@@ -20,6 +21,21 @@ import senda.domains.r22_11;
 import senda.domains.r23_11;
 
 namespace fs = std::filesystem;
+
+class SchemaForeignResolver : public rupa::emitter::ForeignResolver {
+public:
+    const fir::Fir* resolve(fir::ModuleId module) const override {
+        auto it = firs_.find(static_cast<uint16_t>(module));
+        return it != firs_.end() ? it->second : nullptr;
+    }
+
+    void register_module(fir::ModuleId module, const fir::Fir* fir) {
+        firs_[static_cast<uint16_t>(module)] = fir;
+    }
+
+private:
+    std::unordered_map<uint16_t, const fir::Fir*> firs_;
+};
 
 int main(int argc, char* argv[]) {
     std::string domain_override;
@@ -138,11 +154,26 @@ int main(int argc, char* argv[]) {
 
     // Emit to Rupa if requested
     if (emit_flag) {
+        // Build foreign resolver from the domain that was used
+        SchemaForeignResolver resolver;
+
+        auto& fir = result.fir();
+        for (uint16_t i = 0; i < fir.moduleCount(); ++i) {
+            auto mod_id = fir::ModuleId{i};
+            auto name_id = fir.moduleName(mod_id);
+            if (static_cast<uint32_t>(name_id) == UINT32_MAX) continue;
+            auto name = fir.getString(name_id);
+            auto* schema = schema_registry.resolve_by_domain(name);
+            if (schema) {
+                resolver.register_module(mod_id, schema->domain.view().fir());
+            }
+        }
+
         rupa::emitter::RupaEmitter emitter;
         if (emit_output.empty()) {
-            emitter.emit(result.fir(), std::cout);
+            emitter.emit(fir, std::cout, &resolver);
         } else {
-            if (!emitter.emit(result.fir(), fs::path(emit_output))) {
+            if (!emitter.emit(fir, fs::path(emit_output), &resolver)) {
                 std::fprintf(stderr, "error: cannot write '%s'\n",
                              emit_output.c_str());
                 return 1;
