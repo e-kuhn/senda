@@ -163,9 +163,9 @@ int main(int argc, char* argv[]) {
             auto name_id = fir.moduleName(mod_id);
             if (static_cast<uint32_t>(name_id) == UINT32_MAX) continue;
             auto name = fir.getString(name_id);
-            auto* schema = schema_registry.resolve_by_domain(name);
-            if (schema) {
-                resolver.register_module(mod_id, schema->domain.view().fir());
+            auto* dom = driver.find_domain(name);
+            if (dom) {
+                resolver.register_module(mod_id, dom->view().fir());
             }
         }
 
