@@ -154,6 +154,7 @@ public:
             .current_path_ids = {},
             .path_index = {},
             .text_buf = {},
+            .containment_buf = {},
         };
 
         XmlPullParser xml(content);
@@ -214,6 +215,7 @@ private:
         // Object frame
         rupa::fir_builder::ObjectHandle obj{};
         const senda::domains::TypeInfo* type_info = nullptr;
+        std::string_view xml_tag;  // element tag used to create this frame
         // Property frame
         rupa::domain::RoleHandle role{};
         rupa::fir_builder::ObjectHandle parent_obj{};
@@ -224,6 +226,9 @@ private:
         bool is_reference = false;  // true for *-REF property frames
         // Skip frame
         int skip_depth = 0;
+        // Deferred containment — indices into ParseState::containment_buf
+        uint32_t containment_start = 0;
+        uint32_t containment_count = 0;
     };
 
     struct ParseState {
@@ -252,6 +257,9 @@ private:
         bool module_registered = false;
         // Shared text buffer: Property frames record offsets into this
         std::string text_buf;
+        // Shared containment buffer: Object frames record (role_id, child_id)
+        // pairs here, flushed when the Object frame pops. Reclaimed like text_buf.
+        std::vector<std::pair<fir::Id, fir::Id>> containment_buf;
     };
 
     // Extract XSD filename from xsi:schemaLocation value
@@ -356,8 +364,10 @@ private:
             Frame frame{};
             frame.kind = FrameKind::Object;
             frame.type_info = type_info;
-            // Identity will be set when we see SHORT-NAME
-            frame.obj = {};  // deferred
+            frame.xml_tag = tag;
+            frame.obj = {};  // deferred until SHORT-NAME
+            frame.containment_start = static_cast<uint32_t>(
+                state.containment_buf.size());
             state.stack.push_back(std::move(frame));
             return;
         }
@@ -378,6 +388,24 @@ private:
             if (parent.type_info) {
                 auto* role_info = parent.type_info->roles.find(tag);
                 if (role_info) {
+                    // Create ObjectDef for the AUTOSAR root element which
+                    // has no SHORT-NAME but acts as the containment root.
+                    if (!parent.obj.valid()
+                        && parent.xml_tag == "AUTOSAR") {
+                        auto type_id = parent.type_info->handle.id;
+                        if (state.module_registered) {
+                            type_id = state.builder.target().addForeignRef(
+                                state.current_module,
+                                static_cast<uint32_t>(type_id));
+                        }
+                        parent.obj = state.builder.begin_object(
+                            parent.xml_tag,
+                            rupa::fir_builder::TypeHandle{type_id});
+                        if (!state.root_set) {
+                            state.builder.set_root_object(parent.obj);
+                            state.root_set = true;
+                        }
+                    }
                     Frame frame{};
                     frame.kind = FrameKind::Property;
                     frame.role = role_info->role;
@@ -426,7 +454,10 @@ private:
                 Frame frame{};
                 frame.kind = FrameKind::Object;
                 frame.type_info = nested_type_info;
+                frame.xml_tag = tag;
                 frame.obj = {};
+                frame.containment_start = static_cast<uint32_t>(
+                    state.containment_buf.size());
                 state.stack.push_back(std::move(frame));
                 return;
             }
@@ -438,7 +469,10 @@ private:
                 Frame frame{};
                 frame.kind = FrameKind::Object;
                 frame.type_info = prop.target_type_info;
+                frame.xml_tag = tag;
                 frame.obj = {};
+                frame.containment_start = static_cast<uint32_t>(
+                    state.containment_buf.size());
                 state.stack.push_back(std::move(frame));
                 return;
             }
@@ -544,9 +578,50 @@ private:
         }
 
         case FrameKind::Object:
-            if (frame.obj.valid() && !state.current_path_ids.empty()) {
-                state.current_path_key.pop(state.current_path_ids.back());
-                state.current_path_ids.pop_back();
+            if (frame.obj.valid()) {
+                // Flush deferred containment links — these were collected
+                // while children were being parsed, now all scalar properties
+                // are done so containment PropertyVals will be contiguous.
+                for (uint32_t i = 0; i < frame.containment_count; ++i) {
+                    auto [role_id, child_id] = state.containment_buf[
+                        frame.containment_start + i];
+                    state.builder.add_containment(
+                        frame.obj,
+                        rupa::fir_builder::RoleHandle{role_id},
+                        rupa::fir_builder::ObjectHandle{child_id});
+                }
+                state.containment_buf.resize(frame.containment_start);
+
+                // Defer this object's link to its grandparent Object frame:
+                // find the enclosing Property frame and record the link on
+                // the Property's parent Object frame.
+                if (state.stack.size() >= 2) {
+                    auto& below = state.stack[state.stack.size() - 2];
+                    if (below.kind == FrameKind::Property
+                        && below.parent_obj.valid()) {
+                        auto role_id = below.role.id;
+                        if (state.module_registered) {
+                            role_id = state.builder.target().addForeignRef(
+                                state.current_module,
+                                static_cast<uint32_t>(role_id));
+                        }
+                        // Find the grandparent Object frame
+                        for (auto it = state.stack.rbegin() + 2;
+                             it != state.stack.rend(); ++it) {
+                            if (it->kind == FrameKind::Object) {
+                                it->containment_count++;
+                                state.containment_buf.emplace_back(
+                                    role_id, frame.obj.id);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!state.current_path_ids.empty()) {
+                    state.current_path_key.pop(state.current_path_ids.back());
+                    state.current_path_ids.pop_back();
+                }
             }
             break;
         }
