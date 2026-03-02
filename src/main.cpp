@@ -1,11 +1,14 @@
 #include <cstdio>
 #include <cstdlib>
 #include <filesystem>
+#include <fstream>
+#include <iostream>
 #include <string>
 #include <string_view>
 
 import rupa.compiler;
 import rupa.driver;
+import rupa.emitter;
 import rupa.fir;
 import rupa.sema;
 import senda.compiler.arxml;
@@ -20,7 +23,9 @@ namespace fs = std::filesystem;
 
 int main(int argc, char* argv[]) {
     std::string domain_override;
+    std::string emit_output;
     int max_warnings = 10;
+    bool emit_flag = false;
     fs::path input_path;
 
     for (int i = 1; i < argc; ++i) {
@@ -29,6 +34,10 @@ int main(int argc, char* argv[]) {
             domain_override = argv[++i];
         } else if (arg == "--max-warnings" && i + 1 < argc) {
             max_warnings = std::atoi(argv[++i]);
+        } else if (arg == "--emit" || arg == "-e") {
+            emit_flag = true;
+        } else if (arg == "--emit-output" && i + 1 < argc) {
+            emit_output = argv[++i];
         } else if (arg[0] == '-') {
             std::fprintf(stderr, "unknown option: %s\n", argv[i]);
             return 1;
@@ -39,7 +48,7 @@ int main(int argc, char* argv[]) {
 
     if (input_path.empty()) {
         std::puts("senda 0.1.0 — Automotive DSL built on Rupa");
-        std::puts("Usage: senda [--domain <name>] [--max-warnings <N>] <file>");
+        std::puts("Usage: senda [--domain <name>] [--max-warnings <N>] [--emit [output.rupa]] <file>");
         return 0;
     }
 
@@ -125,7 +134,22 @@ int main(int argc, char* argv[]) {
     result.fir().forEachNode([&](fir::Id, const fir::Node& node) {
         if (node.kind == fir::NodeKind::ObjectDef) ++obj_count;
     });
-    std::printf("Compiled %s: %zu objects\n", input_path.c_str(), obj_count);
+    std::fprintf(stderr, "Compiled %s: %zu objects\n", input_path.c_str(), obj_count);
+
+    // Emit to Rupa if requested
+    if (emit_flag) {
+        rupa::emitter::RupaEmitter emitter;
+        if (emit_output.empty()) {
+            emitter.emit(result.fir(), std::cout);
+        } else {
+            if (!emitter.emit(result.fir(), fs::path(emit_output))) {
+                std::fprintf(stderr, "error: cannot write '%s'\n",
+                             emit_output.c_str());
+                return 1;
+            }
+            std::fprintf(stderr, "Wrote %s\n", emit_output.c_str());
+        }
+    }
 
     return 0;
 }

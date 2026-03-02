@@ -61,6 +61,7 @@ target_link_libraries(senda PRIVATE
     rupa.driver
     rupa.sema
     rupa.compiler
+    rupa.emitter
     senda.compiler.arxml
     senda.domains
 )
