@@ -60065,10 +60065,17 @@ private:
         for (int i = 0; i < indent; ++i) out << "  ";
     }
 
+    static uint32_t unwrap_id(const fir::Fir& fir, fir::Id id) {
+        if (fir::is_foreign(id)) {
+            return fir.foreignRef(id).local_id;
+        }
+        return static_cast<uint32_t>(id);
+    }
+
     void emit_object(const fir::Fir& fir, const fir::ObjectDef& obj,
                      std::ostream& out, int indent) {
-        // Look up type -> XML tag
-        auto* type_info = lookup_.type_to_tag.find(static_cast<uint32_t>(obj.type_id));
+        // Look up type -> XML tag (unwrap foreign ID to get domain local_id)
+        auto* type_info = lookup_.type_to_tag.find(unwrap_id(fir, obj.type_id));
         if (!type_info) return;  // Unknown type, skip
 
         // Write opening tag
@@ -60087,9 +60094,9 @@ private:
         for (auto prop_id : props) {
             auto& pv = fir.as<fir::PropertyVal>(prop_id);
 
-            // Look up role -> XML element
+            // Look up role -> XML element (unwrap foreign ID)
             auto* role_info = type_info->role_to_xml.find(
-                static_cast<uint32_t>(pv.role_id));
+                unwrap_id(fir, pv.role_id));
             if (!role_info || role_info->is_identity) continue;
 
             auto& val_node = fir.get(pv.value_id);
