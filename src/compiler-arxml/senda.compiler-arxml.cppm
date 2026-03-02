@@ -247,6 +247,9 @@ private:
         absl::flat_hash_map<size_t, fir::Id> path_index;
         // Root object tracking
         bool root_set = false;
+        // Foreign module tracking
+        fir::ModuleId current_module = fir::ModuleId{UINT16_MAX};
+        bool module_registered = false;
         // Shared text buffer: Property frames record offsets into this
         std::string text_buf;
     };
@@ -256,6 +259,17 @@ private:
         auto space = schema_location.rfind(' ');
         if (space == std::string_view::npos) return schema_location;
         return schema_location.substr(space + 1);
+    }
+
+    // Register the domain's module in the compile FIR when domain is resolved.
+    static void register_domain_module(ParseState& state,
+                                       std::string_view domain_name) {
+        if (state.module_registered) return;
+        auto& target = state.builder.target();
+        auto mod_name_id = target.intern(domain_name);
+        state.current_module = target.addModule(mod_name_id);
+        target.addDomain(mod_name_id);
+        state.module_registered = true;
     }
 
     static void handle_start_element(ParseState& state, XmlPullParser& xml) {
@@ -291,6 +305,7 @@ private:
                         state.abort_parse = true;
                         return;
                     }
+                    register_domain_module(state, domain_name);
                 } else {
                     // Unknown XSD — try default domain (CLI override)
                     auto* view = state.context->request_default_domain();
@@ -306,6 +321,7 @@ private:
                     if (!state.default_domain.empty()) {
                         state.schema = state.registry.resolve_by_domain(
                             state.default_domain);
+                        register_domain_module(state, state.default_domain);
                     }
                     state.domain_is_override = true;
                 }
@@ -316,6 +332,7 @@ private:
                     if (!state.default_domain.empty()) {
                         state.schema = state.registry.resolve_by_domain(
                             state.default_domain);
+                        register_domain_module(state, state.default_domain);
                     }
                     state.domain_is_override = true;
                 }
@@ -465,9 +482,15 @@ private:
                     auto& parent = state.stack[state.stack.size() - 2];
                     if (parent.kind == FrameKind::Object && parent.type_info
                         && !parent.obj.valid()) {
+                        auto type_id = parent.type_info->handle.id;
+                        if (state.module_registered) {
+                            type_id = state.builder.target().addForeignRef(
+                                state.current_module,
+                                static_cast<uint32_t>(type_id));
+                        }
                         parent.obj = state.builder.begin_object(
                             frame_text,
-                            rupa::fir_builder::TypeHandle{parent.type_info->handle.id});
+                            rupa::fir_builder::TypeHandle{type_id});
                         // Set root object (first top-level object)
                         if (!state.root_set) {
                             state.builder.set_root_object(parent.obj);
@@ -493,13 +516,25 @@ private:
                         }
                     }
                     if (!all_ws) {
+                        auto role_id = frame.role.id;
+                        if (state.module_registered) {
+                            role_id = state.builder.target().addForeignRef(
+                                state.current_module,
+                                static_cast<uint32_t>(role_id));
+                        }
                         state.builder.add_reference(
-                            frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
+                            frame.parent_obj, rupa::fir_builder::RoleHandle{role_id},
                             frame_text);
                     }
                 } else {
+                    auto role_id = frame.role.id;
+                    if (state.module_registered) {
+                        role_id = state.builder.target().addForeignRef(
+                            state.current_module,
+                            static_cast<uint32_t>(role_id));
+                    }
                     state.builder.add_property(
-                        frame.parent_obj, rupa::fir_builder::RoleHandle{frame.role.id},
+                        frame.parent_obj, rupa::fir_builder::RoleHandle{role_id},
                         frame_text);
                 }
             }
