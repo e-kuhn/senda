@@ -401,7 +401,7 @@ private:
                                 static_cast<uint32_t>(type_id));
                         }
                         parent.obj = state.builder.begin_object(
-                            parent.xml_tag,
+                            {},
                             rupa::fir_builder::TypeHandle{type_id});
                         if (!state.root_set) {
                             state.builder.set_root_object(parent.obj);
@@ -800,7 +800,7 @@ private:
                         static_cast<uint32_t>(type_id));
                 }
                 frame.obj = state.builder.begin_object(
-                    frame.xml_tag,
+                    {},
                     rupa::fir_builder::TypeHandle{type_id});
             }
 

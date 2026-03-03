@@ -397,15 +397,11 @@ TEST(ArxmlCompilerTest, CapturesXmlAttributes) {
     auto result = compiler.compile(fixture_path("anonymous-containment.arxml"), ctx);
     EXPECT_FALSE(result.has_errors()) << "Compilation failed";
 
-    // Find an object whose identity is "SDG" (anonymous SDG object)
-    // and verify it has a string property with value "info" (the GID attribute)
+    // Find any anonymous object with a string property value "info" (GID attribute)
     bool found_gid_property = false;
     result.fir().forEachNode([&](fir::Id id, const fir::Node& node) {
         if (node.kind != fir::NodeKind::ObjectDef) return;
         auto& od = result.fir().as<fir::ObjectDef>(id);
-        auto name = result.fir().getString(od.identity);
-        // SDG anonymous objects use their xml_tag as identity
-        if (name != "SDG") return;
 
         auto props = result.fir().propertiesOf(od);
         for (auto prop_id : props) {
