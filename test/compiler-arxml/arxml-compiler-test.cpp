@@ -392,3 +392,43 @@ TEST(ArxmlCompilerTest, WrapperOnlyELEMENTSDispatch) {
     EXPECT_FALSE(has_elements_object)
         << "ELEMENTS should be a Wrapper frame, not an Object";
 }
+
+// Verify xml.attribute=true capture: GID on SDG should become a property.
+TEST(ArxmlCompilerTest, CapturesXmlAttributes) {
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
+
+    // anonymous-containment.arxml has: <SDG GID="info"><SD GID="uuid">...</SD></SDG>
+    auto result = compiler.compile(fixture_path("anonymous-containment.arxml"), ctx);
+    EXPECT_FALSE(result.has_errors()) << "Compilation failed";
+
+    // Find an object whose identity is "SDG" (anonymous SDG object)
+    // and verify it has a string property with value "info" (the GID attribute)
+    bool found_gid_property = false;
+    result.fir().forEachNode([&](fir::Id id, const fir::Node& node) {
+        if (node.kind != fir::NodeKind::ObjectDef) return;
+        auto& od = result.fir().as<fir::ObjectDef>(id);
+        auto name = result.fir().getString(od.identity);
+        // SDG anonymous objects use their xml_tag as identity
+        if (name != "SDG") return;
+
+        auto props = result.fir().propertiesOf(od);
+        for (auto prop_id : props) {
+            auto& pv = result.fir().as<fir::PropertyVal>(prop_id);
+            if (fir::is_none(pv.value_id)) continue;
+            auto& val_node = result.fir().get(pv.value_id);
+            if (val_node.kind != fir::NodeKind::ValueDef) continue;
+            auto& vd = result.fir().as<fir::ValueDef>(pv.value_id);
+            if (vd.value_kind != fir::ValueKind::String) continue;
+            auto val_str = result.fir().getString(vd.string_val);
+            if (val_str == "info") {
+                found_gid_property = true;
+            }
+        }
+    });
+    EXPECT_TRUE(found_gid_property)
+        << "SDG object should have a property with value 'info' "
+           "(GID attribute captured via xml.attribute=true)";
+}

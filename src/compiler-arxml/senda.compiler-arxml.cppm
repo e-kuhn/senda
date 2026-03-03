@@ -175,6 +175,7 @@ public:
             switch (event) {
             case XmlEvent::StartElement:
                 handle_start_element(state, xml);
+                capture_xml_attributes(state, xml);
                 break;
             case XmlEvent::EndElement:
                 handle_end_element(state);
@@ -653,6 +654,51 @@ private:
             state.diags.add({rupa::compiler::Severity::Warning,
                 "skipping unknown element '" + std::string(tag) + "'",
                 {state.file_path, 0, 0}});
+        }
+    }
+
+    // Capture XML attributes with xml.attribute=true tags on the just-pushed
+    // Object frame. Called from the main loop after handle_start_element.
+    static void capture_xml_attributes(ParseState& state, XmlPullParser& xml) {
+        if (state.stack.empty()) return;
+        auto& frame = state.stack.back();
+        if (frame.kind != FrameKind::Object || !frame.type_info) return;
+
+        while (xml.next_attr()) {
+            auto name = xml.attr_name();
+            auto* role_info = frame.type_info->roles.find(name);
+            if (!role_info) continue;
+            if (senda::arxml::classify_xml_tags(role_info->xml_tags) !=
+                senda::arxml::XmlPattern::Attribute) continue;
+
+            // Ensure object exists (eager creation for attribute properties)
+            if (!frame.obj.valid()) {
+                auto type_id = frame.type_info->handle.id;
+                if (state.module_registered) {
+                    type_id = state.builder.target().addForeignRef(
+                        state.current_module,
+                        static_cast<uint32_t>(type_id));
+                }
+                frame.obj = state.builder.begin_object(
+                    frame.xml_tag,
+                    rupa::fir_builder::TypeHandle{type_id});
+                if (!state.root_set) {
+                    state.builder.set_root_object(frame.obj);
+                    state.root_set = true;
+                }
+            }
+
+            auto role_id = role_info->role.id;
+            if (state.module_registered) {
+                role_id = state.builder.target().addForeignRef(
+                    state.current_module,
+                    static_cast<uint32_t>(role_id));
+            }
+            auto val_sid = state.builder.target().intern(xml.attr_value());
+            auto val_id = state.builder.target().add<fir::ValueDef>(
+                fir::ValueKind::String, val_sid);
+            frame.deferred_count++;
+            state.deferred_props.emplace_back(role_id, val_id);
         }
     }
 
