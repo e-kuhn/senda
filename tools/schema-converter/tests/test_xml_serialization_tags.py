@@ -84,8 +84,8 @@ class TestXmlTagExtraction:
         assert member is not None
         assert member.xml_sequence_offset == -100
 
-    def test_no_xml_tags(self):
-        """Tags not present — fields should remain None."""
+    def test_no_explicit_xml_tags_inferred(self):
+        """Tags not in appinfo — inferred as RoleOnly from element structure."""
         elem = _make_element_with_appinfo(
             'mmt.qualifiedName="SomeType.someField";'
             'pureMM.minOccurs="0";'
@@ -93,10 +93,11 @@ class TestXmlTagExtraction:
         )
         member = _get_member_from_appinfo(elem)
         assert member is not None
-        assert member.xml_role_element is None
-        assert member.xml_role_wrapper_element is None
-        assert member.xml_type_element is None
-        assert member.xml_type_wrapper_element is None
+        # Inferred as RoleOnly (simple element, no complexType/choice)
+        assert member.xml_role_element is True
+        assert member.xml_role_wrapper_element is False
+        assert member.xml_type_element is False
+        assert member.xml_type_wrapper_element is False
         assert member.xml_attribute is None
         assert member.xml_sequence_offset is None
 
@@ -125,3 +126,44 @@ class TestXmlTagPropagation:
         assert sdg_member.xml_role_wrapper_element is True
         assert sdg_member.xml_type_element is False
         assert sdg_member.xml_type_wrapper_element is False
+
+
+class TestXmlTagInference:
+    """Test inference of XML tags when not explicitly in appinfo."""
+
+    def test_short_name_inferred_as_role_element(self):
+        """SHORT-NAME has no xml.roleElement in appinfo — should be inferred."""
+        if not os.path.exists(XSD_PATH):
+            pytest.skip("R20-11 schema not available")
+
+        schema = export_schema(parse_schema(XSD_PATH))
+        referrable = next((c for c in schema.composites
+                          if c.name == "Referrable"), None)
+        assert referrable is not None
+
+        short_name = next((m for m in referrable.members
+                          if m.name == "shortName"), None)
+        assert short_name is not None
+        assert short_name.xml_role_element is True
+        assert short_name.xml_role_wrapper_element in (False, None)
+        assert short_name.xml_type_element in (False, None)
+
+    def test_no_none_tags_after_inference(self):
+        """After inference, no ExportMember should have all-None xml tags
+        (at least xml_role_element or xml_attribute should be set)."""
+        if not os.path.exists(XSD_PATH):
+            pytest.skip("R20-11 schema not available")
+
+        schema = export_schema(parse_schema(XSD_PATH))
+        for c in schema.composites:
+            for m in c.members:
+                has_any_tag = any([
+                    m.xml_role_element is not None,
+                    m.xml_role_wrapper_element is not None,
+                    m.xml_type_element is not None,
+                    m.xml_type_wrapper_element is not None,
+                    m.xml_attribute is not None,
+                ])
+                assert has_any_tag, (
+                    f"{c.name}.{m.name} has no XML serialization tags after inference"
+                )
