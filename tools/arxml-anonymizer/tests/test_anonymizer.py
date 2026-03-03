@@ -42,6 +42,24 @@ ARXML_WITH_REFS = """\
 """
 
 
+ARXML_WITH_SHORT_NAMES = """\
+<?xml version="1.0" encoding="UTF-8"?>
+<AUTOSAR>
+  <AR-PACKAGES>
+    <AR-PACKAGE>
+      <SHORT-NAME>N</SHORT-NAME>
+      <ELEMENTS>
+        <I-SIGNAL>
+          <SHORT-NAME>BrakePedalPosition</SHORT-NAME>
+          <I-SIGNAL-TYPE>TYPE_REFERENCE</I-SIGNAL-TYPE>
+        </I-SIGNAL>
+      </ELEMENTS>
+    </AR-PACKAGE>
+  </AR-PACKAGES>
+</AUTOSAR>
+"""
+
+
 class TestAnonymizeArxml(unittest.TestCase):
     def _anonymize(self, input_xml: str) -> str:
         with tempfile.NamedTemporaryFile(
@@ -119,6 +137,38 @@ class TestVerification(unittest.TestCase):
             os.unlink(inp_path)
             if os.path.exists(out_path):
                 os.unlink(out_path)
+
+
+class TestMinLengthFilter(unittest.TestCase):
+    def _anonymize(self, input_xml: str, min_length: int = 3) -> str:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".arxml", delete=False
+        ) as inp:
+            inp.write(input_xml)
+            inp_path = inp.name
+        out_path = inp_path + ".anon.arxml"
+        try:
+            result = anonymize_arxml(inp_path, out_path, seed=42, min_name_length=min_length)
+            with open(out_path, "r") as f:
+                return f.read()
+        finally:
+            os.unlink(inp_path)
+            if os.path.exists(out_path):
+                os.unlink(out_path)
+
+    def test_short_names_not_replaced(self):
+        """Names shorter than min_length should not be replaced."""
+        output = self._anonymize(ARXML_WITH_SHORT_NAMES, min_length=3)
+        # "N" is 1 char, below threshold — should remain
+        # But "BrakePedalPosition" (18 chars) should be anonymized
+        self.assertNotIn("BrakePedalPosition", output)
+        # TYPE_REFERENCE should be intact (not corrupted by "N" replacement)
+        self.assertIn("TYPE_REFERENCE", output)
+
+    def test_default_min_length_is_3(self):
+        """Default min_length should be 3."""
+        output = self._anonymize(ARXML_WITH_SHORT_NAMES)
+        self.assertIn("TYPE_REFERENCE", output)
 
 
 if __name__ == "__main__":

@@ -224,6 +224,15 @@ private:
         uint32_t text_len = 0;
         bool is_identity = false;  // true for SHORT-NAME capture
         bool is_reference = false;  // true for *-REF property frames
+        // Single-element containment: this Object frame was created for an element
+        // that is both a role on its parent AND a type (e.g., ADMIN-DATA).
+        // On pop, use this role to defer containment to the enclosing Object frame.
+        bool has_containment_role = false;
+        fir::Id containment_role_id{0};
+        // Path index tracking: true only when this object was created via SHORT-NAME
+        // and pushed a path segment. Prevents anonymous objects from popping segments
+        // they didn't push.
+        bool pushed_path = false;
         // Skip frame
         int skip_depth = 0;
         // Deferred properties — indices into ParseState::deferred_props
@@ -356,29 +365,11 @@ private:
             return;
         }
 
-        // Try type lookup (schema resolved lazily during AUTOSAR root handling)
-        const senda::domains::TypeInfo* type_info = nullptr;
-        if (state.schema) {
-            type_info = state.schema->tag_to_type.find(tag);
-        }
-        if (type_info) {
-            // Known type element — create object
-            Frame frame{};
-            frame.kind = FrameKind::Object;
-            frame.type_info = type_info;
-            frame.xml_tag = tag;
-            frame.obj = {};  // deferred until SHORT-NAME
-            frame.deferred_start = static_cast<uint32_t>(
-                state.deferred_props.size());
-            state.stack.push_back(std::move(frame));
-            return;
-        }
-
-        // If we're inside an Object frame, check for SHORT-NAME or role lookup
+        // ---- Object frame: check roles FIRST, then fall through to type ----
         if (!state.stack.empty() && state.stack.back().kind == FrameKind::Object) {
             auto& parent = state.stack.back();
 
-            // SHORT-NAME provides the identity for the parent object
+            // SHORT-NAME provides identity for the parent object
             if (tag == "SHORT-NAME" && !parent.obj.valid()) {
                 Frame frame{};
                 frame.kind = FrameKind::Property;
@@ -390,10 +381,9 @@ private:
             if (parent.type_info) {
                 auto* role_info = parent.type_info->roles.find(tag);
                 if (role_info) {
-                    // Create ObjectDef for the AUTOSAR root element which
-                    // has no SHORT-NAME but acts as the containment root.
-                    if (!parent.obj.valid()
-                        && parent.xml_tag == "AUTOSAR") {
+                    // Ensure parent object exists — generalized eager creation
+                    // (subsumes the old AUTOSAR-only special case).
+                    if (!parent.obj.valid()) {
                         auto type_id = parent.type_info->handle.id;
                         if (state.module_registered) {
                             type_id = state.builder.target().addForeignRef(
@@ -408,6 +398,38 @@ private:
                             state.root_set = true;
                         }
                     }
+
+                    // Check for single-element containment:
+                    // tag is BOTH a role on the parent AND a registered type.
+                    // Create an Object frame with embedded containment info.
+                    // Skip for reference roles — those need text capture.
+                    const senda::domains::TypeInfo* nested_type = nullptr;
+                    if (!role_info->is_reference && state.schema) {
+                        nested_type = state.schema->tag_to_type.find(tag);
+                    }
+
+                    if (nested_type) {
+                        // Single-element containment: Object frame with role info
+                        auto role_id = role_info->role.id;
+                        if (state.module_registered) {
+                            role_id = state.builder.target().addForeignRef(
+                                state.current_module,
+                                static_cast<uint32_t>(role_id));
+                        }
+                        Frame frame{};
+                        frame.kind = FrameKind::Object;
+                        frame.type_info = nested_type;
+                        frame.xml_tag = tag;
+                        frame.obj = {};  // created eagerly on first child role
+                        frame.deferred_start = static_cast<uint32_t>(
+                            state.deferred_props.size());
+                        frame.has_containment_role = true;
+                        frame.containment_role_id = role_id;
+                        state.stack.push_back(std::move(frame));
+                        return;
+                    }
+
+                    // Standard property (scalar, reference, or wrapper element)
                     Frame frame{};
                     frame.kind = FrameKind::Property;
                     frame.role = role_info->role;
@@ -422,9 +444,11 @@ private:
                     return;
                 }
             }
+            // Fall through to type lookup (handles types that aren't roles
+            // of the current parent, e.g., unexpected nested types)
         }
 
-        // If we're inside a Property frame, try resolving child elements
+        // ---- Property frame: resolve children against target type ----
         if (!state.stack.empty() && state.stack.back().kind == FrameKind::Property) {
             auto& prop = state.stack.back();
 
@@ -465,8 +489,7 @@ private:
             }
 
             // Fall back to the property's target type when the element name
-            // differs from the registered type tag (e.g. VFC-IREF is really
-            // PORT-GROUP-IN-SYSTEM-INSTANCE-REF).
+            // differs from the registered type tag (e.g. VFC-IREF)
             if (prop.target_type_info) {
                 Frame frame{};
                 frame.kind = FrameKind::Object;
@@ -480,13 +503,29 @@ private:
             }
         }
 
-        // Unknown element — skip
+        // ---- Type lookup: root elements and unmatched types ----
+        const senda::domains::TypeInfo* type_info = nullptr;
+        if (state.schema) {
+            type_info = state.schema->tag_to_type.find(tag);
+        }
+        if (type_info) {
+            Frame frame{};
+            frame.kind = FrameKind::Object;
+            frame.type_info = type_info;
+            frame.xml_tag = tag;
+            frame.obj = {};
+            frame.deferred_start = static_cast<uint32_t>(
+                state.deferred_props.size());
+            state.stack.push_back(std::move(frame));
+            return;
+        }
+
+        // ---- Unknown element: skip ----
         Frame frame{};
         frame.kind = FrameKind::Skip;
         frame.skip_depth = 1;
         state.stack.push_back(std::move(frame));
 
-        // Always count skipped elements
         state.skip_total_count++;
         if (state.skip_warning_emitted < state.max_skip_warnings) {
             state.skip_warning_emitted++;
@@ -550,6 +589,7 @@ private:
                         state.current_path_ids.push_back(identity_sid);
                         state.current_path_key.push(identity_sid);
                         state.path_index[state.current_path_key.hash] = parent.obj.id;
+                        parent.pushed_path = true;
                     }
                 }
             } else if (!frame_text.empty() && frame.parent_obj.valid()) {
@@ -587,18 +627,44 @@ private:
         }
 
         case FrameKind::Object:
+            // Eagerly create anonymous object if needed: type without SHORT-NAME
+            // that either has deferred properties or a containment role.
+            if (!frame.obj.valid() && frame.type_info
+                && (frame.deferred_count > 0 || frame.has_containment_role)) {
+                auto type_id = frame.type_info->handle.id;
+                if (state.module_registered) {
+                    type_id = state.builder.target().addForeignRef(
+                        state.current_module,
+                        static_cast<uint32_t>(type_id));
+                }
+                frame.obj = state.builder.begin_object(
+                    frame.xml_tag,
+                    rupa::fir_builder::TypeHandle{type_id});
+            }
+
             if (frame.obj.valid()) {
-                // Flush ALL deferred properties (scalar, reference, containment)
-                // atomically so the object's property span is contiguous.
+                // Flush ALL deferred properties atomically
                 auto span = std::span<const std::pair<fir::Id, fir::Id>>(
                     state.deferred_props.data() + frame.deferred_start,
                     frame.deferred_count);
                 state.builder.flush_properties(frame.obj, span);
                 state.deferred_props.resize(frame.deferred_start);
 
-                // Defer this object as a containment link to the grandparent
-                // Object frame via the enclosing Property frame.
-                if (state.stack.size() >= 2) {
+                // Containment: prefer embedded role (single-element containment)
+                if (frame.has_containment_role) {
+                    // Skip past self (frame is still on the stack as back())
+                    for (auto it = state.stack.rbegin() + 1;
+                         it != state.stack.rend(); ++it) {
+                        if (it->kind == FrameKind::Object) {
+                            it->deferred_count++;
+                            state.deferred_props.emplace_back(
+                                frame.containment_role_id, frame.obj.id);
+                            break;
+                        }
+                    }
+                }
+                // Existing: containment via enclosing Property frame
+                else if (state.stack.size() >= 2) {
                     auto& below = state.stack[state.stack.size() - 2];
                     if (below.kind == FrameKind::Property
                         && below.parent_obj.valid()) {
@@ -608,7 +674,6 @@ private:
                                 state.current_module,
                                 static_cast<uint32_t>(role_id));
                         }
-                        // Find the grandparent Object frame and defer
                         for (auto it = state.stack.rbegin() + 2;
                              it != state.stack.rend(); ++it) {
                             if (it->kind == FrameKind::Object) {
@@ -621,7 +686,8 @@ private:
                     }
                 }
 
-                if (!state.current_path_ids.empty()) {
+                // Path index: only pop if this object pushed a segment
+                if (frame.pushed_path && !state.current_path_ids.empty()) {
                     state.current_path_key.pop(state.current_path_ids.back());
                     state.current_path_ids.pop_back();
                 }

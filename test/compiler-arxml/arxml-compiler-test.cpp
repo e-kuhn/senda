@@ -215,3 +215,51 @@ TEST(ArxmlCompilerTest, PropertyContiguityWithNestedObjects) {
         }
     }
 }
+
+// Verify that anonymous types (no SHORT-NAME) that are both a role AND a type
+// (e.g., ADMIN-DATA) create containment-linked ObjectDefs.
+TEST(ArxmlCompilerTest, AnonymousObjectContainment) {
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
+
+    auto result = compiler.compile(fixture_path("anonymous-containment.arxml"), ctx);
+    EXPECT_FALSE(result.has_errors()) << "Compilation failed";
+
+    // Count objects — should include AUTOSAR root, ARPackage, UNIT,
+    // and the anonymous ADMIN-DATA (at minimum).
+    size_t obj_count = 0;
+    fir::Id unit_obj_id = fir::Id{UINT32_MAX};
+    result.fir().forEachNode([&](fir::Id id, const fir::Node& node) {
+        if (node.kind != fir::NodeKind::ObjectDef) return;
+        ++obj_count;
+        auto& od = result.fir().as<fir::ObjectDef>(id);
+        auto name = result.fir().getString(od.identity);
+        if (name == "Percent") unit_obj_id = id;
+    });
+
+    // Must have ADMIN-DATA as an anonymous object (more objects than before the fix)
+    EXPECT_GE(obj_count, 4u) << "Expected at least AUTOSAR + ARPackage + UNIT + ADMIN-DATA";
+
+    // The UNIT object should have at least one containment property
+    // (the ADMIN-DATA link)
+    ASSERT_FALSE(fir::is_none(unit_obj_id)) << "UNIT 'Percent' not found";
+    auto& unit_od = result.fir().as<fir::ObjectDef>(unit_obj_id);
+    auto unit_props = result.fir().propertiesOf(unit_od);
+
+    // Find a property whose value is an ObjectDef (containment)
+    bool has_containment = false;
+    for (auto prop_id : unit_props) {
+        auto& pv = result.fir().as<fir::PropertyVal>(prop_id);
+        if (!fir::is_none(pv.value_id)) {
+            auto& val_node = result.fir().get(pv.value_id);
+            if (val_node.kind == fir::NodeKind::ObjectDef) {
+                has_containment = true;
+                break;
+            }
+        }
+    }
+    EXPECT_TRUE(has_containment)
+        << "UNIT 'Percent' should contain an anonymous ADMIN-DATA object";
+}
