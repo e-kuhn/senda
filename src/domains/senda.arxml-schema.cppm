@@ -50,6 +50,7 @@ struct TagRoleDesc {
     uint16_t role_index;
     uint16_t target_type;
     bool is_reference;
+    bool is_identity;        // atpIdentityContributor stereotype
     uint8_t xml_tags;        // packed XmlTagBits
     int16_t sequence_offset;
 };

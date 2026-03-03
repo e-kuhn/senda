@@ -376,17 +376,20 @@ private:
         if (!state.stack.empty() && state.stack.back().kind == FrameKind::Object) {
             auto& parent = state.stack.back();
 
-            // SHORT-NAME provides identity for the parent object
-            if (tag == "SHORT-NAME" && !parent.obj.valid()) {
-                Frame frame{};
-                frame.kind = FrameKind::Property;
-                frame.is_identity = true;
-                state.stack.push_back(std::move(frame));
-                return;
-            }
-
             if (parent.type_info) {
                 auto* role_info = parent.type_info->roles.find(tag);
+
+                // Identity: SHORT-NAME role with atpIdentityContributor stereotype.
+                // Only types inheriting from Referrable have this — types like
+                // AdminData, DocRevision, Sdg do NOT and stay anonymous.
+                if (tag == "SHORT-NAME" && role_info
+                    && role_info->is_identity && !parent.obj.valid()) {
+                    Frame frame{};
+                    frame.kind = FrameKind::Property;
+                    frame.is_identity = true;
+                    state.stack.push_back(std::move(frame));
+                    return;
+                }
                 if (role_info) {
                     // Ensure parent object exists — generalized eager creation
                     if (!parent.obj.valid()) {
