@@ -39,6 +39,12 @@ _XSD_NS = {"xsd": "http://www.w3.org/2001/XMLSchema"}
 
 _MIN_OCCURS_RE = re.compile(r'pureMM\.minOccurs="(\d+|\w+)"')
 _MAX_OCCURS_RE = re.compile(r'pureMM\.maxOccurs="(-?\d+|\w+)"')
+_XML_ROLE_ELEMENT_RE = re.compile(r'xml\.roleElement="(true|false)"')
+_XML_ROLE_WRAPPER_RE = re.compile(r'xml\.roleWrapperElement="(true|false)"')
+_XML_TYPE_ELEMENT_RE = re.compile(r'xml\.typeElement="(true|false)"')
+_XML_TYPE_WRAPPER_RE = re.compile(r'xml\.typeWrapperElement="(true|false)"')
+_XML_ATTRIBUTE_RE = re.compile(r'xml\.attribute="(true|false)"')
+_XML_SEQUENCE_OFFSET_RE = re.compile(r'xml\.sequenceOffset="(-?\d+)"')
 
 _RELEASE_RE = re.compile(r"Part of AUTOSAR Release:\s*(R\d\d-\d\d)")
 _VERSION_RE = re.compile(r"Covered Standards:\s*(\d\.\d\.\d)")
@@ -322,6 +328,31 @@ def _get_member_from_appinfo(element: ElementTree.Element) -> InternalMember | N
     stereos = get_stereotypes(element)
     if stereos:
         member.stereotypes = stereos
+
+    # XML serialization tags
+    match = _XML_ROLE_ELEMENT_RE.search(info_text)
+    if match:
+        member.xml_role_element = match.group(1) == "true"
+
+    match = _XML_ROLE_WRAPPER_RE.search(info_text)
+    if match:
+        member.xml_role_wrapper_element = match.group(1) == "true"
+
+    match = _XML_TYPE_ELEMENT_RE.search(info_text)
+    if match:
+        member.xml_type_element = match.group(1) == "true"
+
+    match = _XML_TYPE_WRAPPER_RE.search(info_text)
+    if match:
+        member.xml_type_wrapper_element = match.group(1) == "true"
+
+    match = _XML_ATTRIBUTE_RE.search(info_text)
+    if match:
+        member.xml_attribute = match.group(1) == "true"
+
+    match = _XML_SEQUENCE_OFFSET_RE.search(info_text)
+    if match:
+        member.xml_sequence_offset = int(match.group(1))
 
     return member
 
