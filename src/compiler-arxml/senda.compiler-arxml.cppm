@@ -19,6 +19,7 @@ import rupa.fir;
 import rupa.fir.builder;
 import rupa.diagnostics;
 import senda.domains;
+import senda.arxml_schema;
 
 export namespace senda
 {
@@ -174,6 +175,7 @@ public:
             switch (event) {
             case XmlEvent::StartElement:
                 handle_start_element(state, xml);
+                capture_xml_attributes(state, xml);
                 break;
             case XmlEvent::EndElement:
                 handle_end_element(state);
@@ -208,7 +210,7 @@ private:
 
     // --- SAX state machine ---
 
-    enum class FrameKind { Object, Property, Skip };
+    enum class FrameKind { Object, Property, Wrapper, Skip };
 
     struct Frame {
         FrameKind kind;
@@ -229,6 +231,11 @@ private:
         // On pop, use this role to defer containment to the enclosing Object frame.
         bool has_containment_role = false;
         fir::Id containment_role_id{0};
+        // Wrapper frame: carries the XmlPattern and lookup info for children
+        senda::arxml::XmlPattern wrapper_pattern{};
+        rupa::domain::RoleHandle wrapper_role{};            // role that created this wrapper
+        rupa::fir_builder::ObjectHandle wrapper_parent_obj{}; // grandparent object
+        const senda::domains::TypeInfo* wrapper_target_type = nullptr; // target type for children
         // Path index tracking: true only when this object was created via SHORT-NAME
         // and pushed a path segment. Prevents anonymous objects from popping segments
         // they didn't push.
@@ -369,7 +376,11 @@ private:
         if (!state.stack.empty() && state.stack.back().kind == FrameKind::Object) {
             auto& parent = state.stack.back();
 
-            // SHORT-NAME provides identity for the parent object
+            // SHORT-NAME provides identity for the parent object.
+            // NOTE: is_identity flag is available on RoleInfo for future
+            // stereotype-driven identity, but we keep the hardcoded check
+            // because many types encounter SHORT-NAME in ARXML data without
+            // having it in their generated tag_roles (model group inlining).
             if (tag == "SHORT-NAME" && !parent.obj.valid()) {
                 Frame frame{};
                 frame.kind = FrameKind::Property;
@@ -382,7 +393,6 @@ private:
                 auto* role_info = parent.type_info->roles.find(tag);
                 if (role_info) {
                     // Ensure parent object exists — generalized eager creation
-                    // (subsumes the old AUTOSAR-only special case).
                     if (!parent.obj.valid()) {
                         auto type_id = parent.type_info->handle.id;
                         if (state.module_registered) {
@@ -399,17 +409,58 @@ private:
                         }
                     }
 
-                    // Check for single-element containment:
-                    // tag is BOTH a role on the parent AND a registered type.
-                    // Create an Object frame with embedded containment info.
-                    // Skip for reference roles — those need text capture.
-                    const senda::domains::TypeInfo* nested_type = nullptr;
-                    if (!role_info->is_reference && state.schema) {
-                        nested_type = state.schema->tag_to_type.find(tag);
+                    // Tag-driven dispatch: classify by XML serialization tags
+                    auto pattern = senda::arxml::classify_xml_tags(
+                        role_info->xml_tags);
+
+                    switch (pattern) {
+                    case senda::arxml::XmlPattern::RoleOnly: {
+                        // Single-element containment: tag is BOTH a role AND
+                        // a registered type → Object frame with embedded role.
+                        // Skip for reference roles — those need text capture.
+                        const senda::domains::TypeInfo* nested_type = nullptr;
+                        if (!role_info->is_reference && state.schema) {
+                            nested_type = state.schema->tag_to_type.find(tag);
+                        }
+                        if (nested_type) {
+                            auto role_id = role_info->role.id;
+                            if (state.module_registered) {
+                                role_id = state.builder.target().addForeignRef(
+                                    state.current_module,
+                                    static_cast<uint32_t>(role_id));
+                            }
+                            Frame frame{};
+                            frame.kind = FrameKind::Object;
+                            frame.type_info = nested_type;
+                            frame.xml_tag = tag;
+                            frame.obj = {};
+                            frame.deferred_start = static_cast<uint32_t>(
+                                state.deferred_props.size());
+                            frame.has_containment_role = true;
+                            frame.containment_role_id = role_id;
+                            state.stack.push_back(std::move(frame));
+                            return;
+                        }
+                        // Scalar/reference property
+                        Frame frame{};
+                        frame.kind = FrameKind::Property;
+                        frame.role = role_info->role;
+                        frame.parent_obj = parent.obj;
+                        frame.is_reference = role_info->is_reference;
+                        if (state.schema) {
+                            auto* ti = state.schema->handle_to_type.find(
+                                role_info->target_type_id);
+                            if (ti) frame.target_type_info = *ti;
+                        }
+                        state.stack.push_back(std::move(frame));
+                        return;
                     }
 
-                    if (nested_type) {
-                        // Single-element containment: Object frame with role info
+                    case senda::arxml::XmlPattern::WrapperRole:
+                    case senda::arxml::XmlPattern::WrapperType:
+                    case senda::arxml::XmlPattern::WrapperOnly: {
+                        // Wrapper element: children are type-named or
+                        // role-named elements, dispatched via Wrapper frame.
                         auto role_id = role_info->role.id;
                         if (state.module_registered) {
                             role_id = state.builder.target().addForeignRef(
@@ -417,23 +468,82 @@ private:
                                 static_cast<uint32_t>(role_id));
                         }
                         Frame frame{};
-                        frame.kind = FrameKind::Object;
-                        frame.type_info = nested_type;
-                        frame.xml_tag = tag;
-                        frame.obj = {};  // created eagerly on first child role
-                        frame.deferred_start = static_cast<uint32_t>(
-                            state.deferred_props.size());
-                        frame.has_containment_role = true;
-                        frame.containment_role_id = role_id;
+                        frame.kind = FrameKind::Wrapper;
+                        frame.wrapper_pattern = pattern;
+                        frame.wrapper_role = rupa::domain::RoleHandle{role_id};
+                        frame.wrapper_parent_obj = parent.obj;
+                        if (state.schema) {
+                            auto* ti = state.schema->handle_to_type.find(
+                                role_info->target_type_id);
+                            if (ti) frame.wrapper_target_type = *ti;
+                        }
                         state.stack.push_back(std::move(frame));
                         return;
                     }
 
-                    // Standard property (scalar, reference, or wrapper element)
+                    case senda::arxml::XmlPattern::TypeOnly: {
+                        // Type-named element (e.g., INNER-PORT-IREF):
+                        // the element name comes from the type, not the role.
+                        // Handle same as RoleOnly Property frame.
+                        Frame frame{};
+                        frame.kind = FrameKind::Property;
+                        frame.role = role_info->role;
+                        frame.parent_obj = parent.obj;
+                        frame.is_reference = role_info->is_reference;
+                        if (state.schema) {
+                            auto* ti = state.schema->handle_to_type.find(
+                                role_info->target_type_id);
+                            if (ti) frame.target_type_info = *ti;
+                        }
+                        state.stack.push_back(std::move(frame));
+                        return;
+                    }
+
+                    case senda::arxml::XmlPattern::Flattened:
+                        break;
+                    case senda::arxml::XmlPattern::Attribute:
+                        // Not handled as element dispatch; fall through
+                        // to type lookup below.
+                        break;
+                    }
+                }
+            }
+            // Fall through to type lookup (handles types that aren't roles
+            // of the current parent, e.g., unexpected nested types)
+        }
+
+        // ---- Wrapper frame: dispatch children ----
+        if (!state.stack.empty() && state.stack.back().kind == FrameKind::Wrapper) {
+            auto& wrapper = state.stack.back();
+
+            // Try as top-level type (common for all wrapper patterns)
+            const senda::domains::TypeInfo* nested_type = nullptr;
+            if (state.schema) {
+                nested_type = state.schema->tag_to_type.find(tag);
+            }
+            if (nested_type) {
+                Frame frame{};
+                frame.kind = FrameKind::Object;
+                frame.type_info = nested_type;
+                frame.xml_tag = tag;
+                frame.obj = {};
+                frame.deferred_start = static_cast<uint32_t>(
+                    state.deferred_props.size());
+                frame.has_containment_role = true;
+                frame.containment_role_id = wrapper.wrapper_role.id;
+                state.stack.push_back(std::move(frame));
+                return;
+            }
+
+            // Try as role on wrapper's target type
+            if (wrapper.wrapper_target_type) {
+                auto* role_info = wrapper.wrapper_target_type->roles.find(tag);
+                if (role_info) {
+
                     Frame frame{};
                     frame.kind = FrameKind::Property;
                     frame.role = role_info->role;
-                    frame.parent_obj = parent.obj;
+                    frame.parent_obj = wrapper.wrapper_parent_obj;
                     frame.is_reference = role_info->is_reference;
                     if (state.schema) {
                         auto* ti = state.schema->handle_to_type.find(
@@ -444,8 +554,24 @@ private:
                     return;
                 }
             }
-            // Fall through to type lookup (handles types that aren't roles
-            // of the current parent, e.g., unexpected nested types)
+
+            // Fallback: use wrapper's target type when child element name
+            // doesn't match any registered type (e.g., VFC-IREF, INNER-PORT-IREF)
+            if (wrapper.wrapper_target_type) {
+                Frame frame{};
+                frame.kind = FrameKind::Object;
+                frame.type_info = wrapper.wrapper_target_type;
+                frame.xml_tag = tag;
+                frame.obj = {};
+                frame.deferred_start = static_cast<uint32_t>(
+                    state.deferred_props.size());
+                frame.has_containment_role = true;
+                frame.containment_role_id = wrapper.wrapper_role.id;
+                state.stack.push_back(std::move(frame));
+                return;
+            }
+
+            // Unknown child in wrapper with no target type: fall through
         }
 
         // ---- Property frame: resolve children against target type ----
@@ -535,6 +661,38 @@ private:
         }
     }
 
+    // Capture XML attributes with xml.attribute=true tags on the just-pushed
+    // Object frame. Called from the main loop after handle_start_element.
+    // Capture XML attributes with xml.attribute=true tags on the just-pushed
+    // Object frame. Called from the main loop after handle_start_element.
+    // Does NOT eagerly create the object — deferred properties are flushed
+    // when the frame pops, allowing SHORT-NAME to provide identity first.
+    static void capture_xml_attributes(ParseState& state, XmlPullParser& xml) {
+        if (state.stack.empty()) return;
+        auto& frame = state.stack.back();
+        if (frame.kind != FrameKind::Object || !frame.type_info) return;
+
+        while (xml.next_attr()) {
+            auto name = xml.attr_name();
+            auto* role_info = frame.type_info->roles.find(name);
+            if (!role_info) continue;
+            if (senda::arxml::classify_xml_tags(role_info->xml_tags) !=
+                senda::arxml::XmlPattern::Attribute) continue;
+
+            auto role_id = role_info->role.id;
+            if (state.module_registered) {
+                role_id = state.builder.target().addForeignRef(
+                    state.current_module,
+                    static_cast<uint32_t>(role_id));
+            }
+            auto val_sid = state.builder.target().intern(xml.attr_value());
+            auto val_id = state.builder.target().add<fir::ValueDef>(
+                fir::ValueKind::String, val_sid);
+            frame.deferred_count++;
+            state.deferred_props.emplace_back(role_id, val_id);
+        }
+    }
+
     // Defer a (role_id, value_id) pair to the nearest enclosing Object frame.
     static void defer_property(ParseState& state, fir::Id role_id,
                                fir::Id value_id) {
@@ -555,6 +713,10 @@ private:
         switch (frame.kind) {
         case FrameKind::Skip:
             if (--frame.skip_depth > 0) return;
+            break;
+
+        case FrameKind::Wrapper:
+            // Wrapper frames are structural only — no action on pop
             break;
 
         case FrameKind::Property: {
@@ -663,17 +825,28 @@ private:
                         }
                     }
                 }
-                // Existing: containment via enclosing Property frame
+                // Containment via enclosing Wrapper or Property frame
                 else if (state.stack.size() >= 2) {
                     auto& below = state.stack[state.stack.size() - 2];
-                    if (below.kind == FrameKind::Property
-                        && below.parent_obj.valid()) {
-                        auto role_id = below.role.id;
+                    fir::Id role_id{0};
+                    bool has_role = false;
+
+                    if (below.kind == FrameKind::Wrapper) {
+                        // Wrapper containment: use wrapper's role
+                        role_id = below.wrapper_role.id;
+                        has_role = true;
+                    } else if (below.kind == FrameKind::Property
+                               && below.parent_obj.valid()) {
+                        role_id = below.role.id;
                         if (state.module_registered) {
                             role_id = state.builder.target().addForeignRef(
                                 state.current_module,
                                 static_cast<uint32_t>(role_id));
                         }
+                        has_role = true;
+                    }
+
+                    if (has_role) {
                         for (auto it = state.stack.rbegin() + 2;
                              it != state.stack.rend(); ++it) {
                             if (it->kind == FrameKind::Object) {

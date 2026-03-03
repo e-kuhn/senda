@@ -39,6 +39,12 @@ _XSD_NS = {"xsd": "http://www.w3.org/2001/XMLSchema"}
 
 _MIN_OCCURS_RE = re.compile(r'pureMM\.minOccurs="(\d+|\w+)"')
 _MAX_OCCURS_RE = re.compile(r'pureMM\.maxOccurs="(-?\d+|\w+)"')
+_XML_ROLE_ELEMENT_RE = re.compile(r'xml\.roleElement="(true|false)"')
+_XML_ROLE_WRAPPER_RE = re.compile(r'xml\.roleWrapperElement="(true|false)"')
+_XML_TYPE_ELEMENT_RE = re.compile(r'xml\.typeElement="(true|false)"')
+_XML_TYPE_WRAPPER_RE = re.compile(r'xml\.typeWrapperElement="(true|false)"')
+_XML_ATTRIBUTE_RE = re.compile(r'xml\.attribute="(true|false)"')
+_XML_SEQUENCE_OFFSET_RE = re.compile(r'xml\.sequenceOffset="(-?\d+)"')
 
 _RELEASE_RE = re.compile(r"Part of AUTOSAR Release:\s*(R\d\d-\d\d)")
 _VERSION_RE = re.compile(r"Covered Standards:\s*(\d\.\d\.\d)")
@@ -323,7 +329,68 @@ def _get_member_from_appinfo(element: ElementTree.Element) -> InternalMember | N
     if stereos:
         member.stereotypes = stereos
 
+    # XML serialization tags
+    match = _XML_ROLE_ELEMENT_RE.search(info_text)
+    if match:
+        member.xml_role_element = match.group(1) == "true"
+
+    match = _XML_ROLE_WRAPPER_RE.search(info_text)
+    if match:
+        member.xml_role_wrapper_element = match.group(1) == "true"
+
+    match = _XML_TYPE_ELEMENT_RE.search(info_text)
+    if match:
+        member.xml_type_element = match.group(1) == "true"
+
+    match = _XML_TYPE_WRAPPER_RE.search(info_text)
+    if match:
+        member.xml_type_wrapper_element = match.group(1) == "true"
+
+    match = _XML_ATTRIBUTE_RE.search(info_text)
+    if match:
+        member.xml_attribute = match.group(1) == "true"
+
+    match = _XML_SEQUENCE_OFFSET_RE.search(info_text)
+    if match:
+        member.xml_sequence_offset = int(match.group(1))
+
+    _infer_xml_tags(member, element)
+
     return member
+
+
+def _infer_xml_tags(member: InternalMember, element: ElementTree.Element) -> None:
+    """Infer XML serialization tags from XSD structure when not explicitly present."""
+    if any([member.xml_role_element is not None,
+            member.xml_role_wrapper_element is not None,
+            member.xml_type_element is not None,
+            member.xml_type_wrapper_element is not None,
+            member.xml_attribute is not None]):
+        return
+
+    xsd_ns = "http://www.w3.org/2001/XMLSchema"
+
+    # xsd:attribute → xml.attribute=true
+    if element.tag == f"{{{xsd_ns}}}attribute":
+        member.xml_attribute = True
+        return
+
+    # Check for complexType with choice → wrapper element
+    complex_type = element.find(f"{{{xsd_ns}}}complexType")
+    if complex_type is not None:
+        choice = complex_type.find(f"{{{xsd_ns}}}choice")
+        if choice is not None:
+            member.xml_role_wrapper_element = True
+            member.xml_role_element = False
+            member.xml_type_element = False
+            member.xml_type_wrapper_element = False
+            return
+
+    # Default: role-named element (primitive/scalar)
+    member.xml_role_element = True
+    member.xml_role_wrapper_element = False
+    member.xml_type_element = False
+    member.xml_type_wrapper_element = False
 
 
 def _deduce_type_name(xml_name: str, appinfo_name: str | None) -> str:
@@ -372,6 +439,7 @@ def _get_choice_group_ref_member(
     member.min_occurs = 0
     member.max_occurs = None
     member.xml_types = [ref_name]
+    member.xml_role_element = True
     _add_choice_info(choice_elem, member)
     return member
 
@@ -383,6 +451,7 @@ def _get_unnamed_string_member() -> InternalMember:
     member.is_ordered = True
     member.min_occurs = 0
     member.max_occurs = None
+    member.xml_role_element = True
     return member
 
 
@@ -672,6 +741,7 @@ def _get_sequence_choice_group(
             name = choice_elem.attrib["name"]
             member = InternalMember(name=name)
             member.xml_types = xml_types
+            member.xml_role_element = True
             _add_choice_info(choice_elem, member)
         else:
             member = _get_choice_group_ref_member(group, choice_elem)
@@ -698,6 +768,7 @@ def _get_sequence_choice_element(
 
     member = InternalMember(name=name)
     member.xml_types = xml_types
+    member.xml_role_element = True
     _add_choice_info(choice_elem, member)
 
     ct.members.append(member)
@@ -806,6 +877,7 @@ def _analyze_mixed(
             member_name = extract_qualified_name(info_text) if info_text else None
             member = InternalMember(name=normalize_member_name(member_name) if member_name else None)
             member.xml_types = [drop_ar_prefix(es.attrib["type"])]
+            member.xml_role_element = True
 
         member.xml_element_name = es.attrib.get("name")
         member.is_ordered = True
@@ -930,6 +1002,7 @@ def _analyze_complex_simple(ct: InternalComplexType, elem: ElementTree.Element) 
         base = InternalMember(name=None)
         base.xml_types = [base_type]
         base.is_ordered = False
+        base.xml_role_element = True
         ct.members.append(base)
     else:
         # Primitive/enum wrapper: unnamed member carrying the base type
@@ -937,6 +1010,7 @@ def _analyze_complex_simple(ct: InternalComplexType, elem: ElementTree.Element) 
         member.xml_types = [base_type]
         member.min_occurs = 1
         member.max_occurs = 1
+        member.xml_role_element = True
         # Identifier wrapper types get identity annotation
         if "identifier" in ct.name.lower():
             member.stereotypes = ["atpIdentityContributor"]
@@ -1333,6 +1407,12 @@ def _export_member(mem: InternalMember, schema: InternalSchema) -> ExportMember:
         doc=mem.doc,
         xml_element_name=mem.xml_element_name,
         inner_ref_tag=mem.inner_ref_tag,
+        xml_role_element=mem.xml_role_element,
+        xml_role_wrapper_element=mem.xml_role_wrapper_element,
+        xml_type_element=mem.xml_type_element,
+        xml_type_wrapper_element=mem.xml_type_wrapper_element,
+        xml_attribute=mem.xml_attribute,
+        xml_sequence_offset=mem.xml_sequence_offset,
     )
 
 

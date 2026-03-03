@@ -29,6 +29,12 @@ class ExportMember:
     instance_ref_role: str | None = None  # "context", "target", or None
     xml_element_name: str | None = None
     inner_ref_tag: str | None = None  # Pattern B: inner REF element XML tag name
+    xml_role_element: bool | None = None
+    xml_role_wrapper_element: bool | None = None
+    xml_type_element: bool | None = None
+    xml_type_wrapper_element: bool | None = None
+    xml_attribute: bool | None = None
+    xml_sequence_offset: int | None = None
 
 
 @dataclass
@@ -95,6 +101,12 @@ class InternalMember:
     stereotypes: list[str] = field(default_factory=list)
     min_occurs: int | None = None
     max_occurs: int | None = None
+    xml_role_element: bool | None = None
+    xml_role_wrapper_element: bool | None = None
+    xml_type_element: bool | None = None
+    xml_type_wrapper_element: bool | None = None
+    xml_attribute: bool | None = None
+    xml_sequence_offset: int | None = None
 
 
 @dataclass

@@ -263,3 +263,165 @@ TEST(ArxmlCompilerTest, AnonymousObjectContainment) {
     EXPECT_TRUE(has_containment)
         << "UNIT 'Percent' should contain an anonymous ADMIN-DATA object";
 }
+
+// Verify WrapperRole pattern: SDGS (xml_tags=0x03) creates a Wrapper frame
+// that dispatches SDG children as contained Objects, NOT as a direct Object.
+TEST(ArxmlCompilerTest, WrapperRoleSDGSContainment) {
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
+
+    auto result = compiler.compile(fixture_path("wrapper-role.arxml"), ctx);
+    EXPECT_FALSE(result.has_errors()) << "Compilation failed";
+
+    // Collect all objects with their identities
+    struct ObjInfo {
+        fir::Id id;
+        std::string_view name;
+    };
+    std::vector<ObjInfo> objects;
+    fir::Id unit_id = fir::Id{UINT32_MAX};
+    fir::Id sdg_id = fir::Id{UINT32_MAX};
+
+    result.fir().forEachNode([&](fir::Id id, const fir::Node& node) {
+        if (node.kind != fir::NodeKind::ObjectDef) return;
+        auto& od = result.fir().as<fir::ObjectDef>(id);
+        auto name = result.fir().getString(od.identity);
+        objects.push_back({id, name});
+        if (name == "TestUnit") unit_id = id;
+        else if (name == "TestGroup") sdg_id = id;
+    });
+
+    // Expected: AUTOSAR, AR-PACKAGE(TestPkg), UNIT(TestUnit),
+    // ADMIN-DATA(anonymous), SDG(TestGroup)
+    EXPECT_GE(objects.size(), 5u)
+        << "Expected at least 5 objects";
+
+    // SDG "TestGroup" must exist (created inside SDGS wrapper)
+    ASSERT_FALSE(fir::is_none(sdg_id)) << "SDG 'TestGroup' not found";
+
+    // UNIT should contain ADMIN-DATA via containment property
+    ASSERT_FALSE(fir::is_none(unit_id)) << "UNIT 'TestUnit' not found";
+    auto& unit_od = result.fir().as<fir::ObjectDef>(unit_id);
+    auto unit_props = result.fir().propertiesOf(unit_od);
+
+    bool unit_has_containment = false;
+    fir::Id contained_admin_id = fir::Id{UINT32_MAX};
+    for (auto prop_id : unit_props) {
+        auto& pv = result.fir().as<fir::PropertyVal>(prop_id);
+        if (!fir::is_none(pv.value_id)) {
+            auto& val_node = result.fir().get(pv.value_id);
+            if (val_node.kind == fir::NodeKind::ObjectDef) {
+                unit_has_containment = true;
+                contained_admin_id = pv.value_id;
+                break;
+            }
+        }
+    }
+    EXPECT_TRUE(unit_has_containment)
+        << "UNIT should contain ADMIN-DATA as a containment property";
+
+    // ADMIN-DATA should contain SDG via SDGS wrapper's role
+    if (!fir::is_none(contained_admin_id)) {
+        auto& admin_od = result.fir().as<fir::ObjectDef>(contained_admin_id);
+        auto admin_props = result.fir().propertiesOf(admin_od);
+        bool admin_has_sdg = false;
+        for (auto prop_id : admin_props) {
+            auto& pv = result.fir().as<fir::PropertyVal>(prop_id);
+            if (!fir::is_none(pv.value_id) && pv.value_id == sdg_id) {
+                admin_has_sdg = true;
+                break;
+            }
+        }
+        EXPECT_TRUE(admin_has_sdg)
+            << "ADMIN-DATA should contain SDG 'TestGroup' "
+               "(dispatched through SDGS Wrapper frame)";
+    }
+
+    // SDGS itself should NOT appear as an Object (it's a Wrapper frame)
+    bool has_sdgs_object = false;
+    for (auto& obj : objects) {
+        if (obj.name == "SDGS") {
+            has_sdgs_object = true;
+            break;
+        }
+    }
+    EXPECT_FALSE(has_sdgs_object)
+        << "SDGS should be a Wrapper frame, not an Object";
+}
+
+// Verify WrapperOnly pattern: ELEMENTS (xml_tags=0x02) dispatches
+// type-named children via type lookup within the Wrapper frame.
+TEST(ArxmlCompilerTest, WrapperOnlyELEMENTSDispatch) {
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
+
+    // multi-element.arxml has AR-PACKAGE > ELEMENTS > {I-SIGNAL, I-SIGNAL}
+    auto result = compiler.compile(fixture_path("multi-element.arxml"), ctx);
+    EXPECT_FALSE(result.has_errors()) << "Compilation failed";
+
+    // Count objects — ELEMENTS should NOT be an Object
+    size_t obj_count = 0;
+    bool has_elements_object = false;
+    result.fir().forEachNode([&](fir::Id /*id*/, const fir::Node& node) {
+        if (node.kind != fir::NodeKind::ObjectDef) return;
+        ++obj_count;
+    });
+
+    // Should have at least: AUTOSAR, AR-PACKAGE, and two I-SIGNALs
+    EXPECT_GE(obj_count, 4u)
+        << "Expected at least AUTOSAR + AR-PACKAGE + 2 I-SIGNALs";
+
+    // Verify ELEMENTS wrapper is transparent (no object created for it)
+    result.fir().forEachNode([&](fir::Id id, const fir::Node& node) {
+        if (node.kind != fir::NodeKind::ObjectDef) return;
+        auto& od = result.fir().as<fir::ObjectDef>(id);
+        auto name = result.fir().getString(od.identity);
+        if (name == "ELEMENTS") has_elements_object = true;
+    });
+    EXPECT_FALSE(has_elements_object)
+        << "ELEMENTS should be a Wrapper frame, not an Object";
+}
+
+// Verify xml.attribute=true capture: GID on SDG should become a property.
+TEST(ArxmlCompilerTest, CapturesXmlAttributes) {
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
+
+    // anonymous-containment.arxml has: <SDG GID="info"><SD GID="uuid">...</SD></SDG>
+    auto result = compiler.compile(fixture_path("anonymous-containment.arxml"), ctx);
+    EXPECT_FALSE(result.has_errors()) << "Compilation failed";
+
+    // Find an object whose identity is "SDG" (anonymous SDG object)
+    // and verify it has a string property with value "info" (the GID attribute)
+    bool found_gid_property = false;
+    result.fir().forEachNode([&](fir::Id id, const fir::Node& node) {
+        if (node.kind != fir::NodeKind::ObjectDef) return;
+        auto& od = result.fir().as<fir::ObjectDef>(id);
+        auto name = result.fir().getString(od.identity);
+        // SDG anonymous objects use their xml_tag as identity
+        if (name != "SDG") return;
+
+        auto props = result.fir().propertiesOf(od);
+        for (auto prop_id : props) {
+            auto& pv = result.fir().as<fir::PropertyVal>(prop_id);
+            if (fir::is_none(pv.value_id)) continue;
+            auto& val_node = result.fir().get(pv.value_id);
+            if (val_node.kind != fir::NodeKind::ValueDef) continue;
+            auto& vd = result.fir().as<fir::ValueDef>(pv.value_id);
+            if (vd.value_kind != fir::ValueKind::String) continue;
+            auto val_str = result.fir().getString(vd.string_val);
+            if (val_str == "info") {
+                found_gid_property = true;
+            }
+        }
+    });
+    EXPECT_TRUE(found_gid_property)
+        << "SDG object should have a property with value 'info' "
+           "(GID attribute captured via xml.attribute=true)";
+}
