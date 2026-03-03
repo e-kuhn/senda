@@ -52064,7 +52064,7 @@ AutosarSchema build_autosar_r23_11() {
             info.roles.add(tr.xml_element_name,
                 RoleInfo{rupa::domain::RoleHandle{rh[tr.role_index].id},
                          static_cast<uint32_t>(th[tr.target_type].id),
-                         tr.is_reference});
+                         tr.is_reference, tr.xml_tags});
         }
         info.roles.freeze();
         tag_to_type.add(tag.xml_tag, std::move(info));

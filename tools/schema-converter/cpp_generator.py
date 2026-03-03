@@ -337,7 +337,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
     w("            info.roles.add(tr.xml_element_name,")
     w("                RoleInfo{rupa::domain::RoleHandle{rh[tr.role_index].id},")
     w("                         static_cast<uint32_t>(th[tr.target_type].id),")
-    w("                         tr.is_reference});")
+    w("                         tr.is_reference, tr.xml_tags});")
     w("        }")
     w("        info.roles.freeze();")
     w("        tag_to_type.add(tag.xml_tag, std::move(info));")
