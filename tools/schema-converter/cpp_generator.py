@@ -117,7 +117,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
     composite_by_name: dict[str, ExportComposite] = {c.name: c for c in composites}
     members_by_type: dict[str, list[ExportMember]] = {c.name: c.members for c in composites}
 
-    role_handles: dict[str, list[tuple[int, str, str, int, bool]]] = {}
+    role_handles: dict[str, list[tuple[int, str, str, int, bool, int, int]]] = {}
     for c in composites:
         ti = type_index[c.name]
         role_handles[c.name] = []
@@ -128,11 +128,23 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                     target_idx = 0
                     if m.types and m.types[0] in type_index:
                         target_idx = type_index[m.types[0]]
+                    xml_tags = 0
+                    if m.xml_role_element:
+                        xml_tags |= 0x01
+                    if m.xml_role_wrapper_element:
+                        xml_tags |= 0x02
+                    if m.xml_type_element:
+                        xml_tags |= 0x04
+                    if m.xml_type_wrapper_element:
+                        xml_tags |= 0x08
+                    if m.xml_attribute:
+                        xml_tags |= 0x10
+                    seq_offset = m.xml_sequence_offset or 0
                     role_handles[c.name].append(
-                        (ri, m.xml_element_name, m.name or "..", target_idx, m.is_reference))
+                        (ri, m.xml_element_name, m.name or "..", target_idx, m.is_reference, xml_tags, seq_offset))
 
     # --- Build inner REF injection map ---
-    inner_ref_injections: dict[str, list[tuple[int, str, str, int, bool]]] = {}
+    inner_ref_injections: dict[str, list[tuple[int, str, str, int, bool, int, int]]] = {}
     for c in composites:
         ti = type_index[c.name]
         for mi, m in enumerate(c.members):
@@ -146,16 +158,16 @@ def generate_domain_builder(schema: ExportSchema) -> str:
             if target_name not in inner_ref_injections:
                 inner_ref_injections[target_name] = []
             inner_ref_injections[target_name].append(
-                (ri, m.inner_ref_tag, m.name or "..", target_idx, True))
+                (ri, m.inner_ref_tag, m.name or "..", target_idx, True, 0x01, 0))
 
     # --- Collect inherited + inlined roles (same logic as before) ---
-    def _inlined_roles(cname: str, visited: set[str] | None = None) -> list[tuple[int, str, str, int, bool]]:
+    def _inlined_roles(cname: str, visited: set[str] | None = None) -> list[tuple[int, str, str, int, bool, int, int]]:
         if visited is None:
             visited = set()
         if cname in visited:
             return []
         visited.add(cname)
-        result: list[tuple[int, str, str, int, bool]] = []
+        result: list[tuple[int, str, str, int, bool, int, int]] = []
         for m in members_by_type.get(cname, []):
             if m.xml_element_name is not None:
                 continue
@@ -175,7 +187,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                         result.append(role)
         return result
 
-    def _all_roles_no_inline(cname: str, visited: set[str] | None = None) -> list[tuple[int, str, str, int, bool]]:
+    def _all_roles_no_inline(cname: str, visited: set[str] | None = None) -> list[tuple[int, str, str, int, bool, int, int]]:
         if visited is None:
             visited = set()
         if cname in visited:
@@ -190,7 +202,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
                         result.append(role)
         return result
 
-    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[int, str, str, int, bool]]:
+    def _all_roles(cname: str, visited: set[str] | None = None) -> list[tuple[int, str, str, int, bool, int, int]]:
         if visited is None:
             visited = set()
         if cname in visited:
@@ -213,7 +225,7 @@ def generate_domain_builder(schema: ExportSchema) -> str:
 
     # --- Build flat tag and tag-role lists ---
     tag_list: list[tuple[str, int, int, int]] = []  # (xml_tag, type_idx, tag_role_start, tag_role_count)
-    tag_role_list: list[tuple[str, int, int, bool]] = []  # (xml_elem, role_idx, target_type_idx, is_ref)
+    tag_role_list: list[tuple[str, int, int, bool, int, int]] = []
 
     for c in composites:
         if not c.xml_name:
@@ -221,8 +233,8 @@ def generate_domain_builder(schema: ExportSchema) -> str:
         ti = type_index[c.name]
         roles = _all_roles(c.name)
         tr_start = len(tag_role_list)
-        for ri, xml_elem, _rn, target_idx, is_ref in roles:
-            tag_role_list.append((xml_elem, ri, target_idx, is_ref))
+        for ri, xml_elem, _rn, target_idx, is_ref, xml_tags, seq_offset in roles:
+            tag_role_list.append((xml_elem, ri, target_idx, is_ref, xml_tags, seq_offset))
         tag_list.append((c.xml_name, ti, tr_start, len(tag_role_list) - tr_start))
 
     # --- Emit static arrays ---
@@ -267,9 +279,9 @@ def generate_domain_builder(schema: ExportSchema) -> str:
     if tag_role_list:
         w("// ── Lookup tag-role descriptors (%d) ──" % len(tag_role_list))
         w("constexpr TagRoleDesc kTagRoles[] = {")
-        for xml_elem, ri, target_idx, is_ref in tag_role_list:
-            w('    {"%s", %d, %d, %s},'
-              % (xml_elem, ri, target_idx, "true" if is_ref else "false"))
+        for xml_elem, ri, target_idx, is_ref, xml_tags, seq_offset in tag_role_list:
+            w('    {"%s", %d, %d, %s, 0x%02x, %d},'
+              % (xml_elem, ri, target_idx, "true" if is_ref else "false", xml_tags, seq_offset))
         w("};")
     else:
         w("constexpr TagRoleDesc kTagRoles[] = {};")
@@ -367,9 +379,13 @@ import rupa.fir;
 import rupa.fir.builder;
 import rupa.domain;
 import senda.domains;
+import senda.arxml_schema;
 
 export namespace senda::domains
 {
+
+using senda::arxml::TagRoleDesc;
+using senda::arxml::TagDesc;
 
 ''' % module_version
 

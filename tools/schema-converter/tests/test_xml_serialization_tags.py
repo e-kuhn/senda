@@ -3,6 +3,7 @@
 import os
 import pytest
 from schema_parser import _get_member_from_appinfo, parse_schema, export_schema
+from cpp_generator import generate_domain_builder
 from xml.etree import ElementTree as ET
 
 XSD_NS = "http://www.w3.org/2001/XMLSchema"
@@ -167,3 +168,18 @@ class TestXmlTagInference:
                 assert has_any_tag, (
                     f"{c.name}.{m.name} has no XML serialization tags after inference"
                 )
+
+
+class TestCppGeneration:
+    """Test that generated C++ includes xml_tags bitfield."""
+
+    def test_tag_role_desc_has_xml_tags(self):
+        """Generated C++ should include xml_tags and sequence_offset fields."""
+        if not os.path.exists(XSD_PATH):
+            pytest.skip("R20-11 schema not available")
+
+        schema = export_schema(parse_schema(XSD_PATH))
+        code = generate_domain_builder(schema)
+
+        # AdminData.sdg has rE=T, rWE=T → 0x03 (RoleElement|RoleWrapperElement)
+        assert "0x03," in code
