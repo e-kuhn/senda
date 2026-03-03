@@ -376,20 +376,21 @@ private:
         if (!state.stack.empty() && state.stack.back().kind == FrameKind::Object) {
             auto& parent = state.stack.back();
 
+            // SHORT-NAME provides identity for the parent object.
+            // NOTE: is_identity flag is available on RoleInfo for future
+            // stereotype-driven identity, but we keep the hardcoded check
+            // because many types encounter SHORT-NAME in ARXML data without
+            // having it in their generated tag_roles (model group inlining).
+            if (tag == "SHORT-NAME" && !parent.obj.valid()) {
+                Frame frame{};
+                frame.kind = FrameKind::Property;
+                frame.is_identity = true;
+                state.stack.push_back(std::move(frame));
+                return;
+            }
+
             if (parent.type_info) {
                 auto* role_info = parent.type_info->roles.find(tag);
-
-                // Identity: SHORT-NAME role with atpIdentityContributor stereotype.
-                // Only types inheriting from Referrable have this — types like
-                // AdminData, DocRevision, Sdg do NOT and stay anonymous.
-                if (tag == "SHORT-NAME" && role_info
-                    && role_info->is_identity && !parent.obj.valid()) {
-                    Frame frame{};
-                    frame.kind = FrameKind::Property;
-                    frame.is_identity = true;
-                    state.stack.push_back(std::move(frame));
-                    return;
-                }
                 if (role_info) {
                     // Ensure parent object exists — generalized eager creation
                     if (!parent.obj.valid()) {
@@ -662,6 +663,10 @@ private:
 
     // Capture XML attributes with xml.attribute=true tags on the just-pushed
     // Object frame. Called from the main loop after handle_start_element.
+    // Capture XML attributes with xml.attribute=true tags on the just-pushed
+    // Object frame. Called from the main loop after handle_start_element.
+    // Does NOT eagerly create the object — deferred properties are flushed
+    // when the frame pops, allowing SHORT-NAME to provide identity first.
     static void capture_xml_attributes(ParseState& state, XmlPullParser& xml) {
         if (state.stack.empty()) return;
         auto& frame = state.stack.back();
@@ -673,23 +678,6 @@ private:
             if (!role_info) continue;
             if (senda::arxml::classify_xml_tags(role_info->xml_tags) !=
                 senda::arxml::XmlPattern::Attribute) continue;
-
-            // Ensure object exists (eager creation for attribute properties)
-            if (!frame.obj.valid()) {
-                auto type_id = frame.type_info->handle.id;
-                if (state.module_registered) {
-                    type_id = state.builder.target().addForeignRef(
-                        state.current_module,
-                        static_cast<uint32_t>(type_id));
-                }
-                frame.obj = state.builder.begin_object(
-                    frame.xml_tag,
-                    rupa::fir_builder::TypeHandle{type_id});
-                if (!state.root_set) {
-                    state.builder.set_root_object(frame.obj);
-                    state.root_set = true;
-                }
-            }
 
             auto role_id = role_info->role.id;
             if (state.module_registered) {

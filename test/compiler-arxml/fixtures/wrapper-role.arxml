@@ -11,9 +11,7 @@
           <ADMIN-DATA>
             <SDGS>
               <SDG>
-                <SDG-CAPTION>
-                  <SHORT-NAME>TestCaption</SHORT-NAME>
-                </SDG-CAPTION>
+                <SHORT-NAME>TestGroup</SHORT-NAME>
               </SDG>
             </SDGS>
           </ADMIN-DATA>

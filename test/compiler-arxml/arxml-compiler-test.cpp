@@ -266,7 +266,6 @@ TEST(ArxmlCompilerTest, AnonymousObjectContainment) {
 
 // Verify WrapperRole pattern: SDGS (xml_tags=0x03) creates a Wrapper frame
 // that dispatches SDG children as contained Objects, NOT as a direct Object.
-// SDG is anonymous (doesn't inherit from Referrable, no SHORT-NAME identity).
 TEST(ArxmlCompilerTest, WrapperRoleSDGSContainment) {
     auto reg = make_registry();
     auto* schema = reg.resolve_by_domain("autosar-r23-11");
@@ -277,8 +276,13 @@ TEST(ArxmlCompilerTest, WrapperRoleSDGSContainment) {
     EXPECT_FALSE(result.has_errors()) << "Compilation failed";
 
     // Collect all objects with their identities
-    std::vector<std::pair<fir::Id, std::string_view>> objects;
+    struct ObjInfo {
+        fir::Id id;
+        std::string_view name;
+    };
+    std::vector<ObjInfo> objects;
     fir::Id unit_id = fir::Id{UINT32_MAX};
+    fir::Id sdg_id = fir::Id{UINT32_MAX};
 
     result.fir().forEachNode([&](fir::Id id, const fir::Node& node) {
         if (node.kind != fir::NodeKind::ObjectDef) return;
@@ -286,12 +290,16 @@ TEST(ArxmlCompilerTest, WrapperRoleSDGSContainment) {
         auto name = result.fir().getString(od.identity);
         objects.push_back({id, name});
         if (name == "TestUnit") unit_id = id;
+        else if (name == "TestGroup") sdg_id = id;
     });
 
     // Expected: AUTOSAR, AR-PACKAGE(TestPkg), UNIT(TestUnit),
-    // ADMIN-DATA(anonymous), SDG(anonymous), SDG-CAPTION(TestCaption)
+    // ADMIN-DATA(anonymous), SDG(TestGroup)
     EXPECT_GE(objects.size(), 5u)
         << "Expected at least 5 objects";
+
+    // SDG "TestGroup" must exist (created inside SDGS wrapper)
+    ASSERT_FALSE(fir::is_none(sdg_id)) << "SDG 'TestGroup' not found";
 
     // UNIT should contain ADMIN-DATA via containment property
     ASSERT_FALSE(fir::is_none(unit_id)) << "UNIT 'TestUnit' not found";
@@ -299,12 +307,14 @@ TEST(ArxmlCompilerTest, WrapperRoleSDGSContainment) {
     auto unit_props = result.fir().propertiesOf(unit_od);
 
     bool unit_has_containment = false;
+    fir::Id contained_admin_id = fir::Id{UINT32_MAX};
     for (auto prop_id : unit_props) {
         auto& pv = result.fir().as<fir::PropertyVal>(prop_id);
         if (!fir::is_none(pv.value_id)) {
             auto& val_node = result.fir().get(pv.value_id);
             if (val_node.kind == fir::NodeKind::ObjectDef) {
                 unit_has_containment = true;
+                contained_admin_id = pv.value_id;
                 break;
             }
         }
@@ -312,10 +322,27 @@ TEST(ArxmlCompilerTest, WrapperRoleSDGSContainment) {
     EXPECT_TRUE(unit_has_containment)
         << "UNIT should contain ADMIN-DATA as a containment property";
 
+    // ADMIN-DATA should contain SDG via SDGS wrapper's role
+    if (!fir::is_none(contained_admin_id)) {
+        auto& admin_od = result.fir().as<fir::ObjectDef>(contained_admin_id);
+        auto admin_props = result.fir().propertiesOf(admin_od);
+        bool admin_has_sdg = false;
+        for (auto prop_id : admin_props) {
+            auto& pv = result.fir().as<fir::PropertyVal>(prop_id);
+            if (!fir::is_none(pv.value_id) && pv.value_id == sdg_id) {
+                admin_has_sdg = true;
+                break;
+            }
+        }
+        EXPECT_TRUE(admin_has_sdg)
+            << "ADMIN-DATA should contain SDG 'TestGroup' "
+               "(dispatched through SDGS Wrapper frame)";
+    }
+
     // SDGS itself should NOT appear as an Object (it's a Wrapper frame)
     bool has_sdgs_object = false;
-    for (auto& [id, name] : objects) {
-        if (name == "SDGS") {
+    for (auto& obj : objects) {
+        if (obj.name == "SDGS") {
             has_sdgs_object = true;
             break;
         }
