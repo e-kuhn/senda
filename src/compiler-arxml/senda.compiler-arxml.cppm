@@ -224,6 +224,15 @@ private:
         uint32_t text_len = 0;
         bool is_identity = false;  // true for SHORT-NAME capture
         bool is_reference = false;  // true for *-REF property frames
+        // Single-element containment: this Object frame was created for an element
+        // that is both a role on its parent AND a type (e.g., ADMIN-DATA).
+        // On pop, use this role to defer containment to the enclosing Object frame.
+        bool has_containment_role = false;
+        fir::Id containment_role_id{0};
+        // Path index tracking: true only when this object was created via SHORT-NAME
+        // and pushed a path segment. Prevents anonymous objects from popping segments
+        // they didn't push.
+        bool pushed_path = false;
         // Skip frame
         int skip_depth = 0;
         // Deferred properties — indices into ParseState::deferred_props
