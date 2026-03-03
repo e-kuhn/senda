@@ -365,29 +365,11 @@ private:
             return;
         }
 
-        // Try type lookup (schema resolved lazily during AUTOSAR root handling)
-        const senda::domains::TypeInfo* type_info = nullptr;
-        if (state.schema) {
-            type_info = state.schema->tag_to_type.find(tag);
-        }
-        if (type_info) {
-            // Known type element — create object
-            Frame frame{};
-            frame.kind = FrameKind::Object;
-            frame.type_info = type_info;
-            frame.xml_tag = tag;
-            frame.obj = {};  // deferred until SHORT-NAME
-            frame.deferred_start = static_cast<uint32_t>(
-                state.deferred_props.size());
-            state.stack.push_back(std::move(frame));
-            return;
-        }
-
-        // If we're inside an Object frame, check for SHORT-NAME or role lookup
+        // ---- Object frame: check roles FIRST, then fall through to type ----
         if (!state.stack.empty() && state.stack.back().kind == FrameKind::Object) {
             auto& parent = state.stack.back();
 
-            // SHORT-NAME provides the identity for the parent object
+            // SHORT-NAME provides identity for the parent object
             if (tag == "SHORT-NAME" && !parent.obj.valid()) {
                 Frame frame{};
                 frame.kind = FrameKind::Property;
@@ -399,10 +381,9 @@ private:
             if (parent.type_info) {
                 auto* role_info = parent.type_info->roles.find(tag);
                 if (role_info) {
-                    // Create ObjectDef for the AUTOSAR root element which
-                    // has no SHORT-NAME but acts as the containment root.
-                    if (!parent.obj.valid()
-                        && parent.xml_tag == "AUTOSAR") {
+                    // Ensure parent object exists — generalized eager creation
+                    // (subsumes the old AUTOSAR-only special case).
+                    if (!parent.obj.valid()) {
                         auto type_id = parent.type_info->handle.id;
                         if (state.module_registered) {
                             type_id = state.builder.target().addForeignRef(
@@ -417,6 +398,38 @@ private:
                             state.root_set = true;
                         }
                     }
+
+                    // Check for single-element containment:
+                    // tag is BOTH a role on the parent AND a registered type.
+                    // Create an Object frame with embedded containment info.
+                    // Skip for reference roles — those need text capture.
+                    const senda::domains::TypeInfo* nested_type = nullptr;
+                    if (!role_info->is_reference && state.schema) {
+                        nested_type = state.schema->tag_to_type.find(tag);
+                    }
+
+                    if (nested_type) {
+                        // Single-element containment: Object frame with role info
+                        auto role_id = role_info->role.id;
+                        if (state.module_registered) {
+                            role_id = state.builder.target().addForeignRef(
+                                state.current_module,
+                                static_cast<uint32_t>(role_id));
+                        }
+                        Frame frame{};
+                        frame.kind = FrameKind::Object;
+                        frame.type_info = nested_type;
+                        frame.xml_tag = tag;
+                        frame.obj = {};  // created eagerly on first child role
+                        frame.deferred_start = static_cast<uint32_t>(
+                            state.deferred_props.size());
+                        frame.has_containment_role = true;
+                        frame.containment_role_id = role_id;
+                        state.stack.push_back(std::move(frame));
+                        return;
+                    }
+
+                    // Standard property (scalar, reference, or wrapper element)
                     Frame frame{};
                     frame.kind = FrameKind::Property;
                     frame.role = role_info->role;
@@ -431,9 +444,11 @@ private:
                     return;
                 }
             }
+            // Fall through to type lookup (handles types that aren't roles
+            // of the current parent, e.g., unexpected nested types)
         }
 
-        // If we're inside a Property frame, try resolving child elements
+        // ---- Property frame: resolve children against target type ----
         if (!state.stack.empty() && state.stack.back().kind == FrameKind::Property) {
             auto& prop = state.stack.back();
 
@@ -474,8 +489,7 @@ private:
             }
 
             // Fall back to the property's target type when the element name
-            // differs from the registered type tag (e.g. VFC-IREF is really
-            // PORT-GROUP-IN-SYSTEM-INSTANCE-REF).
+            // differs from the registered type tag (e.g. VFC-IREF)
             if (prop.target_type_info) {
                 Frame frame{};
                 frame.kind = FrameKind::Object;
@@ -489,13 +503,29 @@ private:
             }
         }
 
-        // Unknown element — skip
+        // ---- Type lookup: root elements and unmatched types ----
+        const senda::domains::TypeInfo* type_info = nullptr;
+        if (state.schema) {
+            type_info = state.schema->tag_to_type.find(tag);
+        }
+        if (type_info) {
+            Frame frame{};
+            frame.kind = FrameKind::Object;
+            frame.type_info = type_info;
+            frame.xml_tag = tag;
+            frame.obj = {};
+            frame.deferred_start = static_cast<uint32_t>(
+                state.deferred_props.size());
+            state.stack.push_back(std::move(frame));
+            return;
+        }
+
+        // ---- Unknown element: skip ----
         Frame frame{};
         frame.kind = FrameKind::Skip;
         frame.skip_depth = 1;
         state.stack.push_back(std::move(frame));
 
-        // Always count skipped elements
         state.skip_total_count++;
         if (state.skip_warning_emitted < state.max_skip_warnings) {
             state.skip_warning_emitted++;
