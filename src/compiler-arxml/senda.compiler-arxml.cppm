@@ -19,6 +19,7 @@ import rupa.fir;
 import rupa.fir.builder;
 import rupa.diagnostics;
 import senda.domains;
+import senda.arxml_schema;
 
 export namespace senda
 {

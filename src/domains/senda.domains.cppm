@@ -53,18 +53,4 @@ struct EnumValDesc {
     std::string_view value;
 };
 
-struct TagRoleDesc {
-    std::string_view xml_element_name;
-    uint16_t role_index;    // index into roles array
-    uint16_t target_type;   // index into types array
-    bool is_reference;
-};
-
-struct TagDesc {
-    std::string_view xml_tag;
-    uint16_t type_index;    // index into types array
-    uint16_t tag_role_start; // index into tag_roles array
-    uint16_t tag_role_count;
-};
-
 }  // namespace senda::domains
