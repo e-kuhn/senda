@@ -589,6 +589,7 @@ private:
                         state.current_path_ids.push_back(identity_sid);
                         state.current_path_key.push(identity_sid);
                         state.path_index[state.current_path_key.hash] = parent.obj.id;
+                        parent.pushed_path = true;
                     }
                 }
             } else if (!frame_text.empty() && frame.parent_obj.valid()) {
@@ -626,18 +627,44 @@ private:
         }
 
         case FrameKind::Object:
+            // Eagerly create anonymous object if needed: type without SHORT-NAME
+            // that either has deferred properties or a containment role.
+            if (!frame.obj.valid() && frame.type_info
+                && (frame.deferred_count > 0 || frame.has_containment_role)) {
+                auto type_id = frame.type_info->handle.id;
+                if (state.module_registered) {
+                    type_id = state.builder.target().addForeignRef(
+                        state.current_module,
+                        static_cast<uint32_t>(type_id));
+                }
+                frame.obj = state.builder.begin_object(
+                    frame.xml_tag,
+                    rupa::fir_builder::TypeHandle{type_id});
+            }
+
             if (frame.obj.valid()) {
-                // Flush ALL deferred properties (scalar, reference, containment)
-                // atomically so the object's property span is contiguous.
+                // Flush ALL deferred properties atomically
                 auto span = std::span<const std::pair<fir::Id, fir::Id>>(
                     state.deferred_props.data() + frame.deferred_start,
                     frame.deferred_count);
                 state.builder.flush_properties(frame.obj, span);
                 state.deferred_props.resize(frame.deferred_start);
 
-                // Defer this object as a containment link to the grandparent
-                // Object frame via the enclosing Property frame.
-                if (state.stack.size() >= 2) {
+                // Containment: prefer embedded role (single-element containment)
+                if (frame.has_containment_role) {
+                    // Skip past self (frame is still on the stack as back())
+                    for (auto it = state.stack.rbegin() + 1;
+                         it != state.stack.rend(); ++it) {
+                        if (it->kind == FrameKind::Object) {
+                            it->deferred_count++;
+                            state.deferred_props.emplace_back(
+                                frame.containment_role_id, frame.obj.id);
+                            break;
+                        }
+                    }
+                }
+                // Existing: containment via enclosing Property frame
+                else if (state.stack.size() >= 2) {
                     auto& below = state.stack[state.stack.size() - 2];
                     if (below.kind == FrameKind::Property
                         && below.parent_obj.valid()) {
@@ -647,7 +674,6 @@ private:
                                 state.current_module,
                                 static_cast<uint32_t>(role_id));
                         }
-                        // Find the grandparent Object frame and defer
                         for (auto it = state.stack.rbegin() + 2;
                              it != state.stack.rend(); ++it) {
                             if (it->kind == FrameKind::Object) {
@@ -660,7 +686,8 @@ private:
                     }
                 }
 
-                if (!state.current_path_ids.empty()) {
+                // Path index: only pop if this object pushed a segment
+                if (frame.pushed_path && !state.current_path_ids.empty()) {
                     state.current_path_key.pop(state.current_path_ids.back());
                     state.current_path_ids.pop_back();
                 }

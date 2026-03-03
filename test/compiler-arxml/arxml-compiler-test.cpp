@@ -235,7 +235,7 @@ TEST(ArxmlCompilerTest, AnonymousObjectContainment) {
         if (node.kind != fir::NodeKind::ObjectDef) return;
         ++obj_count;
         auto& od = result.fir().as<fir::ObjectDef>(id);
-        auto name = result.fir().stringOf(od.identity);
+        auto name = result.fir().getString(od.identity);
         if (name == "Percent") unit_obj_id = id;
     });
 
@@ -253,7 +253,7 @@ TEST(ArxmlCompilerTest, AnonymousObjectContainment) {
     for (auto prop_id : unit_props) {
         auto& pv = result.fir().as<fir::PropertyVal>(prop_id);
         if (!fir::is_none(pv.value_id)) {
-            auto& val_node = result.fir().nodeAt(pv.value_id);
+            auto& val_node = result.fir().get(pv.value_id);
             if (val_node.kind == fir::NodeKind::ObjectDef) {
                 has_containment = true;
                 break;
