@@ -284,11 +284,18 @@ def _serialize(
     output_file.write(content[pos:])
 
 
-def _build_mapping(short_names: set[str], seed: int | None) -> dict[str, str]:
-    """Build original->anonymized name mapping."""
+def _build_mapping(short_names: set[str], seed: int | None,
+                   min_name_length: int = 3) -> dict[str, str]:
+    """Build original->anonymized name mapping.
+
+    Names shorter than min_name_length are skipped to avoid
+    corrupting unrelated strings via substring replacement.
+    """
     gen = NameGenerator(seed=seed)
     mapping = {}
     for name in sorted(short_names):  # Sort for determinism
+        if len(name) < min_name_length:
+            continue
         pattern = detect_case_pattern(name)
         mapping[name] = gen.generate(pattern)
     return mapping
@@ -311,6 +318,7 @@ def anonymize_arxml(
     input_path: str,
     output_path: str,
     seed: int | None = None,
+    min_name_length: int = 3,
 ) -> AnonymizeResult:
     """Anonymize an ARXML file."""
     # Pass 1: SAX-collect SHORT-NAMEs
@@ -318,7 +326,7 @@ def anonymize_arxml(
     xml.sax.parse(input_path, collector)
 
     # Build mapping
-    mapping = _build_mapping(collector.short_names, seed)
+    mapping = _build_mapping(collector.short_names, seed, min_name_length)
 
     # Read entire file
     with open(input_path, "r", encoding="utf-8") as f:
