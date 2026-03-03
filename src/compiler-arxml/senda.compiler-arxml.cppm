@@ -209,7 +209,7 @@ private:
 
     // --- SAX state machine ---
 
-    enum class FrameKind { Object, Property, Skip };
+    enum class FrameKind { Object, Property, Wrapper, Skip };
 
     struct Frame {
         FrameKind kind;
@@ -230,6 +230,11 @@ private:
         // On pop, use this role to defer containment to the enclosing Object frame.
         bool has_containment_role = false;
         fir::Id containment_role_id{0};
+        // Wrapper frame: carries the XmlPattern and lookup info for children
+        senda::arxml::XmlPattern wrapper_pattern{};
+        rupa::domain::RoleHandle wrapper_role{};            // role that created this wrapper
+        rupa::fir_builder::ObjectHandle wrapper_parent_obj{}; // grandparent object
+        const senda::domains::TypeInfo* wrapper_target_type = nullptr; // target type for children
         // Path index tracking: true only when this object was created via SHORT-NAME
         // and pushed a path segment. Prevents anonymous objects from popping segments
         // they didn't push.
@@ -556,6 +561,10 @@ private:
         switch (frame.kind) {
         case FrameKind::Skip:
             if (--frame.skip_depth > 0) return;
+            break;
+
+        case FrameKind::Wrapper:
+            // Wrapper frames are structural only — no action on pop
             break;
 
         case FrameKind::Property: {
