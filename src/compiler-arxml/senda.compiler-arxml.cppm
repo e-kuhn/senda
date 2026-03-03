@@ -154,7 +154,7 @@ public:
             .current_path_ids = {},
             .path_index = {},
             .text_buf = {},
-            .containment_buf = {},
+            .deferred_props = {},
         };
 
         XmlPullParser xml(content);
@@ -226,9 +226,9 @@ private:
         bool is_reference = false;  // true for *-REF property frames
         // Skip frame
         int skip_depth = 0;
-        // Deferred containment — indices into ParseState::containment_buf
-        uint32_t containment_start = 0;
-        uint32_t containment_count = 0;
+        // Deferred properties — indices into ParseState::deferred_props
+        uint32_t deferred_start = 0;
+        uint32_t deferred_count = 0;
     };
 
     struct ParseState {
@@ -257,9 +257,11 @@ private:
         bool module_registered = false;
         // Shared text buffer: Property frames record offsets into this
         std::string text_buf;
-        // Shared containment buffer: Object frames record (role_id, child_id)
-        // pairs here, flushed when the Object frame pops. Reclaimed like text_buf.
-        std::vector<std::pair<fir::Id, fir::Id>> containment_buf;
+        // Shared deferred-property buffer: Object frames record (role_id, value_id)
+        // pairs here, flushed atomically via flush_properties when the Object
+        // frame pops. This ensures contiguous property spans even when nested
+        // objects interleave property creation.
+        std::vector<std::pair<fir::Id, fir::Id>> deferred_props;
     };
 
     // Extract XSD filename from xsi:schemaLocation value
@@ -366,8 +368,8 @@ private:
             frame.type_info = type_info;
             frame.xml_tag = tag;
             frame.obj = {};  // deferred until SHORT-NAME
-            frame.containment_start = static_cast<uint32_t>(
-                state.containment_buf.size());
+            frame.deferred_start = static_cast<uint32_t>(
+                state.deferred_props.size());
             state.stack.push_back(std::move(frame));
             return;
         }
@@ -456,8 +458,8 @@ private:
                 frame.type_info = nested_type_info;
                 frame.xml_tag = tag;
                 frame.obj = {};
-                frame.containment_start = static_cast<uint32_t>(
-                    state.containment_buf.size());
+                frame.deferred_start = static_cast<uint32_t>(
+                    state.deferred_props.size());
                 state.stack.push_back(std::move(frame));
                 return;
             }
@@ -471,8 +473,8 @@ private:
                 frame.type_info = prop.target_type_info;
                 frame.xml_tag = tag;
                 frame.obj = {};
-                frame.containment_start = static_cast<uint32_t>(
-                    state.containment_buf.size());
+                frame.deferred_start = static_cast<uint32_t>(
+                    state.deferred_props.size());
                 state.stack.push_back(std::move(frame));
                 return;
             }
@@ -491,6 +493,18 @@ private:
             state.diags.add({rupa::compiler::Severity::Warning,
                 "skipping unknown element '" + std::string(tag) + "'",
                 {state.file_path, 0, 0}});
+        }
+    }
+
+    // Defer a (role_id, value_id) pair to the nearest enclosing Object frame.
+    static void defer_property(ParseState& state, fir::Id role_id,
+                               fir::Id value_id) {
+        for (auto it = state.stack.rbegin(); it != state.stack.rend(); ++it) {
+            if (it->kind == FrameKind::Object) {
+                it->deferred_count++;
+                state.deferred_props.emplace_back(role_id, value_id);
+                return;
+            }
         }
     }
 
@@ -539,6 +553,12 @@ private:
                     }
                 }
             } else if (!frame_text.empty() && frame.parent_obj.valid()) {
+                auto role_id = frame.role.id;
+                if (state.module_registered) {
+                    role_id = state.builder.target().addForeignRef(
+                        state.current_module,
+                        static_cast<uint32_t>(role_id));
+                }
                 if (frame.is_reference) {
                     // Skip whitespace-only text (inter-element indentation
                     // from *-REF elements containing child elements).
@@ -550,26 +570,15 @@ private:
                         }
                     }
                     if (!all_ws) {
-                        auto role_id = frame.role.id;
-                        if (state.module_registered) {
-                            role_id = state.builder.target().addForeignRef(
-                                state.current_module,
-                                static_cast<uint32_t>(role_id));
-                        }
-                        state.builder.add_reference(
-                            frame.parent_obj, rupa::fir_builder::RoleHandle{role_id},
+                        auto val_id = state.builder.create_reference_value(
                             frame_text);
+                        defer_property(state, role_id, val_id);
                     }
                 } else {
-                    auto role_id = frame.role.id;
-                    if (state.module_registered) {
-                        role_id = state.builder.target().addForeignRef(
-                            state.current_module,
-                            static_cast<uint32_t>(role_id));
-                    }
-                    state.builder.add_property(
-                        frame.parent_obj, rupa::fir_builder::RoleHandle{role_id},
-                        frame_text);
+                    auto val_sid = state.builder.target().intern(frame_text);
+                    auto val_id = state.builder.target().add<fir::ValueDef>(
+                        fir::ValueKind::String, val_sid);
+                    defer_property(state, role_id, val_id);
                 }
             }
             // Reclaim buffer space
@@ -579,22 +588,16 @@ private:
 
         case FrameKind::Object:
             if (frame.obj.valid()) {
-                // Flush deferred containment links — these were collected
-                // while children were being parsed, now all scalar properties
-                // are done so containment PropertyVals will be contiguous.
-                for (uint32_t i = 0; i < frame.containment_count; ++i) {
-                    auto [role_id, child_id] = state.containment_buf[
-                        frame.containment_start + i];
-                    state.builder.add_containment(
-                        frame.obj,
-                        rupa::fir_builder::RoleHandle{role_id},
-                        rupa::fir_builder::ObjectHandle{child_id});
-                }
-                state.containment_buf.resize(frame.containment_start);
+                // Flush ALL deferred properties (scalar, reference, containment)
+                // atomically so the object's property span is contiguous.
+                auto span = std::span<const std::pair<fir::Id, fir::Id>>(
+                    state.deferred_props.data() + frame.deferred_start,
+                    frame.deferred_count);
+                state.builder.flush_properties(frame.obj, span);
+                state.deferred_props.resize(frame.deferred_start);
 
-                // Defer this object's link to its grandparent Object frame:
-                // find the enclosing Property frame and record the link on
-                // the Property's parent Object frame.
+                // Defer this object as a containment link to the grandparent
+                // Object frame via the enclosing Property frame.
                 if (state.stack.size() >= 2) {
                     auto& below = state.stack[state.stack.size() - 2];
                     if (below.kind == FrameKind::Property
@@ -605,12 +608,12 @@ private:
                                 state.current_module,
                                 static_cast<uint32_t>(role_id));
                         }
-                        // Find the grandparent Object frame
+                        // Find the grandparent Object frame and defer
                         for (auto it = state.stack.rbegin() + 2;
                              it != state.stack.rend(); ++it) {
                             if (it->kind == FrameKind::Object) {
-                                it->containment_count++;
-                                state.containment_buf.emplace_back(
+                                it->deferred_count++;
+                                state.deferred_props.emplace_back(
                                     role_id, frame.obj.id);
                                 break;
                             }

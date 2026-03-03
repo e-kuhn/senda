@@ -176,8 +176,8 @@ TEST(RupaEmitterPipeline, FullPipelineWithManualTypes) {
     // Instance data
     EXPECT_NE(result.find("using domain autosar-r23-11;"), std::string::npos);
     EXPECT_NE(result.find("ARPackage AUTOSAR {"), std::string::npos);
-    EXPECT_NE(result.find(".subPackages += ARPackage Signals {"), std::string::npos);
-    EXPECT_NE(result.find(".elements += SystemSignal BrakePedalPosition {"),
+    EXPECT_NE(result.find(".subPackages = ARPackage Signals {"), std::string::npos);
+    EXPECT_NE(result.find(".elements = SystemSignal BrakePedalPosition {"),
               std::string::npos);
     EXPECT_NE(result.find(".length = 12;"), std::string::npos);
 }

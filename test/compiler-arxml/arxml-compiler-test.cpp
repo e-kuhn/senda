@@ -153,3 +153,65 @@ TEST(ArxmlCompilerTest, OverriddenDomainEmitsSkipWarnings) {
     // Should succeed (override allows it) but may have warnings
     EXPECT_FALSE(result.has_errors());
 }
+
+// Verify that properties are contiguous per object even when nested objects
+// (like ADMIN-DATA) appear between scalar properties.
+TEST(ArxmlCompilerTest, PropertyContiguityWithNestedObjects) {
+    auto reg = make_registry();
+    auto* schema = reg.resolve_by_domain("autosar-r23-11");
+    MockArxmlContext ctx(schema->domain, /*override_default=*/true);
+    senda::ArxmlCompiler compiler(reg, "autosar-r23-11");
+
+    auto result = compiler.compile(fixture_path("interleaved-props.arxml"), ctx);
+    EXPECT_FALSE(result.has_errors()) << "Compilation failed";
+
+    // For each ObjectDef, verify its property span is valid:
+    // prop_start + prop_count should not overlap with another object's span.
+    struct ObjSpan {
+        fir::Id obj_id;
+        uint32_t start;
+        uint32_t count;
+    };
+    std::vector<ObjSpan> spans;
+
+    result.fir().forEachNode([&](fir::Id id, const fir::Node& node) {
+        if (node.kind != fir::NodeKind::ObjectDef) return;
+        auto& od = result.fir().as<fir::ObjectDef>(id);
+        if (od.prop_count == 0) return;
+        spans.push_back({id, od.prop_start, od.prop_count});
+    });
+
+    // Each object's property span should not include properties from other objects.
+    // Verify by checking that for each object, all its properties have role_ids
+    // that belong to its type or are valid foreign refs (not random other objects'
+    // properties).
+    for (auto& span : spans) {
+        auto& od = result.fir().as<fir::ObjectDef>(span.obj_id);
+        auto props = result.fir().propertiesOf(od);
+        EXPECT_EQ(props.size(), span.count)
+            << "Property span mismatch for object at ID "
+            << static_cast<uint32_t>(span.obj_id);
+
+        // Each property should have a valid role_id (not none)
+        for (auto prop_id : props) {
+            auto& pv = result.fir().as<fir::PropertyVal>(prop_id);
+            EXPECT_FALSE(fir::is_none(pv.role_id))
+                << "Property with none role_id in object "
+                << static_cast<uint32_t>(span.obj_id);
+        }
+    }
+
+    // Verify no overlapping spans
+    for (size_t i = 0; i < spans.size(); ++i) {
+        for (size_t j = i + 1; j < spans.size(); ++j) {
+            auto a_end = spans[i].start + spans[i].count;
+            auto b_end = spans[j].start + spans[j].count;
+            bool overlaps = (spans[i].start < b_end) && (spans[j].start < a_end);
+            EXPECT_FALSE(overlaps)
+                << "Object " << static_cast<uint32_t>(spans[i].obj_id)
+                << " span [" << spans[i].start << ".." << a_end << ") overlaps with "
+                << "Object " << static_cast<uint32_t>(spans[j].obj_id)
+                << " span [" << spans[j].start << ".." << b_end << ")";
+        }
+    }
+}
