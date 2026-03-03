@@ -1364,6 +1364,12 @@ def _export_member(mem: InternalMember, schema: InternalSchema) -> ExportMember:
         doc=mem.doc,
         xml_element_name=mem.xml_element_name,
         inner_ref_tag=mem.inner_ref_tag,
+        xml_role_element=mem.xml_role_element,
+        xml_role_wrapper_element=mem.xml_role_wrapper_element,
+        xml_type_element=mem.xml_type_element,
+        xml_type_wrapper_element=mem.xml_type_wrapper_element,
+        xml_attribute=mem.xml_attribute,
+        xml_sequence_offset=mem.xml_sequence_offset,
     )
 
 

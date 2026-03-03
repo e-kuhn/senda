@@ -1,7 +1,8 @@
 """Tests for XML serialization tag extraction and inference."""
 
+import os
 import pytest
-from schema_parser import _get_member_from_appinfo
+from schema_parser import _get_member_from_appinfo, parse_schema, export_schema
 from xml.etree import ElementTree as ET
 
 XSD_NS = "http://www.w3.org/2001/XMLSchema"
@@ -98,3 +99,29 @@ class TestXmlTagExtraction:
         assert member.xml_type_wrapper_element is None
         assert member.xml_attribute is None
         assert member.xml_sequence_offset is None
+
+
+XSD_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..",
+                        "schema", "AUTOSAR_00051.xsd")
+
+
+class TestXmlTagPropagation:
+    """Test that XML tags propagate from XSD through to ExportMember."""
+
+    def test_tags_in_export_member(self):
+        """Parse the real R20-11 schema and verify AdminData.sdg has correct tags."""
+        if not os.path.exists(XSD_PATH):
+            pytest.skip("R20-11 schema not available")
+
+        schema = export_schema(parse_schema(XSD_PATH))
+        admin_data = next((c for c in schema.composites
+                          if c.name == "AdminData"), None)
+        assert admin_data is not None
+
+        sdg_member = next((m for m in admin_data.members
+                          if m.name == "sdg"), None)
+        assert sdg_member is not None
+        assert sdg_member.xml_role_element is True
+        assert sdg_member.xml_role_wrapper_element is True
+        assert sdg_member.xml_type_element is False
+        assert sdg_member.xml_type_wrapper_element is False
