@@ -158,6 +158,14 @@ public:
             .deferred_props = {},
         };
 
+        // Pre-allocate for typical AUTOSAR files
+        auto file_size = content.size();
+        state.stack.reserve(256);
+        state.text_buf.reserve(file_size / 100);
+        state.deferred_props.reserve(1024);
+        state.current_path_ids.reserve(64);
+        state.path_index.reserve(file_size / 300);
+
         XmlPullParser xml(content);
 
         while (true) {
