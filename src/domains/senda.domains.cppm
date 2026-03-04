@@ -13,15 +13,15 @@ export namespace senda::domains
 {
 
 struct RoleInfo {
-    rupa::domain::RoleHandle role;
-    uint32_t target_type_id;  // fir::Id of the target type (for handle_to_type lookup)
+    fir::RoleHandle role;
+    uint32_t target_type_id;  // raw handle value of the target type (for handle_to_type lookup)
     bool is_reference = false;
     bool is_identity = false;  // atpIdentityContributor stereotype
     uint8_t xml_tags = 0;     // packed XmlTagBits from senda.arxml_schema
 };
 
 struct TypeInfo {
-    rupa::domain::TypeHandle handle;
+    fir::TypeHandle handle;
     kore::FrozenMap<std::string_view, RoleInfo> roles;
 };
 

@@ -146,10 +146,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Report success
-    size_t obj_count = 0;
-    result.fir().forEachNode([&](fir::Id, const fir::Node& node) {
-        if (node.kind == fir::NodeKind::ObjectDef) ++obj_count;
-    });
+    size_t obj_count = result.fir().model.nodes.size();
     std::fprintf(stderr, "Compiled %s: %zu objects\n", input_path.c_str(), obj_count);
 
     // Emit to Rupa if requested
@@ -158,11 +155,11 @@ int main(int argc, char* argv[]) {
         SchemaForeignResolver resolver;
 
         auto& fir = result.fir();
-        for (uint16_t i = 0; i < fir.moduleCount(); ++i) {
-            auto mod_id = fir::ModuleId{i};
-            auto name_id = fir.moduleName(mod_id);
-            if (static_cast<uint32_t>(name_id) == UINT32_MAX) continue;
-            auto name = fir.getString(name_id);
+        for (size_t i = 0; i < fir.types.modules.size(); ++i) {
+            auto mod_id = fir::ModuleId{static_cast<uint16_t>(i)};
+            auto name_sid = fir.types.modules[i].name;
+            if (fir::is_none(name_sid)) continue;
+            auto name = fir.get_string(name_sid);
             auto* dom = driver.find_domain(name);
             if (dom) {
                 resolver.register_module(mod_id, dom->view().fir());
