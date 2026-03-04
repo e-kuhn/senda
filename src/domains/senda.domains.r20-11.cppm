@@ -45182,12 +45182,12 @@ constexpr TagDesc kTags[] = {
 
 AutosarSchema build_autosar_r20_11() {
     fir::Fir type_fir;
-    rupa::fir_builder::FirBuilder b(type_fir);
+    fir::FirBuilder b(type_fir);
 
     constexpr size_t N = std::size(kTypes);
-    std::vector<rupa::fir_builder::TypeHandle> th(N);
+    std::vector<fir::TypeHandle> th(N);
     for (size_t i = 0; i < N; ++i)
-        th[i] = b.begin_type(kTypes[i].name, static_cast<fir::M3Kind>(kTypes[i].kind));
+        th[i] = b.add_type(kTypes[i].name, static_cast<fir::M3Kind>(kTypes[i].kind));
 
     for (size_t i = 0; i < N; ++i) {
         if (kTypes[i].supertype != UINT16_MAX)
@@ -45200,24 +45200,26 @@ AutosarSchema build_autosar_r20_11() {
         for (uint16_t j = 0; j < kTypes[i].enum_count; ++j)
             b.add_enum_value(th[i], kEnumValues[kTypes[i].enum_start + j].value);
 
-    std::vector<rupa::fir_builder::RoleHandle> rh(std::size(kRoles));
-    for (size_t i = 0; i < N; ++i)
+    std::vector<fir::RoleHandle> rh(std::size(kRoles));
+    for (size_t i = 0; i < N; ++i) {
         for (uint16_t j = 0; j < kTypes[i].role_count; ++j) {
             auto ri = kTypes[i].role_start + j;
             rh[ri] = b.add_role(th[i], kRoles[ri].name,
                                 th[kRoles[ri].target_type],
                                 static_cast<fir::Multiplicity>(kRoles[ri].mult));
         }
+        b.finalize_roles(th[i]);
+    }
 
     kore::FrozenMap<std::string_view, TypeInfo> tag_to_type(std::size(kTags));
     for (const auto& tag : kTags) {
-        TypeInfo info{{th[tag.type_index].id},
+        TypeInfo info{th[tag.type_index],
                       kore::FrozenMap<std::string_view, RoleInfo>(tag.tag_role_count)};
         for (uint16_t j = 0; j < tag.tag_role_count; ++j) {
             const auto& tr = kTagRoles[tag.tag_role_start + j];
             info.roles.add(tr.xml_element_name,
-                RoleInfo{rupa::domain::RoleHandle{rh[tr.role_index].id},
-                         static_cast<uint32_t>(th[tr.target_type].id),
+                RoleInfo{rh[tr.role_index],
+                         static_cast<uint32_t>(th[tr.target_type]),
                          tr.is_reference, tr.is_identity, tr.xml_tags});
         }
         info.roles.freeze();
@@ -45227,7 +45229,7 @@ AutosarSchema build_autosar_r20_11() {
 
     kore::FrozenMap<uint32_t, const TypeInfo*> handle_to_type(std::size(kTags));
     for (const auto& tag : kTags)
-        handle_to_type.add(static_cast<uint32_t>(th[tag.type_index].id),
+        handle_to_type.add(static_cast<uint32_t>(th[tag.type_index]),
                           tag_to_type.find(tag.xml_tag));
     handle_to_type.freeze();
 

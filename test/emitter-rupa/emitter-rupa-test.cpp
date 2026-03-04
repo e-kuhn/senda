@@ -73,49 +73,49 @@ TEST(RupaEmitterPipeline, ArxmlCompilerSetsRootObject) {
     ASSERT_FALSE(result.has_errors()) << "ARXML compilation failed";
 
     // Root object should be set after compilation
-    auto root_id = result.fir().rootObject();
-    EXPECT_NE(static_cast<uint32_t>(root_id), UINT32_MAX)
+    auto root_nh = result.fir().model.root_object;
+    EXPECT_FALSE(fir::is_none(root_nh))
         << "Root object not set after compilation";
 }
 
 // Full emitter pipeline: build types + instances in same FIR, emit to Rupa.
-// This simulates the end-to-end ARXML->FIR->Rupa pipeline with types
-// co-located in the same FIR (future: ARXML compiler will import domain types).
 TEST(RupaEmitterPipeline, FullPipelineWithManualTypes) {
     using namespace fir;
-    using namespace rupa::fir_builder;
 
     Fir fir;
     FirBuilder builder(fir);
 
     // Build AUTOSAR-like domain types
-    auto str_prim = builder.begin_type("::string", M3Kind::Primitive);
-    auto str_type = builder.begin_type("Str", M3Kind::Primitive);
+    auto str_prim = builder.add_type("::string", M3Kind::Primitive);
+    auto str_type = builder.add_type("Str", M3Kind::Primitive);
     builder.set_supertype(str_type, str_prim);
 
-    auto int_prim = builder.begin_type("::integer", M3Kind::Primitive);
-    auto int_type = builder.begin_type("PositiveInteger", M3Kind::Primitive);
+    auto int_prim = builder.add_type("::integer", M3Kind::Primitive);
+    auto int_type = builder.add_type("PositiveInteger", M3Kind::Primitive);
     builder.set_supertype(int_type, int_prim);
 
-    auto base = builder.begin_type("ARObject", M3Kind::Composite);
+    auto base = builder.add_type("ARObject", M3Kind::Composite);
     builder.set_abstract(base, true);
     builder.set_domain(base, "autosar-r23-11");
 
-    auto referrable = builder.begin_type("Referrable", M3Kind::Composite);
+    auto referrable = builder.add_type("Referrable", M3Kind::Composite);
     builder.set_supertype(referrable, base);
     auto ref_name = builder.add_role(referrable, "shortName", str_type, Multiplicity::One);
-    fir.as<RoleDef>(ref_name.id).is_identity = true;
+    builder.set_identity(ref_name, true);
+    builder.finalize_roles(referrable);
     builder.set_domain(referrable, "autosar-r23-11");
 
-    auto signal = builder.begin_type("SystemSignal", M3Kind::Composite);
+    auto signal = builder.add_type("SystemSignal", M3Kind::Composite);
     builder.set_supertype(signal, referrable);
     auto sig_len = builder.add_role(signal, "length", int_type, Multiplicity::One);
+    builder.finalize_roles(signal);
     builder.set_domain(signal, "autosar-r23-11");
 
-    auto pkg = builder.begin_type("ARPackage", M3Kind::Composite);
+    auto pkg = builder.add_type("ARPackage", M3Kind::Composite);
     builder.set_supertype(pkg, referrable);
     auto pkg_subs = builder.add_role(pkg, "subPackages", pkg, Multiplicity::Many);
     auto pkg_elements = builder.add_role(pkg, "elements", signal, Multiplicity::Many);
+    builder.finalize_roles(pkg);
     builder.set_domain(pkg, "autosar-r23-11");
 
     builder.add_root_type(pkg);
@@ -126,35 +126,20 @@ TEST(RupaEmitterPipeline, FullPipelineWithManualTypes) {
     //     .elements += SystemSignal BrakePedalPosition { .length = 12; };
     //   };
     // }
-    auto brake = builder.begin_object("BrakePedalPosition", signal);
-    builder.add_property(brake, ref_name, std::string_view("BrakePedalPosition"));
-    builder.add_property(brake, sig_len, int64_t{12});
+    auto brake = builder.begin_object(signal);
+    builder.add_property(brake, ref_name, str_type, builder.add_string("BrakePedalPosition"));
+    builder.add_property(brake, sig_len, int_type, builder.add_integer(12));
+    builder.finalize_properties(brake);
 
-    auto signals_pkg = builder.begin_object("Signals", pkg);
-    builder.add_property(signals_pkg, ref_name, std::string_view("Signals"));
-    {
-        auto prop_id = fir.add<PropertyVal>(pkg_elements.id, brake.id);
-        auto& od = fir.as<ObjectDef>(signals_pkg.id);
-        if (od.prop_count == 0) {
-            od.prop_start = fir.appendProperties({&prop_id, 1});
-        } else {
-            fir.appendProperties({&prop_id, 1});
-        }
-        od.prop_count++;
-    }
+    auto signals_pkg = builder.begin_object(pkg);
+    builder.add_property(signals_pkg, ref_name, str_type, builder.add_string("Signals"));
+    builder.add_containment(signals_pkg, pkg_elements, signal, brake);
+    builder.finalize_properties(signals_pkg);
 
-    auto root = builder.begin_object("AUTOSAR", pkg);
-    builder.add_property(root, ref_name, std::string_view("AUTOSAR"));
-    {
-        auto prop_id = fir.add<PropertyVal>(pkg_subs.id, signals_pkg.id);
-        auto& od = fir.as<ObjectDef>(root.id);
-        if (od.prop_count == 0) {
-            od.prop_start = fir.appendProperties({&prop_id, 1});
-        } else {
-            fir.appendProperties({&prop_id, 1});
-        }
-        od.prop_count++;
-    }
+    auto root = builder.begin_object(pkg);
+    builder.add_property(root, ref_name, str_type, builder.add_string("AUTOSAR"));
+    builder.add_containment(root, pkg_subs, pkg, signals_pkg);
+    builder.finalize_properties(root);
     builder.set_root_object(root);
 
     // Emit to Rupa
@@ -205,13 +190,13 @@ TEST(RupaEmitterPipeline, ArxmlToRupaWithForeignResolver) {
     TestForeignResolver resolver;
 
     auto& fir = result.fir();
-    for (uint16_t i = 0; i < fir.moduleCount(); ++i) {
-        auto mod_id = fir::ModuleId{i};
-        auto name_id = fir.moduleName(mod_id);
-        if (static_cast<uint32_t>(name_id) == UINT32_MAX) continue;
-        auto name = fir.getString(name_id);
+    // Register domain FIRs for foreign resolution
+    for (size_t i = 0; i < fir.types.modules.size(); ++i) {
+        auto name_sid = fir.types.modules[i].name;
+        if (fir::is_none(name_sid)) continue;
+        auto name = fir.get_string(name_sid);
         auto* s = reg.resolve_by_domain(name);
-        if (s) resolver.firs[i] = s->domain.view().fir();
+        if (s) resolver.firs[static_cast<uint16_t>(i)] = s->domain.view().fir();
     }
 
     // Emit with resolver

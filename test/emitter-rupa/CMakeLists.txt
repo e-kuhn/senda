@@ -6,7 +6,6 @@ target_link_libraries(senda.emitter_rupa_test PRIVATE
     rupa.compiler
     rupa.domain
     rupa.fir
-    rupa.fir.builder
     kore
     GTest::gtest_main
 )

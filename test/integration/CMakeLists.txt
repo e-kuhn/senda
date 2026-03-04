@@ -7,7 +7,6 @@ target_link_libraries(senda.e2e_arxml_import_test PRIVATE
     senda.domains
     rupa.domain
     rupa.fir
-    rupa.fir.builder
     kore
     GTest::gtest_main
 )

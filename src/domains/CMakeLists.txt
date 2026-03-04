@@ -10,7 +10,7 @@ target_sources(senda.domains
         senda.domains.r23-11.cppm
 )
 target_link_libraries(senda.domains
-    PUBLIC rupa.domain rupa.fir rupa.fir.builder kore
+    PUBLIC rupa.domain rupa.fir kore
 )
 target_compile_features(senda.domains PUBLIC cxx_std_26)
 senda_target_settings(senda.domains)

@@ -81,11 +81,8 @@ TEST(ArxmlEmitter, RoundTripSimpleSignal) {
     ASSERT_FALSE(compile_result.has_errors()) << "Compilation failed";
 
     // Verify objects were produced
-    size_t obj_count = 0;
-    compile_result.fir().forEachNode([&](fir::Id, const fir::Node& node) {
-        if (node.kind == fir::NodeKind::ObjectDef) ++obj_count;
-    });
-    ASSERT_GE(obj_count, 1u) << "Should have at least one ObjectDef";
+    ASSERT_GE(compile_result.fir().model.nodes.size(), 1u)
+        << "Should have at least one object";
 
     // Emit FIR -> ARXML
     std::ostringstream out;
