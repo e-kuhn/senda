@@ -300,7 +300,7 @@ TEST(ArxmlCompilerTest, CapturesXmlAttributes) {
             if (prop.is_node()) continue;
             auto vh = prop.value_handle();
             if (fir::value_kind(vh) != fir::ValueKind::String) continue;
-            auto sid = model.values.get_string(vh);
+            const auto& sid = model.values.get_string(vh);
             auto val_str = fir.get_string(sid);
             if (val_str == "info") {
                 found_gid_property = true;
