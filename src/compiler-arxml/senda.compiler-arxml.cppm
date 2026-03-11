@@ -165,6 +165,7 @@ public:
         state.deferred_props.reserve(1024);
         state.current_path_ids.reserve(64);
         state.path_index.reserve(file_size / 300);
+        fir.strings.Reserve(file_size / 180);
 
         XmlPullParser xml(content);
 
