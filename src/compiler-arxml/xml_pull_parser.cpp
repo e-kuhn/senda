@@ -9,7 +9,8 @@ XmlPullParser::XmlPullParser(std::string_view input)
       pos_(input.data()),
       attr_pos_(nullptr),
       attr_end_(nullptr),
-      attrs_consumed_(true)
+      attrs_consumed_(true),
+      simd_(xml::resolve_simd_kernels())
 {
     // Skip BOM if present
     if (input.size() >= 3 &&
