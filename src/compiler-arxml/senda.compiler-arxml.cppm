@@ -20,6 +20,8 @@ import rupa.fir.builder;
 import rupa.diagnostics;
 import senda.domains;
 import senda.arxml_schema;
+import kore.containers.tiny_vector;
+import kore.core.arena;
 
 export namespace senda
 {
@@ -156,6 +158,8 @@ public:
             .path_index = {},
             .text_buf = {},
             .deferred_props = {},
+            .ref_arena = kore::VecArena{},
+            .ref_seg_storage = {},
         };
 
         // Pre-allocate for typical AUTOSAR files
@@ -166,6 +170,7 @@ public:
         state.current_path_ids.reserve(64);
         state.path_index.reserve(file_size / 300);
         fir.strings.Reserve(file_size / 180);
+        fir.model.props.reserve(file_size / 50);
 
         XmlPullParser xml(content);
 
@@ -287,6 +292,9 @@ private:
         // frame pops. This ensures contiguous property spans even when nested
         // objects interleave property creation.
         std::vector<fir::FirProp> deferred_props;
+        // Arena-backed segment buffer for reference parsing (zero-alloc for typical paths)
+        kore::VecArena ref_arena;
+        kore::TinyVector<fir::StringId, uint32_t, 8> ref_seg_storage;
     };
 
     // Extract XSD filename from xsi:schemaLocation value
@@ -799,22 +807,22 @@ private:
                         }
                     }
                     if (!all_ws) {
-                        // Parse reference path text into segments
+                        // Parse reference path text into pre-interned segments
                         std::string_view ref_text = frame_text;
-                        // Trim leading /
                         if (!ref_text.empty() && ref_text.front() == '/')
                             ref_text.remove_prefix(1);
-                        std::vector<std::string_view> seg_views;
+                        kore::VecAllocator<fir::StringId> seg_alloc(state.ref_arena);
+                        auto segs = kore::TinyVectorView(state.ref_seg_storage, seg_alloc);
+                        segs.Clear();
                         while (!ref_text.empty()) {
                             auto pos = ref_text.find('/');
-                            if (pos == std::string_view::npos) {
-                                seg_views.push_back(ref_text);
-                                break;
-                            }
-                            seg_views.push_back(ref_text.substr(0, pos));
+                            auto seg = (pos == std::string_view::npos)
+                                ? ref_text : ref_text.substr(0, pos);
+                            segs.PushBack(state.builder.target().intern(seg));
+                            if (pos == std::string_view::npos) break;
                             ref_text.remove_prefix(pos + 1);
                         }
-                        auto vh = state.builder.add_reference(seg_views);
+                        auto vh = state.builder.add_reference(segs.GetElements());
                         defer_value_property(state, rh, vh);
                     }
                 } else {
