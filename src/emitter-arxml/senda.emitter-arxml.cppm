@@ -52939,7 +52939,7 @@ private:
                     out << fir.get_string(fir.model.values.get_string(vh));
                     break;
                 case fir::ValueKind::Integer:
-                    out << fir.model.values.get_integer(vh);
+                    out << fir.model.values.get_integer(vh).as_int64();
                     break;
                 case fir::ValueKind::Float:
                     out << fir.model.values.get_float(vh);
