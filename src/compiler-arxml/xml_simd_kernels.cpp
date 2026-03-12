@@ -203,5 +203,24 @@ uint32_t simd_count_newlines(const char* data, uint32_t len) {
     return HWY_DYNAMIC_DISPATCH(CountNewlines)(data, len);
 }
 
+SimdKernels resolve_simd_kernels() {
+    // Trigger lazy dispatch resolution by calling each kernel once.
+    // With len=0 the SIMD loops don't execute, but the dispatch target is resolved.
+    static const char dummy = '\0';
+    (void)simd_find_tag_or_amp(&dummy, 0);
+    (void)simd_skip_whitespace(&dummy, 0);
+    (void)simd_scan_name(&dummy, 0);
+    (void)simd_find_quote_or_amp(&dummy, 0, '"');
+    (void)simd_count_newlines(&dummy, 0);
+
+    return {
+        simd_find_tag_or_amp,
+        simd_skip_whitespace,
+        simd_scan_name,
+        simd_find_quote_or_amp,
+        simd_count_newlines,
+    };
+}
+
 }  // namespace senda::xml
 #endif

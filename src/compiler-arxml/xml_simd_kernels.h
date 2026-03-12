@@ -27,4 +27,16 @@ uint32_t simd_find_quote_or_amp(const char* data, uint32_t len, char quote_char)
 // Count newline ('\n') bytes in a range. Returns count.
 uint32_t simd_count_newlines(const char* data, uint32_t len);
 
+// Resolved SIMD kernel function pointers — call resolve_simd_kernels() once
+// at startup, then use the pointers directly to avoid per-call dispatch overhead.
+struct SimdKernels {
+    uint32_t(*find_tag_or_amp)(const char*, uint32_t);
+    uint32_t(*skip_whitespace)(const char*, uint32_t);
+    uint32_t(*scan_name)(const char*, uint32_t);
+    uint32_t(*find_quote_or_amp)(const char*, uint32_t, char);
+    uint32_t(*count_newlines)(const char*, uint32_t);
+};
+
+SimdKernels resolve_simd_kernels();
+
 }  // namespace senda::xml
