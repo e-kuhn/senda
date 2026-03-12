@@ -162,12 +162,18 @@ XmlEvent XmlPullParser::next() {
                 // Fall through to entity collection below
             } else {
                 // Check if text is whitespace-only
-                bool all_ws = true;
-                for (auto* c = text_start; c < pos_; ++c) {
-                    if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') {
-                        all_ws = false;
-                        break;
+                auto text_len = static_cast<uint32_t>(pos_ - text_start);
+                bool all_ws;
+                if (text_len <= 8) {
+                    all_ws = true;
+                    for (auto* c = text_start; c < pos_; ++c) {
+                        if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') {
+                            all_ws = false;
+                            break;
+                        }
                     }
+                } else {
+                    all_ws = (skip_whitespace(text_start, text_len) == text_len);
                 }
                 if (!all_ws) {
                     text_ = std::string_view(text_start, static_cast<size_t>(pos_ - text_start));
