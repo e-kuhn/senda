@@ -248,6 +248,31 @@ TEST(XmlPullParserTest, EntitiesFixture) {
     EXPECT_TRUE(found_desc);
 }
 
+TEST(XmlPullParserTest, LineCountingMultilineText) {
+    // 5 newlines in text content
+    std::string xml = "<root>\nline1\nline2\nline3\nline4\n</root>";
+    senda::XmlPullParser p(xml);
+    EXPECT_EQ(p.next(), senda::XmlEvent::StartElement);
+    EXPECT_EQ(p.line(), 1u);
+    EXPECT_EQ(p.next(), senda::XmlEvent::Characters);
+    // Text "\nline1\nline2\nline3\nline4\n" has 5 newlines
+    EXPECT_EQ(p.next(), senda::XmlEvent::EndElement);
+    EXPECT_EQ(p.line(), 6u);  // line 1 + 5 newlines
+}
+
+TEST(XmlPullParserTest, LineCountingLongWhitespace) {
+    // 10 newlines of inter-element whitespace (>8 bytes triggers SIMD path)
+    std::string xml = "<a>\n\n\n\n\n\n\n\n\n\n<b>x</b></a>";
+    senda::XmlPullParser p(xml);
+    EXPECT_EQ(p.next(), senda::XmlEvent::StartElement);  // <a>
+    EXPECT_EQ(p.line(), 1u);
+    EXPECT_EQ(p.next(), senda::XmlEvent::StartElement);  // <b>
+    EXPECT_EQ(p.line(), 11u);  // 1 + 10 newlines
+    EXPECT_EQ(p.next(), senda::XmlEvent::Characters);    // "x"
+    EXPECT_EQ(p.next(), senda::XmlEvent::EndElement);    // </b>
+    EXPECT_EQ(p.next(), senda::XmlEvent::EndElement);    // </a>
+}
+
 TEST(XmlPullParserTest, NamespacePrefixFixture) {
     auto content = read_file(fixture_path("namespace-prefix.arxml"));
     senda::XmlPullParser p(content);

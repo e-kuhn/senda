@@ -41,8 +41,13 @@ XmlEvent XmlPullParser::error(const char* msg) {
 }
 
 void XmlPullParser::count_lines(const char* from, const char* to) {
-    for (auto* p = from; p < to; ++p) {
-        if (*p == '\n') line_++;
+    auto len = static_cast<uint32_t>(to - from);
+    if (len <= 8) {
+        for (auto* p = from; p < to; ++p) {
+            if (*p == '\n') line_++;
+        }
+    } else {
+        line_ += simd_.count_newlines(from, len);
     }
 }
 
