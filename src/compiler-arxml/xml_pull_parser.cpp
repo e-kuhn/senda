@@ -9,7 +9,8 @@ XmlPullParser::XmlPullParser(std::string_view input)
       pos_(input.data()),
       attr_pos_(nullptr),
       attr_end_(nullptr),
-      attrs_consumed_(true)
+      attrs_consumed_(true),
+      simd_(xml::resolve_simd_kernels())
 {
     // Skip BOM if present
     if (input.size() >= 3 &&
@@ -40,8 +41,13 @@ XmlEvent XmlPullParser::error(const char* msg) {
 }
 
 void XmlPullParser::count_lines(const char* from, const char* to) {
-    for (auto* p = from; p < to; ++p) {
-        if (*p == '\n') line_++;
+    auto len = static_cast<uint32_t>(to - from);
+    if (len <= 8) {
+        for (auto* p = from; p < to; ++p) {
+            if (*p == '\n') line_++;
+        }
+    } else {
+        line_ += simd_.count_newlines(from, len);
     }
 }
 
@@ -156,12 +162,18 @@ XmlEvent XmlPullParser::next() {
                 // Fall through to entity collection below
             } else {
                 // Check if text is whitespace-only
-                bool all_ws = true;
-                for (auto* c = text_start; c < pos_; ++c) {
-                    if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') {
-                        all_ws = false;
-                        break;
+                auto text_len = static_cast<uint32_t>(pos_ - text_start);
+                bool all_ws;
+                if (text_len <= 8) {
+                    all_ws = true;
+                    for (auto* c = text_start; c < pos_; ++c) {
+                        if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') {
+                            all_ws = false;
+                            break;
+                        }
                     }
+                } else {
+                    all_ws = (skip_whitespace(text_start, text_len) == text_len);
                 }
                 if (!all_ws) {
                     text_ = std::string_view(text_start, static_cast<size_t>(pos_ - text_start));

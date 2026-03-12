@@ -79,18 +79,20 @@ private:
     // Error state
     const char* error_msg_ = nullptr;
 
-    // --- SIMD-accelerated scanning (delegates to xml_simd_kernels) ---
-    static uint32_t find_tag_or_amp(const char* p, uint32_t len) {
-        return senda::xml::simd_find_tag_or_amp(p, len);
+    // --- SIMD-accelerated scanning (cached dispatch) ---
+    xml::SimdKernels simd_;
+
+    uint32_t find_tag_or_amp(const char* p, uint32_t len) const {
+        return simd_.find_tag_or_amp(p, len);
     }
-    static uint32_t skip_whitespace(const char* p, uint32_t len) {
-        return senda::xml::simd_skip_whitespace(p, len);
+    uint32_t skip_whitespace(const char* p, uint32_t len) const {
+        return simd_.skip_whitespace(p, len);
     }
-    static uint32_t scan_name(const char* p, uint32_t len) {
-        return senda::xml::simd_scan_name(p, len);
+    uint32_t scan_name(const char* p, uint32_t len) const {
+        return simd_.scan_name(p, len);
     }
-    static uint32_t find_quote_end(const char* p, uint32_t len, char quote) {
-        return senda::xml::simd_find_quote_or_amp(p, len, quote);
+    uint32_t find_quote_end(const char* p, uint32_t len, char quote) const {
+        return simd_.find_quote_or_amp(p, len, quote);
     }
 
     // Entity expansion
