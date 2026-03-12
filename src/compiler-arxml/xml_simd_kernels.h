@@ -24,4 +24,7 @@ uint32_t simd_scan_name(const char* data, uint32_t len);
 // When the returned position holds '&', caller knows entity expansion is needed.
 uint32_t simd_find_quote_or_amp(const char* data, uint32_t len, char quote_char);
 
+// Count newline ('\n') bytes in a range. Returns count.
+uint32_t simd_count_newlines(const char* data, uint32_t len);
+
 }  // namespace senda::xml

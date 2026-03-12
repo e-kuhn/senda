@@ -150,6 +150,27 @@ uint32_t FindQuoteOrAmp(const char* data, uint32_t len, char quote_char) {
     return len;
 }
 
+uint32_t CountNewlines(const char* data, uint32_t len) {
+    const hn::ScalableTag<uint8_t> d;
+    const size_t N = hn::Lanes(d);
+    uint32_t count = 0;
+    uint32_t pos = 0;
+    const auto v_nl = hn::Set(d, '\n');
+
+    while (pos + N <= len) {
+        const auto v = hn::LoadU(d, reinterpret_cast<const uint8_t*>(data + pos));
+        count += static_cast<uint32_t>(hn::CountTrue(d, hn::Eq(v, v_nl)));
+        pos += static_cast<uint32_t>(N);
+    }
+
+    // Scalar tail
+    while (pos < len) {
+        if (data[pos] == '\n') count++;
+        pos++;
+    }
+    return count;
+}
+
 }  // namespace senda::xml::HWY_NAMESPACE
 HWY_AFTER_NAMESPACE();
 
@@ -160,6 +181,7 @@ HWY_EXPORT(FindTagOrAmp);
 HWY_EXPORT(SkipWhitespace);
 HWY_EXPORT(ScanName);
 HWY_EXPORT(FindQuoteOrAmp);
+HWY_EXPORT(CountNewlines);
 
 uint32_t simd_find_tag_or_amp(const char* data, uint32_t len) {
     return HWY_DYNAMIC_DISPATCH(FindTagOrAmp)(data, len);
@@ -175,6 +197,10 @@ uint32_t simd_scan_name(const char* data, uint32_t len) {
 
 uint32_t simd_find_quote_or_amp(const char* data, uint32_t len, char quote_char) {
     return HWY_DYNAMIC_DISPATCH(FindQuoteOrAmp)(data, len, quote_char);
+}
+
+uint32_t simd_count_newlines(const char* data, uint32_t len) {
+    return HWY_DYNAMIC_DISPATCH(CountNewlines)(data, len);
 }
 
 }  // namespace senda::xml
